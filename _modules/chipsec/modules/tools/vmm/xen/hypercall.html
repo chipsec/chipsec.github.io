@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.vmm.xen.hypercall &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../../_static/jquery.js"></script>
+    <script src="../../../../../../_static/underscore.js"></script>
+    <script src="../../../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.xen.hypercall</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.vmm.xen.hypercall</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2018, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Xen specific hypercall functionality</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">binascii</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">chipsec.modules.tools.vmm.xen.define</span>  <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.vmm</span>                       <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span>                 <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">chipsec.modules.tools.vmm.common</span>      <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">SM_RANGE</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;masks&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mh">0x00000000000000FF</span> <span class="p">]</span> <span class="p">}</span>
+<span class="n">MD_RANGE</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;masks&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mh">0x000000000000FFFF</span> <span class="p">]</span> <span class="p">}</span>
+<span class="n">XL_RANGE</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;masks&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mh">0xFFFFFFFFFFFFFFFF</span> <span class="p">]</span> <span class="p">}</span>
+
+<div class="viewcode-block" id="XenHypercall"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall">[docs]</a><span class="k">class</span> <span class="nc">XenHypercall</span><span class="p">(</span><span class="n">BaseModuleHwAccess</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModuleHwAccess</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vmm</span> <span class="o">=</span> <span class="n">VMM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hypervisor_present</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hypercalls</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buff_pa</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_pa</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">alloc_physical_mem</span><span class="p">(</span><span class="mh">0x1000</span><span class="p">,</span> <span class="mh">0xFFFFFFFFFFFFFFFF</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_pa</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[*] Could not allocate memory!&quot;</span><span class="p">)</span>
+        <span class="c1">### define initial args for hypercall fuzzing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hypercall_args</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">MEMORY_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">xenmem_commands</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>      <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">SET_TIMER_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">XL_RANGE</span><span class="p">,</span>                    <span class="n">XL_RANGE</span>     <span class="p">]</span> <span class="p">},</span>
+            <span class="n">XEN_VERSION</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">xen_version_commands</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">CONSOLE_IO</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">console_io_commands</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>  <span class="n">MD_RANGE</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">GRANT_TABLE_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">SM_RANGE</span><span class="p">,</span>               <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span><span class="p">,</span>    <span class="n">XL_RANGE</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">SCHED_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">schedop_commands</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>     <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">EVENT_CHANNEL_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">evtchop_commands</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>     <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">NMI_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">XL_RANGE</span><span class="p">,</span>                    <span class="n">XL_RANGE</span>     <span class="p">]</span> <span class="p">},</span>
+            <span class="n">HVM_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">hvmop_commands</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>       <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">TMEM_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span>                              <span class="p">]</span> <span class="p">},</span>
+            <span class="n">XENPMU_OP</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">xenpmuop_commands</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>    <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span> <span class="p">]</span> <span class="p">},</span>
+            <span class="n">SYSCTL</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span>                              <span class="p">]</span> <span class="p">},</span>
+            <span class="n">DOMCTL</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span>                              <span class="p">]</span> <span class="p">},</span>
+            <span class="n">ARCH_1</span><span class="p">:</span>  <span class="p">{</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span>                              <span class="p">]</span> <span class="p">},</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="XenHypercall.get_value"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;masks&#39;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">random</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">range</span><span class="p">]:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+    <span class="c1">##</span>
+    <span class="c1">##  hypercall</span>
+    <span class="c1">##</span>
+<div class="viewcode-block" id="XenHypercall.hypercall"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)[:</span><span class="mi">4096</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buff_pa</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbg</span><span class="p">(</span><span class="s1">&#39;ARGS: </span><span class="si">{}</span><span class="s1">  DATA: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]),</span> <span class="n">binascii</span><span class="o">.</span><span class="n">hexlify</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="mi">32</span><span class="p">])))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">hypercall64_five_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buff_pa</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbg</span><span class="p">(</span><span class="s1">&#39;Exception on hypercall (0x</span><span class="si">{:08X}</span><span class="s1">): </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;exception&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mh">0xFFFFFFFFFFFFFFFF</span><span class="p">,</span> <span class="s1">&#39;buffer&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;exception&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">rax</span><span class="p">,</span> <span class="s1">&#39;buffer&#39;</span><span class="p">:</span> <span class="n">val</span><span class="p">}</span></div>
+
+    <span class="c1">##</span>
+    <span class="c1">##  xen_version</span>
+    <span class="c1">##</span>
+<div class="viewcode-block" id="XenHypercall.xen_version"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.xen_version">[docs]</a>    <span class="k">def</span> <span class="nf">xen_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercall</span><span class="p">((</span><span class="n">XEN_VERSION</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buff_va</span><span class="p">),</span> <span class="n">size</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+    <span class="c1">##</span>
+    <span class="c1">##  get_hypervisor_info</span>
+    <span class="c1">##</span>
+<div class="viewcode-block" id="XenHypercall.get_hypervisor_info"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.get_hypervisor_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_hypervisor_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_VERSION</span><span class="p">)[</span><span class="s1">&#39;exception&#39;</span><span class="p">]:</span>
+            <span class="n">version</span>                     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_VERSION</span><span class="p">)</span>
+            <span class="n">extra_version</span>               <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_EXTRAVERSION</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">compile_info</span>                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_COMPILE_INFO</span><span class="p">,</span> <span class="mi">140</span><span class="p">)</span>
+            <span class="n">capabilities</span>                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_CAPABILITIES</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+            <span class="n">changeset</span>                   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_CHANGESET</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+            <span class="n">platform_parameters</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_PLATFORM_PARAMETERS</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+            <span class="n">pagesize</span>                    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_PAGESIZE</span><span class="p">)</span>
+            <span class="n">guest_handle</span>                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_GUEST_HANDLE</span><span class="p">)</span>
+            <span class="n">command_line</span>                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_COMMANDLINE</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;extra_version&#39;</span><span class="p">]</span>       <span class="o">=</span> <span class="n">extra_version</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;xen_major&#39;</span><span class="p">]</span>           <span class="o">=</span> <span class="p">(</span><span class="n">version</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;xen_minor&#39;</span><span class="p">]</span>           <span class="o">=</span> <span class="n">version</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;xen_version&#39;</span><span class="p">]</span>         <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">.</span><span class="si">{:d}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;xen_major&#39;</span><span class="p">],</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;xen_minor&#39;</span><span class="p">],</span> <span class="n">extra_version</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">])</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;compiler&#39;</span><span class="p">]</span>            <span class="o">=</span> <span class="n">compile_info</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">][:</span><span class="mi">64</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;compile_by&#39;</span><span class="p">]</span>          <span class="o">=</span> <span class="n">compile_info</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">][</span><span class="mi">64</span><span class="p">:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;compile_domain&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="n">compile_info</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">][</span><span class="mi">80</span><span class="p">:</span><span class="mi">112</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;compile_date&#39;</span><span class="p">]</span>        <span class="o">=</span> <span class="n">compile_info</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">][</span><span class="mi">112</span><span class="p">:</span><span class="mi">140</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;capabilities&#39;</span><span class="p">]</span>        <span class="o">=</span> <span class="n">capabilities</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;changeset&#39;</span><span class="p">]</span>           <span class="o">=</span> <span class="n">changeset</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;platform_parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;Q&#39;</span><span class="p">,</span> <span class="n">platform_parameters</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;pagesize&#39;</span><span class="p">]</span>            <span class="o">=</span> <span class="n">pagesize</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;guest_handle&#39;</span><span class="p">]</span>        <span class="o">=</span> <span class="n">guest_handle</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;command_line&#39;</span><span class="p">]</span>        <span class="o">=</span> <span class="n">command_line</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">info</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0x100</span><span class="p">):</span>
+                <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xen_version</span><span class="p">(</span><span class="n">XENVER_GET_FEATURES</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;LL&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;exception&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;LL&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">])</span>
+                    <span class="n">info</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">][</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">info</span></div>
+
+    <span class="c1">##</span>
+    <span class="c1">##  print_hypervisor_info</span>
+    <span class="c1">##</span>
+<div class="viewcode-block" id="XenHypercall.print_hypervisor_info"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.print_hypervisor_info">[docs]</a>    <span class="k">def</span> <span class="nf">print_hypervisor_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;F</span><span class="si">{:d}</span><span class="s1">=</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;XEN Hypervisor is present!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;          Version : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;xen_version&#39;</span><span class="p">])</span>         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;         Compiler : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;compiler&#39;</span><span class="p">])</span>            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;       Compile by : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;compile_by&#39;</span><span class="p">])</span>          <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;   Compile Domain : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;compile_domain&#39;</span><span class="p">])</span>      <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;     Compile Date : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;compile_date&#39;</span><span class="p">])</span>        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;     Capabilities : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;capabilities&#39;</span><span class="p">])</span>        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;       Change Set : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;changeset&#39;</span><span class="p">])</span>           <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;  Platform Params : </span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;platform_parameters&#39;</span><span class="p">])</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;         Features : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>                    <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;        Page size : </span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;pagesize&#39;</span><span class="p">])</span>            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;     Guest Handle : </span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;guest_handle&#39;</span><span class="p">])</span>        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;     Command Line : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;command_line&#39;</span><span class="p">])</span>        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="XenHypercall.scan_hypercalls"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.scan_hypercalls">[docs]</a>    <span class="k">def</span> <span class="nf">scan_hypercalls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="n">vector_list</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercall_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;args&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercall</span><span class="p">([</span><span class="n">vector</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;exception&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">get_invalid_hypercall_code</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hypercalls</span><span class="p">[</span><span class="n">vector</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_initial_data</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">],</span> <span class="n">get_hypercall_status</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span> <span class="kc">True</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="XenHypercall.print_hypercall_status"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.print_hypercall_status">[docs]</a>    <span class="k">def</span> <span class="nf">print_hypercall_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;*** Hypervisor Hypercall Status Codes ***&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hypercalls</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">data</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercalls</span><span class="p">[</span><span class="n">vector</span><span class="p">]</span>
+            <span class="n">name</span>   <span class="o">=</span> <span class="n">get_hypercall_name</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">get_hypercall_status_extended</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s2">&quot;HYPERCALL </span><span class="si">{:04X}</span><span class="s2">  </span><span class="si">{:016X}</span><span class="s2">  </span><span class="si">{:45}</span><span class="s2"> &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="XenHypercall.fuzz_hypercall"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.fuzz_hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+        <span class="n">rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercall_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rule</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span> <span class="s2">&quot;WARNING: Fuzzing rule is not defined for this hypercall!&quot;</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;args&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span> <span class="s2">&quot;Fuzzing </span><span class="si">{}</span><span class="s2"> (0x</span><span class="si">{:02X}</span><span class="s2">) hypercall&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">get_hypercall_name</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">),</span> <span class="n">code</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_reset</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+            <span class="n">data</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span> <span class="o">*</span> <span class="mi">32</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercall</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;exception&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats_event</span><span class="p">(</span><span class="s1">&#39;exception&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats_event</span><span class="p">(</span><span class="n">get_hypercall_status_extended</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_print</span><span class="p">(</span><span class="s1">&#39;Hypercall status codes&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="XenHypercall.fuzz_hypercalls_randomly"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.xen.hypercall.html#chipsec.modules.tools.vmm.xen.hypercall.XenHypercall.fuzz_hypercalls_randomly">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_hypercalls_randomly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">codes</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span>
+            <span class="n">rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercall_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">rule</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span> <span class="s2">&quot;WARNING: Fuzzing rule is not defined for this hypercall!&quot;</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;args&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">data</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span> <span class="o">*</span> <span class="mi">32</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypercall</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../../index.html">
+              <img class="logo" src="../../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.xen.hypercall</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

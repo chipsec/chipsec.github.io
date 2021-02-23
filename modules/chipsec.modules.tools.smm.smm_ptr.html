@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smm_ptr module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="uefi package" href="chipsec.modules.tools.uefi.html" />
+    <link rel="prev" title="rogue_mmio_bar module" href="chipsec.modules.tools.smm.rogue_mmio_bar.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.html" title="uefi package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.smm.rogue_mmio_bar.html" title="rogue_mmio_bar module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.smm.html" accesskey="U">smm package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">smm_ptr module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.modules.tools.smm.smm_ptr">
+<span id="smm-ptr-module"></span><h1>smm_ptr module<a class="headerlink" href="#module-chipsec.modules.tools.smm.smm_ptr" title="Permalink to this headline">¶</a></h1>
+<p>CanSecWest 2015
+<a class="reference external" href="https://cansecwest.com/slides/2015/A%20New%20Class%20of%20Vulnin%20SMI%20-%20Andrew%20Furtak.pdf">A New Class of Vulnerability in SMI Handlers of BIOS/UEFI Firmware</a></p>
+<p>A tool to test SMI handlers for pointer validation vulnerabilities</p>
+<p>Usage:
+<code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.smm.smm_ptr</span> <span class="pre">-l</span> <span class="pre">log.txt</span> <span class="pre">\</span></code>
+<code class="docutils literal notranslate"><span class="pre">[-a</span> <span class="pre">&lt;mode&gt;,&lt;config_file&gt;|&lt;smic_start:smic_end&gt;,&lt;size&gt;,&lt;address&gt;]</span></code></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mode</span></code>: SMI fuzzing mode</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code> = use SMI configuration file &lt;config_file&gt;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fuzz</span></code> = fuzz all SMI handlers with code in the range &lt;smic_start:smic_end&gt;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fuzzmore</span></code> = fuzz mode + pass 2nd-order pointers within buffer to SMI handlers</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: size of the memory buffer (in Hex)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">address</span></code>: physical address of memory buffer to pass in GP regs to SMI handlers (in Hex)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">smram</span></code> = option passes address of SMRAM base (system may hang in this mode!)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>In <code class="docutils literal notranslate"><span class="pre">config</span></code> mode, SMI configuration file should have the following format</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SMI_code</span><span class="o">=&lt;</span><span class="n">SMI</span> <span class="n">code</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span>
+<span class="n">SMI_data</span><span class="o">=&lt;</span><span class="n">SMI</span> <span class="n">data</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span>
+<span class="n">RAX</span><span class="o">=&lt;</span><span class="n">value</span> <span class="n">of</span> <span class="n">RAX</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span> <span class="ow">or</span> <span class="n">PTR</span> <span class="ow">or</span> <span class="n">VAL</span>
+<span class="n">RBX</span><span class="o">=&lt;</span><span class="n">value</span> <span class="n">of</span> <span class="n">RBX</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span> <span class="ow">or</span> <span class="n">PTR</span> <span class="ow">or</span> <span class="n">VAL</span>
+<span class="n">RCX</span><span class="o">=&lt;</span><span class="n">value</span> <span class="n">of</span> <span class="n">RCX</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span> <span class="ow">or</span> <span class="n">PTR</span> <span class="ow">or</span> <span class="n">VAL</span>
+<span class="n">RDX</span><span class="o">=&lt;</span><span class="n">value</span> <span class="n">of</span> <span class="n">RDX</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span> <span class="ow">or</span> <span class="n">PTR</span> <span class="ow">or</span> <span class="n">VAL</span>
+<span class="n">RSI</span><span class="o">=&lt;</span><span class="n">value</span> <span class="n">of</span> <span class="n">RSI</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span> <span class="ow">or</span> <span class="n">PTR</span> <span class="ow">or</span> <span class="n">VAL</span>
+<span class="n">RDI</span><span class="o">=&lt;</span><span class="n">value</span> <span class="n">of</span> <span class="n">RDI</span><span class="o">&gt;</span> <span class="ow">or</span> <span class="o">*</span> <span class="ow">or</span> <span class="n">PTR</span> <span class="ow">or</span> <span class="n">VAL</span>
+<span class="p">[</span><span class="n">PTR_OFFSET</span><span class="o">=&lt;</span><span class="n">offset</span> <span class="n">to</span> <span class="n">pointer</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">buffer</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="p">[</span><span class="n">SIG</span><span class="o">=&lt;</span><span class="n">signature</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="p">[</span><span class="n">SIG_OFFSET</span><span class="o">=&lt;</span><span class="n">offset</span> <span class="n">to</span> <span class="n">signature</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">buffer</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="p">[</span><span class="n">Name</span><span class="o">=&lt;</span><span class="n">SMI</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="p">[</span><span class="n">Desc</span><span class="o">=&lt;</span><span class="n">SMI</span> <span class="n">description</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code>: optional line</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*</span></code>: Don’t Care (the module will replace * with 0x0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PTR</span></code>: Physical address SMI handler will write to (the module will replace PTR with physical address provided as a command-line argument)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VAL</span></code>: Value SMI handler will write to PTR address (the module will replace VAL with hardcoded _FILL_VALUE_xx)</p></li>
+</ul>
+<dl class="py exception">
+<dt id="chipsec.modules.tools.smm.smm_ptr.BadSMIDetected">
+<em class="property">exception </em><code class="sig-name descname">BadSMIDetected</code><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#BadSMIDetected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.BadSMIDetected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.modules.tools.smm.smm_ptr.DIFF">
+<code class="sig-name descname">DIFF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">sz</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#DIFF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.DIFF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.modules.tools.smm.smm_ptr.FILL_BUFFER">
+<code class="sig-name descname">FILL_BUFFER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_fill_byte</span></em>, <em class="sig-param"><span class="n">_fill_size</span></em>, <em class="sig-param"><span class="n">_ptr_in_buffer</span></em>, <em class="sig-param"><span class="n">_ptr</span></em>, <em class="sig-param"><span class="n">_ptr_offset</span></em>, <em class="sig-param"><span class="n">_sig</span></em>, <em class="sig-param"><span class="n">_sig_offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#FILL_BUFFER"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.FILL_BUFFER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smi_desc">
+<em class="property">class </em><code class="sig-name descname">smi_desc</code><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smi_desc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smi_desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr">
+<em class="property">class </em><code class="sig-name descname">smm_ptr</code><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.check_memory">
+<code class="sig-name descname">check_memory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_smi_desc</span></em>, <em class="sig-param"><span class="n">fn</span></em>, <em class="sig-param"><span class="n">restore_contents</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.check_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.check_memory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.fill_memory">
+<code class="sig-name descname">fill_memory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">is_ptr_in_buffer</span></em>, <em class="sig-param"><span class="n">_ptr</span></em>, <em class="sig-param"><span class="n">_ptr_offset</span></em>, <em class="sig-param"><span class="n">_sig</span></em>, <em class="sig-param"><span class="n">_sig_offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.fill_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.fill_memory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.is_supported">
+<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.is_supported" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method should be overwritten by the module returning True or False
+depending whether or not this module is supported in the currently running
+platform.
+To access the currently running platform use</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.send_smi">
+<code class="sig-name descname">send_smi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">smi_code</span></em>, <em class="sig-param"><span class="n">smi_data</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">desc</span></em>, <em class="sig-param"><span class="n">rax</span></em>, <em class="sig-param"><span class="n">rbx</span></em>, <em class="sig-param"><span class="n">rcx</span></em>, <em class="sig-param"><span class="n">rdx</span></em>, <em class="sig-param"><span class="n">rsi</span></em>, <em class="sig-param"><span class="n">rdi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.send_smi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.send_smi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.smi_fuzz_iter">
+<code class="sig-name descname">smi_fuzz_iter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_smi_desc</span></em>, <em class="sig-param"><span class="n">fill_contents</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">restore_contents</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.smi_fuzz_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.smi_fuzz_iter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_config">
+<code class="sig-name descname">test_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">_smi_config_fname</span></em>, <em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_addr1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.test_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_fuzz">
+<code class="sig-name descname">test_fuzz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">smic_start</span></em>, <em class="sig-param"><span class="n">smic_end</span></em>, <em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_addr1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.test_fuzz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_fuzz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.modules.tools.smm.rogue_mmio_bar.html"
+                        title="previous chapter">rogue_mmio_bar module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.modules.tools.uefi.html"
+                        title="next chapter">uefi package</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.html" title="uefi package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.smm.rogue_mmio_bar.html" title="rogue_mmio_bar module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.smm.html" >smm package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">smm_ptr module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

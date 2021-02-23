@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>s3script_modify module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scan_blocked module" href="chipsec.modules.tools.uefi.scan_blocked.html" />
+    <link rel="prev" title="reputation module" href="chipsec.modules.tools.uefi.reputation.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.scan_blocked.html" title="scan_blocked module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.reputation.html" title="reputation module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.uefi.html" accesskey="U">uefi package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">s3script_modify module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.modules.tools.uefi.s3script_modify">
+<span id="s3script-modify-module"></span><h1>s3script_modify module<a class="headerlink" href="#module-chipsec.modules.tools.uefi.s3script_modify" title="Permalink to this headline">¶</a></h1>
+<p>This module will attempt to modify the S3 Boot Script on the platform. Doing this could cause the platform to malfunction. Use with care!</p>
+<dl>
+<dt>Usage:</dt><dd><p>Replacing existing opcode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>chipsec_main.py -m tools.uefi.s3script_modify -a replace_op,&lt;reg_opcode&gt;,&lt;address&gt;,&lt;value&gt;
+    &lt;reg_opcode&gt; = pci_wr|mmio_wr|io_wr|pci_rw|mmio_rw|io_rw
+
+chipsec_main.py -m tools.uefi.s3script_modify -a replace_op,mem[,&lt;address&gt;,&lt;value&gt;]
+
+chipsec_main.py -m tools.uefi.s3script_modify -a replace_op,dispatch``
+
+chipsec_main.py -m tools.uefi.s3script_modify -a replace_op,dispatch_ep``
+</pre></div>
+</div>
+<p>Adding new opcode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">add_op</span><span class="p">,</span><span class="o">&lt;</span><span class="n">reg_opcode</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">address</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">reg_opcode</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">pci_wr</span><span class="o">|</span><span class="n">mmio_wr</span><span class="o">|</span><span class="n">io_wr</span>
+
+<span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">add_op</span><span class="p">,</span><span class="n">dispatch</span><span class="p">[,</span><span class="o">&lt;</span><span class="n">entrypoint</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">replace_op</span><span class="p">,</span><span class="o">&lt;</span><span class="n">reg_opcode</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">address</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="o">&lt;</span><span class="n">reg_opcode</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">pci_wr</span><span class="o">|</span><span class="n">mmio_wr</span><span class="o">|</span><span class="n">io_wr</span><span class="o">|</span><span class="n">pci_rw</span><span class="o">|</span><span class="n">mmio_rw</span><span class="o">|</span><span class="n">io_rw</span>
+</pre></div>
+</div>
+<p>The option will look for a script opcode that writes to PCI config, MMIO or I/O registers and modify the opcode to write the given value to the register with the given address.</p>
+<p>After executing this, if the system is vulnerable to boot script modification, the hardware configuration will have changed according to given &lt;reg_opcode&gt;.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">replace_op</span><span class="p">,</span><span class="n">mem</span>
+</pre></div>
+</div>
+<p>The option will look for a script opcode that writes to memory and modify the opcode to write the given value to the given address.</p>
+<p>By default this test will allocate memory and write write <code class="docutils literal notranslate"><span class="pre">0xB007B007</span></code> that location.</p>
+<p>After executing this, if the system is vulnerable to boot script modification, you should find the given value in the allocated memory location.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">replace_op</span><span class="p">,</span><span class="n">dispatch</span>
+</pre></div>
+</div>
+<p>The option will look for a dispatch opcode in the script and modify the opcode to point to a different entry point. The new entry point will contain a HLT instruction.</p>
+<p>After executing this, if the system is vulnerable to boot script modification, the system should hang on resume from S3.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">replace_op</span><span class="p">,</span><span class="n">dispatch_ep</span>
+</pre></div>
+</div>
+<p>The option will look for a dispatch opcode in the script and will modify memory at the entry point for that opcode. The modified instructions will contain a HLT instruction.</p>
+<p>After executing this, if the system is vulnerable to dispatch opcode entry point modification, the system should hang on resume from S3.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">add_op</span><span class="p">,</span><span class="o">&lt;</span><span class="n">reg_opcode</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">address</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="o">&lt;</span><span class="n">reg_opcode</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">pci_wr</span><span class="o">|</span><span class="n">mmio_wr</span><span class="o">|</span><span class="n">io_wr</span>
+</pre></div>
+</div>
+<p>The option will add a new opcode which writes to PCI config, MMIO or I/O registers with specified values.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">s3script_modify</span> <span class="o">-</span><span class="n">a</span> <span class="n">add_op</span><span class="p">,</span><span class="n">dispatch</span>
+</pre></div>
+</div>
+<p>The option will add a new DISPATCH opcode to the script with entry point to either existing or newly allocated memory.</p>
+<dl class="py class">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify">
+<em class="property">class </em><code class="sig-name descname">s3script_modify</code><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
+<dl class="py attribute">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.DISPATCH_ENTRYPOINT_INSTR">
+<code class="sig-name descname">DISPATCH_ENTRYPOINT_INSTR</code><em class="property"> = '\x90\x90ôô'</em><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.DISPATCH_ENTRYPOINT_INSTR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.get_bootscript">
+<code class="sig-name descname">get_bootscript</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.get_bootscript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.get_bootscript" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.is_supported">
+<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.is_supported" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method should be overwritten by the module returning True or False
+depending whether or not this module is supported in the currently running
+platform.
+To access the currently running platform use</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_add">
+<code class="sig-name descname">modify_s3_add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_opcode</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch">
+<code class="sig-name descname">modify_s3_dispatch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch_ep">
+<code class="sig-name descname">modify_s3_dispatch_ep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_dispatch_ep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch_ep" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_mem">
+<code class="sig-name descname">modify_s3_mem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">new_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_mem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_mem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_reg">
+<code class="sig-name descname">modify_s3_reg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">opcode</span></em>, <em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">new_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_reg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_reg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.modules.tools.uefi.reputation.html"
+                        title="previous chapter">reputation module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.modules.tools.uefi.scan_blocked.html"
+                        title="next chapter">scan_blocked module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.scan_blocked.html" title="scan_blocked module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.reputation.html" title="reputation module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.uefi.html" >uefi package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">s3script_modify module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

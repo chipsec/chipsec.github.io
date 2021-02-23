@@ -1,0 +1,479 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.spd &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spd</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.hal.spd</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Access to Memory (DRAM) Serial Presence Detect (SPD) EEPROM</span>
+
+<span class="sd">References:</span>
+
+<span class="sd">http://www.jedec.org/sites/default/files/docs/4_01_02R19.pdf</span>
+<span class="sd">http://www.jedec.org/sites/default/files/docs/4_01_02_10R17.pdf</span>
+<span class="sd">http://www.jedec.org/sites/default/files/docs/4_01_02_11R24.pdf</span>
+<span class="sd">http://www.jedec.org/sites/default/files/docs/4_01_02_12R23A.pdf</span>
+<span class="sd">http://www.simmtester.com/page/news/showpubnews.asp?num=184</span>
+<span class="sd">http://www.simmtester.com/page/news/showpubnews.asp?num=153</span>
+<span class="sd">http://www.simmtester.com/page/news/showpubnews.asp?num=101</span>
+<span class="sd">http://en.wikipedia.org/wiki/Serial_presence_detect</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span><span class="p">,</span> <span class="n">print_buffer</span>
+
+<span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">=</span> <span class="mh">0xA0</span> <span class="c1"># A2, A4, A6, A8, AA, AC, AE</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM0</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM1</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="mh">0x2</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM2</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="mh">0x4</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM3</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="mh">0x6</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM4</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="mh">0x8</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM5</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="mh">0xA</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM6</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="mh">0xC</span>
+<span class="n">SPD_SMBUS_ADDRESS_DIMM7</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="mh">0xE</span>
+<span class="n">MAX_DIMM_SPD_COUNT</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">SPD_DIMMS</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_DIMM_SPD_COUNT</span><span class="p">):</span>
+    <span class="n">SPD_DIMMS</span><span class="p">[</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;DIMM</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="n">SPD_DIMM_ADDRESSES</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_DIMM_SPD_COUNT</span><span class="p">):</span>
+    <span class="n">SPD_DIMM_ADDRESSES</span><span class="p">[</span><span class="s1">&#39;DIMM</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">SPD_SMBUS_ADDRESS</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span><span class="mi">2</span>
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># SPD Decode</span>
+<span class="c1">#</span>
+<span class="c1"># References:</span>
+<span class="c1"># http://www.jedec.org/sites/default/files/docs/4_01_02R19.pdf</span>
+<span class="c1"># http://www.jedec.org/sites/default/files/docs/4_01_02_10R17.pdf</span>
+<span class="c1"># http://www.jedec.org/sites/default/files/docs/4_01_02_11R24.pdf</span>
+<span class="c1"># http://www.jedec.org/sites/default/files/docs/4_01_02_12R23A.pdf</span>
+<span class="c1"># http://www.simmtester.com/page/news/showpubnews.asp?num=184</span>
+<span class="c1"># http://www.simmtester.com/page/news/showpubnews.asp?num=153</span>
+<span class="c1"># http://www.simmtester.com/page/news/showpubnews.asp?num=101</span>
+<span class="c1"># http://en.wikipedia.org/wiki/Serial_presence_detect</span>
+<span class="c1">#</span>
+<span class="c1"># @TODO: add decode of other fields</span>
+<span class="c1">#</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1">#</span>
+<span class="c1"># DDR/DDR2/DDR3/DDR4 SPD</span>
+<span class="c1">#</span>
+<span class="n">SPD_OFFSET_DRAM_DEVICE_TYPE</span>     <span class="o">=</span> <span class="mi">2</span> <span class="c1"># Fundamental Memory (DRAM) Type</span>
+
+<span class="c1">#</span>
+<span class="c1"># DDR SPD</span>
+<span class="c1">#</span>
+<span class="n">SPD_OFFSET_DDR_SPD_BYTES</span>               <span class="o">=</span> <span class="mi">0</span>
+<span class="n">SPD_OFFSET_DDR_SPD_SIZE</span>                <span class="o">=</span> <span class="mi">1</span>
+<span class="n">SPD_OFFSET_DDR_ROW_ADDRESS_COUNT</span>       <span class="o">=</span> <span class="mi">3</span>
+<span class="n">SPD_OFFSET_DDR_COL_ADDRESS_COUNT</span>       <span class="o">=</span> <span class="mi">4</span>
+<span class="n">SPD_OFFSET_DDR_BANKDS_COUNT</span>            <span class="o">=</span> <span class="mi">5</span>
+<span class="n">SPD_OFFSET_DDR_MODULE_WIDTH_LOW</span>        <span class="o">=</span> <span class="mi">6</span>
+<span class="n">SPD_OFFSET_DDR_MODULE_WIDTH_HIGH</span>       <span class="o">=</span> <span class="mi">7</span>
+<span class="n">SPD_OFFSET_DDR_VOLTAGE_IFACE_LEVEL</span>     <span class="o">=</span> <span class="mi">8</span>
+<span class="n">SPD_OFFSET_DDR_CLOCK_FREQUENCY</span>         <span class="o">=</span> <span class="mi">9</span>
+<span class="n">SPD_OFFSET_DDR_tAC</span>                     <span class="o">=</span> <span class="mi">10</span>
+<span class="n">SPD_OFFSET_DDR_DIMM_CONFIGURATION_TYPE</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">SPD_OFFSET_DDR_REFRESH_RATE_TYPE</span>       <span class="o">=</span> <span class="mi">12</span>
+<span class="n">SPD_OFFSET_DDR_PRIMARY_SDRAM_WIDTH</span>     <span class="o">=</span> <span class="mi">13</span>
+<span class="n">SPD_OFFSET_DDR_ECC_SDRAM_WIDTH</span>         <span class="o">=</span> <span class="mi">14</span>
+<span class="n">SPD_OFFSET_DDR_tCCD_MIN</span>                <span class="o">=</span> <span class="mi">15</span>
+
+<span class="c1">#</span>
+<span class="c1"># DDR3 SPD</span>
+<span class="c1">#</span>
+<span class="n">SPD_OFFSET_DDR3_SPD_BYTES</span>            <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># SPD Bytes Written, Device Size, CRC coverage/range</span>
+<span class="n">SPD_OFFSET_DDR3_SPD_REVISION</span>         <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># SPD Revision</span>
+<span class="n">SPD_OFFSET_DDR3_MODULE_TYPE</span>          <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Module Type</span>
+<span class="n">SPD_OFFSET_DDR3_SDRAM_DENSITY_BANKS</span>  <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># SDRAM Density and Banks</span>
+<span class="n">SPD_OFFSET_DDR3_SDRAM_ADDRESSING</span>     <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># SDRAM Addressing</span>
+<span class="n">SPD_OFFSET_DDR3_VDD</span>                  <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># Module Nominal Voltage, VDD</span>
+<span class="n">SPD_OFFSET_DDR3_MODULE_ORGANIZATION</span>  <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># Module Organization</span>
+<span class="n">SPD_OFFSET_DDR3_MEMORY_BUS_WIDTH_ECC</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Module Memory Bus Width</span>
+<span class="n">SPD_OFFSET_DDR3_FTB</span>                  <span class="o">=</span> <span class="mi">9</span>  <span class="c1"># Fine Time Base (FTB) Divident / Divisor</span>
+<span class="n">SPD_OFFSET_DDR3_MTB_DIVIDENT</span>         <span class="o">=</span> <span class="mi">10</span> <span class="c1"># Medium Time Base (MTB) Divident</span>
+<span class="n">SPD_OFFSET_DDR3_MTB_DIVISOR</span>          <span class="o">=</span> <span class="mi">11</span> <span class="c1"># Medium Time Base (MTB) Divisor</span>
+<span class="n">SPD_OFFSET_DDR3_tCK_MIN</span>              <span class="o">=</span> <span class="mi">12</span> <span class="c1"># SDRAM Minimum Cycle Time (tCKmin)</span>
+<span class="n">SPD_OFFSET_DDR3_RESERVED13</span>           <span class="o">=</span> <span class="mi">13</span> <span class="c1"># Reserved</span>
+<span class="n">SPD_OFFSET_DDR3_CAS_LATENCY_LOW</span>      <span class="o">=</span> <span class="mi">14</span> <span class="c1"># CAS Latencies Supported, LSB</span>
+<span class="n">SPD_OFFSET_DDR3_CAS_LATENCY_HIGH</span>     <span class="o">=</span> <span class="mi">15</span> <span class="c1"># CAS Latencies Supported, MSB</span>
+
+<span class="c1">#</span>
+<span class="c1"># DDR4 SPD</span>
+<span class="c1">#</span>
+<span class="c1"># Base Configuration and DRAM Parameters</span>
+<span class="n">SPD_OFFSET_DDR4_SPD_BYTES</span>            <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># SPD Bytes Written, Device Size, CRC coverage/range</span>
+<span class="n">SPD_OFFSET_DDR4_SPD_REVISION</span>         <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># SPD Revision</span>
+<span class="n">SPD_OFFSET_DDR4_MODULE_TYPE</span>          <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Module Type</span>
+<span class="n">SPD_OFFSET_DDR4_SDRAM_DENSITY_BANKS</span>  <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># SDRAM Density and Banks</span>
+<span class="n">SPD_OFFSET_DDR4_SDRAM_ADDRESSING</span>     <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># SDRAM Addresing</span>
+<span class="n">SPD_OFFSET_DDR4_SDRAM_PACKAGE_TYPE</span>   <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># SDRAM Package Type</span>
+<span class="n">SPD_OFFSET_DDR4_OPTIONAL_FEATURES</span>    <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># SDRAM Optional Features</span>
+<span class="n">SPD_OFFSET_DDR4_THERMAL_AND_REFRESH</span>  <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># SDRAM Thermal and Refresh Options</span>
+<span class="n">SPD_OFFSET_DDR4_OPTIONAL_FEATURES_1</span>  <span class="o">=</span> <span class="mi">9</span>  <span class="c1"># Other Optional Features</span>
+<span class="n">SPD_OFFSET_DDR4_RESERVED10</span>           <span class="o">=</span> <span class="mi">10</span> <span class="c1"># Reserved (must be 0x00)</span>
+<span class="n">SPD_OFFSET_DDR4_VDD</span>                  <span class="o">=</span> <span class="mi">11</span> <span class="c1"># Module Nominal Voltage, VDD</span>
+<span class="n">SPD_OFFSET_DDR4_MODULE_ORGANIZATION</span>  <span class="o">=</span> <span class="mi">12</span> <span class="c1"># Module Organization</span>
+<span class="n">SPD_OFFSET_DDR4_MEMORY_BUS_WIDTH_ECC</span> <span class="o">=</span> <span class="mi">13</span> <span class="c1"># Module Memory Bus Width</span>
+<span class="n">SPD_OFFSET_DDR4_MODULE_THERMAL_SENSOR</span><span class="o">=</span> <span class="mi">14</span> <span class="c1"># Module Thermal Sensor</span>
+<span class="n">SPD_OFFSET_DDR4_MODULE_TYPE_EXTENDED</span> <span class="o">=</span> <span class="mi">15</span> <span class="c1"># Extended Module Type</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># Fundamental Memory Type</span>
+<span class="c1"># Ref: http://www.jedec.org/sites/default/files/docs/4_01_02_01R12.pdf</span>
+<span class="c1">#</span>
+<span class="n">DRAM_DEVICE_TYPE_FPM_DRAM</span>        <span class="o">=</span> <span class="mh">0x1</span>
+<span class="n">DRAM_DEVICE_TYPE_EDO</span>             <span class="o">=</span> <span class="mh">0x2</span>
+<span class="n">DRAM_DEVICE_TYPE_PIPELINED_NIBBLE</span><span class="o">=</span> <span class="mh">0x3</span>
+<span class="n">DRAM_DEVICE_TYPE_SDR</span>             <span class="o">=</span> <span class="mh">0x4</span>
+<span class="n">DRAM_DEVICE_TYPE_MULTIPLEXED_ROM</span> <span class="o">=</span> <span class="mh">0x5</span>
+<span class="n">DRAM_DEVICE_TYPE_DDR</span>             <span class="o">=</span> <span class="mh">0x7</span>
+<span class="n">DRAM_DEVICE_TYPE_DDR2</span>            <span class="o">=</span> <span class="mh">0x8</span>
+<span class="n">DRAM_DEVICE_TYPE_DDR3</span>            <span class="o">=</span> <span class="mh">0x0B</span>
+<span class="n">DRAM_DEVICE_TYPE_DDR4</span>            <span class="o">=</span> <span class="mh">0x0C</span>
+<span class="n">DRAM_DEVICE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">DRAM_DEVICE_TYPE_FPM_DRAM</span><span class="p">:</span> <span class="s1">&#39;Standard Fast Page Mode DRAM&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_EDO</span><span class="p">:</span> <span class="s1">&#39;EDO DRAM&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_PIPELINED_NIBBLE</span><span class="p">:</span> <span class="s1">&#39;Pipelined Nibble&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_SDR</span><span class="p">:</span> <span class="s1">&#39;Sync DRAM (SDRAM)&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_MULTIPLEXED_ROM</span><span class="p">:</span> <span class="s1">&#39;Multiplexed ROM&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_DDR</span><span class="p">:</span> <span class="s1">&#39;DDR SDRAM&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_DDR2</span><span class="p">:</span> <span class="s1">&#39;DDR2 SDRAM&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_DDR3</span><span class="p">:</span> <span class="s1">&#39;DDR3 SDRAM&#39;</span><span class="p">,</span>
+  <span class="n">DRAM_DEVICE_TYPE_DDR4</span><span class="p">:</span> <span class="s1">&#39;DDR4 SDRAM&#39;</span>
+<span class="p">}</span>
+
+<span class="n">MODULE_TYPE_UNDEFINED</span>       <span class="o">=</span> <span class="mh">0x0</span>
+<span class="n">MODULE_TYPE_RDIMM</span>           <span class="o">=</span> <span class="mh">0x1</span>
+<span class="n">MODULE_TYPE_UDIMM</span>           <span class="o">=</span> <span class="mh">0x2</span>
+<span class="n">MODULE_TYPE_SODIMM</span>          <span class="o">=</span> <span class="mh">0x3</span>
+<span class="n">MODULE_TYPE_LRDIMM</span>          <span class="o">=</span> <span class="mh">0x4</span>
+<span class="n">MODULE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">MODULE_TYPE_UNDEFINED</span><span class="p">:</span> <span class="s1">&#39;Undefined&#39;</span><span class="p">,</span>
+  <span class="n">MODULE_TYPE_RDIMM</span><span class="p">:</span>     <span class="s1">&#39;Registered Long DIMM&#39;</span><span class="p">,</span>
+  <span class="n">MODULE_TYPE_UDIMM</span><span class="p">:</span>     <span class="s1">&#39;Unbuffered Long DIMM&#39;</span><span class="p">,</span>
+  <span class="n">MODULE_TYPE_SODIMM</span><span class="p">:</span>    <span class="s1">&#39;Small Outline DIMM&#39;</span><span class="p">,</span>
+  <span class="n">MODULE_TYPE_LRDIMM</span><span class="p">:</span>    <span class="s1">&#39;LR-DIMM&#39;</span>
+<span class="p">}</span>
+
+<span class="n">SPD_REVISION_0_0</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">SPD_REVISION_0_7</span> <span class="o">=</span> <span class="mh">0x07</span>
+<span class="n">SPD_REVISION_0_8</span> <span class="o">=</span> <span class="mh">0x08</span>
+<span class="n">SPD_REVISION_0_9</span> <span class="o">=</span> <span class="mh">0x09</span>
+<span class="n">SPD_REVISION_1_0</span> <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">SPD_REVISION_1_1</span> <span class="o">=</span> <span class="mh">0x11</span>
+<span class="n">SPD_REVISION_1_2</span> <span class="o">=</span> <span class="mh">0x12</span>
+<span class="n">SPD_REVISION_1_3</span> <span class="o">=</span> <span class="mh">0x13</span>
+<div class="viewcode-block" id="SPD_REVISION"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD_REVISION">[docs]</a><span class="k">def</span> <span class="nf">SPD_REVISION</span><span class="p">(</span><span class="n">revision</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">.</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">revision</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span> <span class="n">revision</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">)</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="dram_device_type_name"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.dram_device_type_name">[docs]</a><span class="k">def</span> <span class="nf">dram_device_type_name</span><span class="p">(</span> <span class="n">dram_type</span> <span class="p">):</span>
+    <span class="n">dt_name</span> <span class="o">=</span> <span class="n">DRAM_DEVICE_TYPE</span><span class="p">[</span><span class="n">dram_type</span><span class="p">]</span> <span class="k">if</span> <span class="n">dram_type</span> <span class="ow">in</span> <span class="n">DRAM_DEVICE_TYPE</span> <span class="k">else</span> <span class="s1">&#39;unknown&#39;</span>
+    <span class="k">return</span> <span class="n">dt_name</span></div>
+
+<div class="viewcode-block" id="module_type_name"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.module_type_name">[docs]</a><span class="k">def</span> <span class="nf">module_type_name</span><span class="p">(</span> <span class="n">module_type</span> <span class="p">):</span>
+    <span class="n">mt_name</span> <span class="o">=</span> <span class="n">MODULE_TYPE</span><span class="p">[</span><span class="n">module_type</span><span class="p">]</span> <span class="k">if</span> <span class="n">module_type</span> <span class="ow">in</span> <span class="n">MODULE_TYPE</span> <span class="k">else</span> <span class="s1">&#39;unknown&#39;</span>
+    <span class="k">return</span> <span class="n">mt_name</span></div>
+
+
+<span class="n">SPD_DDR_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;=4B&#39;</span>
+<div class="viewcode-block" id="SPD_DDR"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD_DDR">[docs]</a><span class="k">class</span> <span class="nc">SPD_DDR</span><span class="p">(</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SPD_DDR&#39;</span><span class="p">,</span> <span class="s1">&#39;SPDBytes TotalBytes DeviceType RowAddressCount&#39;</span><span class="p">)</span> <span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;------------------------------------------------------------------</span>
+<span class="s2">SPD DDR</span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">[0] Number of SPD bytes written: 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[1] Total number of bytes      : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[2] DRAM Memory Type           : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[3] Number of Row Addresses    : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">SPDBytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">TotalBytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">,</span> <span class="n">dram_device_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">RowAddressCount</span> <span class="p">)</span></div>
+
+<span class="n">SPD_DDR2_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;=4B&#39;</span>
+<div class="viewcode-block" id="SPD_DDR2"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD_DDR2">[docs]</a><span class="k">class</span> <span class="nc">SPD_DDR2</span><span class="p">(</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SPD_DDR2&#39;</span><span class="p">,</span> <span class="s1">&#39;SPDBytes TotalBytes DeviceType RowAddressCount&#39;</span><span class="p">)</span> <span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;------------------------------------------------------------------</span>
+<span class="s2">SPD DDR2</span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">[0] Number of SPD bytes written: 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[1] Total number of bytes      : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[2] DRAM Memory Type           : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[3] Number of Row Addresses    : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">SPDBytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">TotalBytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">,</span> <span class="n">dram_device_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">RowAddressCount</span> <span class="p">)</span></div>
+
+<span class="n">SPD_DDR3_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;=16B&#39;</span>
+<div class="viewcode-block" id="SPD_DDR3"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD_DDR3">[docs]</a><span class="k">class</span> <span class="nc">SPD_DDR3</span><span class="p">(</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SPD_DDR3&#39;</span><span class="p">,</span> <span class="s1">&#39;SPDBytes Revision DeviceType ModuleType ChipSize Addressing Voltages ModuleOrg BusWidthECC FTB MTBDivident MTBDivisor tCKMin RsvdD CASLo CASHi&#39;</span><span class="p">)</span> <span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;------------------------------------------------------------------</span>
+<span class="s2">SPD DDR3</span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">[0x00] SPD Bytes Written, Device Size, CRC: 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x01] SPD Revision                       : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[0x02] DRAM Memory Type                   : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[0x03] Module Type                        : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[0x04] SDRAM Density and Banks            : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x05] SDRAM Addressing (Row/Column Bits) : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x06] Module Nominal Voltage, VDD        : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x07] Module Organization                : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x08] Module Memory Bus Width, ECC       : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x09] FTB Divident/Divisor               : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0A] MTB Divident                       : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0B] MTB Divisor                        : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0C] SDRAM Minimum Cycle Time (tCKmin)  : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0D] Reserved                           : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0E] CAS Latencies Supported (LSB)      : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0F] CAS Latencies Supported (MSB)      : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">SPDBytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">,</span> <span class="n">SPD_REVISION</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">,</span> <span class="n">dram_device_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span> <span class="n">module_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">),</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">ChipSize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Addressing</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Voltages</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ModuleOrg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BusWidthECC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">FTB</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MTBDivident</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MTBDivisor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tCKMin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">RsvdD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CASLo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CASHi</span> <span class="p">)</span></div>
+
+<span class="n">SPD_DDR4_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;=16B&#39;</span>
+<div class="viewcode-block" id="SPD_DDR4"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD_DDR4">[docs]</a><span class="k">class</span> <span class="nc">SPD_DDR4</span><span class="p">(</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SPD_DDR4&#39;</span><span class="p">,</span> <span class="s1">&#39;SPDBytes Revision DeviceType ModuleType Density Addressing PackageType OptFeatures ThernalRefresh OptFeatures1 ReservedA VDD ModuleOrg BusWidthECC ThermSensor ModuleTypeExt&#39;</span><span class="p">)</span> <span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;------------------------------------------------------------------</span>
+<span class="s2">SPD DDR4</span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">Base Configuration and DRAM Parameters</span>
+<span class="s2">[0x00] SPD Bytes Written, Device Size, CRC: 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x01] SPD Revision                       : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[0x02] DRAM Memory Type                   : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[0x03] Module Type                        : 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)</span>
+<span class="s2">[0x04] SDRAM Density and Banks            : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x05] SDRAM Addresing (Row/Column Bits)  : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x06] SDRAM Package Type                 : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x07] SDRAM Optional Features            : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x08] SDRAM Thermal and Refresh Options  : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x09] Other Optional Features            : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0A] Reserved (== 0x00)                 : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0B] Module Nominal Voltage, VDD        : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0C] Module Organization                : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0D] Module Memory Bus Width            : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0E] Module Thermal Sensor              : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">[0x0F] Extended Module Type               : 0x</span><span class="si">{:02X}</span><span class="s2"></span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">SPDBytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">,</span> <span class="n">SPD_REVISION</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">,</span> <span class="n">dram_device_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DeviceType</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">,</span> <span class="n">module_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">),</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">Density</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Addressing</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PackageType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OptFeatures</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ThernalRefresh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OptFeatures1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ReservedA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">VDD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ModuleOrg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BusWidthECC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ThermSensor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ModuleTypeExt</span><span class="p">)</span></div>
+
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># Main SPD HAL component class</span>
+<span class="c1">#</span>
+<span class="c1">###############################################################################</span>
+
+<div class="viewcode-block" id="SPD"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD">[docs]</a><span class="k">class</span> <span class="nc">SPD</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">smbus</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span> <span class="o">=</span> <span class="n">smbus</span>
+
+<div class="viewcode-block" id="SPD.read_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.read_byte">[docs]</a>    <span class="k">def</span> <span class="nf">read_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">device</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SPD.write_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.write_byte">[docs]</a>    <span class="k">def</span> <span class="nf">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="n">device</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SPD.read_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.read_range">[docs]</a>    <span class="k">def</span> <span class="nf">read_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="mh">0xFF</span><span class="p">)]</span> <span class="o">*</span><span class="n">size</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">buffer</span></div>
+
+<div class="viewcode-block" id="SPD.write_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.write_range">[docs]</a>    <span class="k">def</span> <span class="nf">write_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="nb">ord</span><span class="p">(</span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">device</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="SPD.dump_spd_rom"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.dump_spd_rom">[docs]</a>    <span class="k">def</span> <span class="nf">dump_spd_rom</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_range</span><span class="p">(</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Decoding certain bytes of DIMM SPD: may be dependent on the DRAM type</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="SPD.getDRAMDeviceType"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.getDRAMDeviceType">[docs]</a>    <span class="k">def</span> <span class="nf">getDRAMDeviceType</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="n">dram_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">SPD_OFFSET_DRAM_DEVICE_TYPE</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] DRAM Device Type (byte 2): 0x</span><span class="si">{:01X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">dram_type</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">dram_type</span></div>
+
+<div class="viewcode-block" id="SPD.getModuleType"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.getModuleType">[docs]</a>    <span class="k">def</span> <span class="nf">getModuleType</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">SPD_OFFSET_DDR3_MODULE_TYPE</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] Module Type (byte 3): 0x</span><span class="si">{:01X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">module_type</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">module_type</span></div>
+
+<div class="viewcode-block" id="SPD.isECC"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.isECC">[docs]</a>    <span class="k">def</span> <span class="nf">isECC</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="n">device_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDRAMDeviceType</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
+        <span class="n">ecc_supported</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">ecc_off</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ecc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span>   <span class="n">DRAM_DEVICE_TYPE_DDR3</span> <span class="o">==</span> <span class="n">device_type</span><span class="p">:</span>
+            <span class="n">ecc_off</span> <span class="o">=</span> <span class="n">SPD_OFFSET_DDR3_MEMORY_BUS_WIDTH_ECC</span>
+            <span class="n">ecc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">ecc_off</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
+            <span class="n">ecc_supported</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xB</span> <span class="o">==</span> <span class="n">ecc</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">DRAM_DEVICE_TYPE_DDR4</span> <span class="o">==</span> <span class="n">device_type</span><span class="p">:</span>
+            <span class="n">ecc_off</span> <span class="o">=</span> <span class="n">SPD_OFFSET_DDR4_MEMORY_BUS_WIDTH_ECC</span>
+            <span class="n">ecc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">ecc_off</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
+            <span class="n">ecc_supported</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xB</span> <span class="o">==</span> <span class="n">ecc</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">DRAM_DEVICE_TYPE_DDR</span> <span class="o">==</span> <span class="n">device_type</span> <span class="ow">or</span> <span class="n">DRAM_DEVICE_TYPE_DDR2</span> <span class="o">==</span> <span class="n">device_type</span><span class="p">:</span>
+            <span class="n">ecc_off</span> <span class="o">=</span> <span class="n">SPD_OFFSET_DDR_DIMM_CONFIGURATION_TYPE</span>
+            <span class="n">ecc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">ecc_off</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
+            <span class="n">ecc_supported</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x2</span> <span class="o">==</span> <span class="n">ecc</span><span class="p">)</span>
+            <span class="n">ecc_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">SPD_OFFSET_DDR_ECC_SDRAM_WIDTH</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] DDR/DDR2 ECC width (byte </span><span class="si">{:d}</span><span class="s2">): 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">SPD_OFFSET_DDR_ECC_SDRAM_WIDTH</span><span class="p">,</span> <span class="n">ecc_width</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ecc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] Unable to determine ECC support&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] ECC is </span><span class="si">{}</span><span class="s2">supported by the DIMM (byte </span><span class="si">{:d}</span><span class="s2"> = 0x</span><span class="si">{:02X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">ecc_supported</span> <span class="k">else</span> <span class="s1">&#39;not &#39;</span><span class="p">,</span> <span class="n">ecc_off</span><span class="p">,</span> <span class="n">ecc</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ecc_supported</span></div>
+
+
+<div class="viewcode-block" id="SPD.detect"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.detect">[docs]</a>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="n">_dimms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">SPD_DIMMS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSPDPresent</span><span class="p">(</span> <span class="n">d</span> <span class="p">):</span> <span class="n">_dimms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">d</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;Detected the following SPD devices:&quot;</span> <span class="p">)</span>
+            <span class="k">for</span> <span class="n">_dimm</span> <span class="ow">in</span> <span class="n">_dimms</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SPD_DIMMS</span><span class="p">[</span><span class="n">_dimm</span><span class="p">],</span> <span class="n">_dimm</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">_dimms</span></div>
+
+<div class="viewcode-block" id="SPD.isSPDPresent"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.isSPDPresent">[docs]</a>    <span class="k">def</span> <span class="nf">isSPDPresent</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="n">device_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDRAMDeviceType</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
+        <span class="n">is_spd_present</span> <span class="o">=</span> <span class="p">(</span><span class="n">device_type</span> <span class="o">!=</span> <span class="mh">0xFF</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] Detecting SPD.. </span><span class="si">{}</span><span class="s2">found (DRAM memory type = 0x</span><span class="si">{:X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">is_spd_present</span> <span class="k">else</span> <span class="s1">&#39;not &#39;</span><span class="p">,</span> <span class="n">device_type</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">is_spd_present</span></div>
+
+
+<div class="viewcode-block" id="SPD.decode"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="n">spd</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">device_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDRAMDeviceType</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
+        <span class="n">spd_rom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dump_spd_rom</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] Serial Presence Detect (SPD) EEPROM contents:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">print_buffer</span><span class="p">(</span> <span class="n">spd_rom</span> <span class="p">)</span>
+        <span class="n">spd_buffer</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spd_rom</span><span class="p">)</span>
+
+        <span class="k">if</span>   <span class="n">DRAM_DEVICE_TYPE_DDR</span>  <span class="o">==</span> <span class="n">device_type</span><span class="p">:</span>
+            <span class="n">spd</span> <span class="o">=</span> <span class="n">SPD_DDR</span> <span class="p">(</span> <span class="o">*</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span> <span class="n">SPD_DDR_FORMAT</span><span class="p">,</span>  <span class="n">spd_buffer</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">DRAM_DEVICE_TYPE_DDR2</span> <span class="o">==</span> <span class="n">device_type</span><span class="p">:</span>
+            <span class="n">spd</span> <span class="o">=</span> <span class="n">SPD_DDR2</span><span class="p">(</span> <span class="o">*</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span> <span class="n">SPD_DDR2_FORMAT</span><span class="p">,</span> <span class="n">spd_buffer</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">DRAM_DEVICE_TYPE_DDR3</span> <span class="o">==</span> <span class="n">device_type</span><span class="p">:</span>
+            <span class="n">spd</span> <span class="o">=</span> <span class="n">SPD_DDR3</span><span class="p">(</span> <span class="o">*</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span> <span class="n">SPD_DDR3_FORMAT</span><span class="p">,</span> <span class="n">spd_buffer</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">DRAM_DEVICE_TYPE_DDR4</span> <span class="o">==</span> <span class="n">device_type</span><span class="p">:</span>
+            <span class="n">spd</span> <span class="o">=</span> <span class="n">SPD_DDR4</span><span class="p">(</span> <span class="o">*</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span> <span class="n">SPD_DDR4_FORMAT</span><span class="p">,</span> <span class="n">spd_buffer</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;[spd] Unsupported SPD format&quot;</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">spd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">spd</span> <span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spd</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.common.remap &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.remap</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.common.remap</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">`Preventing &amp; Detecting Xen Hypervisor Subversions &lt;http://www.invisiblethingslab.com/resources/bh08/part2-full.pdf&gt;`_ by Joanna Rutkowska &amp; Rafal Wojtczuk</span>
+
+<span class="sd">Check Memory Remapping Configuration</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">MTAG_HWCONFIG</span><span class="p">,</span> <span class="n">MTAG_SMM</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">BIT32</span><span class="p">,</span> <span class="n">ALIGNED_1MB</span>
+
+<span class="n">_MODULE_NAME</span> <span class="o">=</span> <span class="s1">&#39;remap&#39;</span>
+
+<span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_SMM</span><span class="p">,</span> <span class="n">MTAG_HWCONFIG</span><span class="p">]</span>
+
+
+<span class="n">_REMAP_ADDR_MASK</span> <span class="o">=</span> <span class="mh">0x7FFFF00000</span>
+<span class="n">_TOLUD_MASK</span>      <span class="o">=</span> <span class="mh">0xFFFFF000</span>
+
+<div class="viewcode-block" id="remap"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap">[docs]</a><span class="k">class</span> <span class="nc">remap</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="remap.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_core</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="remap.check_remap_config"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.check_remap_config">[docs]</a>    <span class="k">def</span> <span class="nf">check_remap_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;Memory Remapping Configuration&quot;</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_REMAPBASE&#39;</span>  <span class="p">)</span> <span class="ow">or</span> \
+           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_REMAPLIMIT&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
+           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_TOUUD&#39;</span>      <span class="p">)</span> <span class="ow">or</span> \
+           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_TOLUD&#39;</span>      <span class="p">)</span> <span class="ow">or</span> \
+           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_TSEGMB&#39;</span>     <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Couldn&#39;t find definition of required registers (REMAP*, TOLUD, TOUUD, TSEGMB)&quot;</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">ERROR</span>
+
+        <span class="n">remapbase</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_REMAPBASE&#39;</span> <span class="p">)</span>
+        <span class="n">remaplimit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_REMAPLIMIT&#39;</span> <span class="p">)</span>
+        <span class="n">touud</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_TOUUD&#39;</span> <span class="p">)</span>
+        <span class="n">tolud</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_TOLUD&#39;</span> <span class="p">)</span>
+        <span class="n">tsegmb</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;PCI0.0.0_TSEGMB&#39;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Registers:&quot;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   TOUUD     : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">touud</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   REMAPLIMIT: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remaplimit</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   REMAPBASE : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remapbase</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   TOLUD     : 0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tolud</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   TSEGMB    : 0x</span><span class="si">{:08X}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tsegmb</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">ia_untrusted</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;MSR_BIOS_DONE&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span><span class="s1">&#39;MSR_BIOS_DONE&#39;</span><span class="p">,</span> <span class="s1">&#39;IA_UNTRUSTED&#39;</span><span class="p">):</span>
+            <span class="n">ia_untrusted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;MSR_BIOS_DONE&#39;</span><span class="p">,</span> <span class="s1">&#39;IA_UNTRUSTED&#39;</span><span class="p">)</span>
+        <span class="n">remapbase_lock</span>  <span class="o">=</span> <span class="n">remapbase</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">remaplimit_lock</span> <span class="o">=</span> <span class="n">remaplimit</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">touud_lock</span>      <span class="o">=</span> <span class="n">touud</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">tolud_lock</span>      <span class="o">=</span> <span class="n">tolud</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">tsegmb_lock</span>     <span class="o">=</span> <span class="n">tsegmb</span> <span class="o">&amp;</span> <span class="mh">0x1</span>
+        <span class="n">remapbase</span>  <span class="o">&amp;=</span> <span class="n">_REMAP_ADDR_MASK</span>
+        <span class="n">remaplimit</span> <span class="o">&amp;=</span> <span class="n">_REMAP_ADDR_MASK</span>
+        <span class="c1">#remaplimit |= 0xFFFFF</span>
+        <span class="n">touud</span>      <span class="o">&amp;=</span> <span class="n">_REMAP_ADDR_MASK</span>
+        <span class="n">tolud</span>      <span class="o">&amp;=</span> <span class="n">_TOLUD_MASK</span>
+        <span class="n">tsegmb</span>     <span class="o">&amp;=</span> <span class="n">_TOLUD_MASK</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Memory Map:&quot;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   Top Of Upper Memory: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">touud</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   Remap Limit Address: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remaplimit</span><span class="o">|</span><span class="mh">0xFFFFF</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   Remap Base Address : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remapbase</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   4GB                : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">BIT32</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   Top Of Low Memory  : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tolud</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   TSEG (SMRAM) Base  : 0x</span><span class="si">{:016X}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tsegmb</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">remap_ok</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] checking memory remap configuration..&quot;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">remapbase</span> <span class="o">&gt;</span> <span class="n">remaplimit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   Memory Remap is disabled&quot;</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*]   Memory Remap is enabled&quot;</span> <span class="p">)</span>
+            <span class="n">remaplimit_addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">remaplimit</span><span class="o">|</span><span class="mh">0xFFFFF</span><span class="p">)</span>
+            <span class="n">ok</span> <span class="o">=</span> <span class="p">((</span><span class="n">remaplimit_addr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">touud</span><span class="p">)</span>
+            <span class="n">remap_ok</span> <span class="o">=</span> <span class="n">remap_ok</span> <span class="ow">and</span> <span class="n">ok</span>
+            <span class="k">if</span> <span class="n">ok</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;  Remap window configuration is correct: REMAPBASE &lt;= REMAPLIMIT &lt; TOUUD&quot;</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;  Remap window configuration is not correct&quot;</span> <span class="p">)</span>
+
+        <span class="n">ok</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">tolud</span> <span class="o">&amp;</span> <span class="n">ALIGNED_1MB</span><span class="p">)</span>     <span class="ow">and</span> \
+             <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">touud</span> <span class="o">&amp;</span> <span class="n">ALIGNED_1MB</span><span class="p">)</span>     <span class="ow">and</span> \
+             <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">remapbase</span> <span class="o">&amp;</span> <span class="n">ALIGNED_1MB</span><span class="p">)</span> <span class="ow">and</span> \
+             <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">remaplimit</span> <span class="o">&amp;</span> <span class="n">ALIGNED_1MB</span><span class="p">)</span>
+        <span class="n">remap_ok</span> <span class="o">=</span> <span class="n">remap_ok</span> <span class="ow">and</span> <span class="n">ok</span>
+        <span class="k">if</span> <span class="n">ok</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;  All addresses are 1MB aligned&quot;</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;  Not all addresses are 1MB aligned&quot;</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] checking if memory remap configuration is locked..&quot;</span> <span class="p">)</span>
+        <span class="n">ok</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">touud_lock</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">ia_untrusted</span><span class="p">)</span>
+        <span class="n">remap_ok</span> <span class="o">=</span> <span class="n">remap_ok</span> <span class="ow">and</span> <span class="n">ok</span>
+        <span class="k">if</span> <span class="n">ok</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;  TOUUD is locked&quot;</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;  TOUUD is not locked&quot;</span> <span class="p">)</span>
+
+        <span class="n">ok</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">tolud_lock</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">ia_untrusted</span><span class="p">)</span>
+        <span class="n">remap_ok</span> <span class="o">=</span> <span class="n">remap_ok</span> <span class="ow">and</span> <span class="n">ok</span>
+        <span class="k">if</span> <span class="n">ok</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;  TOLUD is locked&quot;</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;  TOLUD is not locked&quot;</span> <span class="p">)</span>
+
+        <span class="n">ok</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">remapbase_lock</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">remaplimit_lock</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">ia_untrusted</span><span class="p">)</span>
+        <span class="n">remap_ok</span> <span class="o">=</span> <span class="n">remap_ok</span> <span class="ow">and</span> <span class="n">ok</span>
+        <span class="k">if</span> <span class="n">ok</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;  REMAPBASE and REMAPLIMIT are locked&quot;</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;  REMAPBASE and REMAPLIMIT are not locked&quot;</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">remap_ok</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span> <span class="s2">&quot;Memory Remap is configured correctly and locked&quot;</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed_check</span><span class="p">(</span> <span class="s2">&quot;Memory Remap is not properly configured/locked. Remaping attack may be possible&quot;</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># run( module_argv )</span>
+    <span class="c1"># Required function: run here all tests from this module</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="remap.run"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_remap_config</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.remap</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pci module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pcidb module" href="chipsec.hal.pcidb.html" />
+    <link rel="prev" title="paging module" href="chipsec.hal.paging.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.pcidb.html" title="pcidb module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.paging.html" title="paging module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pci module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.pci">
+<span id="pci-module"></span><h1>pci module<a class="headerlink" href="#module-chipsec.hal.pci" title="Permalink to this headline">¶</a></h1>
+<p>Access to of PCI/PCIe device hierarchy
+- enumerating PCI/PCIe devices
+- read/write access to PCI configuration headers/registers
+- enumerating PCI expansion (option) ROMs
+- identifying PCI/PCIe devices MMIO and I/O ranges (BARs)</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0x88</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0x88</span><span class="p">,</span> <span class="mh">0x1A</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">enumerate_devices</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">enumerate_xroms</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">find_XROM</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="mh">0xFED00000</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">get_device_bars</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">get_DIDVID</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="chipsec.hal.pci.EFI_XROM_HEADER">
+<em class="property">class </em><code class="sig-name descname">EFI_XROM_HEADER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Signature</span></em>, <em class="sig-param"><span class="n">InitSize</span></em>, <em class="sig-param"><span class="n">EfiSignature</span></em>, <em class="sig-param"><span class="n">EfiSubsystem</span></em>, <em class="sig-param"><span class="n">EfiMachineType</span></em>, <em class="sig-param"><span class="n">CompressType</span></em>, <em class="sig-param"><span class="n">Reserved</span></em>, <em class="sig-param"><span class="n">EfiImageHeaderOffset</span></em>, <em class="sig-param"><span class="n">PCIROffset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#EFI_XROM_HEADER"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.EFI_XROM_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.pci.EFI_XROM_HEADER" title="chipsec.hal.pci.EFI_XROM_HEADER"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.pci.EFI_XROM_HEADER</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.pci.PCI_XROM_HEADER">
+<em class="property">class </em><code class="sig-name descname">PCI_XROM_HEADER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Signature</span></em>, <em class="sig-param"><span class="n">ArchSpecific</span></em>, <em class="sig-param"><span class="n">PCIROffset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#PCI_XROM_HEADER"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.PCI_XROM_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.pci.PCI_XROM_HEADER" title="chipsec.hal.pci.PCI_XROM_HEADER"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.pci.PCI_XROM_HEADER</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.pci.Pci">
+<em class="property">class </em><code class="sig-name descname">Pci</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.calc_bar_size">
+<code class="sig-name descname">calc_bar_size</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">fun</span></em>, <em class="sig-param"><span class="n">off</span></em>, <em class="sig-param"><span class="n">reg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.calc_bar_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.calc_bar_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.dump_pci_config">
+<code class="sig-name descname">dump_pci_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">function</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.dump_pci_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.dump_pci_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.enumerate_devices">
+<code class="sig-name descname">enumerate_devices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.enumerate_devices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.enumerate_devices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.enumerate_xroms">
+<code class="sig-name descname">enumerate_xroms</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">try_init</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">xrom_dump</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">xrom_addr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.enumerate_xroms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.enumerate_xroms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.find_XROM">
+<code class="sig-name descname">find_XROM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">fun</span></em>, <em class="sig-param"><span class="n">try_init</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">xrom_dump</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">xrom_addr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.find_XROM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.find_XROM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.get_DIDVID">
+<code class="sig-name descname">get_DIDVID</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">fun</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.get_DIDVID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.get_DIDVID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.get_device_bars">
+<code class="sig-name descname">get_device_bars</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">fun</span></em>, <em class="sig-param"><span class="n">bCalcSize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.get_device_bars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.get_device_bars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.is_enabled">
+<code class="sig-name descname">is_enabled</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">fun</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.is_enabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.is_enabled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.parse_XROM">
+<code class="sig-name descname">parse_XROM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xrom</span></em>, <em class="sig-param"><span class="n">xrom_dump</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.parse_XROM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.parse_XROM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.print_pci_config_all">
+<code class="sig-name descname">print_pci_config_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.print_pci_config_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.print_pci_config_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.read_byte">
+<code class="sig-name descname">read_byte</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">address</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.read_byte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.read_byte" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.read_dword">
+<code class="sig-name descname">read_dword</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">address</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.read_dword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.read_dword" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.read_word">
+<code class="sig-name descname">read_word</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">address</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.read_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.read_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.write_byte">
+<code class="sig-name descname">write_byte</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">byte_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.write_byte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.write_byte" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.write_dword">
+<code class="sig-name descname">write_dword</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">dword_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.write_dword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.write_dword" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.pci.Pci.write_word">
+<code class="sig-name descname">write_word</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">word_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#Pci.write_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.Pci.write_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.pci.PciDeviceNotFoundError">
+<em class="property">exception </em><code class="sig-name descname">PciDeviceNotFoundError</code><a class="reference internal" href="../_modules/chipsec/hal/pci.html#PciDeviceNotFoundError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.PciDeviceNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.pci.PciRuntimeError">
+<em class="property">exception </em><code class="sig-name descname">PciRuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/pci.html#PciRuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.PciRuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.pci.XROM">
+<em class="property">class </em><code class="sig-name descname">XROM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bus</span></em>, <em class="sig-param"><span class="n">dev</span></em>, <em class="sig-param"><span class="n">fun</span></em>, <em class="sig-param"><span class="n">en</span></em>, <em class="sig-param"><span class="n">base</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#XROM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.XROM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.pci.XROM_HEADER">
+<em class="property">class </em><code class="sig-name descname">XROM_HEADER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Signature</span></em>, <em class="sig-param"><span class="n">InitSize</span></em>, <em class="sig-param"><span class="n">InitEP</span></em>, <em class="sig-param"><span class="n">Reserved</span></em>, <em class="sig-param"><span class="n">PCIROffset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#XROM_HEADER"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.XROM_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.pci.XROM_HEADER" title="chipsec.hal.pci.XROM_HEADER"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.pci.XROM_HEADER</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.pci.get_device_name_by_didvid">
+<code class="sig-name descname">get_device_name_by_didvid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vid</span></em>, <em class="sig-param"><span class="n">did</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#get_device_name_by_didvid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.get_device_name_by_didvid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.pci.get_vendor_name_by_vid">
+<code class="sig-name descname">get_vendor_name_by_vid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vid</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#get_vendor_name_by_vid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.get_vendor_name_by_vid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.pci.print_pci_XROMs">
+<code class="sig-name descname">print_pci_XROMs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_xroms</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#print_pci_XROMs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.print_pci_XROMs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.pci.print_pci_devices">
+<code class="sig-name descname">print_pci_devices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_devices</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/pci.html#print_pci_devices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.pci.print_pci_devices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.paging.html"
+                        title="previous chapter">paging module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.pcidb.html"
+                        title="next chapter">pcidb module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.pcidb.html" title="pcidb module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.paging.html" title="paging module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pci module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

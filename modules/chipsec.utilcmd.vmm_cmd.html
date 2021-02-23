@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vmm_cmd module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="hal package" href="chipsec.hal.html" />
+    <link rel="prev" title="vmem_cmd module" href="chipsec.utilcmd.vmem_cmd.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.html" title="hal package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.vmem_cmd.html" title="vmem_cmd module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">vmm_cmd module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.utilcmd.vmm_cmd">
+<span id="vmm-cmd-module"></span><h1>vmm_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.vmm_cmd" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand">
+<em class="property">class </em><code class="sig-name descname">VMMCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="o">&lt;</span><span class="n">rax</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rbx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rcx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rdx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rdi</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rsi</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">r8</span><span class="p">]</span> <span class="p">[</span><span class="n">r9</span><span class="p">]</span> <span class="p">[</span><span class="n">r10</span><span class="p">]</span> <span class="p">[</span><span class="n">r11</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="o">&lt;</span><span class="n">eax</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ebx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ecx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">edx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">edi</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">esi</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">pt</span><span class="o">|</span><span class="n">ept</span> <span class="o">&lt;</span><span class="n">ept_pointer</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;.&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="mi">32</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">pt</span> <span class="mh">0x524B01E</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span> <span class="mi">0</span><span class="p">:</span><span class="mf">6.0</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.requires_driver">
+<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.requires_driver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.virtio">
+<code class="sig-name descname">virtio</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.virtio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.virtio" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.utilcmd.vmem_cmd.html"
+                        title="previous chapter">vmem_cmd module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.html"
+                        title="next chapter">hal package</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.html" title="hal package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.vmem_cmd.html" title="vmem_cmd module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">vmm_cmd module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

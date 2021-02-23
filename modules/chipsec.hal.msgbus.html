@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>msgbus module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="msr module" href="chipsec.hal.msr.html" />
+    <link rel="prev" title="mmio module" href="chipsec.hal.mmio.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.msr.html" title="msr module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.mmio.html" title="mmio module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">msgbus module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.msgbus">
+<span id="msgbus-module"></span><h1>msgbus module<a class="headerlink" href="#module-chipsec.hal.msgbus" title="Permalink to this headline">¶</a></h1>
+<p>Access to message bus (IOSF sideband) interface registers on Intel SoCs</p>
+<p>References:</p>
+<ul class="simple">
+<li><p>Intel(R) Atom(TM) Processor E3800 Product Family Datasheet, May 2016, Revision 4.0
+<a class="reference external" href="http://www.intel.com/content/www/us/en/embedded/products/bay-trail/atom-e3800-family-datasheet.html">http://www.intel.com/content/www/us/en/embedded/products/bay-trail/atom-e3800-family-datasheet.html</a> (sections 3.6 and 13.4.6 - 13.4.8)</p></li>
+<li><p>Intel(R) Atom(TM) Processor D2000 and N2000 Series Datasheet, Volume 2, July 2012, Revision 003
+<a class="reference external" href="http://www.intel.com/content/dam/doc/datasheet/atom-d2000-n2000-vol-2-datasheet.pdf">http://www.intel.com/content/dam/doc/datasheet/atom-d2000-n2000-vol-2-datasheet.pdf</a> (section 1.10.2)</p></li>
+</ul>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msgbus_reg_read</span><span class="p">(</span> <span class="n">port</span><span class="p">,</span> <span class="n">register</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msgbus_reg_write</span><span class="p">(</span> <span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msgbus_read_message</span><span class="p">(</span> <span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">opcode</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msgbus_write_message</span><span class="p">(</span> <span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msgbus_send_message</span><span class="p">(</span> <span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode">
+<em class="property">class </em><code class="sig-name descname">MessageBusOpcode</code><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MessageBusOpcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CFG_READ">
+<code class="sig-name descname">MB_OPCODE_CFG_READ</code><em class="property"> = 4</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CFG_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CFG_WRITE">
+<code class="sig-name descname">MB_OPCODE_CFG_WRITE</code><em class="property"> = 5</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CFG_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CR_READ">
+<code class="sig-name descname">MB_OPCODE_CR_READ</code><em class="property"> = 6</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CR_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CR_WRITE">
+<code class="sig-name descname">MB_OPCODE_CR_WRITE</code><em class="property"> = 7</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_CR_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_ESRAM_READ">
+<code class="sig-name descname">MB_OPCODE_ESRAM_READ</code><em class="property"> = 18</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_ESRAM_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_ESRAM_WRITE">
+<code class="sig-name descname">MB_OPCODE_ESRAM_WRITE</code><em class="property"> = 19</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_ESRAM_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_IO_READ">
+<code class="sig-name descname">MB_OPCODE_IO_READ</code><em class="property"> = 2</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_IO_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_IO_WRITE">
+<code class="sig-name descname">MB_OPCODE_IO_WRITE</code><em class="property"> = 3</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_IO_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_MMIO_READ">
+<code class="sig-name descname">MB_OPCODE_MMIO_READ</code><em class="property"> = 0</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_MMIO_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_MMIO_WRITE">
+<code class="sig-name descname">MB_OPCODE_MMIO_WRITE</code><em class="property"> = 1</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_MMIO_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_REG_READ">
+<code class="sig-name descname">MB_OPCODE_REG_READ</code><em class="property"> = 16</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_REG_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_REG_WRITE">
+<code class="sig-name descname">MB_OPCODE_REG_WRITE</code><em class="property"> = 17</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusOpcode.MB_OPCODE_REG_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom">
+<em class="property">class </em><code class="sig-name descname">MessageBusPort_Atom</code><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MessageBusPort_Atom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_AUNIT">
+<code class="sig-name descname">UNIT_AUNIT</code><em class="property"> = 0</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_AUNIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_BUNIT">
+<code class="sig-name descname">UNIT_BUNIT</code><em class="property"> = 3</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_BUNIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_CPU">
+<code class="sig-name descname">UNIT_CPU</code><em class="property"> = 2</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_CPU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_GFX">
+<code class="sig-name descname">UNIT_GFX</code><em class="property"> = 6</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_GFX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_PCIE">
+<code class="sig-name descname">UNIT_PCIE</code><em class="property"> = 166</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_PCIE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_PMC">
+<code class="sig-name descname">UNIT_PMC</code><em class="property"> = 4</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_PMC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_SATA">
+<code class="sig-name descname">UNIT_SATA</code><em class="property"> = 163</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_SATA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_SMC">
+<code class="sig-name descname">UNIT_SMC</code><em class="property"> = 1</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_SMC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_SMI">
+<code class="sig-name descname">UNIT_SMI</code><em class="property"> = 12</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_SMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_USB">
+<code class="sig-name descname">UNIT_USB</code><em class="property"> = 67</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Atom.UNIT_USB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Quark">
+<em class="property">class </em><code class="sig-name descname">MessageBusPort_Quark</code><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MessageBusPort_Quark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Quark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_HB">
+<code class="sig-name descname">UNIT_HB</code><em class="property"> = 3</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_HB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_HBA">
+<code class="sig-name descname">UNIT_HBA</code><em class="property"> = 0</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_HBA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_MM">
+<code class="sig-name descname">UNIT_MM</code><em class="property"> = 5</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_MM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_RMU">
+<code class="sig-name descname">UNIT_RMU</code><em class="property"> = 4</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_RMU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_SOC">
+<code class="sig-name descname">UNIT_SOC</code><em class="property"> = 49</em><a class="headerlink" href="#chipsec.hal.msgbus.MessageBusPort_Quark.UNIT_SOC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.msgbus.MsgBus">
+<em class="property">class </em><code class="sig-name descname">MsgBus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
+<dl class="py method">
+<dt id="chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_read">
+<code class="sig-name descname">mm_msgbus_reg_read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">register</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus.mm_msgbus_reg_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_write">
+<code class="sig-name descname">mm_msgbus_reg_write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">register</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus.mm_msgbus_reg_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msgbus.MsgBus.msgbus_read_message">
+<code class="sig-name descname">msgbus_read_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">register</span></em>, <em class="sig-param"><span class="n">opcode</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus.msgbus_read_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus.msgbus_read_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msgbus.MsgBus.msgbus_reg_read">
+<code class="sig-name descname">msgbus_reg_read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">register</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus.msgbus_reg_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus.msgbus_reg_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msgbus.MsgBus.msgbus_reg_write">
+<code class="sig-name descname">msgbus_reg_write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">register</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus.msgbus_reg_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus.msgbus_reg_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msgbus.MsgBus.msgbus_send_message">
+<code class="sig-name descname">msgbus_send_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">register</span></em>, <em class="sig-param"><span class="n">opcode</span></em>, <em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus.msgbus_send_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus.msgbus_send_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msgbus.MsgBus.msgbus_write_message">
+<code class="sig-name descname">msgbus_write_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">register</span></em>, <em class="sig-param"><span class="n">opcode</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBus.msgbus_write_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBus.msgbus_write_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.msgbus.MsgBusRuntimeError">
+<em class="property">exception </em><code class="sig-name descname">MsgBusRuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/msgbus.html#MsgBusRuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msgbus.MsgBusRuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.mmio.html"
+                        title="previous chapter">mmio module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.msr.html"
+                        title="next chapter">msr module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.msr.html" title="msr module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.mmio.html" title="mmio module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">msgbus module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

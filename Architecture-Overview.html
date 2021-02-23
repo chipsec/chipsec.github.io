@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Architecture Overview &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Methods for Platform Detection" href="Platform-Detection.html" />
+    <link rel="prev" title="Interpreting results" href="Interpreting-Results.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Platform-Detection.html" title="Methods for Platform Detection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Interpreting-Results.html" title="Interpreting results"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" accesskey="U">CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Architecture Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="architecture-overview">
+<h1>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-default" id="id1">
+<img alt="CHIPSEC Architecture" src="_images/architecture.png" />
+<p class="caption"><span class="caption-text">CHIPSEC Architecture</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="core-components">
+<h2>Core components<a class="headerlink" href="#core-components" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 63%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span></code></p></td>
+<td><p>main application logic and automation functions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec_util.py</span></code></p></td>
+<td><p>utility functions (access to various hardware resources)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/chipset.py</span></code></p></td>
+<td><p>chipset detection</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/command.py</span></code></p></td>
+<td><p>base class for util commands</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/defines.py</span></code></p></td>
+<td><p>common defines</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/file.py</span></code></p></td>
+<td><p>reading from/writing to files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/logger.py</span></code></p></td>
+<td><p>logging functions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/module.py</span></code></p></td>
+<td><p>generic functions to import and load modules</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/module_common.py</span></code></p></td>
+<td><p>base class for modules</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/result_deltas.py</span></code></p></td>
+<td><p>supports checking result deltas between test runs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/testcase.py</span></code></p></td>
+<td><p>support for XML and JSON log file output</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/helpers.py</span></code></p></td>
+<td><p>registry of supported OS helpers</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/oshelper.py</span></code></p></td>
+<td><p>OS helper: wrapper around platform specific code that invokes kernel driver</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="modules-tools">
+<h2>Modules &amp; Tools<a class="headerlink" href="#modules-tools" title="Permalink to this headline">¶</a></h2>
+<p>Implementation of tests or other functionality for chipsec_main</p>
+<div class="section" id="platform-detection">
+<h3>Platform detection<a class="headerlink" href="#platform-detection" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Platform-Detection.html#uses-pci-vid-and-did-to-detect-processor-and-pch">Uses PCI VID and DID to detect processor and PCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Platform-Detection.html#chip-information-located-in-chipsec-chipset-py">Chip information located in <code class="docutils literal notranslate"><span class="pre">chipsec/chipset.py</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Platform-Detection.html#platform-configuration-options">Platform Configuration Options</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration-files">
+<h3>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h3>
+<p>Provide a human readable abstraction for registers in the system</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 57%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086</span></code></p></td>
+<td><p>platform specific configuration xml files</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086/common.xml</span></code></p></td>
+<td><p>common configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086/&lt;platform&gt;.xml</span></code></p></td>
+<td><p>configuration for a specific &lt;platform&gt;</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.apl.xml.html">apl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.avn.xml.html">avn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.bdw.xml.html">bdw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.bdx.xml.html">bdx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.byt.xml.html">byt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.cfl.xml.html">cfl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.cht.xml.html">cht</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.cml.xml.html">cml</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.common.xml.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.dnv.xml.html">dnv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.glk.xml.html">glk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.hsw.xml.html">hsw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.hsx.xml.html">hsx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.icl.xml.html">icl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.iommu.xml.html">iommu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.ivb.xml.html">ivb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.ivt.xml.html">ivt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.jkt.xml.html">jkt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.kbl.xml.html">kbl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_1xx.xml.html">pch_1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_2xx.xml.html">pch_2xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_3xx.xml.html">pch_3xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_3xxlp.xml.html">pch_3xxlp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_3xxop.xml.html">pch_3xxop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_495.xml.html">pch_495</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_4xx.xml.html">pch_4xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_4xxh.xml.html">pch_4xxh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_4xxlp.xml.html">pch_4xxlp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_c60x.xml.html">pch_c60x</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_c61x.xml.html">pch_c61x</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_c620.xml.html">pch_c620</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.qrk.xml.html">qrk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.sfdp.xml.html">sfdp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.skl.xml.html">skl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.skx.xml.html">skx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.snb.xml.html">snb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.whl.xml.html">whl</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="commands">
+<h3>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h3>
+<p>Implement functionality of chipsec_util</p>
+<p>CHIPSEC utilities provide the capability for manual testing and direct hardware access.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>DIRECT HARDWARE ACCESS PROVIDED BY THESE UTILITIES COULD MAKE YOUR SYSTEM UNBOOTABLE. MAKE SURE YOU KNOW WHAT YOU ARE DOING!</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All numeric values in the instructions are in hex.</p>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.utilcmd.html">List of Utility components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.acpi_cmd.html">acpi_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.chipset_cmd.html">chipset_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.cmos_cmd.html">cmos_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.cpu_cmd.html">cpu_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.decode_cmd.html">decode_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.deltas_cmd.html">deltas_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.desc_cmd.html">desc_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.ec_cmd.html">ec_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.igd_cmd.html">igd_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.interrupts_cmd.html">interrupts_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.io_cmd.html">io_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.iommu_cmd.html">iommu_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.mem_cmd.html">mem_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.mmcfg_cmd.html">mmcfg_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.mmio_cmd.html">mmio_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.msgbus_cmd.html">msgbus_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.msr_cmd.html">msr_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.pci_cmd.html">pci_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.reg_cmd.html">reg_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.smbios_cmd.html">smbios_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.smbus_cmd.html">smbus_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.spd_cmd.html">spd_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.spi_cmd.html">spi_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.spidesc_cmd.html">spidesc_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.tpm_cmd.html">tpm_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.ucode_cmd.html">ucode_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.uefi_cmd.html">uefi_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.vmem_cmd.html">vmem_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.vmm_cmd.html">vmm_cmd module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="hal-hardware-abstraction-layer">
+<h3>HAL (Hardware Abstraction Layer)<a class="headerlink" href="#hal-hardware-abstraction-layer" title="Permalink to this headline">¶</a></h3>
+<p>Useful abstractions for common tasks such as accessing the SPI</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.hal.html">List of HAL components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.acpi.html">acpi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.acpi_tables.html">acpi_tables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.cmos.html">cmos module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.cpu.html">cpu module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.cpuid.html">cpuid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.ec.html">ec module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.hal_base.html">hal_base module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.igd.html">igd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.interrupts.html">interrupts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.io.html">io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.iobar.html">iobar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.iommu.html">iommu module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.mmio.html">mmio module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.msgbus.html">msgbus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.msr.html">msr module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.paging.html">paging module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.pci.html">pci module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.pcidb.html">pcidb module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.physmem.html">physmem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.smbios.html">smbios module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.smbus.html">smbus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.spd.html">spd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.spi.html">spi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.spi_descriptor.html">spi_descriptor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.spi_jedec_ids.html">spi_jedec_ids module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.spi_uefi.html">spi_uefi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.tpm.html">tpm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.tpm12_commands.html">tpm12_commands module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.tpm_eventlog.html">tpm_eventlog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.ucode.html">ucode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.uefi.html">uefi module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.uefi_common.html">uefi_common module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.uefi_fv.html">uefi_fv module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.uefi_platform.html">uefi_platform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.uefi_search.html">uefi_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.virtmem.html">virtmem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.hal.vmm.html">vmm module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="os-helpers-drivers">
+<h3>OS Helpers &amp; Drivers<a class="headerlink" href="#os-helpers-drivers" title="Permalink to this headline">¶</a></h3>
+<p>Provides a translation layer to convert a common interface to OS
+specific driver calls</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="OS-Helpers-and-Drivers.html#mostly-invoked-by-hal-modules">Mostly invoked by HAL modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="OS-Helpers-and-Drivers.html#helpers-import-from-basehelper">Helpers import from BaseHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="OS-Helpers-and-Drivers.html#create-a-new-helper">Create a New Helper</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.helper.html">List of Helper components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.dal.html">dal package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.efi.html">efi package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.file.html">file package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.linux.html">linux package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.osx.html">osx package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.rwe.html">rwe package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.win.html">win package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.basehelper.html">basehelper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.helpers.html">helpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.helper.oshelper.html">oshelper module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="fuzzing">
+<h3>Fuzzing<a class="headerlink" href="#fuzzing" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.fuzzing.html">List of Fuzzing components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.fuzzing.primitives.html">primitives module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="chipsec-main-program-flow">
+<h2>CHIPSEC_MAIN Program Flow<a class="headerlink" href="#chipsec-main-program-flow" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Select <a class="reference internal" href="OS-Helpers-and-Drivers.html#os-helpers-and-drivers"><span class="std std-ref">OS Helpers and Drivers</span></a></p>
+<ul class="simple">
+<li><p>Load Driver (optional)</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="Platform-Detection.html#platform-detection"><span class="std std-ref">Detect Platform</span></a></p></li>
+<li><p>Load <a class="reference internal" href="Configuration-Files.html#configuration-files"><span class="std std-ref">Configuration Files</span></a></p></li>
+<li><p>Load Modules</p></li>
+<li><p>Run Loaded Modules</p></li>
+<li><p>Report Results</p></li>
+<li><p>Cleanup</p></li>
+</ol>
+</div>
+<div class="section" id="chipsec-util-program-flow">
+<h2>CHIPSEC_UTIL Program Flow<a class="headerlink" href="#chipsec-util-program-flow" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Select <a class="reference internal" href="OS-Helpers-and-Drivers.html#os-helpers-and-drivers"><span class="std std-ref">OS Helpers and Drivers</span></a></p>
+<ul class="simple">
+<li><p>Load Driver (optional)</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="Platform-Detection.html#platform-detection"><span class="std std-ref">Detect Platform</span></a></p></li>
+<li><p>Load <a class="reference internal" href="Configuration-Files.html#configuration-files"><span class="std std-ref">Configuration Files</span></a></p></li>
+<li><p>Load Utility Commands</p></li>
+<li><p>Run Selected Command</p></li>
+<li><p>Cleanup</p></li>
+</ol>
+</div>
+<div class="section" id="auxiliary-components">
+<h2>Auxiliary components<a class="headerlink" href="#auxiliary-components" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></td>
+<td><p>setup script to install CHIPSEC as a package</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="executable-build-scripts">
+<h2>Executable build scripts<a class="headerlink" href="#executable-build-scripts" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">&lt;CHIPSEC_ROOT&gt;/scripts/build_exe_*.py</span></code>  make files to build Windows executables</p>
+</div></blockquote>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Architecture Overview</a><ul>
+<li><a class="reference internal" href="#core-components">Core components</a></li>
+<li><a class="reference internal" href="#modules-tools">Modules &amp; Tools</a><ul>
+<li><a class="reference internal" href="#platform-detection">Platform detection</a></li>
+<li><a class="reference internal" href="#configuration-files">Configuration Files</a></li>
+<li><a class="reference internal" href="#commands">Commands</a></li>
+<li><a class="reference internal" href="#hal-hardware-abstraction-layer">HAL (Hardware Abstraction Layer)</a></li>
+<li><a class="reference internal" href="#os-helpers-drivers">OS Helpers &amp; Drivers</a></li>
+<li><a class="reference internal" href="#fuzzing">Fuzzing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#chipsec-main-program-flow">CHIPSEC_MAIN Program Flow</a></li>
+<li><a class="reference internal" href="#chipsec-util-program-flow">CHIPSEC_UTIL Program Flow</a></li>
+<li><a class="reference internal" href="#auxiliary-components">Auxiliary components</a></li>
+<li><a class="reference internal" href="#executable-build-scripts">Executable build scripts</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Interpreting-Results.html"
+                        title="previous chapter">Interpreting results</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Platform-Detection.html"
+                        title="next chapter">Methods for Platform Detection</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Platform-Detection.html" title="Methods for Platform Detection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Interpreting-Results.html" title="Interpreting results"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" >CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Architecture Overview</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

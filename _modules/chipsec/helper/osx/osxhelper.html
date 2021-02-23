@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.helper.osx.osxhelper &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.helper.osx.osxhelper</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.helper.osx.osxhelper</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2016, Google</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">OSX helper</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">fcntl</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">chipsec</span>
+<span class="kn">import</span> <span class="nn">chipsec.defines</span>
+<span class="kn">from</span> <span class="nn">chipsec.helper.oshelper</span> <span class="kn">import</span> <span class="n">OsHelperError</span><span class="p">,</span> <span class="n">HWAccessViolationError</span><span class="p">,</span> <span class="n">UnimplementedAPIError</span><span class="p">,</span> <span class="n">UnimplementedNativeAPIError</span>
+<span class="kn">from</span> <span class="nn">chipsec.helper.basehelper</span> <span class="kn">import</span> <span class="n">Helper</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">MSGBUS_MDR_IN_MASK</span>          <span class="o">=</span> <span class="mh">0x1</span>
+<span class="n">MSGBUS_MDR_OUT_MASK</span>         <span class="o">=</span> <span class="mh">0x2</span>
+
+<span class="n">IOCTL_RDPCI</span>                 <span class="o">=</span> <span class="mh">0xc00c7001</span>
+<span class="n">IOCTL_WRPCI</span>                 <span class="o">=</span> <span class="mh">0xc00c7002</span>
+<span class="n">IOCTL_RDMMIO</span>                <span class="o">=</span> <span class="mh">0xc0187003</span>
+<span class="n">IOCTL_WRMMIO</span>                <span class="o">=</span> <span class="mh">0xc0187004</span>
+<span class="n">IOCTL_RDCR</span>                  <span class="o">=</span> <span class="mh">0xc0107005</span>
+<span class="n">IOCTL_WRCR</span>                  <span class="o">=</span> <span class="mh">0xc0107006</span>
+<span class="n">IOCTL_RDIO</span>                  <span class="o">=</span> <span class="mh">0xc0187007</span>
+<span class="n">IOCTL_WRIO</span>                  <span class="o">=</span> <span class="mh">0xc0187008</span>
+<span class="n">IOCTL_CPUID</span>                 <span class="o">=</span> <span class="mh">0xc0207009</span>
+<span class="n">IOCTL_RDMSR</span>                 <span class="o">=</span> <span class="mh">0xc018700a</span>
+<span class="n">IOCTL_WRMSR</span>                 <span class="o">=</span> <span class="mh">0xc018700b</span>
+<span class="n">IOCTL_SWSMI</span>                 <span class="o">=</span> <span class="mh">0xc038700c</span>
+<span class="n">IOCTL_HYPERCALL</span>             <span class="o">=</span> <span class="mh">0xc060700d</span>
+<span class="n">IOCTL_MSGBUS_SEND_MESSAGE</span>   <span class="o">=</span> <span class="mh">0xc028700e</span>
+<span class="n">IOCTL_CPU_DESCRIPTOR_TABLE</span>  <span class="o">=</span> <span class="mh">0xc038700f</span>
+<span class="n">IOCTL_ALLOC_PHYSMEM</span>         <span class="o">=</span> <span class="mh">0xc0207010</span>
+<span class="c1">#IOCTL_LOAD_UCODE_PATCH      = 0xc0067011</span>
+
+<span class="c1"># Format for the IOCTL structures. See chipsec_ioctl.h for the complete</span>
+<span class="c1"># definition.</span>
+<span class="n">_pci_msg_t_fmt</span>       <span class="o">=</span> <span class="s2">&quot;BBBHBI&quot;</span>
+<span class="n">_mmio_msg_t_fmt</span>      <span class="o">=</span> <span class="s2">&quot;QQB&quot;</span>
+<span class="n">_io_msg_t_fmt</span>        <span class="o">=</span> <span class="s2">&quot;QQQ&quot;</span>
+<span class="n">_cr_msg_t_fmt</span>        <span class="o">=</span> <span class="s2">&quot;IQ&quot;</span>
+<span class="n">_msr_msg_t_fmt</span>       <span class="o">=</span> <span class="s2">&quot;QQQ&quot;</span>
+<span class="n">_cpuid_msg_t_fmt</span>     <span class="o">=</span> <span class="s2">&quot;QQQQ&quot;</span>
+<span class="n">_smi_msg_t_fmt</span>       <span class="o">=</span> <span class="s2">&quot;QQQQQQQ&quot;</span>
+<span class="n">_hypercall_msg_t_fmt</span> <span class="o">=</span> <span class="s2">&quot;QQQQQQQQQQQQ&quot;</span>
+<span class="n">_msgbus_msg_t_fmt</span>    <span class="o">=</span> <span class="s2">&quot;QQQQQ&quot;</span>
+<span class="n">_cpudes_msg_t_fmt</span>    <span class="o">=</span> <span class="s2">&quot;QQQQQQQ&quot;</span>
+<span class="c1">#_ucodeh_msg_t_fmt    = &quot;BH&quot;</span>
+<span class="n">_alloc_mem_msg_t_fmt</span> <span class="o">=</span> <span class="s2">&quot;QQQQ&quot;</span>
+
+
+<span class="n">LZMA</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">TOOLS_DIR</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;LzmaCompress&quot;</span><span class="p">)</span>
+<span class="n">TIANO</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">TOOLS_DIR</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;TianoCompress&quot;</span><span class="p">)</span>
+<span class="n">EFI</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">TOOLS_DIR</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;TianoCompress&quot;</span><span class="p">)</span>
+<span class="n">BROTLI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">TOOLS_DIR</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;Brotli&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OSXHelper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper">[docs]</a><span class="k">class</span> <span class="nc">OSXHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
+
+    <span class="n">DEVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;/dev/chipsec&quot;</span>
+    <span class="n">DRIVER_NAME</span> <span class="o">=</span> <span class="s2">&quot;chipsec.kext&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">OSXHelper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_system</span>  <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_release</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_version</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">version</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_machine</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">machine</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_uname</span>   <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;OSXHelper&quot;</span>
+
+    <span class="n">decompression_oder_type1</span> <span class="o">=</span> <span class="p">[</span><span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_TIANO</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UEFI</span><span class="p">]</span>
+    <span class="n">decompression_oder_type2</span> <span class="o">=</span> <span class="p">[</span><span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_TIANO</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UEFI</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_LZMA</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_BROTLI</span><span class="p">]</span>
+
+<div class="viewcode-block" id="OSXHelper.load_driver"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.load_driver">[docs]</a>    <span class="k">def</span> <span class="nf">load_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">driver_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="s2">&quot;chipsec&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;helper&quot;</span><span class="p">,</span> <span class="s2">&quot;osx&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRIVER_NAME</span><span class="p">)</span>
+        <span class="c1"># Make sure the driver image and its subdirectories are owned by root.</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">driver_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">s</span><span class="o">.</span><span class="n">st_gid</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chown</span><span class="p">(</span><span class="n">driver_path</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">driver_path</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">dirs</span> <span class="o">+</span> <span class="n">files</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">chown</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;kextload&quot;</span><span class="p">,</span> <span class="n">driver_path</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DEVICE_NAME</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Module </span><span class="si">{}</span><span class="s2"> loaded successfully&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DRIVER_NAME</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to load the module </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DRIVER_NAME</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driverpath</span> <span class="o">=</span> <span class="n">driver_path</span></div>
+
+<div class="viewcode-block" id="OSXHelper.create"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">):</span>
+        <span class="c1">#self.init(start_driver)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[helper] OSX Helper created&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="OSXHelper.start"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">,</span> <span class="n">driver_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">start_driver</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DEVICE_NAME</span><span class="p">):</span>
+                <span class="n">driver_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="s2">&quot;chipsec&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;helper&quot;</span><span class="p">,</span> <span class="s2">&quot;osx&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRIVER_NAME</span><span class="p">)</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;kextunload&quot;</span><span class="p">,</span> <span class="n">driver_path</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_driver</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">start_driver</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[helper] OSX Helper started/loaded&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="OSXHelper.stop"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_loaded</span><span class="p">:</span>
+            <span class="n">driver_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="s2">&quot;chipsec&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;helper&quot;</span><span class="p">,</span> <span class="s2">&quot;osx&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DRIVER_NAME</span><span class="p">)</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;kextunload&quot;</span><span class="p">,</span> <span class="n">driver_path</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[helper] OSX Helper stopped/unloaded&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="OSXHelper.delete"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[helper] OSX Helper deleted&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="OSXHelper.init"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">start_driver</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DEVICE_NAME</span><span class="p">,</span> <span class="s2">&quot;rb+&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">driver_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">OsHelperError</span><span class="p">(</span><span class="s2">&quot;Unable to open the Chipsec device.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)),</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.close"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="OSXHelper.ioctl"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.ioctl">[docs]</a>    <span class="k">def</span> <span class="nf">ioctl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ioctl_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="p">,</span> <span class="n">ioctl_name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.mem_read_block"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.mem_read_block">[docs]</a>    <span class="k">def</span> <span class="nf">mem_read_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">sz</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">addr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.mem_write_block"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.mem_write_block">[docs]</a>    <span class="k">def</span> <span class="nf">mem_write_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="n">newval</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">addr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newval</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev_fh</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.write_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.write_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr_hi</span><span class="p">,</span> <span class="n">addr_lo</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mem_write_block</span><span class="p">((</span><span class="n">addr_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">addr_lo</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.read_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.read_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr_hi</span><span class="p">,</span> <span class="n">addr_lo</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mem_read_block</span><span class="p">((</span><span class="n">addr_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">addr_lo</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="OSXHelper.read_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.read_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_pci_msg_t_fmt</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
+                           <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_RDPCI</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;IOError&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_pci_msg_t_fmt</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="OSXHelper.write_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.write_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_pci_msg_t_fmt</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
+                           <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_WRPCI</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;IOError&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.read_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.read_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_mmio_msg_t_fmt</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_RDMMIO</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_mmio_msg_t_fmt</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="OSXHelper.write_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.write_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_mmio_msg_t_fmt</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_WRMMIO</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.getcwd"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.getcwd">[docs]</a>    <span class="k">def</span> <span class="nf">getcwd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.rotate_list"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.rotate_list">[docs]</a>    <span class="k">def</span> <span class="nf">rotate_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="OSXHelper.unknown_decompress"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.unknown_decompress">[docs]</a>    <span class="k">def</span> <span class="nf">unknown_decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">):</span>
+        <span class="n">failed_times</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompression_oder_type2</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompress_file</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rotate_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decompression_oder_type2</span><span class="p">,</span> <span class="n">failed_times</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">failed_times</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="OSXHelper.unknown_efi_decompress"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.unknown_efi_decompress">[docs]</a>    <span class="k">def</span> <span class="nf">unknown_efi_decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">):</span>
+        <span class="n">failed_times</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompression_oder_type1</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompress_file</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rotate_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decompression_oder_type1</span><span class="p">,</span> <span class="n">failed_times</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">failed_times</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Compress binary file</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="OSXHelper.compress_file"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.compress_file">[docs]</a>    <span class="k">def</span> <span class="nf">compress_file</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPES</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">encode_str</span> <span class="o">=</span> <span class="s2">&quot; -e -o </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">OutputFileName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_NONE</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">FileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_TIANO</span><span class="p">:</span>
+            <span class="n">encode_str</span> <span class="o">=</span> <span class="n">TIANO</span> <span class="o">+</span> <span class="n">encode_str</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UEFI</span><span class="p">:</span>
+            <span class="n">encode_str</span> <span class="o">=</span> <span class="n">EFI</span> <span class="o">+</span> <span class="n">encode_str</span> <span class="o">+</span> <span class="s2">&quot;--uefi &quot;</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_LZMA</span><span class="p">:</span>
+            <span class="n">encode_str</span> <span class="o">=</span> <span class="n">LZMA</span> <span class="o">+</span> <span class="n">encode_str</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_BROTLI</span><span class="p">:</span>
+            <span class="n">encode_str</span> <span class="o">=</span> <span class="n">BROTLI</span> <span class="o">+</span> <span class="n">encode_str</span>
+        <span class="n">encode_str</span> <span class="o">+=</span> <span class="n">FileName</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">encode_str</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot decompress file(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">FileName</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Decompress binary</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="OSXHelper.decompress_file"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.decompress_file">[docs]</a>    <span class="k">def</span> <span class="nf">decompress_file</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPES</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UNKNOWN</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unknown_decompress</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_EFI_STANDARD</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unknown_efi_decompress</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="n">decode_str</span> <span class="o">=</span> <span class="s2">&quot; -d -o </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">OutputFileName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_NONE</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_TIANO</span><span class="p">:</span>
+            <span class="n">decode_str</span> <span class="o">=</span> <span class="n">TIANO</span> <span class="o">+</span> <span class="n">decode_str</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UEFI</span><span class="p">:</span>
+            <span class="n">decode_str</span> <span class="o">=</span> <span class="n">EFI</span> <span class="o">+</span> <span class="n">decode_str</span> <span class="o">+</span> <span class="s2">&quot;--uefi &quot;</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_LZMA</span><span class="p">:</span>
+            <span class="n">decode_str</span> <span class="o">=</span> <span class="n">LZMA</span> <span class="o">+</span> <span class="n">decode_str</span>
+        <span class="k">elif</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_BROTLI</span><span class="p">:</span>
+            <span class="n">decode_str</span> <span class="o">=</span> <span class="n">BROTLI</span> <span class="o">+</span> <span class="n">decode_str</span>
+        <span class="n">decode_str</span> <span class="o">+=</span> <span class="n">CompressedFileName</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">decode_str</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot decompress file(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="OSXHelper.get_tool_info"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.get_tool_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_tool_info</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">tool_type</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Logical CPU count</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="OSXHelper.get_threads_count"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.get_threads_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_threads_count</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">subprocess</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s2">&quot;sysctl -n hw.ncpu&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
+
+    <span class="c1">#########################################################</span>
+    <span class="c1"># EFI Runtime API</span>
+    <span class="c1">#########################################################</span>
+
+    <span class="c1"># @TODO: macOS helper doesn&#39;t support EFI runtime API yet</span>
+<div class="viewcode-block" id="OSXHelper.EFI_supported"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.EFI_supported">[docs]</a>    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="c1"># Placeholders for EFI Variable API</span>
+
+<div class="viewcode-block" id="OSXHelper.delete_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.delete_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<div class="viewcode-block" id="OSXHelper.native_delete_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.native_delete_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">native_delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.list_EFI_variables"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.list_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<div class="viewcode-block" id="OSXHelper.native_list_EFI_variables"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.native_list_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">native_list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.get_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.get_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<div class="viewcode-block" id="OSXHelper.native_get_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.native_get_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">native_get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.set_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.set_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">datasize</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<div class="viewcode-block" id="OSXHelper.native_set_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.native_set_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">native_set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">datasize</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+
+    <span class="c1">#########################################################</span>
+    <span class="c1"># Port I/O</span>
+    <span class="c1">#########################################################</span>
+
+<div class="viewcode-block" id="OSXHelper.read_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.read_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_io_msg_t_fmt</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_RDIO</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">size</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_io_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
+            <span class="k">elif</span> <span class="mi">2</span> <span class="o">==</span> <span class="n">size</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_io_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0xffff</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_io_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0xffffffff</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;DeviceIoControl did not return value of proper size </span><span class="si">{:x}</span><span class="s2"> (value = &#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="OSXHelper.write_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.write_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_io_msg_t_fmt</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_WRIO</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.read_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.read_cr">[docs]</a>    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">):</span>
+        <span class="c1">#self.set_affinity(cpu_thread_id)</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_cr_msg_t_fmt</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_RDCR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_cr_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="OSXHelper.write_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.write_cr">[docs]</a>    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1">#self.set_affinity(cpu_thread_id)</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_cr_msg_t_fmt</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_WRCR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.read_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.read_msr">[docs]</a>    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">):</span>
+        <span class="c1">#self.set_affinity(cpu_thread_id)</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_msr_msg_t_fmt</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_RDMSR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_msr_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="OSXHelper.write_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.write_msr">[docs]</a>    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">):</span>
+        <span class="c1">#self.set_affinity(cpu_thread_id)</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_msr_msg_t_fmt</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_WRMSR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.get_descriptor_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.get_descriptor_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">):</span>
+        <span class="c1">#self.set_affinity(cpu_thread_id)</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_cpudes_msg_t_fmt</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_CPU_DESCRIPTOR_TABLE</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">base_hi</span><span class="p">,</span> <span class="n">base_lo</span><span class="p">,</span> <span class="n">pa_hi</span><span class="p">,</span> <span class="n">pa_lo</span><span class="p">)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_cpudes_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="n">pa</span> <span class="o">=</span> <span class="p">(</span><span class="n">pa_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">+</span> <span class="n">pa_lo</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">+</span> <span class="n">base_lo</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.hypercall"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span> <span class="p">):</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_hypercall_msg_t_fmt</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_HYPERCALL</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_hypercall_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">11</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="OSXHelper.cpuid"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.cpuid">[docs]</a>    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">):</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_cpuid_msg_t_fmt</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_CPUID</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_cpuid_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OSXHelper.alloc_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.alloc_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">max_addr</span><span class="p">):</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_alloc_mem_msg_t_fmt</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">max_addr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_ALLOC_PHYSMEM</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_alloc_mem_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span></div>
+
+<div class="viewcode-block" id="OSXHelper.msgbus_send_read_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.msgbus_send_read_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span> <span class="p">):</span>
+        <span class="n">mdr_out</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">in_buf</span>  <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_msgbus_msg_t_fmt</span><span class="p">,</span> <span class="n">MSGBUS_MDR_OUT_MASK</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mdr_out</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span> <span class="n">IOCTL_MSGBUS_SEND_MESSAGE</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="n">mdr_out</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="n">_msgbus_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">mdr_out</span></div>
+
+<div class="viewcode-block" id="OSXHelper.msgbus_send_write_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.msgbus_send_write_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
+        <span class="n">mdr_out</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">in_buf</span>  <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_msgbus_msg_t_fmt</span><span class="p">,</span> <span class="n">MSGBUS_MDR_IN_MASK</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">,</span> <span class="n">mdr_out</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span> <span class="n">IOCTL_MSGBUS_SEND_MESSAGE</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="OSXHelper.msgbus_send_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.msgbus_send_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">mdr_out</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">mdr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_msgbus_msg_t_fmt</span><span class="p">,</span> <span class="n">MSGBUS_MDR_OUT_MASK</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mdr_out</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_msgbus_msg_t_fmt</span><span class="p">,</span> <span class="p">(</span><span class="n">MSGBUS_MDR_IN_MASK</span> <span class="o">|</span> <span class="n">MSGBUS_MDR_OUT_MASK</span><span class="p">),</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">,</span> <span class="n">mdr_out</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span> <span class="n">IOCTL_MSGBUS_SEND_MESSAGE</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="n">mdr_out</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="n">_msgbus_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">mdr_out</span></div>
+
+<div class="viewcode-block" id="OSXHelper.get_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.get_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.set_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.set_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.send_sw_smi"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.send_sw_smi">[docs]</a>    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">):</span>
+        <span class="c1">#self.set_affinity(cpu_thread_id)</span>
+        <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">_smi_msg_t_fmt</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">)</span>
+        <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ioctl</span><span class="p">(</span><span class="n">IOCTL_SWSMI</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">_smi_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="OSXHelper.map_io_space"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.map_io_space">[docs]</a>    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OSXHelper.load_ucode_update"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.load_ucode_update">[docs]</a>    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">ucode_update_buf</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Speculation control</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="OSXHelper.retpoline_enabled"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.OSXHelper.retpoline_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s2">&quot;retpoline_enabled&quot;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="get_helper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.osx.osxhelper.html#chipsec.helper.osx.osxhelper.get_helper">[docs]</a><span class="k">def</span> <span class="nf">get_helper</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">OSXHelper</span><span class="p">()</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.helper.osx.osxhelper</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

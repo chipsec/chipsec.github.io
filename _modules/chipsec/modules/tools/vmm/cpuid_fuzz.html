@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.vmm.cpuid_fuzz &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.cpuid_fuzz</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.vmm.cpuid_fuzz</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Simple CPUID VMM emulation fuzzer</span>
+
+<span class="sd"> Usage:</span>
+<span class="sd">   ``chipsec_main.py -i -m tools.vmm.cpuid_fuzz -l log.txt``</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span>
+
+<span class="c1">#logger.VERBOSE = True</span>
+
+<span class="n">_MODULE_NAME</span> <span class="o">=</span> <span class="s1">&#39;cpuid_fuzz&#39;</span>
+
+<span class="c1">#</span>
+<span class="c1"># We will only be fuzzing _NO_EAX_TO_FUZZ range of EAX values each _EAX_FUZZ_STEP step</span>
+<span class="c1">#</span>
+<span class="c1">#global _EAX_FUZZ_STEP</span>
+<span class="n">_NO_EAX_TO_FUZZ</span>       <span class="o">=</span> <span class="mh">0x100</span>
+<span class="n">_EAX_FUZZ_STEP</span>        <span class="o">=</span> <span class="mh">0x1000000</span>
+
+<span class="c1"># Number of iterations if value is Randomly chosen</span>
+<span class="n">_NO_ITERATIONS_TO_FUZZ</span> <span class="o">=</span> <span class="mh">0x1000000</span>
+
+<span class="c1"># Control values to be passed in ECX</span>
+<span class="n">_FUZZ_ECX_RANDOM</span>      <span class="o">=</span> <span class="kc">False</span>
+<span class="c1"># Max value of ECX when fuzzed sequentially</span>
+<span class="n">_MAX_ECX</span>              <span class="o">=</span> <span class="mh">0x100</span>
+
+<span class="c1"># Exclude CPUID EAX which cause VM hang/crash</span>
+<span class="n">_EXCLUDE_CPUID</span>        <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+
+<span class="c1"># Flush log file before each fuzz iteration</span>
+<span class="n">_FLUSH_LOG_EACH_ITER</span>  <span class="o">=</span> <span class="kc">False</span>
+<span class="c1"># Log values of EAX, EBX, ECX, EDX which CPUID returns</span>
+<span class="n">_LOG_OUT_RESULTS</span>      <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="cpuid_fuzz"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.cpuid_fuzz.html#chipsec.modules.tools.vmm.cpuid_fuzz.cpuid_fuzz">[docs]</a><span class="k">class</span> <span class="nc">cpuid_fuzz</span> <span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+<div class="viewcode-block" id="cpuid_fuzz.fuzz_CPUID"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.cpuid_fuzz.html#chipsec.modules.tools.vmm.cpuid_fuzz.cpuid_fuzz.fuzz_CPUID">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_CPUID</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">eax_start</span><span class="p">,</span> <span class="n">random_order</span><span class="o">=</span><span class="kc">False</span> <span class="p">):</span>
+        <span class="n">eax_range</span> <span class="o">=</span> <span class="n">_NO_EAX_TO_FUZZ</span>
+        <span class="n">eax_end</span>   <span class="o">=</span> <span class="n">eax_start</span> <span class="o">+</span> <span class="n">eax_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Fuzzing CPUID with EAX in range 0x</span><span class="si">{:08X}</span><span class="s2">:0x</span><span class="si">{:08X}</span><span class="s2">..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eax_start</span><span class="p">,</span> <span class="n">eax_end</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">random_order</span><span class="p">:</span> <span class="n">it_max</span> <span class="o">=</span> <span class="n">_NO_ITERATIONS_TO_FUZZ</span>
+        <span class="k">else</span><span class="p">:</span>            <span class="n">it_max</span> <span class="o">=</span> <span class="n">eax_range</span>
+
+        <span class="k">while</span> <span class="n">it</span> <span class="o">&lt;</span> <span class="n">it_max</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">random_order</span><span class="p">:</span> <span class="n">eax</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span> <span class="n">eax_start</span><span class="p">,</span> <span class="n">eax_end</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>            <span class="n">eax</span> <span class="o">=</span> <span class="n">eax_start</span> <span class="o">+</span> <span class="n">it</span>
+            <span class="k">if</span> <span class="n">_FLUSH_LOG_EACH_ITER</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">eax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_EXCLUDE_CPUID</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] CPUID EAX: 0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eax</span><span class="p">)</span> <span class="p">)</span>
+                <span class="k">if</span> <span class="n">_FUZZ_ECX_RANDOM</span><span class="p">:</span>
+                    <span class="n">ecx</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span> <span class="p">)</span>
+                    <span class="p">(</span><span class="n">r_eax</span><span class="p">,</span> <span class="n">r_ebx</span><span class="p">,</span> <span class="n">r_ecx</span><span class="p">,</span> <span class="n">r_edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span> <span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">ecx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">_MAX_ECX</span> <span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;  &gt; ECX: 0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ecx</span><span class="p">)</span> <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">_FLUSH_LOG_EACH_ITER</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        <span class="p">(</span><span class="n">r_eax</span><span class="p">,</span> <span class="n">r_ebx</span><span class="p">,</span> <span class="n">r_ecx</span><span class="p">,</span> <span class="n">r_edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span> <span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span> <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">_LOG_OUT_RESULTS</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Out: EAX=0x</span><span class="si">{:08X}</span><span class="s2">, EBX=0x</span><span class="si">{:08X}</span><span class="s2">, ECX=0x</span><span class="si">{:08X}</span><span class="s2">, EDX=0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r_eax</span><span class="p">,</span> <span class="n">r_ebx</span><span class="p">,</span> <span class="n">r_ecx</span><span class="p">,</span> <span class="n">r_edx</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="cpuid_fuzz.run"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.cpuid_fuzz.html#chipsec.modules.tools.vmm.cpuid_fuzz.cpuid_fuzz.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;CPUID Fuzzer&quot;</span> <span class="p">)</span>
+
+        <span class="n">_random_order</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s1">&#39;random&#39;</span> <span class="o">==</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">_random_order</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Configuration:&quot;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Mode: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;random&#39;</span> <span class="k">if</span> <span class="n">_random_order</span> <span class="k">else</span> <span class="s1">&#39;sequential&#39;</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Step to fuzz range of EAX values (_EAX_FUZZ_STEP): 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_EAX_FUZZ_STEP</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    No of EAX values to fuzz within each step (_NO_EAX_TO_FUZZ): 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_NO_EAX_TO_FUZZ</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Fuzz ECX with random values? (_FUZZ_ECX_RANDOM): </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_FUZZ_ECX_RANDOM</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Max ECX value (_MAX_ECX): 0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_MAX_ECX</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Exclude the following EAX values from fuzzing (_EXCLUDE_CPUID): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">_EXCLUDE_CPUID</span><span class="p">))</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Flush log file after each iteration (_FLUSH_LOG_EACH_ITER): </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_FLUSH_LOG_EACH_ITER</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Log output results (_LOG_OUT_RESULTS): </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_LOG_OUT_RESULTS</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="mh">0x100000000</span> <span class="o">//</span> <span class="n">_EAX_FUZZ_STEP</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_CPUID</span><span class="p">(</span> <span class="n">s</span> <span class="o">*</span><span class="n">_EAX_FUZZ_STEP</span><span class="p">,</span> <span class="n">_random_order</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.cpuid_fuzz</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

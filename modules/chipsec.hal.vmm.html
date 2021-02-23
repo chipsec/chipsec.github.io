@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vmm module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OS Helpers and Drivers" href="../OS-Helpers-and-Drivers.html" />
+    <link rel="prev" title="virtmem module" href="chipsec.hal.virtmem.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../OS-Helpers-and-Drivers.html" title="OS Helpers and Drivers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.virtmem.html" title="virtmem module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">vmm module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.vmm">
+<span id="vmm-module"></span><h1>vmm module<a class="headerlink" href="#module-chipsec.hal.vmm" title="Permalink to this headline">¶</a></h1>
+<p>VMM specific functionality
+1. Hypervisor hypercall interfaces
+2. Second-level Address Translation (SLAT)
+3. VirtIO devices
+4. …</p>
+<dl class="py class">
+<dt id="chipsec.hal.vmm.VMM">
+<em class="property">class </em><code class="sig-name descname">VMM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VMM.dump_EPT_page_tables">
+<code class="sig-name descname">dump_EPT_page_tables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eptp</span></em>, <em class="sig-param"><span class="n">pt_fname</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM.dump_EPT_page_tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM.dump_EPT_page_tables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VMM.hypercall">
+<code class="sig-name descname">hypercall</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rax</span></em>, <em class="sig-param"><span class="n">rbx</span></em>, <em class="sig-param"><span class="n">rcx</span></em>, <em class="sig-param"><span class="n">rdx</span></em>, <em class="sig-param"><span class="n">rdi</span></em>, <em class="sig-param"><span class="n">rsi</span></em>, <em class="sig-param"><span class="n">r8</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">r9</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">r10</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">r11</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">xmm_buffer</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM.hypercall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM.hypercall" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VMM.hypercall64_extended_fast">
+<code class="sig-name descname">hypercall64_extended_fast</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hypervisor_input_value</span></em>, <em class="sig-param"><span class="n">parameter_block</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM.hypercall64_extended_fast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM.hypercall64_extended_fast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VMM.hypercall64_fast">
+<code class="sig-name descname">hypercall64_fast</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hypervisor_input_value</span></em>, <em class="sig-param"><span class="n">param0</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">param1</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM.hypercall64_fast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM.hypercall64_fast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VMM.hypercall64_five_args">
+<code class="sig-name descname">hypercall64_five_args</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vector</span></em>, <em class="sig-param"><span class="n">arg1</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">arg2</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">arg3</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">arg4</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">arg5</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM.hypercall64_five_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM.hypercall64_five_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VMM.hypercall64_memory_based">
+<code class="sig-name descname">hypercall64_memory_based</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hypervisor_input_value</span></em>, <em class="sig-param"><span class="n">parameters</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM.hypercall64_memory_based"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM.hypercall64_memory_based" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VMM.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMM.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMM.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.vmm.VMMRuntimeError">
+<em class="property">exception </em><code class="sig-name descname">VMMRuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VMMRuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VMMRuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.vmm.VirtIO_Device">
+<em class="property">class </em><code class="sig-name descname">VirtIO_Device</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VirtIO_Device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VirtIO_Device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="chipsec.hal.vmm.VirtIO_Device.dump_device">
+<code class="sig-name descname">dump_device</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#VirtIO_Device.dump_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.VirtIO_Device.dump_device" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.vmm.get_virtio_devices">
+<code class="sig-name descname">get_virtio_devices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">devices</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/vmm.html#get_virtio_devices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.vmm.get_virtio_devices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.virtmem.html"
+                        title="previous chapter">virtmem module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../OS-Helpers-and-Drivers.html"
+                        title="next chapter">OS Helpers and Drivers</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../OS-Helpers-and-Drivers.html" title="OS Helpers and Drivers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.virtmem.html" title="virtmem module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">vmm module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.smbus &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.smbus</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.hal.smbus</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+
+<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># CHIPSEC: Platform Hardware Security Assessment Framework</span>
+<span class="c1">#</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Access to SMBus Controller</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">iobar</span><span class="p">,</span> <span class="n">hal_base</span>
+
+<span class="n">SMBUS_COMMAND_QUICK</span>         <span class="o">=</span> <span class="mi">0</span>
+<span class="n">SMBUS_COMMAND_BYTE</span>          <span class="o">=</span> <span class="mi">1</span>
+<span class="n">SMBUS_COMMAND_BYTE_DATA</span>     <span class="o">=</span> <span class="mi">2</span>
+<span class="n">SMBUS_COMMAND_WORD_DATA</span>     <span class="o">=</span> <span class="mi">3</span>
+<span class="n">SMBUS_COMMAND_PROCESS_CALL</span>  <span class="o">=</span> <span class="mi">4</span>
+<span class="n">SMBUS_COMMAND_BLOCK</span>         <span class="o">=</span> <span class="mi">5</span>
+<span class="n">SMBUS_COMMAND_I2C_READ</span>      <span class="o">=</span> <span class="mi">6</span>
+<span class="n">SMBUS_COMMAND_BLOCK_PROCESS</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="n">SMBUS_POLL_COUNT</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">SMBUS_COMMAND_WRITE</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">SMBUS_COMMAND_READ</span>  <span class="o">=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="SMBus"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus">[docs]</a><span class="k">class</span> <span class="nc">SMBus</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cs</span> <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SMBus</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iobar</span> <span class="o">=</span> <span class="n">iobar</span><span class="o">.</span><span class="n">IOBAR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span>  <span class="o">=</span> <span class="s1">&#39;SMBUS_HST_STS&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_command</span> <span class="o">=</span> <span class="s1">&#39;SMBUS_HST_CMD&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_address</span> <span class="o">=</span> <span class="s1">&#39;SMBUS_HST_SLVA&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_control</span> <span class="o">=</span> <span class="s1">&#39;SMBUS_HST_CNT&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_data0</span>   <span class="o">=</span> <span class="s1">&#39;SMBUS_HST_D0&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_data1</span>   <span class="o">=</span> <span class="s1">&#39;SMBUS_HST_D1&#39;</span>
+
+<div class="viewcode-block" id="SMBus.get_SMBus_Base_Address"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.get_SMBus_Base_Address">[docs]</a>    <span class="k">def</span> <span class="nf">get_SMBus_Base_Address</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iobar</span><span class="o">.</span><span class="n">is_IO_BAR_defined</span><span class="p">(</span> <span class="s1">&#39;SMBUS_BASE&#39;</span> <span class="p">):</span>
+            <span class="p">(</span><span class="n">sba_base</span><span class="p">,</span> <span class="n">sba_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iobar</span><span class="o">.</span><span class="n">get_IO_BAR_base_address</span><span class="p">(</span> <span class="s1">&#39;SMBUS_BASE&#39;</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">sba_base</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">iobar</span><span class="o">.</span><span class="n">IOBARNotFoundError</span> <span class="p">(</span><span class="s1">&#39;IOBARAccessError: SMBUS_BASE&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SMBus.get_SMBus_HCFG"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.get_SMBus_HCFG">[docs]</a>    <span class="k">def</span> <span class="nf">get_SMBus_HCFG</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;SMBUS_HCFG&#39;</span> <span class="p">):</span>
+            <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;SMBUS_HCFG&#39;</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span> <span class="s1">&#39;SMBUS_HCFG&#39;</span><span class="p">,</span> <span class="n">reg_value</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">reg_value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">RegisterNotFoundError</span> <span class="p">(</span><span class="s1">&#39;RegisterNotFound: SMBUS_HCFG&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SMBus.display_SMBus_info"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.display_SMBus_info">[docs]</a>    <span class="k">def</span> <span class="nf">display_SMBus_info</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[smbus] SMBus Base Address: 0x</span><span class="si">{:04X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_SMBus_Base_Address</span><span class="p">())</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_SMBus_HCFG</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SMBus.is_SMBus_enabled"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.is_SMBus_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_SMBus_enabled</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_device_enabled</span><span class="p">(</span> <span class="s1">&#39;SMBUS&#39;</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SMBus.is_SMBus_supported"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.is_SMBus_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_SMBus_supported</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="p">(</span><span class="n">did</span><span class="p">,</span> <span class="n">vid</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_DeviceVendorID</span><span class="p">(</span> <span class="s1">&#39;SMBUS&#39;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[smbus] SMBus Controller (DID,VID) = (0x</span><span class="si">{:04X}</span><span class="s2">,0x</span><span class="si">{:04X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">did</span><span class="p">,</span> <span class="n">vid</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mh">0x8086</span> <span class="o">==</span> <span class="n">vid</span><span class="p">):</span> <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Unknown SMBus Controller (DID,VID) = (0x</span><span class="si">{:04X}</span><span class="s2">,0x</span><span class="si">{:04X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">did</span><span class="p">,</span> <span class="n">vid</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="SMBus.is_SMBus_host_controller_enabled"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.is_SMBus_host_controller_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_SMBus_host_controller_enabled</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="n">hcfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SMBus_HCFG</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s2">&quot;SMBUS_HCFG&quot;</span><span class="p">,</span> <span class="n">hcfg</span><span class="p">,</span> <span class="s2">&quot;HST_EN&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SMBus.enable_SMBus_host_controller"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.enable_SMBus_host_controller">[docs]</a>    <span class="k">def</span> <span class="nf">enable_SMBus_host_controller</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="c1"># Enable SMBus Host Controller Interface in HCFG</span>
+        <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;SMBUS_HCFG&#39;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="p">(</span><span class="n">reg_value</span> <span class="o">&amp;</span> <span class="mh">0x1</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="s1">&#39;SMBUS_HCFG&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">reg_value</span><span class="o">|</span><span class="mh">0x1</span><span class="p">)</span> <span class="p">)</span>
+        <span class="c1"># @TODO: check SBA is programmed</span>
+        <span class="n">sba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SMBus_Base_Address</span><span class="p">()</span>
+        <span class="c1"># Enable SMBus I/O Space</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;SMBUS_CMD&#39;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">&amp;</span> <span class="mh">0x1</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="s1">&#39;SMBUS_CMD&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">cmd</span><span class="o">|</span><span class="mh">0x1</span><span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SMBus.reset_SMBus_controller"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.reset_SMBus_controller">[docs]</a>    <span class="k">def</span> <span class="nf">reset_SMBus_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;SMBUS_HCFG&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s1">&#39;SMBUS_HCFG&#39;</span><span class="p">,</span> <span class="n">reg_value</span> <span class="o">|</span> <span class="mh">0x08</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SMBUS_POLL_COUNT</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;SMBUS_HCFG&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x08</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># SMBus commands</span>
+    <span class="c1">#</span>
+
+    <span class="c1"># waits for SMBus to become ready</span>
+    <span class="k">def</span> <span class="nf">_is_smbus_ready</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SMBUS_POLL_COUNT</span><span class="p">):</span>
+            <span class="c1">#time.sleep( SMBUS_POLL_SLEEP_INTERVAL )</span>
+            <span class="n">busy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="s1">&#39;BUSY&#39;</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">busy</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">busy</span><span class="p">)</span>
+
+    <span class="c1"># waits for SMBus transaction to complete</span>
+    <span class="k">def</span> <span class="nf">_wait_for_cycle</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SMBUS_POLL_COUNT</span><span class="p">):</span>
+            <span class="c1">#time.sleep( SMBUS_POLL_SLEEP_INTERVAL )</span>
+            <span class="n">sts</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span> <span class="p">)</span>
+            <span class="n">busy</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="n">sts</span><span class="p">,</span> <span class="s1">&#39;BUSY&#39;</span> <span class="p">)</span>
+            <span class="n">intr</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="n">sts</span><span class="p">,</span> <span class="s1">&#39;INTR&#39;</span> <span class="p">)</span>
+            <span class="n">failed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="n">sts</span><span class="p">,</span> <span class="s1">&#39;FAILED&#39;</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">busy</span> <span class="ow">and</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">intr</span><span class="p">:</span>
+                <span class="c1">#if self.logger.HAL:</span>
+                <span class="c1">#    intr = chipsec.chipset.get_register_field( self.cs, self.smb_reg_status, sts, &#39;INTR&#39; )</span>
+                <span class="c1">#    self.logger.log( &quot;[smbus]: INTR = {:d}&quot;.format(intr) )</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">failed</span><span class="p">:</span>
+                <span class="c1">#kill = 0</span>
+                <span class="c1">#if chipsec.chipset.register_has_field( self.cs, self.smb_reg_control, &#39;KILL&#39; ):</span>
+                <span class="c1">#    kill = chipsec.chipset.read_register_field( self.cs, self.smb_reg_control, &#39;KILL&#39; )</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;SMBus transaction failed (FAILED/ERROR bit = 1)&quot;</span> <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="s1">&#39;DEV_ERR&#39;</span> <span class="p">):</span>
+                    <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="n">sts</span><span class="p">,</span> <span class="s1">&#39;DEV_ERR&#39;</span> <span class="p">):</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;SMBus device error (invalid cmd, unclaimed cycle or time-out error)&quot;</span> <span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="s1">&#39;BUS_ERR&#39;</span> <span class="p">):</span>
+                    <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="n">sts</span><span class="p">,</span> <span class="s1">&#39;BUS_ERR&#39;</span> <span class="p">):</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;SMBus bus error&quot;</span> <span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">busy</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SMBus.read_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.read_byte">[docs]</a>    <span class="k">def</span> <span class="nf">read_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">offset</span> <span class="p">):</span>
+        <span class="c1"># clear status bits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">)</span>
+
+        <span class="c1"># SMBus txn RW direction = Read, SMBus slave address = target_address</span>
+        <span class="n">hst_sa</span> <span class="o">=</span> <span class="mh">0x0</span>
+        <span class="n">hst_sa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">set_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_address</span><span class="p">,</span> <span class="n">hst_sa</span><span class="p">,</span> <span class="s1">&#39;RW&#39;</span><span class="p">,</span> <span class="n">SMBUS_COMMAND_READ</span> <span class="p">)</span>
+        <span class="n">hst_sa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">set_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_address</span><span class="p">,</span> <span class="n">hst_sa</span><span class="p">,</span> <span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="kc">True</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_address</span><span class="p">,</span> <span class="n">hst_sa</span> <span class="p">)</span>
+        <span class="c1"># command data = byte offset (bus txn address)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_command</span><span class="p">,</span> <span class="s1">&#39;DataOffset&#39;</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span>
+        <span class="c1"># command = Byte Data</span>
+        <span class="c1">#if self.cs.register_has_field( self.smb_reg_control, &#39;SMB_CMD&#39; ):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_control</span><span class="p">,</span> <span class="s1">&#39;SMB_CMD&#39;</span><span class="p">,</span> <span class="n">SMBUS_COMMAND_BYTE_DATA</span> <span class="p">)</span>
+        <span class="c1"># send SMBus txn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_control</span><span class="p">,</span> <span class="s1">&#39;START&#39;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
+
+        <span class="c1"># wait for cycle to complete</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_cycle</span><span class="p">():</span> <span class="k">return</span> <span class="mh">0xFF</span>
+        <span class="c1"># read the data</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_data0</span><span class="p">,</span> <span class="s1">&#39;Data&#39;</span> <span class="p">)</span>
+        <span class="c1"># clear status bits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">)</span>
+        <span class="c1"># clear address/offset registers</span>
+        <span class="c1">#chipsec.chipset.write_register( self.cs, self.smb_reg_address, 0x0 )</span>
+        <span class="c1">#chipsec.chipset.write_register( self.cs, self.smb_reg_command, 0x0 )</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[smbus] read device </span><span class="si">{:X}</span><span class="s2"> off </span><span class="si">{:X}</span><span class="s2"> = </span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_address</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="SMBus.write_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.write_byte">[docs]</a>    <span class="k">def</span> <span class="nf">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="c1"># clear status bits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">)</span>
+
+        <span class="c1"># SMBus txn RW direction = Write, SMBus slave address = target_address</span>
+        <span class="n">hst_sa</span> <span class="o">=</span> <span class="mh">0x0</span>
+        <span class="n">hst_sa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">set_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_address</span><span class="p">,</span> <span class="n">hst_sa</span><span class="p">,</span> <span class="s1">&#39;RW&#39;</span><span class="p">,</span> <span class="n">SMBUS_COMMAND_WRITE</span> <span class="p">)</span>
+        <span class="n">hst_sa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">set_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_address</span><span class="p">,</span> <span class="n">hst_sa</span><span class="p">,</span> <span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="kc">True</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_address</span><span class="p">,</span> <span class="n">hst_sa</span> <span class="p">)</span>
+        <span class="c1"># command data = byte offset (bus txn address)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_command</span><span class="p">,</span> <span class="s1">&#39;DataOffset&#39;</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span>
+        <span class="c1"># write the data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_data0</span><span class="p">,</span> <span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+        <span class="c1"># command = Byte Data</span>
+        <span class="c1">#if self.cs.register_has_field( self.smb_reg_control, &#39;SMB_CMD&#39; ):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_control</span><span class="p">,</span> <span class="s1">&#39;SMB_CMD&#39;</span><span class="p">,</span> <span class="n">SMBUS_COMMAND_BYTE_DATA</span> <span class="p">)</span>
+        <span class="c1"># send SMBus txn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_control</span><span class="p">,</span> <span class="s1">&#39;START&#39;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
+
+        <span class="c1"># wait for cycle to complete</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_cycle</span><span class="p">():</span> <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1"># clear status bits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">smb_reg_status</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">)</span>
+        <span class="c1"># clear address/offset registers</span>
+        <span class="c1">#chipsec.chipset.write_register( self.cs, self.smb_reg_address, 0x0 )</span>
+        <span class="c1">#chipsec.chipset.write_register( self.cs, self.smb_reg_command, 0x0 )</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[smbus] write to device </span><span class="si">{:X}</span><span class="s2"> off </span><span class="si">{:X}</span><span class="s2"> = </span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_address</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="SMBus.read_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.read_range">[docs]</a>    <span class="k">def</span> <span class="nf">read_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="mh">0xFF</span><span class="p">)]</span> <span class="o">*</span><span class="n">size</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[smbus] reading </span><span class="si">{:d}</span><span class="s2"> bytes from device 0x</span><span class="si">{:X}</span><span class="s2"> at offset </span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">)</span> <span class="p">)</span>
+            <span class="c1">#print_buffer( buffer )</span>
+        <span class="k">return</span> <span class="n">buffer</span></div>
+
+<div class="viewcode-block" id="SMBus.write_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbus.html#chipsec.hal.smbus.SMBus.write_range">[docs]</a>    <span class="k">def</span> <span class="nf">write_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">buffer</span> <span class="p">):</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="nb">ord</span><span class="p">(</span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[smbus] writing </span><span class="si">{:d}</span><span class="s2"> bytes to device 0x</span><span class="si">{:X}</span><span class="s2"> at offset </span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">target_address</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">)</span> <span class="p">)</span>
+            <span class="c1">#print_buffer( buffer )</span>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.smbus</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

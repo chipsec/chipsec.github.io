@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.mmio &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.mmio</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.hal.mmio</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Access to MMIO (Memory Mapped IO) BARs and Memory-Mapped PCI Configuration Space (MMCFG)</span>
+
+<span class="sd">usage:</span>
+<span class="sd">    &gt;&gt;&gt; read_MMIO_reg(cs, bar_base, 0x0, 4 )</span>
+<span class="sd">    &gt;&gt;&gt; write_MMIO_reg(cs, bar_base, 0x0, 0xFFFFFFFF, 4 )</span>
+<span class="sd">    &gt;&gt;&gt; read_MMIO( cs, bar_base, 0x1000 )</span>
+<span class="sd">    &gt;&gt;&gt; dump_MMIO( cs, bar_base, 0x1000 )</span>
+
+<span class="sd">    Access MMIO by BAR name:</span>
+
+<span class="sd">    &gt;&gt;&gt; read_MMIO_BAR_reg( cs, &#39;MCHBAR&#39;, 0x0, 4 )</span>
+<span class="sd">    &gt;&gt;&gt; write_MMIO_BAR_reg( cs, &#39;MCHBAR&#39;, 0x0, 0xFFFFFFFF, 4 )</span>
+<span class="sd">    &gt;&gt;&gt; get_MMIO_BAR_base_address( cs, &#39;MCHBAR&#39; )</span>
+<span class="sd">    &gt;&gt;&gt; is_MMIO_BAR_enabled( cs, &#39;MCHBAR&#39; )</span>
+<span class="sd">    &gt;&gt;&gt; is_MMIO_BAR_programmed( cs, &#39;MCHBAR&#39; )</span>
+<span class="sd">    &gt;&gt;&gt; dump_MMIO_BAR( cs, &#39;MCHBAR&#39; )</span>
+<span class="sd">    &gt;&gt;&gt; list_MMIO_BARs( cs )</span>
+
+<span class="sd">    Access Memory Mapped Config Space:</span>
+
+<span class="sd">    &gt;&gt;&gt; get_MMCFG_base_address(cs)</span>
+<span class="sd">    &gt;&gt;&gt; read_mmcfg_reg( cs, 0, 0, 0, 0x10, 4 )</span>
+<span class="sd">    &gt;&gt;&gt; read_mmcfg_reg( cs, 0, 0, 0, 0x10, 4, 0xFFFFFFFF )</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">hal_base</span>
+
+<span class="n">DEFAULT_MMIO_BAR_SIZE</span> <span class="o">=</span> <span class="mh">0x1000</span>
+
+<span class="n">PCI_PCIEXBAR_REG_LENGTH_256MB</span>  <span class="o">=</span> <span class="mh">0x0</span>
+<span class="n">PCI_PCIEXBAR_REG_LENGTH_128MB</span>  <span class="o">=</span> <span class="mh">0x1</span>
+<span class="n">PCI_PCIEXBAR_REG_LENGTH_64MB</span>   <span class="o">=</span> <span class="mh">0x2</span>
+<span class="n">PCI_PCIEXBAR_REG_LENGTH_512MB</span>  <span class="o">=</span> <span class="mh">0x3</span>
+<span class="n">PCI_PCIEXBAR_REG_LENGTH_1024MB</span> <span class="o">=</span> <span class="mh">0x4</span>
+<span class="n">PCI_PCIEXBAR_REG_LENGTH_2048MB</span> <span class="o">=</span> <span class="mh">0x5</span>
+<span class="n">PCI_PCIEXBAR_REG_LENGTH_4096MB</span> <span class="o">=</span> <span class="mh">0x6</span>
+<span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">=</span> <span class="mh">0x7FFC000000</span>
+
+<div class="viewcode-block" id="MMIO"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO">[docs]</a><span class="k">class</span> <span class="nc">MMIO</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MMIO</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Access to MMIO BAR defined by configuration files (chipsec/cfg/*.py)</span>
+    <span class="c1">###########################################################################</span>
+    <span class="c1">#</span>
+    <span class="c1"># To add your own MMIO bar:</span>
+    <span class="c1">#   1. Add new MMIO BAR id (any)</span>
+    <span class="c1">#   2. Write a function get_yourBAR_base_address() with no args that</span>
+    <span class="c1">#      returns base addres of new bar</span>
+    <span class="c1">#   3. Add a pointer to this function to MMIO_BAR_base map</span>
+    <span class="c1">#   4. Don&#39;t touch read/write_MMIO_reg functions ;)</span>
+    <span class="c1">#</span>
+    <span class="c1">###########################################################################</span>
+
+
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Read MMIO register as an offset off of MMIO range base address</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.read_MMIO_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_MMIO_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_MMIO_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">bar_size</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;MMIO read cannot exceed 8&quot;</span><span class="p">)</span>
+        <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">bar_size</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">reg_value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">reg_value</span></div>
+
+<div class="viewcode-block" id="MMIO.read_MMIO_reg_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_MMIO_reg_byte">[docs]</a>    <span class="k">def</span> <span class="nf">read_MMIO_reg_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span> <span class="p">):</span>
+        <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">reg_value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">reg_value</span></div>
+
+<div class="viewcode-block" id="MMIO.read_MMIO_reg_word"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_MMIO_reg_word">[docs]</a>    <span class="k">def</span> <span class="nf">read_MMIO_reg_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span> <span class="p">):</span>
+        <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">reg_value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">reg_value</span></div>
+
+<div class="viewcode-block" id="MMIO.read_MMIO_reg_dword"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_MMIO_reg_dword">[docs]</a>    <span class="k">def</span> <span class="nf">read_MMIO_reg_dword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span> <span class="p">):</span>
+        <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">reg_value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">reg_value</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Write MMIO register as an offset off of MMIO range base address</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.write_MMIO_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.write_MMIO_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_MMIO_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">bar_size</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] write 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">bar_size</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MMIO.write_MMIO_reg_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.write_MMIO_reg_byte">[docs]</a>    <span class="k">def</span> <span class="nf">write_MMIO_reg_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] write 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MMIO.write_MMIO_reg_word"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.write_MMIO_reg_word">[docs]</a>    <span class="k">def</span> <span class="nf">write_MMIO_reg_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] write 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MMIO.write_MMIO_reg_dword"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.write_MMIO_reg_dword">[docs]</a>    <span class="k">def</span> <span class="nf">write_MMIO_reg_dword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] write 0x</span><span class="si">{:08X}</span><span class="s1"> + 0x</span><span class="si">{:08X}</span><span class="s1"> = 0x</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_mmio_reg</span><span class="p">(</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Read MMIO registers as offsets off of MMIO range base address</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.read_MMIO"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_MMIO">[docs]</a>    <span class="k">def</span> <span class="nf">read_MMIO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">regs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">size</span> <span class="o">-=</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">4</span>
+        <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="n">regs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">regs</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Dump MMIO range</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.dump_MMIO"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.dump_MMIO">[docs]</a>    <span class="k">def</span> <span class="nf">dump_MMIO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[mmio] MMIO register range [0x</span><span class="si">{:016X}</span><span class="s2">:0x</span><span class="si">{:016X}</span><span class="s2">+</span><span class="si">{:08X}</span><span class="s2">]:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+        <span class="n">size</span> <span class="o">-=</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">4</span>
+        <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;+</span><span class="si">{:08X}</span><span class="s1">: </span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span> <span class="p">)</span></div>
+
+
+    <span class="c1">###############################################################################</span>
+    <span class="c1"># Access to MMIO BAR defined by XML configuration files (chipsec/cfg/*.xml)</span>
+    <span class="c1">###############################################################################</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Check if MMIO BAR with bar_name has been defined in XML config</span>
+    <span class="c1"># Use this function to fall-back to hardcoded config in case XML config is not available</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.is_MMIO_BAR_defined"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.is_MMIO_BAR_defined">[docs]</a>    <span class="k">def</span> <span class="nf">is_MMIO_BAR_defined</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">):</span>
+        <span class="n">is_bar_defined</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">MMIO_BARS</span><span class="p">[</span> <span class="n">bar_name</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="n">_bar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;register&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">:</span>
+                    <span class="n">is_bar_defined</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;register&#39;</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;bus&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;dev&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;fun&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;reg&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">):</span>
+                    <span class="c1"># old definition</span>
+                    <span class="n">is_bar_defined</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_bar_defined</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; MMIO BAR definition not found/correct in XML config&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">is_bar_defined</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Get base address of MMIO range by MMIO BAR name</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.get_MMIO_BAR_base_address"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.get_MMIO_BAR_base_address">[docs]</a>    <span class="k">def</span> <span class="nf">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">):</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">MMIO_BARS</span><span class="p">[</span> <span class="n">bar_name</span> <span class="p">]</span>
+        <span class="k">if</span> <span class="n">bar</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">bar</span> <span class="o">==</span> <span class="p">{}:</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">if</span> <span class="s1">&#39;register&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+            <span class="n">bar_reg</span> <span class="o">=</span> <span class="n">bar</span><span class="p">[</span><span class="s1">&#39;register&#39;</span><span class="p">]</span>
+            <span class="n">reg_def</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;base_field&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+                <span class="n">base_field</span> <span class="o">=</span> <span class="n">bar</span><span class="p">[</span><span class="s1">&#39;base_field&#39;</span><span class="p">]</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">,</span> <span class="n">base_field</span><span class="p">,</span> <span class="n">preserve_field_position</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">reg_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field_mask</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">,</span> <span class="n">base_field</span><span class="p">,</span> <span class="n">preserve_field_position</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">)</span>
+                <span class="n">reg_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field_mask</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">,</span> <span class="n">preserve_field_position</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># this method is not preferred (less flexible)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;bus&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;dev&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;fun&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;reg&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">reg_mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="mi">8</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+                <span class="n">base_lo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="p">)</span>
+                <span class="n">base_hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">4</span> <span class="p">)</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">base_lo</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;fixed_address&#39;</span> <span class="ow">in</span> <span class="n">bar</span> <span class="ow">and</span> <span class="n">base</span> <span class="o">==</span> <span class="n">reg_mask</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;fixed_address&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[mmio] Using fixed address for </span><span class="si">{}</span><span class="s1">: 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_name</span><span class="p">,</span> <span class="n">base</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;mask&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span> <span class="n">base</span> <span class="o">&amp;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;offset&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span> <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">)</span> <span class="k">else</span> <span class="n">DEFAULT_MMIO_BAR_SIZE</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmio] </span><span class="si">{}</span><span class="s1">: 0x</span><span class="si">{:016X}</span><span class="s1"> (size = 0x</span><span class="si">{:X}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_name</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">base</span><span class="p">,</span> <span class="n">size</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Check if MMIO range is enabled by MMIO BAR name</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.is_MMIO_BAR_enabled"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.is_MMIO_BAR_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_MMIO_BAR_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_MMIO_BAR_defined</span><span class="p">(</span> <span class="n">bar_name</span> <span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">MMIO_BARS</span><span class="p">[</span> <span class="n">bar_name</span> <span class="p">]</span>
+        <span class="n">is_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="s1">&#39;register&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+            <span class="n">bar_reg</span>   <span class="o">=</span> <span class="n">bar</span><span class="p">[</span><span class="s1">&#39;register&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;enable_field&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+                <span class="n">bar_en_field</span> <span class="o">=</span> <span class="n">bar</span><span class="p">[</span><span class="s1">&#39;enable_field&#39;</span><span class="p">]</span>
+                <span class="n">is_enabled</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">,</span> <span class="n">bar_en_field</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># this method is not preferred (less flexible)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;bus&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;dev&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;fun&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;reg&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="k">if</span> <span class="mi">8</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+                <span class="n">base_lo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="p">)</span>
+                <span class="n">base_hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">4</span> <span class="p">)</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">base_lo</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;enable_bit&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+                <span class="n">en_mask</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;enable_bit&#39;</span><span class="p">])</span>
+                <span class="n">is_enabled</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">base</span> <span class="o">&amp;</span> <span class="n">en_mask</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">is_enabled</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Check if MMIO range is programmed by MMIO BAR name</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.is_MMIO_BAR_programmed"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.is_MMIO_BAR_programmed">[docs]</a>    <span class="k">def</span> <span class="nf">is_MMIO_BAR_programmed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">):</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">MMIO_BARS</span><span class="p">[</span><span class="n">bar_name</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s1">&#39;register&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+            <span class="n">bar_reg</span>   <span class="o">=</span> <span class="n">bar</span><span class="p">[</span><span class="s1">&#39;register&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;base_field&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+                <span class="n">base_field</span> <span class="o">=</span> <span class="n">bar</span><span class="p">[</span><span class="s1">&#39;base_field&#39;</span><span class="p">]</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">,</span> <span class="n">base_field</span><span class="p">,</span> <span class="n">preserve_field_position</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># this method is not preferred (less flexible)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;bus&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;dev&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;fun&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;reg&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bar</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="k">if</span> <span class="mi">8</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+                <span class="n">base_lo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="p">)</span>
+                <span class="n">base_hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">4</span> <span class="p">)</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">base_lo</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r</span> <span class="p">)</span>
+
+        <span class="c1">#if &#39;mask&#39; in bar: base &amp;= int(bar[&#39;mask&#39;],16)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">base</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Read MMIO register from MMIO range defined by MMIO BAR name</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.read_MMIO_BAR_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_MMIO_BAR_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_MMIO_BAR_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span> <span class="p">):</span>
+        <span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
+        <span class="c1"># @TODO: check offset exceeds BAR size</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Write MMIO register from MMIO range defined by MMIO BAR name</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.write_MMIO_BAR_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.write_MMIO_BAR_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_MMIO_BAR_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span> <span class="p">):</span>
+        <span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
+        <span class="c1"># @TODO: check offset exceeds BAR size</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MMIO.read_MMIO_BAR"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_MMIO_BAR">[docs]</a>    <span class="k">def</span> <span class="nf">read_MMIO_BAR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_MMIO</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Dump MMIO range by MMIO BAR name</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="MMIO.dump_MMIO_BAR"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.dump_MMIO_BAR">[docs]</a>    <span class="k">def</span> <span class="nf">dump_MMIO_BAR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dump_MMIO</span><span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MMIO.list_MMIO_BARs"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.list_MMIO_BARs">[docs]</a>    <span class="k">def</span> <span class="nf">list_MMIO_BARs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;--------------------------------------------------------------------------------&#39;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39; MMIO Range   | BAR Register   | Base             | Size     | En? | Description&#39;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;--------------------------------------------------------------------------------&#39;</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">_bar_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">MMIO_BARS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_MMIO_BAR_defined</span><span class="p">(</span> <span class="n">_bar_name</span> <span class="p">):</span> <span class="k">continue</span>
+            <span class="n">_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">MMIO_BARS</span><span class="p">[</span><span class="n">_bar_name</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">_base</span><span class="p">,</span> <span class="n">_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="n">_bar_name</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Unable to find MMIO BAR </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_bar</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="n">_en</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_MMIO_BAR_enabled</span><span class="p">(</span> <span class="n">_bar_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;register&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">:</span>
+                <span class="n">_s</span> <span class="o">=</span> <span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;register&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;offset&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">:</span> <span class="n">_s</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39; + 0x</span><span class="si">{:X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02X}</span><span class="s1">:</span><span class="si">{:02X}</span><span class="s1">.</span><span class="si">{:01X}</span><span class="s1"> + </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;bus&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;dev&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;fun&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">),</span> <span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;reg&#39;</span><span class="p">]</span> <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39; </span><span class="si">{:12}</span><span class="s1"> | </span><span class="si">{:14}</span><span class="s1"> | </span><span class="si">{:016X}</span><span class="s1"> | </span><span class="si">{:08X}</span><span class="s1"> | </span><span class="si">{:d}</span><span class="s1">   | </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_bar_name</span><span class="p">,</span> <span class="n">_s</span><span class="p">,</span> <span class="n">_base</span><span class="p">,</span> <span class="n">_size</span><span class="p">,</span> <span class="n">_en</span><span class="p">,</span> <span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">])</span> <span class="p">)</span></div>
+
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1"># Access to Memory Mapped PCIe Configuration Space</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="MMIO.get_MMCFG_base_address"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.get_MMCFG_base_address">[docs]</a>    <span class="k">def</span> <span class="nf">get_MMCFG_base_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="s1">&#39;MMCFG&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span><span class="s2">&quot;PCI0.0.0_PCIEXBAR&quot;</span><span class="p">,</span> <span class="s2">&quot;LENGTH&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_server</span><span class="p">():</span>
+            <span class="nb">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s2">&quot;PCI0.0.0_PCIEXBAR&quot;</span><span class="p">,</span> <span class="s2">&quot;LENGTH&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span> <span class="o">==</span> <span class="n">PCI_PCIEXBAR_REG_LENGTH_256MB</span><span class="p">:</span>
+                <span class="n">bar_base</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span> <span class="o">==</span> <span class="n">PCI_PCIEXBAR_REG_LENGTH_128MB</span><span class="p">:</span>
+                <span class="n">bar_base</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span> <span class="o">==</span> <span class="n">PCI_PCIEXBAR_REG_LENGTH_64MB</span><span class="p">:</span>
+                <span class="n">bar_base</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span> <span class="o">==</span> <span class="n">PCI_PCIEXBAR_REG_LENGTH_512MB</span><span class="p">:</span>
+                <span class="n">bar_base</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span> <span class="o">==</span> <span class="n">PCI_PCIEXBAR_REG_LENGTH_1024MB</span><span class="p">:</span>
+                <span class="n">bar_base</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span> <span class="o">==</span> <span class="n">PCI_PCIEXBAR_REG_LENGTH_2048MB</span><span class="p">:</span>
+                <span class="n">bar_base</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span> <span class="o">==</span> <span class="n">PCI_PCIEXBAR_REG_LENGTH_4096MB</span><span class="p">:</span>
+                <span class="n">bar_base</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="n">PCI_PCIEBAR_REG_MASK</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[mmcfg] Memory Mapped CFG Base: 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_base</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span></div>
+
+<div class="viewcode-block" id="MMIO.read_mmcfg_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.read_mmcfg_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_mmcfg_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="n">pciexbar</span><span class="p">,</span> <span class="n">pciexbar_sz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMCFG_base_address</span><span class="p">()</span>
+        <span class="n">pciexbar_off</span> <span class="o">=</span> <span class="p">(</span><span class="n">bus</span> <span class="o">*</span> <span class="mi">32</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">dev</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">fun</span><span class="p">)</span> <span class="o">*</span> <span class="mh">0x1000</span> <span class="o">+</span> <span class="n">off</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span><span class="n">pciexbar</span><span class="p">,</span> <span class="n">pciexbar_off</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">pciexbar_sz</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[mmcfg] reading </span><span class="si">{:02d}</span><span class="s2">:</span><span class="si">{:02d}</span><span class="s2">.</span><span class="si">{:d}</span><span class="s2"> + 0x</span><span class="si">{:02X}</span><span class="s2"> (MMCFG + 0x</span><span class="si">{:08X}</span><span class="s2">): 0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">pciexbar_off</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">size</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mi">2</span> <span class="o">==</span> <span class="n">size</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="MMIO.write_mmcfg_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.mmio.html#chipsec.hal.mmio.MMIO.write_mmcfg_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_mmcfg_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">pciexbar</span><span class="p">,</span> <span class="n">pciexbar_sz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_MMCFG_base_address</span><span class="p">()</span>
+        <span class="n">pciexbar_off</span> <span class="o">=</span> <span class="p">(</span><span class="n">bus</span> <span class="o">*</span> <span class="mi">32</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">dev</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">fun</span><span class="p">)</span> <span class="o">*</span> <span class="mh">0x1000</span> <span class="o">+</span> <span class="n">off</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span><span class="n">pciexbar</span><span class="p">,</span> <span class="n">pciexbar_off</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="n">pciexbar_sz</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[mmcfg] writing </span><span class="si">{:02d}</span><span class="s2">:</span><span class="si">{:02d}</span><span class="s2">.</span><span class="si">{:d}</span><span class="s2"> + 0x</span><span class="si">{:02X}</span><span class="s2"> (MMCFG + 0x</span><span class="si">{:08X}</span><span class="s2">): 0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">fun</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">pciexbar_off</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.mmio</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

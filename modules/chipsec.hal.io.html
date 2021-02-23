@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>io module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="iobar module" href="chipsec.hal.iobar.html" />
+    <link rel="prev" title="interrupts module" href="chipsec.hal.interrupts.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.iobar.html" title="iobar module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.interrupts.html" title="interrupts module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">io module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.io">
+<span id="io-module"></span><h1>io module<a class="headerlink" href="#module-chipsec.hal.io" title="Permalink to this headline">¶</a></h1>
+<p>Access to Port I/O</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_port_byte</span><span class="p">(</span> <span class="mh">0x61</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_port_word</span><span class="p">(</span> <span class="mh">0x61</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_port_dword</span><span class="p">(</span> <span class="mh">0x61</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_port_byte</span><span class="p">(</span> <span class="mh">0x71</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_port_word</span><span class="p">(</span> <span class="mh">0x71</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_port_dword</span><span class="p">(</span> <span class="mh">0x71</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="chipsec.hal.io.PortIO">
+<em class="property">class </em><code class="sig-name descname">PortIO</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.dump_IO">
+<code class="sig-name descname">dump_IO</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">range_base</span></em>, <em class="sig-param"><span class="n">range_size</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.dump_IO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.dump_IO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.read_IO">
+<code class="sig-name descname">read_IO</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">range_base</span></em>, <em class="sig-param"><span class="n">range_size</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.read_IO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.read_IO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.read_port_byte">
+<code class="sig-name descname">read_port_byte</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">io_port</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.read_port_byte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.read_port_byte" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.read_port_dword">
+<code class="sig-name descname">read_port_dword</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">io_port</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.read_port_dword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.read_port_dword" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.read_port_word">
+<code class="sig-name descname">read_port_word</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">io_port</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.read_port_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.read_port_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.write_port_byte">
+<code class="sig-name descname">write_port_byte</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">io_port</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.write_port_byte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.write_port_byte" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.write_port_dword">
+<code class="sig-name descname">write_port_dword</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">io_port</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.write_port_dword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.write_port_dword" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.io.PortIO.write_port_word">
+<code class="sig-name descname">write_port_word</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">io_port</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIO.write_port_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIO.write_port_word" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.io.PortIORuntimeError">
+<em class="property">exception </em><code class="sig-name descname">PortIORuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/io.html#PortIORuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.io.PortIORuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.interrupts.html"
+                        title="previous chapter">interrupts module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.iobar.html"
+                        title="next chapter">iobar module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.iobar.html" title="iobar module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.interrupts.html" title="interrupts module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">io module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

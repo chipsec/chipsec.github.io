@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creating the Kali Linux Live USB &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Running CHIPSEC" href="Running-Chipsec.html" />
+    <link rel="prev" title="Building a Bootable USB drive with UEFI Shell (x64)" href="USB%20with%20UEFI%20Shell.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Running-Chipsec.html" title="Running CHIPSEC"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="USB%20with%20UEFI%20Shell.html" title="Building a Bootable USB drive with UEFI Shell (x64)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" accesskey="U">CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Creating the Kali Linux Live USB</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="creating-the-kali-linux-live-usb">
+<h1>Creating the Kali Linux Live USB<a class="headerlink" href="#creating-the-kali-linux-live-usb" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://www.kali.org/downloads/">Download</a> and <a class="reference external" href="https://www.kali.org/docs/installation/">install</a> Kali Linux</p>
+<div class="section" id="installing-chipsec">
+<h2>Installing CHIPSEC<a class="headerlink" href="#installing-chipsec" title="Permalink to this headline">¶</a></h2>
+<p><strong>Install the dependencies</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python</span> <span class="pre">python-devel</span> <span class="pre">gcc</span> <span class="pre">nasm</span> <span class="pre">linux-headers-[version]-all</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Install the linux headers for the currently running version of the Linux kernel. You can determine this with <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-r</span></code></p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">setuptools</span></code></p>
+<p><strong>Install latest CHIPSEC release from PyPI repository</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">chipsec</span></code></p>
+<p><strong>Install CHIPSEC package from latest source code</strong></p>
+<p>Copy CHIPSEC to the USB drive (or install <code class="docutils literal notranslate"><span class="pre">git</span></code>)</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/chipsec/chipsec</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code></p>
+</div></blockquote>
+</div>
+<div class="section" id="run-chipsec">
+<h2>Run CHIPSEC<a class="headerlink" href="#run-chipsec" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">chipsec_main</span></code></p>
+<p>or</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">chipsec_util</span></code></p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating the Kali Linux Live USB</a><ul>
+<li><a class="reference internal" href="#installing-chipsec">Installing CHIPSEC</a></li>
+<li><a class="reference internal" href="#run-chipsec">Run CHIPSEC</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="USB%20with%20UEFI%20Shell.html"
+                        title="previous chapter">Building a Bootable USB drive with UEFI Shell (x64)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Running-Chipsec.html"
+                        title="next chapter">Running CHIPSEC</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Running-Chipsec.html" title="Running CHIPSEC"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="USB%20with%20UEFI%20Shell.html" title="Building a Bootable USB drive with UEFI Shell (x64)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" >CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Creating the Kali Linux Live USB</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

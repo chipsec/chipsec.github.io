@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.vmm.pcie_fuzz &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.pcie_fuzz</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.vmm.pcie_fuzz</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Simple PCIe device Memory-Mapped I/O (MMIO) and I/O ranges VMM emulation fuzzer</span>
+
+<span class="sd"> Usage:</span>
+<span class="sd">   ``chipsec_main.py -i -m tools.vmm.pcie_fuzz -l log.txt``</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.pci</span> <span class="kn">import</span> <span class="n">print_pci_devices</span>
+
+
+
+<span class="c1">#################################################################</span>
+<span class="c1"># Fuzzing configuration</span>
+<span class="c1">#################################################################</span>
+<span class="c1">#</span>
+<span class="n">IO_FUZZ</span>        <span class="o">=</span> <span class="mi">0</span>
+<span class="n">CALC_BAR_SIZE</span>  <span class="o">=</span> <span class="mi">1</span>
+<span class="n">TIMEOUT</span>        <span class="o">=</span> <span class="mi">1</span>
+<span class="n">ACTIVE_RANGE</span>   <span class="o">=</span> <span class="mi">0</span>
+<span class="n">BIT_FLIP</span>       <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">_EXCLUDE_BAR</span>   <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="pcie_fuzz"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz">[docs]</a><span class="k">class</span> <span class="nc">pcie_fuzz</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_io_bar"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_io_bar">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_io_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mh">0x100</span><span class="p">):</span>
+        <span class="c1">#logger.log( &quot;[*] Fuzzing I/O BAR 0x{:08X}, size = 0x{:X}..&quot;.format(bar,size) )</span>
+        <span class="n">port_off</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Issue 8/16/32-bit I/O requests with various values to all I/O ports (aligned and unaligned)</span>
+        <span class="k">for</span> <span class="n">port_off</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">port_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_port_byte</span><span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span> <span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="n">port_value</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span> <span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="p">((</span><span class="o">~</span><span class="n">port_value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span> <span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span> <span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="mh">0x00</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_word</span> <span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="mh">0xFFFF</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_word</span> <span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="mh">0x0000</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_dword</span><span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_dword</span><span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">port_off</span><span class="p">,</span> <span class="mh">0x00000000</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_offset"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_offset">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">reg_value</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">reg_value</span> <span class="p">)</span> <span class="c1"># same value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="o">~</span><span class="n">reg_value</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="mh">0x5A5A5A5A</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="mh">0x00000000</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_unaligned"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_unaligned">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_unaligned</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">):</span>
+        <span class="n">dummy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
+        <span class="c1"># @TODO: crosses the reg boundary</span>
+        <span class="c1">#write_MMIO_reg( cs, bar, reg_off + 1, 0xFFFFFFFF )</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem_word</span><span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">reg_off</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mh">0xFFFF</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem_byte</span><span class="p">(</span> <span class="n">bar</span> <span class="o">+</span> <span class="n">reg_off</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_mmio_bar"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_mmio_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mh">0x1000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Fuzzing MMIO BAR 0x</span><span class="si">{:016X}</span><span class="s2">, size = 0x</span><span class="si">{:X}</span><span class="s2">..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">reg_off</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Issue aligned 32-bit MMIO requests with various values to all MMIO registers</span>
+        <span class="k">for</span> <span class="n">reg_off</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_offset</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">reg_value</span><span class="p">,</span> <span class="n">is64bit</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_unaligned</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">is64bit</span> <span class="p">)</span>
+            <span class="c1"># restore the original value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">reg_value</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_mmio_bar_random"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_random">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_mmio_bar_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mh">0x1000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Fuzzing MMIO BAR in random mode 0x</span><span class="si">{:016X}</span><span class="s2">, size = 0x</span><span class="si">{:X}</span><span class="s2">..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">reg_off</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span> <span class="o">/</span><span class="mi">4</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_offset</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">rand</span> <span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_offset</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">rand</span> <span class="o">*</span><span class="mi">4</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_unaligned</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">rand</span> <span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_mmio_bar_in_active_range"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_mmio_bar_in_active_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Fuzzing MMIO BAR in Active range 0x</span><span class="si">{:016X}</span><span class="s2">, size of range = 0x</span><span class="si">{:X}</span><span class="s2">..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">reg_off</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_offset</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">rand</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_unaligned</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_mmio_bar_in_active_range_random"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range_random">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_mmio_bar_in_active_range_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Fuzzing MMIO BAR in Active range 0x</span><span class="si">{:016X}</span><span class="s2"> in random mode, size of range = 0x</span><span class="si">{:X}</span><span class="s2">..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span> <span class="p">)</span>
+        <span class="n">reg_off</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_unaligned</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">)</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_offset</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">rand</span><span class="p">],</span> <span class="n">is64bit</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_mmio_bar_in_active_range_bit_flip"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range_bit_flip">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_mmio_bar_in_active_range_bit_flip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Fuzzing (bit flipping) MMIO BAR in Active range 0x</span><span class="si">{:016X}</span><span class="s2">, size of range = 0x</span><span class="si">{:X}</span><span class="s2">..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span> <span class="p">)</span>
+        <span class="n">reg_off</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rand_index</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">rand_index</span><span class="p">]</span> <span class="p">)</span>
+
+            <span class="n">rand_offset</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+            <span class="k">if</span> <span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">rand_offset</span> <span class="o">&amp;</span> <span class="n">reg_value</span><span class="p">:</span>
+                <span class="n">reg_value</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">rand_offset</span><span class="p">)</span><span class="o">&amp;</span> <span class="mh">0xffffffff</span> <span class="o">&amp;</span> <span class="n">reg_value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">reg_value</span> <span class="o">=</span> <span class="n">reg_value</span> <span class="o">|</span> <span class="mi">1</span><span class="o">&lt;&lt;</span><span class="n">rand_offset</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">reg_off</span><span class="p">,</span> <span class="n">reg_value</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.find_active_range"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.find_active_range">[docs]</a>    <span class="k">def</span> <span class="nf">find_active_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Determine MMIO BAR Active range 0x</span><span class="si">{:016X}</span><span class="s2">, size  0x</span><span class="si">{:X}</span><span class="s2">..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">one</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">TIMEOUT</span><span class="p">)</span>
+        <span class="n">two</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">diff_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">one</span><span class="p">)</span> <span class="o">//</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">one</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">two</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span><span class="p">]</span> <span class="ow">or</span> <span class="n">one</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span> <span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">two</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span> <span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">one</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span> <span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">two</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span> <span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="n">one</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span> <span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="n">two</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span><span class="n">i</span> <span class="o">+</span><span class="mi">3</span><span class="p">]:</span>
+                <span class="n">diff_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">diff_index</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.fuzz_pcie_device"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_pcie_device">[docs]</a>    <span class="k">def</span> <span class="nf">fuzz_pcie_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Discovering MMIO and I/O BARs of the device..&quot;</span> <span class="p">)</span>
+        <span class="n">device_bars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">get_device_bars</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">bCalcSize</span><span class="o">=</span><span class="n">CALC_BAR_SIZE</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">isMMIO</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar_off</span><span class="p">,</span> <span class="n">bar_reg</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="ow">in</span> <span class="n">device_bars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bar</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_EXCLUDE_BAR</span><span class="p">:</span>
+                <span class="c1"># Fuzzing MMIO registers of the PCIe device</span>
+                <span class="k">if</span> <span class="n">isMMIO</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] + 0x</span><span class="si">{:02X}</span><span class="s2"> (</span><span class="si">{:X}</span><span class="s2">): MMIO BAR at 0x</span><span class="si">{:016X}</span><span class="s2"> (64-bit? </span><span class="si">{:d}</span><span class="s2">) with size: 0x</span><span class="si">{:08X}</span><span class="s2">. Fuzzing..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_off</span><span class="p">,</span> <span class="n">bar_reg</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">ACTIVE_RANGE</span> <span class="ow">and</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mh">0x1000</span><span class="p">:</span>
+                        <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="nb">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_active_range</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">BIT_FLIP</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_mmio_bar_in_active_range_bit_flip</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_mmio_bar_in_active_range</span><span class="p">(</span> <span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;=</span> <span class="mh">0x2000000</span><span class="p">:</span> <span class="n">size</span> <span class="o">=</span> <span class="mh">0x2000000</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_mmio_bar</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+                <span class="c1"># Fuzzing I/O registers of the PCIe device</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">IO_FUZZ</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] + 0x</span><span class="si">{:02X}</span><span class="s2">: I/O BAR at 0x</span><span class="si">{:08X}</span><span class="s2">. Fuzzing..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_off</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_io_bar</span><span class="p">(</span> <span class="n">bar</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="pcie_fuzz.run"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.vmm.pcie_fuzz.html#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;PCIe device fuzzer (pass-through devices)&quot;</span> <span class="p">)</span>
+
+        <span class="n">pcie_devices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">_bus</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">_dev</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">_fun</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">pcie_devices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">_bus</span><span class="p">,</span> <span class="n">_dev</span><span class="p">,</span> <span class="n">_fun</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Enumerating available PCIe devices..&quot;</span> <span class="p">)</span>
+            <span class="n">pcie_devices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">enumerate_devices</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] About to fuzz the following PCIe devices..&quot;</span> <span class="p">)</span>
+        <span class="n">print_pci_devices</span><span class="p">(</span> <span class="n">pcie_devices</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">vid</span><span class="p">,</span> <span class="n">did</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pcie_devices</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[+] Fuzzing device </span><span class="si">{:02X}</span><span class="s2">:</span><span class="si">{:02X}</span><span class="s2">.</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_pcie_device</span><span class="p">(</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.pcie_fuzz</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

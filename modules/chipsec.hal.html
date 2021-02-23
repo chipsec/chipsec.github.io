@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hal package &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="acpi module" href="chipsec.hal.acpi.html" />
+    <link rel="prev" title="vmm_cmd module" href="chipsec.utilcmd.vmm_cmd.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.acpi.html" title="acpi module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.vmm_cmd.html" title="vmm_cmd module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" accesskey="U">Architecture Overview</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hal package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hal-package">
+<h1>hal package<a class="headerlink" href="#hal-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.acpi.html">acpi module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.acpi_tables.html">acpi_tables module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.cmos.html">cmos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.cpu.html">cpu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.cpuid.html">cpuid module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.ec.html">ec module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.hal_base.html">hal_base module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.igd.html">igd module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.interrupts.html">interrupts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.io.html">io module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.iobar.html">iobar module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.iommu.html">iommu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.mmio.html">mmio module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.msgbus.html">msgbus module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.msr.html">msr module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.paging.html">paging module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.pci.html">pci module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.pcidb.html">pcidb module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.physmem.html">physmem module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.smbios.html">smbios module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.smbus.html">smbus module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.spd.html">spd module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.spi.html">spi module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.spi_descriptor.html">spi_descriptor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.spi_jedec_ids.html">spi_jedec_ids module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.spi_uefi.html">spi_uefi module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.tpm.html">tpm module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.tpm12_commands.html">tpm12_commands module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.tpm_eventlog.html">tpm_eventlog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.ucode.html">ucode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.uefi.html">uefi module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.uefi_common.html">uefi_common module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.uefi_fv.html">uefi_fv module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.uefi_platform.html">uefi_platform module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.uefi_search.html">uefi_search module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.virtmem.html">virtmem module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chipsec.hal.vmm.html">vmm module</a></li>
+</ul>
+</div>
+<span class="target" id="module-chipsec.hal"></span></div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.utilcmd.vmm_cmd.html"
+                        title="previous chapter">vmm_cmd module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.acpi.html"
+                        title="next chapter">acpi module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.acpi.html" title="acpi module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.vmm_cmd.html" title="vmm_cmd module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hal package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

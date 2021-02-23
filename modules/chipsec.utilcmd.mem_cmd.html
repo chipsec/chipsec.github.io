@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mem_cmd module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mmcfg_cmd module" href="chipsec.utilcmd.mmcfg_cmd.html" />
+    <link rel="prev" title="iommu_cmd module" href="chipsec.utilcmd.iommu_cmd.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.mmcfg_cmd.html" title="mmcfg_cmd module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.iommu_cmd.html" title="iommu_cmd module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">mem_cmd module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.utilcmd.mem_cmd">
+<span id="mem-cmd-module"></span><h1>mem_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.mem_cmd" title="Permalink to this headline">¶</a></h1>
+<p>The mem command provides direct access to read and write physical memory.</p>
+<dl class="py class">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand">
+<em class="property">class </em><code class="sig-name descname">MemCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="o">&lt;</span><span class="n">op</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">length</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">value</span><span class="o">|</span><span class="n">buffer_file</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span> <span class="p">:</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">physical</span> <span class="n">address</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">op</span><span class="o">&gt;</span>               <span class="p">:</span> <span class="n">read</span><span class="o">|</span><span class="n">readval</span><span class="o">|</span><span class="n">write</span><span class="o">|</span><span class="n">writeval</span><span class="o">|</span><span class="n">allocate</span><span class="o">|</span><span class="n">pagedump</span><span class="o">|</span><span class="n">search</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">length</span><span class="o">&gt;</span>           <span class="p">:</span> <span class="n">byte</span><span class="o">|</span><span class="n">word</span><span class="o">|</span><span class="n">dword</span> <span class="ow">or</span> <span class="n">length</span> <span class="n">of</span> <span class="n">the</span> <span class="n">buffer</span> <span class="kn">from</span> <span class="o">&lt;</span><span class="n">buffer_file</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>            <span class="p">:</span> <span class="n">byte</span><span class="p">,</span> <span class="n">word</span> <span class="ow">or</span> <span class="n">dword</span> <span class="n">value</span> <span class="n">to</span> <span class="n">be</span> <span class="n">written</span> <span class="n">to</span> <span class="n">memory</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">buffer_file</span><span class="o">&gt;</span>      <span class="p">:</span> <span class="n">file</span> <span class="k">with</span> <span class="n">the</span> <span class="n">contents</span> <span class="n">to</span> <span class="n">be</span> <span class="n">written</span> <span class="n">to</span> <span class="n">memory</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="o">&lt;</span><span class="n">op</span><span class="o">&gt;</span>     <span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">length</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">value</span><span class="o">|</span><span class="n">file</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">readval</span>  <span class="mh">0xFED40000</span>         <span class="n">dword</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">read</span>     <span class="mh">0x41E</span>              <span class="mh">0x20</span>     <span class="n">buffer</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">writeval</span> <span class="mh">0xA0000</span>            <span class="n">dword</span>    <span class="mh">0x9090CCCC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">write</span>    <span class="mh">0x100000000</span>        <span class="mh">0x1000</span>   <span class="n">buffer</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">write</span>    <span class="mh">0x100000000</span>        <span class="mh">0x10</span>     <span class="mi">000102030405060708090</span><span class="n">A0B0C0D0E0F</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">allocate</span>                    <span class="mh">0x1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">pagedump</span> <span class="mh">0xFED00000</span>         <span class="mh">0x100000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mem</span> <span class="n">search</span>   <span class="mh">0xF0000</span>            <span class="mh">0x10000</span>  <span class="n">_SM_</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.dump_region_to_path">
+<code class="sig-name descname">dump_region_to_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">pa_start</span></em>, <em class="sig-param"><span class="n">pa_end</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.dump_region_to_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.dump_region_to_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.mem_allocate">
+<code class="sig-name descname">mem_allocate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.mem_allocate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.mem_allocate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.mem_pagedump">
+<code class="sig-name descname">mem_pagedump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.mem_pagedump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.mem_pagedump" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.mem_read">
+<code class="sig-name descname">mem_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.mem_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.mem_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.mem_readval">
+<code class="sig-name descname">mem_readval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.mem_readval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.mem_readval" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.mem_search">
+<code class="sig-name descname">mem_search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.mem_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.mem_search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.mem_write">
+<code class="sig-name descname">mem_write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.mem_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.mem_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.mem_writeval">
+<code class="sig-name descname">mem_writeval</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.mem_writeval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.mem_writeval" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.requires_driver">
+<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.requires_driver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.mem_cmd.MemCommand.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mem_cmd.html#MemCommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mem_cmd.MemCommand.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.utilcmd.iommu_cmd.html"
+                        title="previous chapter">iommu_cmd module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.utilcmd.mmcfg_cmd.html"
+                        title="next chapter">mmcfg_cmd module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.mmcfg_cmd.html" title="mmcfg_cmd module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.iommu_cmd.html" title="iommu_cmd module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">mem_cmd module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>interrupts module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="io module" href="chipsec.hal.io.html" />
+    <link rel="prev" title="igd module" href="chipsec.hal.igd.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.io.html" title="io module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.igd.html" title="igd module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">interrupts module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.interrupts">
+<span id="interrupts-module"></span><h1>interrupts module<a class="headerlink" href="#module-chipsec.hal.interrupts" title="Permalink to this headline">¶</a></h1>
+<p>Functionality encapsulating interrupt generation
+CPU Interrupts specific functions (SMI, NMI)</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">send_SMI_APMC</span><span class="p">(</span> <span class="mh">0xDE</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">send_NMI</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="chipsec.hal.interrupts.Interrupts">
+<em class="property">class </em><code class="sig-name descname">Interrupts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
+<dl class="py method">
+<dt id="chipsec.hal.interrupts.Interrupts.find_ACPI_SMI_Buffer">
+<code class="sig-name descname">find_ACPI_SMI_Buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts.find_ACPI_SMI_Buffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts.find_ACPI_SMI_Buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.interrupts.Interrupts.find_smmc">
+<code class="sig-name descname">find_smmc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">end</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts.find_smmc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts.find_smmc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.interrupts.Interrupts.send_ACPI_SMI">
+<code class="sig-name descname">send_ACPI_SMI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">smi_num</span></em>, <em class="sig-param"><span class="n">buf_addr</span></em>, <em class="sig-param"><span class="n">invoc_reg</span></em>, <em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts.send_ACPI_SMI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts.send_ACPI_SMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.interrupts.Interrupts.send_NMI">
+<code class="sig-name descname">send_NMI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts.send_NMI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts.send_NMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.interrupts.Interrupts.send_SMI_APMC">
+<code class="sig-name descname">send_SMI_APMC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">SMI_code_port_value</span></em>, <em class="sig-param"><span class="n">SMI_data_port_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts.send_SMI_APMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts.send_SMI_APMC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.interrupts.Interrupts.send_SW_SMI">
+<code class="sig-name descname">send_SW_SMI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">SMI_code_port_value</span></em>, <em class="sig-param"><span class="n">SMI_data_port_value</span></em>, <em class="sig-param"><span class="n">_rax</span></em>, <em class="sig-param"><span class="n">_rbx</span></em>, <em class="sig-param"><span class="n">_rcx</span></em>, <em class="sig-param"><span class="n">_rdx</span></em>, <em class="sig-param"><span class="n">_rsi</span></em>, <em class="sig-param"><span class="n">_rdi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts.send_SW_SMI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts.send_SW_SMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.interrupts.Interrupts.send_smmc_SMI">
+<code class="sig-name descname">send_smmc_SMI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">smmc</span></em>, <em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">payload</span></em>, <em class="sig-param"><span class="n">payload_loc</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/interrupts.html#Interrupts.send_smmc_SMI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.interrupts.Interrupts.send_smmc_SMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.igd.html"
+                        title="previous chapter">igd module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.io.html"
+                        title="next chapter">io module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.io.html" title="io module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.igd.html" title="igd module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">interrupts module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

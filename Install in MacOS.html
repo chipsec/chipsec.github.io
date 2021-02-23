@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MacOS Installation &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Building a Bootable USB drive with UEFI Shell (x64)" href="USB%20with%20UEFI%20Shell.html" />
+    <link rel="prev" title="Linux Installation" href="Install%20in%20Linux.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="USB%20with%20UEFI%20Shell.html" title="Building a Bootable USB drive with UEFI Shell (x64)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20Linux.html" title="Linux Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" accesskey="U">CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">MacOS Installation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="macos-installation">
+<h1>MacOS Installation<a class="headerlink" href="#macos-installation" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>MacOS support is currently in Beta release</p>
+</div>
+<p><strong>Install CHIPSEC Dependencies</strong></p>
+<p>Python 3.7 or higher (<a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a>)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>CHIPSEC will be deprecating support for Python2 in June 2020</p>
+</div>
+<p>Install XCODE from the App Store</p>
+<p>Install PIP and setuptools packages. Please see instructions <a class="reference external" href="http://docs.python-guide.org/en/latest/starting/install/osx/">here</a></p>
+<p>Turn the System Integrity Protection (SIP) off. See <a class="reference external" href="https://developer.apple.com/library/mac/documentation/Security/Conceptual/System_Integrity_Protection_Guide/ConfiguringSystemIntegrityProtection/ConfiguringSystemIntegrityProtection.html">Configuring SIP</a></p>
+<p>An alternative to disabling SIP and allowing untrusted/unsigned kexts to load can be enabled by running the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># csrutil enable --without kext</span>
+</pre></div>
+</div>
+<p><strong>Building Chipsec</strong></p>
+<p>Clone CHIPSEC Git repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># git clone https://github.com/chipsec/chipsec</span>
+</pre></div>
+</div>
+<p>To install and run CHIPSEC as a package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># python setup.py install</span>
+
+<span class="c1"># sudo chipsec_main</span>
+</pre></div>
+</div>
+<p>To use CHIPSEC <em>in place</em> without installing it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># python setup.py build_ext -i</span>
+
+<span class="c1"># sudo python chipsec_main.py</span>
+</pre></div>
+</div>
+<p>To build chipsec.kext on your own and load please follow the instructions in drivers/osx/README</p>
+<p><strong>CHIPSEC Cleanup</strong></p>
+<p>When done using CHIPSEC, ensure the driver is unloaded and re-enable the System Integrity Protection:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># kextunload -b com.google.chipsec</span>
+
+<span class="c1"># csrutil enable</span>
+</pre></div>
+</div>
+<p><strong>Build Errors</strong></p>
+<p>xcodebuild requires xcode error during CHIPSEC install:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># sudo xcode-select -s /Applications/Xcode.app/Contents/Developer</span>
+</pre></div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Install%20in%20Linux.html"
+                        title="previous chapter">Linux Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="USB%20with%20UEFI%20Shell.html"
+                        title="next chapter">Building a Bootable USB drive with UEFI Shell (x64)</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="USB%20with%20UEFI%20Shell.html" title="Building a Bootable USB drive with UEFI Shell (x64)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20Linux.html" title="Linux Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" >CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">MacOS Installation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

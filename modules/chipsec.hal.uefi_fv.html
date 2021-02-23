@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>uefi_fv module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="uefi_platform module" href="chipsec.hal.uefi_platform.html" />
+    <link rel="prev" title="uefi_common module" href="chipsec.hal.uefi_common.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.uefi_platform.html" title="uefi_platform module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.uefi_common.html" title="uefi_common module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefi_fv module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.uefi_fv">
+<span id="uefi-fv-module"></span><h1>uefi_fv module<a class="headerlink" href="#module-chipsec.hal.uefi_fv" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.DecodeSection">
+<code class="sig-name descname">DecodeSection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">SecType</span></em>, <em class="sig-param"><span class="n">SecBody</span></em>, <em class="sig-param"><span class="n">SecHeaderSize</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#DecodeSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.DecodeSection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.uefi_fv.EFI_FILE">
+<em class="property">class </em><code class="sig-name descname">EFI_FILE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Offset</span></em>, <em class="sig-param"><span class="n">Guid</span></em>, <em class="sig-param"><span class="n">Type</span></em>, <em class="sig-param"><span class="n">Attributes</span></em>, <em class="sig-param"><span class="n">State</span></em>, <em class="sig-param"><span class="n">Checksum</span></em>, <em class="sig-param"><span class="n">Size</span></em>, <em class="sig-param"><span class="n">Image</span></em>, <em class="sig-param"><span class="n">HeaderSize</span></em>, <em class="sig-param"><span class="n">UD</span></em>, <em class="sig-param"><span class="n">CalcSum</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#EFI_FILE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.EFI_FILE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_fv.EFI_MODULE" title="chipsec.hal.uefi_fv.EFI_MODULE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_fv.EFI_MODULE</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.uefi_fv.EFI_FV">
+<em class="property">class </em><code class="sig-name descname">EFI_FV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Offset</span></em>, <em class="sig-param"><span class="n">Guid</span></em>, <em class="sig-param"><span class="n">Size</span></em>, <em class="sig-param"><span class="n">Attributes</span></em>, <em class="sig-param"><span class="n">HeaderSize</span></em>, <em class="sig-param"><span class="n">Checksum</span></em>, <em class="sig-param"><span class="n">ExtHeaderOffset</span></em>, <em class="sig-param"><span class="n">Image</span></em>, <em class="sig-param"><span class="n">CalcSum</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#EFI_FV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.EFI_FV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_fv.EFI_MODULE" title="chipsec.hal.uefi_fv.EFI_MODULE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_fv.EFI_MODULE</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.uefi_fv.EFI_MODULE">
+<em class="property">class </em><code class="sig-name descname">EFI_MODULE</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Offset</span></em>, <em class="sig-param"><span class="n">Guid</span></em>, <em class="sig-param"><span class="n">HeaderSize</span></em>, <em class="sig-param"><span class="n">Attributes</span></em>, <em class="sig-param"><span class="n">Image</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#EFI_MODULE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.EFI_MODULE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="chipsec.hal.uefi_fv.EFI_MODULE.calc_hashes">
+<code class="sig-name descname">calc_hashes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">off</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#EFI_MODULE.calc_hashes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.EFI_MODULE.calc_hashes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.uefi_fv.EFI_MODULE.name">
+<code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#EFI_MODULE.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.EFI_MODULE.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.uefi_fv.EFI_SECTION">
+<em class="property">class </em><code class="sig-name descname">EFI_SECTION</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Offset</span></em>, <em class="sig-param"><span class="n">Name</span></em>, <em class="sig-param"><span class="n">Type</span></em>, <em class="sig-param"><span class="n">Image</span></em>, <em class="sig-param"><span class="n">HeaderSize</span></em>, <em class="sig-param"><span class="n">Size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#EFI_SECTION"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.EFI_SECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_fv.EFI_MODULE" title="chipsec.hal.uefi_fv.EFI_MODULE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_fv.EFI_MODULE</span></code></a></p>
+<dl class="py method">
+<dt id="chipsec.hal.uefi_fv.EFI_SECTION.name">
+<code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#EFI_SECTION.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.EFI_SECTION.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.FvChecksum16">
+<code class="sig-name descname">FvChecksum16</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">buffer</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#FvChecksum16"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.FvChecksum16" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.FvChecksum8">
+<code class="sig-name descname">FvChecksum8</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">buffer</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#FvChecksum8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.FvChecksum8" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.FvSum16">
+<code class="sig-name descname">FvSum16</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">buffer</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#FvSum16"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.FvSum16" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.FvSum8">
+<code class="sig-name descname">FvSum8</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">buffer</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#FvSum8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.FvSum8" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.GetFvHeader">
+<code class="sig-name descname">GetFvHeader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">buffer</span></em>, <em class="sig-param"><span class="n">off</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#GetFvHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.GetFvHeader" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.NextFwFile">
+<code class="sig-name descname">NextFwFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">FvImage</span></em>, <em class="sig-param"><span class="n">FvLength</span></em>, <em class="sig-param"><span class="n">fof</span></em>, <em class="sig-param"><span class="n">polarity</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#NextFwFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.NextFwFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.NextFwFileSection">
+<code class="sig-name descname">NextFwFileSection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sections</span></em>, <em class="sig-param"><span class="n">ssize</span></em>, <em class="sig-param"><span class="n">sof</span></em>, <em class="sig-param"><span class="n">polarity</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#NextFwFileSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.NextFwFileSection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.NextFwVolume">
+<code class="sig-name descname">NextFwVolume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">buffer</span></em>, <em class="sig-param"><span class="n">off</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#NextFwVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.NextFwVolume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.ValidateFwVolumeHeader">
+<code class="sig-name descname">ValidateFwVolumeHeader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ZeroVector</span></em>, <em class="sig-param"><span class="n">FsGuid</span></em>, <em class="sig-param"><span class="n">FvLength</span></em>, <em class="sig-param"><span class="n">HeaderLength</span></em>, <em class="sig-param"><span class="n">ExtHeaderOffset</span></em>, <em class="sig-param"><span class="n">Reserved</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#ValidateFwVolumeHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.ValidateFwVolumeHeader" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.align_image">
+<code class="sig-name descname">align_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">8</span></em>, <em class="sig-param"><span class="n">fill</span><span class="o">=</span><span class="default_value">'\x00'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#align_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.align_image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.assemble_uefi_file">
+<code class="sig-name descname">assemble_uefi_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">image</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#assemble_uefi_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.assemble_uefi_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.assemble_uefi_raw">
+<code class="sig-name descname">assemble_uefi_raw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#assemble_uefi_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.assemble_uefi_raw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.assemble_uefi_section">
+<code class="sig-name descname">assemble_uefi_section</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">uncomressed_size</span></em>, <em class="sig-param"><span class="n">compression_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#assemble_uefi_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.assemble_uefi_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.uefi_fv.get_guid_bin">
+<code class="sig-name descname">get_guid_bin</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_fv.html#get_guid_bin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.uefi_fv.get_guid_bin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.uefi_common.html"
+                        title="previous chapter">uefi_common module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.uefi_platform.html"
+                        title="next chapter">uefi_platform module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.uefi_platform.html" title="uefi_platform module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.uefi_common.html" title="uefi_common module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefi_fv module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

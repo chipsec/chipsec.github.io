@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.uefi.scan_blocked &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.uefi.scan_blocked</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.uefi.scan_blocked</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module checks current contents of UEFI firmware ROM or specified firmware image for blocked EFI binaries</span>
+<span class="sd">which can be EFI firmware volumes, EFI executable binaries (PEI modules, DXE drivers..) or EFI sections.</span>
+<span class="sd">The module can find EFI binaries by their UI names, EFI GUIDs, MD5/SHA-1/SHA-256 hashes</span>
+<span class="sd">or contents matching specified regular expressions.</span>
+
+<span class="sd">Important! This module can only detect what it knows about from its config file.</span>
+<span class="sd">If a bad or vulnerable binary is not detected then its &#39;signature&#39; needs to be added to the config.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">  ``chipsec_main.py -i -m tools.uefi.scan_blocked [-a &lt;fw_image&gt;,&lt;blockedlist&gt;]``</span>
+<span class="sd">    - ``fw_image``	Full file path to UEFI firmware image. If not specified, the module will dump firmware image directly from ROM</span>
+<span class="sd">    - ``blockedlist``	JSON file with configuration of blocked EFI binaries (default = ``blockedlist.json``). Config file should be located in the same directory as this module</span>
+
+<span class="sd">Examples:</span>
+
+<span class="sd">&gt;&gt;&gt; chipsec_main.py -m tools.uefi.scan_blocked</span>
+
+<span class="sd">Dumps UEFI firmware image from flash memory device, decodes it and checks for blocked EFI modules defined in the default config ``blockedlist.json``</span>
+
+<span class="sd">&gt;&gt;&gt; chipsec_main.py -i --no_driver -m tools.uefi.scan_blocked -a uefi.rom,blockedlist.json</span>
+
+<span class="sd">Decodes ``uefi.rom`` binary with UEFI firmware image and checks for blocked EFI modules defined in ``blockedlist.json`` config</span>
+
+<span class="sd">Note: ``-i`` and ``--no_driver`` arguments can be used in this case because the test does not depend on the platform and no kernel driver is required when firmware image is specified</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">MTAG_BIOS</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.spi_uefi</span> <span class="kn">import</span> <span class="n">search_efi_tree</span><span class="p">,</span> <span class="n">build_efi_model</span><span class="p">,</span> <span class="n">EFIModuleType</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.uefi</span> <span class="kn">import</span> <span class="n">UEFI</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.spi</span> <span class="kn">import</span> <span class="n">SPI</span><span class="p">,</span> <span class="n">BIOS</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.uefi_search</span> <span class="kn">import</span> <span class="n">check_match_criteria</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">read_file</span><span class="p">,</span> <span class="n">get_main_dir</span>
+
+<span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_BIOS</span><span class="p">]</span>
+
+<span class="n">DEF_FWIMAGE_FILE</span> <span class="o">=</span> <span class="s1">&#39;fw.bin&#39;</span>
+
+<span class="n">USAGE_TEXT</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">Usage:</span>
+
+<span class="s1">    chipsec_main.py -i -m tools.uefi.scan_blocked [-a &lt;fw_image&gt;,&lt;blockedlist&gt;]</span>
+
+<span class="s1">      fw_image    : Full file path to UEFI firmware image</span>
+<span class="s1">                    If not specified, the module will dump firmware image directly from ROM</span>
+<span class="s1">      blockedlist : JSON file with configuration of blocked EFI binaries (default = blockedlist.json)</span>
+<span class="s1">                    Config file should be located in the same directory as this module</span>
+
+<span class="s1">Examples:</span>
+
+<span class="s1">    chipsec_main.py -m tools.uefi.scan_blocked</span>
+
+<span class="s1">      Dumps UEFI firmware image from flash memory device, decodes it and</span>
+<span class="s1">      checks for blocked EFI modules defined in the default config &#39;blockedlist.json&#39;</span>
+
+<span class="s1">    chipsec_main.py -i --no_driver -m tools.uefi.scan_blocked -a uefi.rom,blockedlist.json</span>
+
+<span class="s1">      Decodes &#39;uefi.rom&#39; binary with UEFI firmware image and</span>
+<span class="s1">      checks for blocked EFI modules defined in &#39;blockedlist.json&#39; config</span>
+
+<span class="s1">Important! This module can only detect what it knows about from its config file.</span>
+<span class="s1">If a bad or vulnerable binary is not detected then its &#39;signature&#39; needs to be added to the config.</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="scan_blocked"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.scan_blocked.html#chipsec.modules.tools.uefi.scan_blocked.scan_blocked">[docs]</a><span class="k">class</span> <span class="nc">scan_blocked</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uefi</span> <span class="o">=</span> <span class="n">UEFI</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg_name</span> <span class="o">=</span> <span class="s1">&#39;blockedlist.json&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">efi_blockedlist</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="scan_blocked.is_supported"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.scan_blocked.html#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="scan_blocked.blockedlist_callback"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.scan_blocked.html#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.blockedlist_callback">[docs]</a>    <span class="k">def</span> <span class="nf">blockedlist_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">efi_module</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">check_match_criteria</span><span class="p">(</span><span class="n">efi_module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">efi_blockedlist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="scan_blocked.check_blockedlist"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.scan_blocked.html#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.check_blockedlist">[docs]</a>    <span class="k">def</span> <span class="nf">check_blockedlist</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] searching for EFI binaries that match criteria from &#39;</span><span class="si">{}</span><span class="s2">&#39;:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg_name</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">efi_blockedlist</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">efi_blockedlist</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    </span><span class="si">{:16}</span><span class="s2"> - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;description&#39;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">)</span>
+            <span class="c1">#if &#39;match&#39; in entry:</span>
+            <span class="c1">#    for c in entry[&#39;match&#39;].keys(): self.logger.log( &quot;[*]   {}&quot;.format(entry[&#39;match&#39;][c]) )</span>
+            <span class="c1">#if &#39;exclude&#39; in entry:</span>
+            <span class="c1">#    self.logger.log( &quot;[*]   excluding binaries:&quot; )</span>
+            <span class="c1">#    for c in entry[&#39;exclude&#39;]: self.logger.log( &quot;[*]   {}&quot;.format(entry[&#39;exclude&#39;][c]) )</span>
+
+        <span class="c1"># parse the UEFI firmware image and look for EFI modules matching the balck-list</span>
+        <span class="n">efi_tree</span> <span class="o">=</span> <span class="n">build_efi_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uefi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1">#match_types = (spi_uefi.EFIModuleType.SECTION_EXE|spi_uefi.EFIModuleType.FILE)</span>
+        <span class="n">match_types</span> <span class="o">=</span> <span class="n">EFIModuleType</span><span class="o">.</span><span class="n">SECTION_EXE</span>
+        <span class="n">matching_modules</span> <span class="o">=</span> <span class="n">search_efi_tree</span><span class="p">(</span><span class="n">efi_tree</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockedlist_callback</span><span class="p">,</span> <span class="n">match_types</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matching_modules</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warn_check</span><span class="p">(</span><span class="s2">&quot;Blocked EFI binary found in the UEFI firmware image&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span><span class="s2">&quot;Didn&#39;t find any blocked EFI binary&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="scan_blocked.usage"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.scan_blocked.html#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.usage">[docs]</a>    <span class="k">def</span> <span class="nf">usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">USAGE_TEXT</span> <span class="p">)</span></div>
+
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># run( module_argv )</span>
+    <span class="c1"># Required function: run here all tests from this module</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="scan_blocked.run"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.scan_blocked.html#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;Check for blocked EFI binaries in UEFI firmware&quot;</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+
+        <span class="n">image_file</span> <span class="o">=</span> <span class="n">DEF_FWIMAGE_FILE</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Read firmware image directly from SPI flash memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi</span> <span class="o">=</span> <span class="n">SPI</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
+            <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">freg</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">get_SPI_region</span><span class="p">(</span> <span class="n">BIOS</span> <span class="p">)</span>
+            <span class="n">image_size</span> <span class="o">=</span> <span class="n">limit</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">base</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] dumping FW image from ROM to </span><span class="si">{}</span><span class="s2">: 0x</span><span class="si">{:08X}</span><span class="s2"> bytes at [0x</span><span class="si">{:08X}</span><span class="s2">:0x</span><span class="si">{:08X}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_file</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">image_size</span><span class="p">)</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] this may take a few minutes (instead, use &#39;chipsec_util spi dump&#39;)...&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">read_spi_to_file</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">image_file</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Use provided firmware image</span>
+            <span class="n">image_file</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] reading FW image from file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_file</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span> <span class="n">image_file</span> <span class="p">)</span>
+
+        <span class="c1"># Load JSON config with blocked EFI modules</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg_name</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">cfg_pth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">get_main_dir</span><span class="p">(),</span> <span class="s2">&quot;chipsec/modules/tools/uefi&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg_name</span> <span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg_pth</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">blockedlist_json</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">efi_blockedlist</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span> <span class="n">blockedlist_json</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_blockedlist</span><span class="p">()</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.uefi.scan_blocked</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

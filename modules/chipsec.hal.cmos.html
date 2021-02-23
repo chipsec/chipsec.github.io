@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cmos module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cpu module" href="chipsec.hal.cpu.html" />
+    <link rel="prev" title="acpi_tables module" href="chipsec.hal.acpi_tables.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.cpu.html" title="cpu module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.acpi_tables.html" title="acpi_tables module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cmos module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.cmos">
+<span id="cmos-module"></span><h1>cmos module<a class="headerlink" href="#module-chipsec.hal.cmos" title="Permalink to this headline">¶</a></h1>
+<p>CMOS memory specific functions (dump, read/write)</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cmos</span><span class="o">.</span><span class="n">dump_low</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmos</span><span class="o">.</span><span class="n">dump_high</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmos</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmos</span><span class="o">.</span><span class="n">read_cmos_low</span><span class="p">(</span> <span class="n">offset</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmos</span><span class="o">.</span><span class="n">write_cmos_low</span><span class="p">(</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmos</span><span class="o">.</span><span class="n">read_cmos_high</span><span class="p">(</span> <span class="n">offset</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmos</span><span class="o">.</span><span class="n">write_cmos_high</span><span class="p">(</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="chipsec.hal.cmos.CMOS">
+<em class="property">class </em><code class="sig-name descname">CMOS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
+<dl class="py method">
+<dt id="chipsec.hal.cmos.CMOS.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS.dump" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.cmos.CMOS.dump_high">
+<code class="sig-name descname">dump_high</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS.dump_high"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS.dump_high" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.cmos.CMOS.dump_low">
+<code class="sig-name descname">dump_low</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS.dump_low"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS.dump_low" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.cmos.CMOS.read_cmos_high">
+<code class="sig-name descname">read_cmos_high</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS.read_cmos_high"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS.read_cmos_high" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.cmos.CMOS.read_cmos_low">
+<code class="sig-name descname">read_cmos_low</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS.read_cmos_low"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS.read_cmos_low" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.cmos.CMOS.write_cmos_high">
+<code class="sig-name descname">write_cmos_high</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS.write_cmos_high"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS.write_cmos_high" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.cmos.CMOS.write_cmos_low">
+<code class="sig-name descname">write_cmos_low</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CMOS.write_cmos_low"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CMOS.write_cmos_low" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.cmos.CmosAccessError">
+<em class="property">exception </em><code class="sig-name descname">CmosAccessError</code><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CmosAccessError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CmosAccessError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.cmos.CmosRuntimeError">
+<em class="property">exception </em><code class="sig-name descname">CmosRuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/cmos.html#CmosRuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.cmos.CmosRuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.acpi_tables.html"
+                        title="previous chapter">acpi_tables module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.cpu.html"
+                        title="next chapter">cpu module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.cpu.html" title="cpu module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.acpi_tables.html" title="acpi_tables module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cmos module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

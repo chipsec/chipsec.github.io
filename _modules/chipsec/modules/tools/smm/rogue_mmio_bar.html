@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.smm.rogue_mmio_bar &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.smm.rogue_mmio_bar</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.smm.rogue_mmio_bar</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2017-2020, Intel Security</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># Authors:</span>
+<span class="c1">#   Yuriy Bulygin</span>
+<span class="c1">#   Alex Bazhaniuk</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Experimental module that may help checking SMM firmware for MMIO BAR hijacking</span>
+<span class="sd">vulnerabilities described in the following presentation:</span>
+
+<span class="sd">`BARing the System: New vulnerabilities in Coreboot &amp; UEFI based systems &lt;http://www.intelsecurity.com/advanced-threat-research/content/data/REConBrussels2017_BARing_the_system.pdf&gt;`_ by Intel Advanced Threat Research team at RECon Brussels 2017</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">  ``chipsec_main -m tools.smm.rogue_mmio_bar [-a &lt;smi_start:smi_end&gt;,&lt;b:d.f&gt;]``</span>
+
+<span class="sd">- ``smi_start:smi_end``: range of SMI codes (written to IO port 0xB2)</span>
+<span class="sd">- ``b:d.f``: PCIe bus/device/function in b:d.f format (in hex)</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m tools.smm.rogue_mmio_bar -a 0x00:0x80</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m tools.smm.rogue_mmio_bar -a 0x00:0xFF,0:1C.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">BOUNDARY_4GB</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">write_file</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.pci</span> <span class="kn">import</span> <span class="n">PCI_HDR_BAR_STEP</span><span class="p">,</span> <span class="n">PCI_HDR_BAR_BASE_MASK_MMIO64</span><span class="p">,</span> <span class="n">PCI_HDR_BAR_CFGBITS_MASK</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.interrupts</span> <span class="kn">import</span> <span class="n">Interrupts</span>
+
+<span class="c1">#################################################################</span>
+<span class="c1"># Testing configuration</span>
+<span class="c1">#################################################################</span>
+
+<span class="n">FLUSH_OUTPUT_AFTER_SMI</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">_FILL_VALUE_QWORD</span>   <span class="o">=</span> <span class="mh">0x0000000000000000</span>
+<span class="n">_MEM_FILL_VALUE</span>     <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="mh">0xFF</span><span class="p">)</span>
+<span class="n">MAX_MMIO_RANGE_SIZE</span> <span class="o">=</span> <span class="mh">0x10000</span> <span class="c1"># 0x400000</span>
+
+<span class="n">SMI_CODE_LIMIT</span>      <span class="o">=</span> <span class="mh">0x0</span>
+<span class="n">SMI_DATA_LIMIT</span>      <span class="o">=</span> <span class="mh">0xF</span>
+<span class="n">SMI_FUNC_LIMIT</span>      <span class="o">=</span> <span class="mh">0xF</span>
+
+
+<div class="viewcode-block" id="DIFF"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html#chipsec.modules.tools.smm.rogue_mmio_bar.DIFF">[docs]</a><span class="k">def</span> <span class="nf">DIFF</span><span class="p">(</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">sz</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span> <span class="n">pos</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">sz</span> <span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">!=</span> <span class="n">t</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="p">]</span></div>
+
+<div class="viewcode-block" id="rogue_mmio_bar"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html#chipsec.modules.tools.smm.rogue_mmio_bar.rogue_mmio_bar">[docs]</a><span class="k">class</span> <span class="nc">rogue_mmio_bar</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_interrupts</span>  <span class="o">=</span> <span class="n">Interrupts</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
+
+        <span class="c1"># SMI code to be written to I/O port 0xB2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smic_start</span>   <span class="o">=</span> <span class="mh">0x00</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smic_end</span>     <span class="o">=</span> <span class="n">SMI_CODE_LIMIT</span>
+        <span class="c1"># SMI data to be written to I/O port 0xB3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smid_start</span>   <span class="o">=</span> <span class="mh">0x00</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smid_end</span>     <span class="o">=</span> <span class="n">SMI_DATA_LIMIT</span>
+        <span class="c1"># SMI handler &quot;function&quot; often supplied in ECX register</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smif_start</span>   <span class="o">=</span> <span class="mh">0x00</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smif_end</span>     <span class="o">=</span> <span class="n">SMI_FUNC_LIMIT</span>
+        <span class="c1"># SMM communication buffer often supplied in EBX register</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm</span>         <span class="o">=</span> <span class="mh">0x00</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span>   <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="rogue_mmio_bar.smi_mmio_range_fuzz"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html#chipsec.modules.tools.smm.rogue_mmio_bar.rogue_mmio_bar.smi_mmio_range_fuzz">[docs]</a>    <span class="k">def</span> <span class="nf">smi_mmio_range_fuzz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">bar_off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">new_bar</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+
+        <span class="c1"># copy all registers from MMIO range to new location in memory</span>
+        <span class="c1"># we do that once rather than before every SMI since we return after first change detected</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] copying BAR 0x</span><span class="si">{:X}</span><span class="s2"> &gt; 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">orig_mmio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_bar</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">dump_MMIO</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+            <span class="n">write_file</span><span class="p">(</span><span class="s1">&#39;mmio_mem.orig&#39;</span><span class="p">,</span> <span class="n">orig_mmio</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">smi_code</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smic_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smic_end</span> <span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">smi_data</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smid_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smid_end</span> <span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">ecx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smif_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smif_end</span> <span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;&gt; SMI# </span><span class="si">{:02X}</span><span class="s2">: data </span><span class="si">{:02X}</span><span class="s2">, func (ECX) </span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">smi_code</span><span class="p">,</span> <span class="n">smi_data</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">FLUSH_OUTPUT_AFTER_SMI</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+                    <span class="c1"># point MMIO range to new location (relocate MMIO range)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;  relocating BAR 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_bar</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">bar_off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">new_bar</span><span class="p">):</span> <span class="k">continue</span>
+
+                    <span class="c1"># generate SW SMI</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_interrupts</span><span class="o">.</span><span class="n">send_SW_SMI</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">smi_code</span><span class="p">,</span> <span class="n">smi_data</span><span class="p">,</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">)</span>
+
+                    <span class="c1"># restore original location of MMIO range</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">restore_bar</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">bar_off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;  restored BAR with 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span> <span class="p">)</span>
+
+                    <span class="c1"># check the contents at the address range used to relocate MMIO BAR</span>
+                    <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">DIFF</span><span class="p">(</span><span class="n">orig_mmio</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;  checking relocated MMIO&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;changes found at 0x</span><span class="si">{:X}</span><span class="s2"> +</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span><span class="p">,</span> <span class="n">diff</span><span class="p">))</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="n">write_file</span><span class="p">(</span><span class="s1">&#39;mmio_mem.new&#39;</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="rogue_mmio_bar.copy_bar"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html#chipsec.modules.tools.smm.rogue_mmio_bar.rogue_mmio_bar.copy_bar">[docs]</a>    <span class="k">def</span> <span class="nf">copy_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_base_mem</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">off</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span><span class="n">bar_base</span> <span class="o">+</span> <span class="n">off</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem_dword</span><span class="p">(</span><span class="n">bar_base_mem</span> <span class="o">+</span> <span class="n">off</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">bar_base_mem</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    def copy_bar_name(self, name, bar_base_mem):</span>
+<span class="sd">        bar_regs = self.cs.mmio.read_MMIO_BAR(bar_name)</span>
+<span class="sd">        size = len(bar_regs)</span>
+<span class="sd">        off = 0</span>
+<span class="sd">        for r in bar_regs:</span>
+<span class="sd">            self.cs.mem.write_physical_mem_dword(bar_base_mem + off, r)</span>
+<span class="sd">            off += 4</span>
+<span class="sd">        return self.cs.mem.read_physical_mem(bar_base_mem, size)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="rogue_mmio_bar.modify_bar"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html#chipsec.modules.tools.smm.rogue_mmio_bar.rogue_mmio_bar.modify_bar">[docs]</a>    <span class="k">def</span> <span class="nf">modify_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">new_bar</span><span class="p">):</span>
+        <span class="c1"># Modify MMIO BAR address</span>
+        <span class="k">if</span> <span class="n">is64bit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">write_dword</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span> <span class="o">+</span> <span class="n">PCI_HDR_BAR_STEP</span><span class="p">,</span> <span class="p">((</span><span class="n">new_bar</span><span class="o">&gt;&gt;</span><span class="mi">32</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">write_dword</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="p">(</span><span class="n">new_bar</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">))</span>
+        <span class="c1"># Check that the MMIO BAR has been modified correctly. Restore original and skip if not</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_dword</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">l</span> <span class="o">!=</span> <span class="p">(</span><span class="n">new_bar</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">restore_bar</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;  skipping (</span><span class="si">{:X}</span><span class="s2"> != </span><span class="si">{:X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">new_bar</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;  new BAR: 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="rogue_mmio_bar.restore_bar"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html#chipsec.modules.tools.smm.rogue_mmio_bar.rogue_mmio_bar.restore_bar">[docs]</a>    <span class="k">def</span> <span class="nf">restore_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">is64bit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">write_dword</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span> <span class="o">+</span> <span class="n">PCI_HDR_BAR_STEP</span><span class="p">,</span> <span class="p">((</span><span class="n">bar</span><span class="o">&gt;&gt;</span><span class="mi">32</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">write_dword</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="p">(</span><span class="n">bar</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="rogue_mmio_bar.run"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html#chipsec.modules.tools.smm.rogue_mmio_bar.rogue_mmio_bar.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;experimental tool to help checking for SMM MMIO BAR issues&quot;</span> <span class="p">)</span>
+
+        <span class="n">pcie_devices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">smic_arr</span>        <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smic_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">smic_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smic_end</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">smic_arr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">b</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">d</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="n">pcie_devices</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;incorrect b:d.f format</span><span class="se">\n</span><span class="s2">Usage:</span><span class="se">\n</span><span class="s2">chipsec_main -m tools.smm.rogue_mmio_bar [-a &lt;smi_start:smi_end&gt;,&lt;b:d.f&gt;]&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] discovering PCIe devices..&quot;</span><span class="p">)</span>
+            <span class="n">pcie_devices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">enumerate_devices</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] testing MMIO of PCIe devices:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pcie_devices</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;    </span><span class="si">{:02X}</span><span class="s2">:</span><span class="si">{:02X}</span><span class="s2">.</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+
+        <span class="c1"># allocate a page or SMM communication buffer (often supplied in EBX register)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">alloc_physical_mem</span><span class="p">(</span><span class="mh">0x1000</span><span class="p">,</span> <span class="n">BOUNDARY_4GB</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#self.cs.mem.write_physical_mem( self.comm, 0x1000, chr(0)*0x1000 )</span>
+
+        <span class="c1"># allocate range in physical memory (should cover all MMIO ranges including GTTMMADR)</span>
+        <span class="n">bsz</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span><span class="n">MAX_MMIO_RANGE_SIZE</span>
+        <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">alloc_physical_mem</span><span class="p">(</span> <span class="n">bsz</span><span class="p">,</span> <span class="n">BOUNDARY_4GB</span> <span class="o">-</span><span class="mi">1</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] allocated memory range : 0x</span><span class="si">{:016X}</span><span class="s2"> (0x</span><span class="si">{:X}</span><span class="s2"> bytes)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">bsz</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">bsz</span><span class="p">,</span> <span class="n">_MEM_FILL_VALUE</span> <span class="o">*</span><span class="n">bsz</span><span class="p">)</span>
+        <span class="c1"># align at the MAX_MMIO_RANGE_SIZE boundary within allocated range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span> <span class="o">=</span> <span class="n">pa</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="p">(</span><span class="n">MAX_MMIO_RANGE_SIZE</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span> <span class="o">&lt;</span> <span class="n">pa</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span> <span class="o">+=</span> <span class="n">MAX_MMIO_RANGE_SIZE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] MMIO relocation address: 0x</span><span class="si">{:016X}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">vid</span><span class="p">,</span> <span class="n">did</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pcie_devices</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] enumerating device </span><span class="si">{:02X}</span><span class="s2">:</span><span class="si">{:02X}</span><span class="s2">.</span><span class="si">{:X}</span><span class="s2"> MMIO BARs..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+            <span class="n">device_bars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">get_device_bars</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">isMMIO</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar_off</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="ow">in</span> <span class="n">device_bars</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">isMMIO</span> <span class="ow">and</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="n">MAX_MMIO_RANGE_SIZE</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] found MMIO BAR +0x</span><span class="si">{:02X}</span><span class="s2"> (base 0x</span><span class="si">{:016X}</span><span class="s2">, size 0x</span><span class="si">{:X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bar_off</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="n">new_bar</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">reloc_mmio</span> <span class="o">&amp;</span> <span class="n">PCI_HDR_BAR_BASE_MASK_MMIO64</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">bar</span> <span class="o">&amp;</span> <span class="n">PCI_HDR_BAR_CFGBITS_MASK</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smi_mmio_range_fuzz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">bar_off</span><span class="p">,</span> <span class="n">is64bit</span><span class="p">,</span> <span class="n">bar</span><span class="p">,</span> <span class="n">new_bar</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.smm.rogue_mmio_bar</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

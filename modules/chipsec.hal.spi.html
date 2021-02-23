@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>spi module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="spi_descriptor module" href="chipsec.hal.spi_descriptor.html" />
+    <link rel="prev" title="spd module" href="chipsec.hal.spd.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.spi_descriptor.html" title="spi_descriptor module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.spd.html" title="spd module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">spi module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.spi">
+<span id="spi-module"></span><h1>spi module<a class="headerlink" href="#module-chipsec.hal.spi" title="Permalink to this headline">¶</a></h1>
+<p>Access to SPI Flash parts</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_spi</span><span class="p">(</span> <span class="n">spi_fla</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_spi</span><span class="p">(</span> <span class="n">spi_fla</span><span class="p">,</span> <span class="n">buf</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">erase_spi_block</span><span class="p">(</span> <span class="n">spi_fla</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_SPI_JEDEC_ID</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_SPI_JEDEC_ID_decoded</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>!! IMPORTANT:
+Size of the data chunk used in SPI read cycle (in bytes)
+default = maximum 64 bytes (remainder is read in 4 byte chunks)</p>
+<p>If you want to change logic to read SPI Flash in 4 byte chunks:
+SPI_READ_WRITE_MAX_DBC = 4</p>
+<p>&#64;TBD: SPI write cycles operate on 4 byte chunks (not optimized yet)</p>
+<p>Approximate performance (on 2-core SMT Intel Core i5-4300U (Haswell) CPU 1.9GHz):
+SPI read: ~7 sec per 1MB (with DBC=64)</p>
+</div>
+<dl class="py class">
+<dt id="chipsec.hal.spi.SPI">
+<em class="property">class </em><code class="sig-name descname">SPI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.check_hardware_sequencing">
+<code class="sig-name descname">check_hardware_sequencing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.check_hardware_sequencing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.check_hardware_sequencing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.disable_BIOS_write_protection">
+<code class="sig-name descname">disable_BIOS_write_protection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.disable_BIOS_write_protection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.disable_BIOS_write_protection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_BIOS_region">
+<code class="sig-name descname">display_BIOS_region</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_BIOS_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_BIOS_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_BIOS_write_protection">
+<code class="sig-name descname">display_BIOS_write_protection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_BIOS_write_protection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_BIOS_write_protection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_SPI_Flash_Descriptor">
+<code class="sig-name descname">display_SPI_Flash_Descriptor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_SPI_Flash_Descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_SPI_Flash_Descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_SPI_Flash_Regions">
+<code class="sig-name descname">display_SPI_Flash_Regions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_SPI_Flash_Regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_SPI_Flash_Regions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_SPI_Protected_Ranges">
+<code class="sig-name descname">display_SPI_Protected_Ranges</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_SPI_Protected_Ranges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_SPI_Protected_Ranges" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_SPI_Ranges_Access_Permissions">
+<code class="sig-name descname">display_SPI_Ranges_Access_Permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_SPI_Ranges_Access_Permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_SPI_Ranges_Access_Permissions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_SPI_map">
+<code class="sig-name descname">display_SPI_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_SPI_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_SPI_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.display_SPI_opcode_info">
+<code class="sig-name descname">display_SPI_opcode_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.display_SPI_opcode_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.display_SPI_opcode_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.erase_spi_block">
+<code class="sig-name descname">erase_spi_block</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spi_fla</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.erase_spi_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.erase_spi_block" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.get_SPI_JEDEC_ID">
+<code class="sig-name descname">get_SPI_JEDEC_ID</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.get_SPI_JEDEC_ID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.get_SPI_JEDEC_ID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.get_SPI_JEDEC_ID_decoded">
+<code class="sig-name descname">get_SPI_JEDEC_ID_decoded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.get_SPI_JEDEC_ID_decoded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.get_SPI_JEDEC_ID_decoded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.get_SPI_MMIO_base">
+<code class="sig-name descname">get_SPI_MMIO_base</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.get_SPI_MMIO_base"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.get_SPI_MMIO_base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.get_SPI_Protected_Range">
+<code class="sig-name descname">get_SPI_Protected_Range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pr_num</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.get_SPI_Protected_Range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.get_SPI_Protected_Range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.get_SPI_SFDP">
+<code class="sig-name descname">get_SPI_SFDP</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.get_SPI_SFDP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.get_SPI_SFDP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.get_SPI_region">
+<code class="sig-name descname">get_SPI_region</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spi_region_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.get_SPI_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.get_SPI_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.get_SPI_regions">
+<code class="sig-name descname">get_SPI_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">all_regions</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.get_SPI_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.get_SPI_regions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.ptmesg">
+<code class="sig-name descname">ptmesg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.ptmesg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.ptmesg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.read_spi">
+<code class="sig-name descname">read_spi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spi_fla</span></em>, <em class="sig-param"><span class="n">data_byte_count</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.read_spi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.read_spi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.read_spi_to_file">
+<code class="sig-name descname">read_spi_to_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spi_fla</span></em>, <em class="sig-param"><span class="n">data_byte_count</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.read_spi_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.read_spi_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.spi_reg_read">
+<code class="sig-name descname">spi_reg_read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reg</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.spi_reg_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.spi_reg_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.spi_reg_write">
+<code class="sig-name descname">spi_reg_write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reg</span></em>, <em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.spi_reg_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.spi_reg_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.write_spi">
+<code class="sig-name descname">write_spi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spi_fla</span></em>, <em class="sig-param"><span class="n">buf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.write_spi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.write_spi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.spi.SPI.write_spi_from_file">
+<code class="sig-name descname">write_spi_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spi_fla</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SPI.write_spi_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SPI.write_spi_from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.spi.SpiAccessError">
+<em class="property">exception </em><code class="sig-name descname">SpiAccessError</code><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SpiAccessError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SpiAccessError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.spi.SpiRuntimeError">
+<em class="property">exception </em><code class="sig-name descname">SpiRuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/spi.html#SpiRuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.SpiRuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.spi.get_SPI_region">
+<code class="sig-name descname">get_SPI_region</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">flreg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi.html#get_SPI_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi.get_SPI_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.spd.html"
+                        title="previous chapter">spd module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.spi_descriptor.html"
+                        title="next chapter">spi_descriptor module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.spi_descriptor.html" title="spi_descriptor module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.spd.html" title="spd module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">spi module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

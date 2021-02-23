@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>msr module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="paging module" href="chipsec.hal.paging.html" />
+    <link rel="prev" title="msgbus module" href="chipsec.hal.msgbus.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.paging.html" title="paging module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.msgbus.html" title="msgbus module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">msr module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.msr">
+<span id="msr-module"></span><h1>msr module<a class="headerlink" href="#module-chipsec.hal.msr" title="Permalink to this headline">¶</a></h1>
+<p>Access to CPU resources (for each CPU thread): Model Specific Registers (MSR), IDT/GDT</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_msr</span><span class="p">(</span> <span class="mh">0x8B</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_msr</span><span class="p">(</span> <span class="mh">0x79</span><span class="p">,</span> <span class="mh">0x12345678</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_IDTR</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_GDTR</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_Descriptor_Table</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DESCRIPTOR_TABLE_CODE_IDTR</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">IDT</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">GDT</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">IDT_all</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">GDT_all</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="chipsec.hal.msr.Msr">
+<em class="property">class </em><code class="sig-name descname">Msr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.GDT">
+<code class="sig-name descname">GDT</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">num_entries</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.GDT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.GDT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.GDT_all">
+<code class="sig-name descname">GDT_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_entries</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.GDT_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.GDT_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.IDT">
+<code class="sig-name descname">IDT</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">num_entries</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.IDT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.IDT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.IDT_all">
+<code class="sig-name descname">IDT_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_entries</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.IDT_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.IDT_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.dump_Descriptor_Table">
+<code class="sig-name descname">dump_Descriptor_Table</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">code</span></em>, <em class="sig-param"><span class="n">num_entries</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.dump_Descriptor_Table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.dump_Descriptor_Table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.get_Desc_Table_Register">
+<code class="sig-name descname">get_Desc_Table_Register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">code</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.get_Desc_Table_Register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.get_Desc_Table_Register" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.get_GDTR">
+<code class="sig-name descname">get_GDTR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.get_GDTR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.get_GDTR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.get_IDTR">
+<code class="sig-name descname">get_IDTR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.get_IDTR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.get_IDTR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.get_LDTR">
+<code class="sig-name descname">get_LDTR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.get_LDTR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.get_LDTR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.get_cpu_core_count">
+<code class="sig-name descname">get_cpu_core_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.get_cpu_core_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.get_cpu_core_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.get_cpu_thread_count">
+<code class="sig-name descname">get_cpu_thread_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.get_cpu_thread_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.get_cpu_thread_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.read_msr">
+<code class="sig-name descname">read_msr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">msr_addr</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.read_msr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.read_msr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.msr.Msr.write_msr">
+<code class="sig-name descname">write_msr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">msr_addr</span></em>, <em class="sig-param"><span class="n">eax</span></em>, <em class="sig-param"><span class="n">edx</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/msr.html#Msr.write_msr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.Msr.write_msr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="chipsec.hal.msr.MsrRuntimeError">
+<em class="property">exception </em><code class="sig-name descname">MsrRuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/msr.html#MsrRuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.msr.MsrRuntimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.msgbus.html"
+                        title="previous chapter">msgbus module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.paging.html"
+                        title="next chapter">paging module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.paging.html" title="paging module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.msgbus.html" title="msgbus module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">msr module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

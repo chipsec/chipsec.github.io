@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CHIPSEC &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Windows Installation" href="Install%20in%20Windows.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20Windows.html" title="Windows Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CHIPSEC</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="chipsec">
+<h1>CHIPSEC<a class="headerlink" href="#chipsec" title="Permalink to this headline">¶</a></h1>
+<p>CHIPSEC is a framework for analyzing platform level security of
+hardware, devices, system firmware, low-level protection mechanisms, and
+the configuration of various platform components.</p>
+<p>It contains a set of modules, including simple tests for hardware
+protections and correct configuration, tests for vulnerabilities in
+firmware and platform components, security assessment and fuzzing tools
+for various platform devices and interfaces, and tools acquiring
+critical firmware and device artifacts.</p>
+<p>CHIPSEC can run on <em>Windows</em>, <em>Linux</em>, <em>Mac OS</em> and <em>UEFI shell</em>. Mac OS
+support is Beta.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Chipsec should only be used on test systems!</p>
+<p>It should not be installed/deployed on production end-user systems.</p>
+<p>There are multiple reasons for that:</p>
+<p>1. Chipsec kernel drivers provide direct access to hardware resources to
+user-mode applications (for example, access to physical memory). When installed on
+production systems this could allow malware to access privileged hardware resources.</p>
+<p>2. The driver is distributed as source code. In order to load it on Operating System
+which requires kernel drivers to be signed (for example, 64 bit versions of
+Microsoft Windows 7 and higher), it is necessary to enable TestSigning (or equivalent)
+mode and sign the driver executable with test signature. Enabling TestSigning
+(or equivalent) mode turns off an important OS kernel protection and should not be done
+on production systems.</p>
+<p>3. Due to the nature of access to hardware, if any chipsec module issues incorrect access
+to hardware resources, Operating System can hang or panic.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>CHIPSEC supports Windows, Linux, Mac OS X, DAL and UEFI shell.
+Circumstances surrounding the target platform may change which of these
+environments is most appropriate.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Install%20in%20Windows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Install%20in%20DAL%20Win.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Install%20in%20Linux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Install%20in%20MacOS.html">MacOS Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="using-chipsec">
+<h2>Using CHIPSEC<a class="headerlink" href="#using-chipsec" title="Permalink to this headline">¶</a></h2>
+<p>CHIPSEC should be launched as Administrator/root</p>
+<p>CHIPSEC will automatically attempt to create and start its service,
+including load its kernel-mode driver. If CHIPSEC service is already
+running then it will attempt to connect to the existing service.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--no-driver</span></code> command-line option to skip loading the kernel
+module. This option will only work for certain commands or modules.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Running-Chipsec.html">Running CHIPSEC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Running-Chipsec.html#running-in-shell">Running in Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Running-Chipsec.html#using-as-a-python-package">Using as a Python Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Running-Chipsec.html#chipsec-main-options">chipsec_main options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Running-Chipsec.html#chipsec-util-options">chipsec_util options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Interpreting-Results.html">Interpreting results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Interpreting-Results.html#results">Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Interpreting-Results.html#automated-tests">Automated Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Interpreting-Results.html#tools">Tools</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-command-development">
+<h2>Module &amp; Command Development<a class="headerlink" href="#module-command-development" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture-Overview.html">Architecture Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Architecture-Overview.html#core-components">Core components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture-Overview.html#modules-tools">Modules &amp; Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture-Overview.html#chipsec-main-program-flow">CHIPSEC_MAIN Program Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture-Overview.html#chipsec-util-program-flow">CHIPSEC_UTIL Program Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture-Overview.html#auxiliary-components">Auxiliary components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture-Overview.html#executable-build-scripts">Executable build scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html#modules">Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Developing.html">Writing Your Own Modules</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CHIPSEC</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#using-chipsec">Using CHIPSEC</a></li>
+<li><a class="reference internal" href="#module-command-development">Module &amp; Command Development</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Install%20in%20Windows.html"
+                        title="next chapter">Windows Installation</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20Windows.html" title="Windows Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CHIPSEC</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

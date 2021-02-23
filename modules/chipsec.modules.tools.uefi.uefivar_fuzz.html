@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>uefivar_fuzz module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="vmm package" href="chipsec.modules.tools.vmm.html" />
+    <link rel="prev" title="scan_image module" href="chipsec.modules.tools.uefi.scan_image.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.vmm.html" title="vmm package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.scan_image.html" title="scan_image module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.uefi.html" accesskey="U">uefi package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefivar_fuzz module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.modules.tools.uefi.uefivar_fuzz">
+<span id="uefivar-fuzz-module"></span><h1>uefivar_fuzz module<a class="headerlink" href="#module-chipsec.modules.tools.uefi.uefivar_fuzz" title="Permalink to this headline">¶</a></h1>
+<p>The module is fuzzing UEFI Variable interface.</p>
+<p>The module is using UEFI SetVariable interface to write new UEFI variables
+to SPI flash NVRAM with randomized name/attributes/GUID/data/size.</p>
+<p>Note: this module modifies contents of non-volatile SPI flash memory (UEFI Variable NVRAM).
+This may render system unbootable if firmware doesn’t properly handle variable update/delete operations.</p>
+<p>Usage:</p>
+<blockquote>
+<div><p>chipsec_main -m tools.uefi.uefivar_fuzz [-a &lt;options&gt;]</p>
+</div></blockquote>
+<p>Options:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">[-a</span> <span class="pre">&lt;test&gt;,&lt;iterations&gt;,&lt;seed&gt;,&lt;test_case&gt;]</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code>  UEFI variable interface to fuzz (all, name, guid, attrib, data, size)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iterations</span></code>  number of tests to perform (default = 1000)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>  RNG seed to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_case</span></code> test case # to skip to (combined with seed, can be used to skip to failing test)</p></li>
+</ul>
+</div></blockquote>
+<p>All module arguments are optional</p>
+</div></blockquote>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">uefivar_fuzz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">uefivar_fuzz</span> <span class="o">-</span><span class="n">a</span> <span class="nb">all</span><span class="p">,</span><span class="mi">100000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">uefivar_fuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">data</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">123456789</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">uefivar_fuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">name</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">123456789</span><span class="p">,</span><span class="mi">94</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt id="chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz">
+<em class="property">class </em><code class="sig-name descname">uefivar_fuzz</code><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/uefivar_fuzz.html#uefivar_fuzz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.is_supported">
+<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/uefivar_fuzz.html#uefivar_fuzz.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.is_supported" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method should be overwritten by the module returning True or False
+depending whether or not this module is supported in the currently running
+platform.
+To access the currently running platform use</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.rnd">
+<code class="sig-name descname">rnd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/uefivar_fuzz.html#uefivar_fuzz.rnd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.rnd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/uefivar_fuzz.html#uefivar_fuzz.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.usage">
+<code class="sig-name descname">usage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/uefivar_fuzz.html#uefivar_fuzz.usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.usage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.modules.tools.uefi.scan_image.html"
+                        title="previous chapter">scan_image module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.modules.tools.vmm.html"
+                        title="next chapter">vmm package</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.vmm.html" title="vmm package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.tools.uefi.scan_image.html" title="scan_image module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.uefi.html" >uefi package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefivar_fuzz module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.vmm.hv.synth_dev &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../../../" src="../../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../../_static/jquery.js"></script>
+    <script src="../../../../../../_static/underscore.js"></script>
+    <script src="../../../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.hv.synth_dev</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.vmm.hv.synth_dev</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2018, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Hyper-V VMBus synthetic device generic fuzzer</span>
+
+<span class="sd">Usage:</span>
+
+<span class="sd">  Print channel offers:</span>
+
+<span class="sd">  ``chipsec_main.py -i -m tools.vmm.hv.synth_dev -a info``</span>
+
+<span class="sd">  Fuzzing device with specified relid:</span>
+
+<span class="sd">  ``chipsec_main.py -i -m tools.vmm.hv.synth_dev -a fuzz,&lt;relid&gt; -l log.txt``</span>
+
+<span class="sd">Note: the fuzzer is incompatible with native VMBus driver (``vmbus.sys``). To use it, remove ``vmbus.sys``</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">struct</span>    <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">random</span>    <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">binascii</span>  <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">chipsec.modules.tools.vmm.hv.define</span>    <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">chipsec.modules.tools.vmm.common</span>       <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">chipsec.modules.tools.vmm.hv.vmbus</span>     <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">chipsec_util</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">session_logger</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;synth_dev&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="VMBusDeviceFuzzer"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.VMBusDeviceFuzzer">[docs]</a><span class="k">class</span> <span class="nc">VMBusDeviceFuzzer</span><span class="p">(</span><span class="n">VMBusDiscovery</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">VMBusDiscovery</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">responses</span>    <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="VMBusDeviceFuzzer.send_1"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.VMBusDeviceFuzzer.send_1">[docs]</a>    <span class="k">def</span> <span class="nf">send_1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relid</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg_sent</span> <span class="o">=</span> <span class="n">messages</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vmbus_sendpacket</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="n">msg_sent</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="n">VM_PKT_DATA_INBAND</span><span class="p">,</span> <span class="n">VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED</span><span class="p">)</span>
+            <span class="n">msg_recv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmbus_recvpacket</span><span class="p">(</span><span class="n">relid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg_recv</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">msg1</span><span class="p">,</span> <span class="n">msg2</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">msg_recv</span><span class="p">,</span> <span class="n">msg_sent</span><span class="p">)</span> <span class="k">if</span> <span class="n">order</span> <span class="k">else</span> <span class="p">(</span><span class="n">msg_sent</span><span class="p">,</span> <span class="n">msg_recv</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">msg1</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+                    <span class="n">info</span><span class="p">[</span><span class="n">msg1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;next&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+                <span class="n">info</span><span class="p">[</span><span class="n">msg1</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>    <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">info</span><span class="p">[</span><span class="n">msg1</span><span class="p">][</span><span class="s1">&#39;message&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">msg2</span>
+                <span class="n">info</span><span class="p">[</span><span class="n">msg1</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">]</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_1</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="n">msg1</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">],</span> <span class="n">order</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span></div>
+
+<div class="viewcode-block" id="VMBusDeviceFuzzer.device_fuzzing"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.VMBusDeviceFuzzer.device_fuzzing">[docs]</a>    <span class="k">def</span> <span class="nf">device_fuzzing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relid</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">ringbuffer_init</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vmbus_establish_gpadl</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">gpadl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">pfn</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vmbus_open</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">gpadl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">send_size</span><span class="p">)</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;LL&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="p">((</span><span class="n">a</span> <span class="o">&amp;</span> <span class="mh">0xf0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">a</span> <span class="o">%</span> <span class="mh">0x0f</span><span class="p">)</span> <span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_1</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="p">[</span><span class="n">msg</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vmbus_close</span><span class="p">(</span><span class="n">relid</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vmbus_teardown_gpadl</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">gpadl</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="VMBusDeviceFuzzer.print_1"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.VMBusDeviceFuzzer.print_1">[docs]</a>    <span class="k">def</span> <span class="nf">print_1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">indent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}{:20}</span><span class="s1">:</span><span class="si">{:20}</span><span class="s1">  </span><span class="si">{:4d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;  &#39;</span> <span class="o">*</span> <span class="n">indent</span><span class="p">,</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;message&#39;</span><span class="p">]),</span> <span class="n">info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_1</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;next&#39;</span><span class="p">],</span> <span class="n">indent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="VMBusDeviceFuzzer.print_statistics"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.VMBusDeviceFuzzer.print_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">print_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Response statistics:&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">)</span>
+        <span class="k">return</span></div></div>
+
+<div class="viewcode-block" id="synth_dev"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.synth_dev">[docs]</a><span class="k">class</span> <span class="nc">synth_dev</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<div class="viewcode-block" id="synth_dev.usage"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.synth_dev.usage">[docs]</a>    <span class="k">def</span> <span class="nf">usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;  Usage:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;    chipsec_main.py -i -m tools.vmm.hv.synth_dev -a info&#39;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;      print channel offers&#39;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;    chipsec_main.py -i -m tools.vmm.hv.synth_dev -a fuzz,&lt;relid&gt;&#39;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;      fuzzing device with specified relid&#39;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;  Note: the fuzzer is incompatible with native VMBus driver (vmbus.sys). To use it, remove vmbus.sys&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="synth_dev.run"><a class="viewcode-back" href="../../../../../../modules/chipsec.modules.tools.vmm.hv.synth_dev.html#chipsec.modules.tools.vmm.hv.synth_dev.synth_dev.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;Hyper-V VMBus synthetic device fuzzer&quot;</span> <span class="p">)</span>
+
+        <span class="n">command</span> <span class="o">=</span>             <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="s1">&#39;none&#39;</span>
+        <span class="n">relid</span>   <span class="o">=</span> <span class="n">get_int_arg</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="mh">0x5</span>
+
+        <span class="n">vb</span> <span class="o">=</span> <span class="n">VMBusDeviceFuzzer</span><span class="p">()</span>
+        <span class="n">vb</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_init</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_connect</span><span class="p">()</span>
+            <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_request_offers</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">relid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;child_relid&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">vb</span><span class="o">.</span><span class="n">offer_channels</span><span class="o">.</span><span class="n">values</span><span class="p">()]:</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="s1">&#39;child relid #</span><span class="si">{:d}</span><span class="s1"> has not been found!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">relid</span><span class="p">))</span>
+
+            <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span> <span class="o">=</span> <span class="n">RingBuffer</span><span class="p">()</span>
+            <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">ringbuffer_alloc</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">gpadl</span> <span class="o">=</span> <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_get_next_gpadl</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_establish_gpadl</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">gpadl</span><span class="p">,</span> <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">pfn</span><span class="p">)</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_open</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">gpadl</span><span class="p">,</span> <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">send_size</span><span class="p">)</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">print_offer_channels</span><span class="p">()</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">print_created_gpadl</span><span class="p">()</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">print_open_channels</span><span class="p">()</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_close</span><span class="p">(</span><span class="n">relid</span><span class="p">)</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_teardown_gpadl</span><span class="p">(</span><span class="n">relid</span><span class="p">,</span> <span class="n">vb</span><span class="o">.</span><span class="n">ringbuffers</span><span class="p">[</span><span class="n">relid</span><span class="p">]</span><span class="o">.</span><span class="n">gpadl</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;fuzz&#39;</span><span class="p">:</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">promt</span> <span class="o">=</span> <span class="s1">&#39;DEVICE </span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">relid</span><span class="p">)</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s1">&#39;Fuzzing VMBus devices ...&#39;</span><span class="p">)</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">device_fuzzing</span><span class="p">(</span><span class="n">relid</span><span class="p">)</span>
+                <span class="n">vb</span><span class="o">.</span><span class="n">print_statistics</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;***** Control-C *****&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">vb</span><span class="o">.</span><span class="n">vmbus_rescind_all_offers</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">vb</span>
+        <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../../index.html">
+              <img class="logo" src="../../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.hv.synth_dev</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

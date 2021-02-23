@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.uefi_search &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_search</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.hal.uefi_search</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+
+<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># CHIPSEC: Platform Hardware Security Assessment Framework</span>
+<span class="c1">#</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">UEFI image search auxilliary functionality</span>
+
+<span class="sd">usage:</span>
+<span class="sd">   &gt;&gt;&gt; chipsec.hal.uefi_search.check_match_criteria(efi_module, match_criteria, self.logger)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">binascii</span>
+
+<span class="kn">from</span> <span class="nn">chipsec</span> <span class="kn">import</span> <span class="n">defines</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.spi_uefi</span> <span class="kn">import</span> <span class="n">EFI_SECTION</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="c1">#</span>
+<span class="c1"># - EFI binaries are searched according to criteria defined by &quot;match&quot; rules.</span>
+<span class="c1"># - EFI binaries matching exclusion criteria defined by &quot;exclude&quot; rules are excluded from matching.</span>
+<span class="c1">#</span>
+<span class="c1"># Format of the matching rules (any field can be empty or missing):</span>
+<span class="c1"># - Individual rules are OR&#39;ed</span>
+<span class="c1"># - criteria within a given rule are AND&#39;ed</span>
+<span class="c1">#</span>
+<span class="c1"># Example:</span>
+<span class="c1">#</span>
+<span class="c1">#  &quot;UEFI_rootkitX&quot;: {</span>
+<span class="c1">#    &quot;description&quot;: &quot;yet another UEFI implant X&quot;,</span>
+<span class="c1">#    &quot;match&quot;: {</span>
+<span class="c1">#      &quot;rktX_rule1&quot; : { &quot;guid&quot;: &quot;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX&quot; },</span>
+<span class="c1">#      &quot;rktX_rule2&quot; : { &quot;name&quot;: &quot;rootkitX.efi&quot; }</span>
+<span class="c1">#    }</span>
+<span class="c1">#  },</span>
+<span class="c1">#</span>
+<span class="c1">#  &quot;UEFI_vulnerabilityX&quot;: {</span>
+<span class="c1">#    &quot;description&quot;: &quot;yet another UEFI vulnerability X&quot;,</span>
+<span class="c1">#    &quot;match&quot;: {</span>
+<span class="c1">#      &quot;vulnX_rule1&quot;: { &quot;guid&quot;: &quot;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX&quot;, &quot;regexp&quot;: &quot;IAMVULNERABLE&quot; },</span>
+<span class="c1">#      &quot;vulnX_rule2&quot;: { &quot;md5&quot;: &quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;, &quot;sha1&quot;: &quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot; }</span>
+<span class="c1">#    },</span>
+<span class="c1">#    &quot;exclude&quot;: {</span>
+<span class="c1">#      &quot;vulnX_patched&quot;: { &quot;md5&quot;: &quot;HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH&quot;, &quot;sha1&quot;: &quot;HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH&quot; }</span>
+<span class="c1">#    }</span>
+<span class="c1">#  }</span>
+<span class="c1">#</span>
+<span class="c1"># Above example results in a match if the following EFI binary is found:</span>
+<span class="c1"># - with GUID &quot;XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX&quot;</span>
+<span class="c1"># OR</span>
+<span class="c1"># - with name &quot;module0&quot; AND contains a byte sequence matching regular expression &quot;blah&quot;</span>
+<span class="c1"># OR</span>
+<span class="c1"># - with MD5 hash &quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot; AND SHA-1 hash &quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
+<span class="c1"># Unless it&#39;s a EFI binary:</span>
+<span class="c1"># - with MD5 hash &quot;HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH&quot; AND SHA-1 hash &quot;HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH&quot;</span>
+<span class="c1">#</span>
+<span class="n">MATCH_NAME</span>        <span class="o">=</span> <span class="mh">0x1</span>
+<span class="n">MATCH_GUID</span>        <span class="o">=</span> <span class="p">(</span><span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">MATCH_REGEXP</span>      <span class="o">=</span> <span class="p">(</span><span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">MATCH_HASH_MD5</span>    <span class="o">=</span> <span class="p">(</span><span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">MATCH_HASH_SHA1</span>   <span class="o">=</span> <span class="p">(</span><span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">MATCH_HASH_SHA256</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span><span class="p">)</span>
+
+<div class="viewcode-block" id="check_rules"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_search.html#chipsec.hal.uefi_search.check_rules">[docs]</a><span class="k">def</span> <span class="nf">check_rules</span><span class="p">(</span> <span class="n">efi</span><span class="p">,</span> <span class="n">rules</span><span class="p">,</span> <span class="n">entry_name</span><span class="p">,</span> <span class="n">_log</span><span class="p">,</span> <span class="n">bLog</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
+    <span class="n">bfound</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">what</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">match_mask</span>   <span class="o">=</span> <span class="mh">0x00000000</span>
+        <span class="n">match_result</span> <span class="o">=</span> <span class="mh">0x00000000</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">entry_name</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">)</span>
+        <span class="n">rule</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="c1"># Determine which criteria are defined in the current rule</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span>   <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>   <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_NAME</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;guid&#39;</span>   <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">]</span>   <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_GUID</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;regexp&#39;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;regexp&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_REGEXP</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;md5&#39;</span>    <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;md5&#39;</span><span class="p">]</span>    <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_HASH_MD5</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;sha1&#39;</span>   <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;sha1&#39;</span><span class="p">]</span>   <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_HASH_SHA1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;sha256&#39;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;sha256&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span> <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_HASH_SHA256</span>
+        <span class="c1">#</span>
+        <span class="c1"># Check criteria defined in the current rule against the current EFI module</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">match_mask</span> <span class="o">&amp;</span> <span class="n">MATCH_NAME</span><span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_NAME</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">efi</span><span class="o">.</span><span class="n">ui_string</span> <span class="o">==</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span> <span class="n">match_result</span> <span class="o">|=</span> <span class="n">MATCH_NAME</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">match_mask</span> <span class="o">&amp;</span> <span class="n">MATCH_GUID</span><span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_GUID</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">efi</span><span class="p">)</span> <span class="ow">is</span> <span class="n">EFI_SECTION</span> <span class="ow">and</span> <span class="n">efi</span><span class="o">.</span><span class="n">parentGuid</span> <span class="o">==</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">])</span> <span class="ow">or</span> \
+               <span class="p">(</span><span class="n">efi</span><span class="o">.</span><span class="n">Guid</span> <span class="o">==</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">]):</span> <span class="n">match_result</span> <span class="o">|=</span> <span class="n">MATCH_GUID</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">match_mask</span> <span class="o">&amp;</span> <span class="n">MATCH_REGEXP</span><span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_REGEXP</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;regexp&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">search</span><span class="p">(</span> <span class="n">efi</span><span class="o">.</span><span class="n">Image</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="n">match_result</span> <span class="o">|=</span> <span class="n">MATCH_REGEXP</span>
+                <span class="n">_str</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">what</span> <span class="o">=</span> <span class="s2">&quot;bytes &#39;</span><span class="si">{}</span><span class="s2">&#39;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binascii</span><span class="o">.</span><span class="n">hexlify</span><span class="p">(</span><span class="n">_str</span><span class="p">),</span> <span class="s2">&quot; (&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_str</span><span class="p">)</span> <span class="k">if</span> <span class="n">defines</span><span class="o">.</span><span class="n">is_printable</span><span class="p">(</span><span class="n">_str</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">match_mask</span> <span class="o">&amp;</span> <span class="n">MATCH_HASH_MD5</span><span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_HASH_MD5</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">efi</span><span class="o">.</span><span class="n">MD5</span> <span class="o">==</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;md5&#39;</span><span class="p">]:</span> <span class="n">match_result</span> <span class="o">|=</span> <span class="n">MATCH_HASH_MD5</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">match_mask</span> <span class="o">&amp;</span> <span class="n">MATCH_HASH_SHA1</span><span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_HASH_SHA1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">efi</span><span class="o">.</span><span class="n">SHA1</span> <span class="o">==</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;sha1&#39;</span><span class="p">]:</span> <span class="n">match_result</span> <span class="o">|=</span> <span class="n">MATCH_HASH_SHA1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">match_mask</span> <span class="o">&amp;</span> <span class="n">MATCH_HASH_SHA256</span><span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_HASH_SHA256</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">efi</span><span class="o">.</span><span class="n">SHA256</span> <span class="o">==</span> <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;sha256&#39;</span><span class="p">]:</span> <span class="n">match_result</span> <span class="o">|=</span> <span class="n">MATCH_HASH_SHA256</span>
+
+        <span class="n">brule_match</span> <span class="o">=</span> <span class="p">((</span><span class="n">match_result</span> <span class="o">&amp;</span> <span class="n">match_mask</span><span class="p">)</span> <span class="o">==</span> <span class="n">match_mask</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">brule_match</span> <span class="ow">and</span> <span class="n">bLog</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span> <span class="s2">&quot;match &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">match_result</span> <span class="o">&amp;</span> <span class="n">MATCH_NAME</span>       <span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_NAME</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    name  : &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">match_result</span> <span class="o">&amp;</span> <span class="n">MATCH_GUID</span>       <span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_GUID</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    GUID  : {{</span><span class="si">{}</span><span class="s2">}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">])</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">match_result</span> <span class="o">&amp;</span> <span class="n">MATCH_REGEXP</span>     <span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_REGEXP</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    regexp: bytes &#39;</span><span class="si">{}</span><span class="s2">&#39; at offset </span><span class="si">{:X}</span><span class="s2">h&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">match_result</span> <span class="o">&amp;</span> <span class="n">MATCH_HASH_MD5</span>   <span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_HASH_MD5</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    MD5   : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;md5&#39;</span><span class="p">])</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">match_result</span> <span class="o">&amp;</span> <span class="n">MATCH_HASH_SHA1</span>  <span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_HASH_SHA1</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    SHA1  : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;sha1&#39;</span><span class="p">])</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">match_result</span> <span class="o">&amp;</span> <span class="n">MATCH_HASH_SHA256</span><span class="p">)</span> <span class="o">==</span> <span class="n">MATCH_HASH_SHA256</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    SHA256: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;sha256&#39;</span><span class="p">])</span> <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Rules are OR&#39;ed unless matching rule is explicitly excluded from match</span>
+        <span class="c1">#</span>
+        <span class="n">bfound</span> <span class="o">=</span> <span class="n">bfound</span> <span class="ow">or</span> <span class="n">brule_match</span>
+
+    <span class="k">return</span> <span class="n">bfound</span></div>
+
+<div class="viewcode-block" id="check_match_criteria"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_search.html#chipsec.hal.uefi_search.check_match_criteria">[docs]</a><span class="k">def</span> <span class="nf">check_match_criteria</span><span class="p">(</span><span class="n">efi</span><span class="p">,</span> <span class="n">criteria</span><span class="p">,</span> <span class="n">_log</span><span class="p">):</span>
+    <span class="n">bfound</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">_log</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">_log</span> <span class="o">=</span> <span class="n">logger</span><span class="p">()</span>
+    <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[uefi] checking </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">efi</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">criteria</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">criteria</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="c1"># Check if the EFI binary is a match</span>
+        <span class="k">if</span> <span class="s1">&#39;match&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+            <span class="n">bmatch</span> <span class="o">=</span> <span class="n">check_rules</span><span class="p">(</span><span class="n">efi</span><span class="p">,</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">],</span> <span class="n">k</span><span class="p">,</span> <span class="n">_log</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bmatch</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;found EFI binary matching &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="k">if</span> <span class="s1">&#39;description&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span> <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;    </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]))</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">efi</span><span class="p">)</span>
+                <span class="c1"># Check if the matched binary should be excluded</span>
+                <span class="c1"># There&#39;s no point in checking a binary against exclusions if it wasn&#39;t a match</span>
+                <span class="k">if</span> <span class="s1">&#39;exclude&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">check_rules</span><span class="p">(</span><span class="n">efi</span><span class="p">,</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;exclude&#39;</span><span class="p">],</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.exclude&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">_log</span><span class="p">):</span>
+                        <span class="n">_log</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;matched EFI binary is excluded from &#39;</span><span class="si">{}</span><span class="s2">&#39;. Skipping...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                        <span class="k">continue</span>
+            <span class="c1"># we are here if the matched binary wasn&#39;t excluded</span>
+            <span class="c1"># the binary is a final match if it matches either of search entries</span>
+            <span class="n">bfound</span> <span class="o">=</span> <span class="n">bfound</span> <span class="ow">or</span> <span class="n">bmatch</span>
+
+    <span class="k">return</span> <span class="n">bfound</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_search</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

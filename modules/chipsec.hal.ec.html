@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ec module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="hal_base module" href="chipsec.hal.hal_base.html" />
+    <link rel="prev" title="cpuid module" href="chipsec.hal.cpuid.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.hal_base.html" title="hal_base module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.cpuid.html" title="cpuid module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ec module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.ec">
+<span id="ec-module"></span><h1>ec module<a class="headerlink" href="#module-chipsec.hal.ec" title="Permalink to this headline">¶</a></h1>
+<p>Access to Embedded Controller (EC)</p>
+<p>Usage:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">write_command</span><span class="p">(</span> <span class="n">command</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_data</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_data</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_memory</span><span class="p">(</span> <span class="n">offset</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_memory</span><span class="p">(</span> <span class="n">offset</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_memory_extended</span><span class="p">(</span> <span class="n">word_offset</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_memory_extended</span><span class="p">(</span> <span class="n">word_offset</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_range</span><span class="p">(</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_range</span><span class="p">(</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">buffer</span> <span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt id="chipsec.hal.ec.EC">
+<em class="property">class </em><code class="sig-name descname">EC</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.read_data">
+<code class="sig-name descname">read_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.read_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.read_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.read_idx">
+<code class="sig-name descname">read_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.read_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.read_idx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.read_memory">
+<code class="sig-name descname">read_memory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.read_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.read_memory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.read_memory_extended">
+<code class="sig-name descname">read_memory_extended</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">word_offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.read_memory_extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.read_memory_extended" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.read_range">
+<code class="sig-name descname">read_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_offset</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.read_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.read_range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.write_command">
+<code class="sig-name descname">write_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.write_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.write_command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.write_data">
+<code class="sig-name descname">write_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.write_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.write_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.write_idx">
+<code class="sig-name descname">write_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.write_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.write_idx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.write_memory">
+<code class="sig-name descname">write_memory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.write_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.write_memory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.write_memory_extended">
+<code class="sig-name descname">write_memory_extended</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">word_offset</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.write_memory_extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.write_memory_extended" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ec.EC.write_range">
+<code class="sig-name descname">write_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_offset</span></em>, <em class="sig-param"><span class="n">buffer</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ec.html#EC.write_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ec.EC.write_range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.cpuid.html"
+                        title="previous chapter">cpuid module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.hal_base.html"
+                        title="next chapter">hal_base module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.hal_base.html" title="hal_base module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.cpuid.html" title="cpuid module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ec module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

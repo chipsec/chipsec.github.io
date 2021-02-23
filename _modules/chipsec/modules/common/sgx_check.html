@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.common.sgx_check &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.sgx_check</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.common.sgx_check</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2019, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+<span class="c1"># Authors:</span>
+<span class="c1">#  Sushmith Hiremath, INTEL DCG RED team</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Check SGX related configuration</span>
+<span class="sd">Reference: SGX BWG, CDI/IBP#: 565432</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">_MODULE_NAME</span> <span class="o">=</span> <span class="s1">&#39;sgx_check&#39;</span>
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">MTAG_HWCONFIG</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">BIT0</span><span class="p">,</span> <span class="n">BIT1</span><span class="p">,</span> <span class="n">BIT2</span><span class="p">,</span> <span class="n">BIT5</span><span class="p">,</span> <span class="n">BIT6</span><span class="p">,</span> <span class="n">BIT7</span><span class="p">,</span> <span class="n">BIT8</span>
+<span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_HWCONFIG</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="sgx_check"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.sgx_check.html#chipsec.modules.common.sgx_check.sgx_check">[docs]</a><span class="k">class</span> <span class="nc">sgx_check</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+
+<div class="viewcode-block" id="sgx_check.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.sgx_check.html#chipsec.modules.common.sgx_check.sgx_check.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sgx_cpu_support</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">set_affinity</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Failed to set affinity to CPU</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+            <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">r_ebx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="mh">0x07</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">r_ebx</span> <span class="o">&amp;</span> <span class="n">BIT2</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] CPU</span><span class="si">{:d}</span><span class="s2">: does support SGX&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+                <span class="n">sgx_cpu_support</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]CPU</span><span class="si">{:d}</span><span class="s2">: does not support SGX&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sgx_cpu_support</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
+        <span class="k">return</span> <span class="n">sgx_cpu_support</span></div>
+
+<div class="viewcode-block" id="sgx_check.check_sgx_config"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.sgx_check.html#chipsec.modules.common.sgx_check.sgx_check.check_sgx_config">[docs]</a>    <span class="k">def</span> <span class="nf">check_sgx_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;Check SGX feature support&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Test if CPU has support for SGX&quot;</span><span class="p">)</span>
+        <span class="n">sgx_ok</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] SGX BIOS enablement check&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Verifying IA32_FEATURE_CONTROL MSR is configured&quot;</span><span class="p">)</span>
+        <span class="n">bios_feature_control_enable</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_FEATURE_CONTROL&#39;</span><span class="p">,</span> <span class="s1">&#39;SGX_GLOBAL_EN&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">bios_feature_control_enable</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">bios_feature_control_enable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;Intel SGX is Enabled in BIOS&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span> <span class="s2">&quot;Intel SGX is not enabled in BIOS&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] Verifying IA32_FEATURE_CONTROL MSR is locked&quot;</span><span class="p">)</span>
+        <span class="n">locked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+            <span class="n">feature_cntl_lock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;Ia32FeatureControlLock&#39;</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] cpu</span><span class="si">{:d}</span><span class="s2">: IA32_Feature_Control Lock = </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">feature_cntl_lock</span><span class="p">))</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">feature_cntl_lock</span><span class="p">:</span>
+                <span class="n">locked</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">locked</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;IA32_Feature_Control locked&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;IA32_Feature_Control is unlocked&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="c1"># Verify that Protected Memory Range (PRM) is supported, MSR IA32_MTRRCAP (FEh) [12]=1</span>
+        <span class="c1"># Check on every CPU and make sure that they are all the same values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] Verifying if Protected Memory Range (PRMRR) is configured&quot;</span> <span class="p">)</span>
+        <span class="n">prmrr_enable</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+            <span class="n">mtrrcap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;MTRRCAP&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">mtrrcap</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] CPU</span><span class="si">{:d}</span><span class="s2"> Protected Memory Range configuration is not supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prmrr_enable</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] CPU</span><span class="si">{:d}</span><span class="s2"> Protected Memory Range configuration is supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">prmrr_enable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;Protected Memory Range configuration is supported&quot;</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;Protected Memory Range configuration is not supported&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">-</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="c1"># Check PRMRR configurations on each core.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] Verifying PRMRR Configuration on each core.&quot;</span><span class="p">)</span>
+        <span class="n">first_iter</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">prmrr_valid_config</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_base</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_base_memtype</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_base</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_base_new</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_mask</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_mask</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_mask_new</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_mask_vld</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_mask_vld</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_mask_vld_new</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_mask_lock</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_mask_lock</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uncore_mask_lock_new</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prmrr_uniform</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">prmrr_locked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">check_uncore_vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;PRMRR_UNCORE_PHYBASE&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;PRMRR_UNCORE_MASK&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+            <span class="n">prmrr_valid_config_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;PRMRR_VALID_CONFIG&#39;</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="n">prmrr_base_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_PHYBASE&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_base_address_fields&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="n">prmrr_base_memtype_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_PHYBASE&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_MEMTYPE&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="n">prmrr_mask_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_MASK&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_mask_bits&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="n">prmrr_mask_vld_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_MASK&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_VLD&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="n">prmrr_mask_lock_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_MASK&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_LOCK&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">check_uncore_vals</span><span class="p">:</span>
+                <span class="n">prmrr_uncore_base_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_UNCORE_PHYBASE&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_base_address_fields&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+                <span class="n">prmrr_uncore_mask_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_UNCORE_MASK&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_mask_bits&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+                <span class="n">prmrr_uncore_mask_vld_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_UNCORE_MASK&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_VLD&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+                <span class="n">prmrr_uncore_mask_lock_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;PRMRR_UNCORE_MASK&#39;</span><span class="p">,</span> <span class="s1">&#39;PRMRR_LOCK&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR_VALID_CONFIG: 0x</span><span class="si">{:010X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_valid_config_new</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR base address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_base_new</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR memory type: 0x</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_base_memtype_new</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR mask address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_mask_new</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR mask valid: 0x</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_mask_vld_new</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR mask lock: 0x</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_mask_lock_new</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">check_uncore_vals</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR uncore base address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_uncore_base_new</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR uncore mask address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_uncore_mask_new</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR uncore mask valid: 0x</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_uncore_mask_vld_new</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      CPU</span><span class="si">{:d}</span><span class="s2"> PRMRR uncore mask lock: 0x</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">prmrr_uncore_mask_lock_new</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">first_iter</span><span class="p">:</span>
+                <span class="n">prmrr_valid_config</span> <span class="o">=</span> <span class="n">prmrr_valid_config_new</span>
+                <span class="n">prmrr_base</span> <span class="o">=</span> <span class="n">prmrr_base_new</span>
+                <span class="n">prmrr_base_memtype</span> <span class="o">=</span> <span class="n">prmrr_base_memtype_new</span>
+                <span class="n">prmrr_mask</span> <span class="o">=</span> <span class="n">prmrr_mask_new</span>
+                <span class="n">prmrr_mask_vld</span> <span class="o">=</span> <span class="n">prmrr_mask_vld_new</span>
+                <span class="n">prmrr_mask_lock</span> <span class="o">=</span> <span class="n">prmrr_mask_lock_new</span>
+                <span class="n">prmrr_uncore_base</span> <span class="o">=</span> <span class="n">prmrr_uncore_base_new</span>
+                <span class="n">prmrr_uncore_mask</span> <span class="o">=</span> <span class="n">prmrr_uncore_mask_new</span>
+                <span class="n">prmrr_uncore_mask_vld</span> <span class="o">=</span> <span class="n">prmrr_uncore_mask_vld_new</span>
+                <span class="n">prmrr_uncore_mask_lock</span> <span class="o">=</span> <span class="n">prmrr_uncore_mask_lock_new</span>
+                <span class="n">first_iter</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">prmrr_mask_lock_new</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">prmrr_locked</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">prmrr_valid_config</span> <span class="o">!=</span> <span class="n">prmrr_valid_config_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_base</span> <span class="o">!=</span> <span class="n">prmrr_base_new</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">prmrr_mask</span> <span class="o">!=</span> <span class="n">prmrr_mask_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_uncore_base</span> <span class="o">!=</span> <span class="n">prmrr_uncore_base_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_uncore_mask</span> <span class="o">!=</span> <span class="n">prmrr_uncore_mask_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_mask_vld</span> <span class="o">!=</span> <span class="n">prmrr_mask_vld_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_mask_lock</span> <span class="o">!=</span> <span class="n">prmrr_mask_lock_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_uncore_mask_vld</span> <span class="o">!=</span> <span class="n">prmrr_uncore_mask_vld_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_uncore_mask_lock</span> <span class="o">!=</span> <span class="n">prmrr_uncore_mask_lock_new</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">prmrr_base_memtype</span> <span class="o">!=</span> <span class="n">prmrr_base_memtype_new</span><span class="p">)):</span>
+                <span class="n">prmrr_uniform</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prmrr_uniform</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;PRMRR config is not uniform across all CPUs&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;PRMRR config is uniform across all CPUs&quot;</span> <span class="p">)</span>
+            <span class="n">prmrr_configs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># NB: BWG Provides only a list of 4 possible values, see item 5, section 2.1. So values e.g. 0x050 are prhibited, report error.</span>
+            <span class="n">config_support</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">BIT0</span> <span class="o">&amp;</span> <span class="n">prmrr_valid_config</span><span class="p">):</span>
+                <span class="n">prmrr_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;1M&quot;</span><span class="p">)</span>
+                <span class="n">config_support</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">BIT1</span> <span class="o">&amp;</span> <span class="n">prmrr_valid_config</span><span class="p">):</span>
+                <span class="n">prmrr_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;2M&quot;</span><span class="p">)</span>
+                <span class="n">config_support</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">BIT5</span> <span class="o">&amp;</span> <span class="n">prmrr_valid_config</span><span class="p">):</span>
+                <span class="n">prmrr_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;32M&quot;</span><span class="p">)</span>
+                <span class="n">config_support</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">BIT6</span> <span class="o">&amp;</span> <span class="n">prmrr_valid_config</span><span class="p">):</span>
+                <span class="n">prmrr_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;64M&quot;</span><span class="p">)</span>
+                <span class="n">config_support</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">BIT7</span> <span class="o">&amp;</span> <span class="n">prmrr_valid_config</span><span class="p">):</span>
+                <span class="n">prmrr_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;128M&quot;</span><span class="p">)</span>
+                <span class="n">config_support</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">BIT8</span> <span class="o">&amp;</span> <span class="n">prmrr_valid_config</span><span class="p">):</span>
+                <span class="n">prmrr_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;256M&quot;</span><span class="p">)</span>
+                <span class="n">config_support</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">config_support</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR config supports: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prmrr_configs</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] PRMMR config has improper value&quot;</span><span class="p">)</span>
+                <span class="n">sgx_ok</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="c1"># In some cases the PRMRR base and mask may be zero</span>
+            <span class="k">if</span> <span class="n">prmrr_base</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">prmrr_mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] PRMRR Base and Mask are set to zero.  PRMRR appears to be disabled.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]   Skipping Base/Mask settings.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR base address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_base</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying PRMR memory type is valid&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR memory type : 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_base_memtype</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">prmrr_base_memtype</span> <span class="o">==</span> <span class="mh">0x6</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;PRMRR memory type is WB as expected&quot;</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;Unexpected PRMRR memory type (not WB)&quot;</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR mask address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_mask</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying PRMR address are valid&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR uncore mask valid: 0x</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_uncore_mask_vld</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">prmrr_mask_vld</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;Mcheck marked PRMRR address as valid&quot;</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;Mcheck marked PRMRR address as invalid&quot;</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying if PRMR mask register is locked&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR mask lock: 0x</span><span class="si">%u</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_mask_lock</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prmrr_locked</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;PRMRR MASK register is locked&quot;</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;PRMRR MASK register is not locked&quot;</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+                <span class="k">if</span> <span class="n">check_uncore_vals</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR uncore base address: 0x</span><span class="si">%012X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_base</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR uncore mask address: 0x</span><span class="si">%012X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_mask</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying PRMR uncore address are valid&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR uncore mask valid: 0x</span><span class="si">%u</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_mask_vld</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">prmrr_uncore_mask_vld</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;Mcheck marked uncore PRMRR address as valid&quot;</span> <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;Mcheck marked uncore PRMRR address as invalid&quot;</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying if PRMR uncore mask register is locked&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR uncore mask lock: 0x</span><span class="si">%u</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_mask_lock</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">prmrr_uncore_mask_lock</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;PMRR uncore MASK register is locked&quot;</span> <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;PMRR uncore MASK register is not locked&quot;</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="k">if</span> <span class="n">bios_feature_control_enable</span> <span class="ow">and</span> <span class="n">locked</span><span class="p">:</span>
+            <span class="n">sgx1_instr_support</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">sgx2_instr_support</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] Verifying if SGX instructions are supported&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">set_affinity</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Failed to set affinity to CPU</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+                <span class="p">(</span><span class="n">r_eax</span><span class="p">,</span> <span class="n">r_ebx</span><span class="p">,</span> <span class="n">r_ecx</span><span class="p">,</span> <span class="n">r_edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="mh">0x012</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">r_eax</span> <span class="o">&amp;</span> <span class="n">BIT0</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] CPU</span><span class="si">{:d}</span><span class="s2"> SGX-1 instructions are supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+                    <span class="n">sgx1_instr_support</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] CPU</span><span class="si">{:d}</span><span class="s2"> SGX-1 instructions are not supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">r_eax</span> <span class="o">&amp;</span> <span class="n">BIT1</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] CPU</span><span class="si">{:d}</span><span class="s2"> SGX-2 instructions are supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+                    <span class="n">sgx2_instr_support</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] CPU</span><span class="si">{:d}</span><span class="s2"> SGX-2 instructions are not supported&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">sgx1_instr_support</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;Intel SGX instructions are supported and available to use&quot;</span><span class="p">)</span>
+                <span class="n">sgx_ok</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;Intel SGX instructions are not supported on system&quot;</span><span class="p">)</span>
+                <span class="n">sgx_ok</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">sgx2_instr_support</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] SGX-2 instructions are supported&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] SGX-2 instructions are not supported&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sgx_ok</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] Verifying if SGX is available to use&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sgx_ok</span> <span class="ow">and</span> <span class="n">prmrr_enable</span> <span class="ow">and</span> <span class="n">prmrr_uniform</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;Intel SGX is available to use&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="ow">not</span> <span class="n">sgx_ok</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">bios_feature_control_enable</span><span class="p">)</span> <span class="ow">and</span> <span class="n">prmrr_enable</span> <span class="ow">and</span> <span class="n">prmrr_uniform</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s2">&quot;Intel SGX instructions disabled by firmware&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">==</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;Intel SGX is not available to use&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN_STATUS&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] BIOS_SE_SVN : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]     PFAT_SE_SVN : 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN&#39;</span><span class="p">,</span> <span class="s1">&#39;PFAT_SE_SVN&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]     ANC_SE_SVN : 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN&#39;</span><span class="p">,</span> <span class="s1">&#39;ANC_SE_SVN&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]     SCLEAN_SE_SVN : 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN&#39;</span><span class="p">,</span> <span class="s1">&#39;SCLEAN_SE_SVN&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]     SINIT_SE_SVN : 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN&#39;</span><span class="p">,</span> <span class="s1">&#39;SINIT_SE_SVN&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] BIOS_SE_SVN_STATUS : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN_STATUS&#39;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]     BIOS_SE_SVN ACM threshold lock : 0x</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;BIOS_SE_SVN_STATUS&#39;</span><span class="p">,</span> <span class="s1">&#39;LOCK&#39;</span><span class="p">)))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] Check SGX debug feature settings&quot;</span><span class="p">)</span>
+        <span class="n">sgx_debug_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;SGX_DEBUG_MODE&#39;</span><span class="p">,</span> <span class="s1">&#39;SGX_DEBUG_MODE_STATUS_BIT&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] SGX Debug Enable             : </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sgx_debug_status</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Check Silicon debug feature settings&quot;</span><span class="p">)</span>
+        <span class="n">debug_interface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;IA32_DEBUG_INTERFACE&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]   IA32_DEBUG_INTERFACE : 0x</span><span class="si">{:08X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">debug_interface</span><span class="p">))</span>
+        <span class="n">debug_enable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_DEBUG_INTERFACE&#39;</span><span class="p">,</span> <span class="n">debug_interface</span><span class="p">,</span> <span class="s1">&#39;ENABLE&#39;</span><span class="p">)</span>
+        <span class="n">debug_lock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_DEBUG_INTERFACE&#39;</span><span class="p">,</span> <span class="n">debug_interface</span><span class="p">,</span> <span class="s1">&#39;LOCK&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]     Debug enabled      : </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">debug_enable</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]     Lock               : </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">debug_lock</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">sgx_debug_status</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;SGX debug mode is enabled&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;SGX debug mode is disabled&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">debug_enable</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;Silicon debug features are disabled&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;Silicon debug features are not disabled&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">debug_enable</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">1</span><span class="o">==</span><span class="n">sgx_debug_status</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;Enabling sgx_debug without enabling debug mode in msr IA32_DEBUG_INTERFACE is not a valid configuration&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">debug_lock</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;Silicon debug Feature Control register is locked&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;Silicon debug Feature Control register is not locked&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div>
+
+<div class="viewcode-block" id="sgx_check.run"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.sgx_check.html#chipsec.modules.common.sgx_check.sgx_check.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">is_efi</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;Currently this module cannot run within the EFI Shell. Exiting.&#39;</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">SKIPPED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_sgx_config</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">==</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span><span class="s1">&#39;All SGX checks passed&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">==</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warn_check</span><span class="p">(</span><span class="s1">&#39;One or more SGX checks detected a warning&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">==</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">SKIPPED</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_skipped_check</span><span class="p">(</span><span class="s1">&#39;SGX test is being skipped&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">==</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_not_applicable_check</span><span class="p">(</span><span class="s1">&#39;SGX test is being skipped&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed_check</span><span class="p">(</span><span class="s1">&#39;One or more SGX checks failed&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.sgx_check</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

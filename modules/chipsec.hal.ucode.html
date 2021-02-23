@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ucode module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="uefi module" href="chipsec.hal.uefi.html" />
+    <link rel="prev" title="tpm_eventlog module" href="chipsec.hal.tpm_eventlog.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.uefi.html" title="uefi module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.tpm_eventlog.html" title="tpm_eventlog module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ucode module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.hal.ucode">
+<span id="ucode-module"></span><h1>ucode module<a class="headerlink" href="#module-chipsec.hal.ucode" title="Permalink to this headline">¶</a></h1>
+<p>Microcode update specific functionality (for each CPU thread)</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ucode_update_id</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">load_ucode_update</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ucode_buf</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">update_ucode_all_cpus</span><span class="p">(</span> <span class="s1">&#39;ucode.pdb&#39;</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_ucode_update_header</span><span class="p">(</span> <span class="s1">&#39;ucode.pdb&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="chipsec.hal.ucode.Ucode">
+<em class="property">class </em><code class="sig-name descname">Ucode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#Ucode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.Ucode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="chipsec.hal.ucode.Ucode.get_cpu_thread_count">
+<code class="sig-name descname">get_cpu_thread_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#Ucode.get_cpu_thread_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.Ucode.get_cpu_thread_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ucode.Ucode.load_ucode_update">
+<code class="sig-name descname">load_ucode_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">ucode_buf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#Ucode.load_ucode_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.Ucode.load_ucode_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ucode.Ucode.ucode_update_id">
+<code class="sig-name descname">ucode_update_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#Ucode.ucode_update_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.Ucode.ucode_update_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ucode.Ucode.update_ucode">
+<code class="sig-name descname">update_ucode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cpu_thread_id</span></em>, <em class="sig-param"><span class="n">ucode_file</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#Ucode.update_ucode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.Ucode.update_ucode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.hal.ucode.Ucode.update_ucode_all_cpus">
+<code class="sig-name descname">update_ucode_all_cpus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ucode_file</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#Ucode.update_ucode_all_cpus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.Ucode.update_ucode_all_cpus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="chipsec.hal.ucode.UcodeUpdateHeader">
+<em class="property">class </em><code class="sig-name descname">UcodeUpdateHeader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">header_version</span></em>, <em class="sig-param"><span class="n">update_revision</span></em>, <em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">processor_signature</span></em>, <em class="sig-param"><span class="n">checksum</span></em>, <em class="sig-param"><span class="n">loader_revision</span></em>, <em class="sig-param"><span class="n">processor_flags</span></em>, <em class="sig-param"><span class="n">data_size</span></em>, <em class="sig-param"><span class="n">total_size</span></em>, <em class="sig-param"><span class="n">reserved1</span></em>, <em class="sig-param"><span class="n">reserved2</span></em>, <em class="sig-param"><span class="n">reserved3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#UcodeUpdateHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.UcodeUpdateHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.ucode.UcodeUpdateHeader" title="chipsec.hal.ucode.UcodeUpdateHeader"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.ucode.UcodeUpdateHeader</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.ucode.dump_ucode_update_header">
+<code class="sig-name descname">dump_ucode_update_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pdb_ucode_buffer</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#dump_ucode_update_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.dump_ucode_update_header" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="chipsec.hal.ucode.read_ucode_file">
+<code class="sig-name descname">read_ucode_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ucode_filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/ucode.html#read_ucode_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.ucode.read_ucode_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.hal.tpm_eventlog.html"
+                        title="previous chapter">tpm_eventlog module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.hal.uefi.html"
+                        title="next chapter">uefi module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.uefi.html" title="uefi module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.hal.tpm_eventlog.html" title="tpm_eventlog module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ucode module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

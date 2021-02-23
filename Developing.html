@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Writing Your Own Modules &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="venom module" href="modules/chipsec.modules.tools.vmm.venom.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules/chipsec.modules.tools.vmm.venom.html" title="venom module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" accesskey="U">CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Writing Your Own Modules</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="writing-your-own-modules">
+<h1>Writing Your Own Modules<a class="headerlink" href="#writing-your-own-modules" title="Permalink to this headline">¶</a></h1>
+<p>Your module class should subclass BaseModule and implement at least the methods named <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and <code class="docutils literal notranslate"><span class="pre">run</span></code>. When chipsec_main runs, it will first run <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and if that returns true, then it will call <code class="docutils literal notranslate"><span class="pre">run</span></code>.</p>
+<p>As of CHIPSEC version 1.2.0, CHIPSEC implements an abstract name for platform <em>controls</em>. Module authors are encouraged to create controls in the XML configuration files for important platform configuration information and then use <code class="docutils literal notranslate"><span class="pre">get_control</span></code> and <code class="docutils literal notranslate"><span class="pre">set_control</span></code> within modules. This abstraction allows modules to test for the abstract control without knowning which register provides it. (This is especially important for test reuse across platform generations.)</p>
+<p>Most modules read some platform configuration and then pass or fail based on the result. For example:</p>
+<ol class="arabic">
+<li><p>Define the control in the platform XML file (in <code class="docutils literal notranslate"><span class="pre">chispec/cfg</span></code>):</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;control</span> <span class="na">name=</span><span class="s">&quot;BiosLockEnable&quot;</span>     <span class="na">register=</span><span class="s">&quot;BC&quot;</span>    <span class="na">field=</span><span class="s">&quot;BLE&quot;</span>    <span class="na">desc=</span><span class="s">&quot;BIOS Lock Enable&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Get the current status of the control:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ble</span> <span class="o">=</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">chipset</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;BiosLockEnable&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>React based on the status of the control:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ble</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span><span class="s2">&quot;BIOS Lock is set.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed_check</span><span class="p">(</span><span class="s2">&quot;BIOS Lock is not set.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Return:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ble</span><span class="p">:</span> <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+<span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The CHIPSEC HAL and other APIs are also available within these modules. See the next sections for details about the available functionality.</p>
+<p>Copy your module into the <code class="docutils literal notranslate"><span class="pre">chipsec/modules/</span></code> directory structure</p>
+<ul class="simple">
+<li><p>Modules specific to a certain platform should implement <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> function which returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for the platforms the module is applicable to</p></li>
+<li><p>Modules specific to a certain platform can also be located in <code class="docutils literal notranslate"><span class="pre">chipsec/modules/&lt;platform_code&gt;</span></code> directory, for example <code class="docutils literal notranslate"><span class="pre">chipsec/modules/hsw</span></code>. Supported plaforms and their code can be found by running <code class="docutils literal notranslate"><span class="pre">chipesec_main.py</span> <span class="pre">--help</span></code></p></li>
+<li><p>Modules common to all platform which CHIPSEC supports can be located in <code class="docutils literal notranslate"><span class="pre">chipsec/modules/common</span></code> directory</p></li>
+</ul>
+<p>If a new platform needs to be added:</p>
+<ul class="simple">
+<li><p>Review the platform datasheet and include appropriate information in an XML configuration file for the platform. Place this file in chipsec/cfg/8086. Registers that are correctly defined in <code class="docutils literal notranslate"><span class="pre">common.xml</span></code> will be inherited and do not need to be added. Use <code class="docutils literal notranslate"><span class="pre">common.xml</span></code> as an example. It is based on the 4th Generation Intel Core platform (Haswell).</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://github.com/chipsec/chipsec/wiki/files/training/OSFC_2018_CHIPSEC_Workshop.pdf">Creating CHIPSEC modules and commands</a></p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules/chipsec.modules.tools.vmm.venom.html"
+                        title="previous chapter">venom module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules/chipsec.modules.tools.vmm.venom.html" title="venom module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" >CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Writing Your Own Modules</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

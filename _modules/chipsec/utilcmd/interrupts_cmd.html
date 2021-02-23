@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.utilcmd.interrupts_cmd &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.interrupts_cmd</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.utilcmd.interrupts_cmd</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2015, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.command</span>        <span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.interrupts</span> <span class="kn">import</span> <span class="n">Interrupts</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="c1"># ###################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># CPU Interrupts</span>
+<span class="c1">#</span>
+<span class="c1"># ###################################################################</span>
+
+
+
+<div class="viewcode-block" id="SMICommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand">[docs]</a><span class="k">class</span> <span class="nc">SMICommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util smi count</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util smi &lt;thread_id&gt; &lt;SMI_code&gt; &lt;SMI_data&gt; [RAX] [RBX] [RCX] [RDX] [RSI] [RDI]</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util smi smmc &lt;RT_code_start&gt; &lt;RT_code_end&gt; &lt;GUID&gt; &lt;payload_loc&gt; &lt;payload_file|payload_string&gt;</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">    &gt;&gt;&gt; chipsec_util smi count</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util smi 0x0 0xDE 0x0</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util smi 0x0 0xDE 0x0 0xAAAAAAAAAAAAAAAA ..</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util.py smi smmc 0x79dfe000 0x79efdfff ed32d533-99e6-4209-9cc02d72cdd998a7 0x79dfaaaa payload.bin</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SMICommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># No driver required when printing the util documentation</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="SMICommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="n">SMICommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">interrupts</span> <span class="o">=</span> <span class="n">Interrupts</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;count&#39;</span> <span class="o">==</span> <span class="n">op</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SMI count:&quot;</span> <span class="p">)</span>
+            <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+                <span class="n">smi_cnt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;MSR_SMI_COUNT&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">,</span> <span class="n">cpu_thread</span><span class="o">=</span><span class="n">tid</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;  CPU</span><span class="si">{:d}</span><span class="s2">: </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">smi_cnt</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;smmc&#39;</span> <span class="o">==</span> <span class="n">op</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="n">SMICommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="n">RTC_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">RTC_end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">guid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+            <span class="n">payload_loc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">payload</span><span class="p">):</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+                <span class="n">payload</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Searching for </span><span class="se">\&#39;</span><span class="s2">smmc</span><span class="se">\&#39;</span><span class="s2"> in range 0x</span><span class="si">{:x}</span><span class="s2">-0x</span><span class="si">{:x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">RTC_start</span><span class="p">,</span> <span class="n">RTC_end</span><span class="p">))</span>
+            <span class="c1"># scan for SMM_CORE_PRIVATE_DATA smmc signature</span>
+            <span class="n">smmc_loc</span> <span class="o">=</span> <span class="n">interrupts</span><span class="o">.</span><span class="n">find_smmc</span><span class="p">(</span><span class="n">RTC_start</span><span class="p">,</span> <span class="n">RTC_end</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">smmc_loc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot; Couldn&#39;t find smmc signature&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Found </span><span class="se">\&#39;</span><span class="s2">smmc</span><span class="se">\&#39;</span><span class="s2"> structure at 0x</span><span class="si">{:x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">smmc_loc</span><span class="p">))</span>
+
+            <span class="n">ReturnStatus</span> <span class="o">=</span> <span class="n">interrupts</span><span class="o">.</span><span class="n">send_smmc_SMI</span><span class="p">(</span><span class="n">smmc_loc</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">payload_loc</span><span class="p">)</span>
+            <span class="c1">#TODO Translate ReturnStatus to EFI_STATUS enum</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;ReturnStatus: </span><span class="si">{:x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ReturnStatus</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">SMI_data_port_value</span> <span class="o">=</span> <span class="mh">0x0</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">thread_id</span>           <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="n">SMI_code_port_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="n">SMI_data_port_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Sending SW SMI (code: 0x</span><span class="si">{:02X}</span><span class="s2">, data: 0x</span><span class="si">{:02X}</span><span class="s2">)..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="n">SMI_data_port_value</span><span class="p">)</span> <span class="p">)</span>
+                <span class="k">if</span> <span class="mi">5</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">):</span>
+                    <span class="n">interrupts</span><span class="o">.</span><span class="n">send_SMI_APMC</span><span class="p">(</span> <span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="n">SMI_data_port_value</span> <span class="p">)</span>
+                <span class="k">elif</span> <span class="mi">11</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">):</span>
+                    <span class="n">_rax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="n">_rbx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="n">_rcx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="n">_rdx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="n">_rsi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="n">_rdi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RAX: 0x</span><span class="si">{:016X}</span><span class="s2"> (AX will be overwridden with values of SW SMI ports B2/B3)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rax</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RBX: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rbx</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RCX: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rcx</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RDX: 0x</span><span class="si">{:016X}</span><span class="s2"> (DX will be overwridden with 0x00B2)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rdx</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RSI: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rsi</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RDI: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rdi</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="n">ret</span> <span class="o">=</span> <span class="n">interrupts</span><span class="o">.</span><span class="n">send_SW_SMI</span><span class="p">(</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="n">SMI_data_port_value</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span> <span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;Return values&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RAX: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RBX: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RCX: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RDX: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RSI: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RDI: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">SMICommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;unknown command-line option &#39;</span><span class="si">{:32}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="p">)</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="n">SMICommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (smi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="NMICommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.NMICommand">[docs]</a><span class="k">class</span> <span class="nc">NMICommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util nmi</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">    &gt;&gt;&gt; chipsec_util nmi</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="NMICommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.NMICommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="NMICommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.NMICommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">interrupts</span> <span class="o">=</span> <span class="n">Interrupts</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Sending NMI#..&quot;</span> <span class="p">)</span>
+        <span class="n">interrupts</span><span class="o">.</span><span class="n">send_NMI</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (nmi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+
+<span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;smi&#39;</span><span class="p">:</span> <span class="n">SMICommand</span><span class="p">,</span> <span class="s1">&#39;nmi&#39;</span><span class="p">:</span> <span class="n">NMICommand</span> <span class="p">}</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.interrupts_cmd</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

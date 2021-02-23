@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Running CHIPSEC &#8212; CHIPSEC 1.5.8 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Interpreting results" href="Interpreting-Results.html" />
+    <link rel="prev" title="Creating the Kali Linux Live USB" href="Using-CHIPSEC-with-Kali-Linux.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Interpreting-Results.html" title="Interpreting results"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Using-CHIPSEC-with-Kali-Linux.html" title="Creating the Kali Linux Live USB"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" accesskey="U">CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Running CHIPSEC</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="running-chipsec">
+<h1>Running CHIPSEC<a class="headerlink" href="#running-chipsec" title="Permalink to this headline">¶</a></h1>
+<p>CHIPSEC should be launched as Administrator/root.</p>
+<p>CHIPSEC will automatically attempt to create and start its service, including load its kernel-mode driver. If CHIPSEC service is already running then it will attempt to connect to the existing service.</p>
+<p>Use –no-driver command-line option to skip loading the kernel module. This option will only work for certain commands or modules.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--module</span></code> to run a specific module (e.g. security check, a tool or a PoC..):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span> <span class="pre">-m</span> <span class="pre">common.bios_wp</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span> <span class="pre">-m</span> <span class="pre">common.spi_lock</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span> <span class="pre">-m</span> <span class="pre">common.smrr</span></code></p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p>You can also use CHIPSEC to access various hardware resources:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_util.py</span></code></p>
+</div></blockquote>
+</li>
+</ul>
+<div class="section" id="running-in-shell">
+<h2>Running in Shell<a class="headerlink" href="#running-in-shell" title="Permalink to this headline">¶</a></h2>
+<p><strong>Basic usage</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_util.py</span></code></p>
+<p><strong>For help, run</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span> <span class="pre">--help</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_util.py</span> <span class="pre">--help</span></code></p>
+</div>
+<div class="section" id="using-as-a-python-package">
+<h2>Using as a Python Package<a class="headerlink" href="#using-as-a-python-package" title="Permalink to this headline">¶</a></h2>
+<p>Install CHIPSEC manually or from PyPI. You can then use CHIPSEC from your Python project or from the Python shell:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">chipsec_main</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span><span class="s1">&#39;common.bios_wp&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">chipsec_util</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s1">&#39;spi&#39;</span><span class="p">,</span><span class="s1">&#39;info&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="chipsec-main-options">
+<h2>chipsec_main options<a class="headerlink" href="#chipsec-main-options" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>                      <span class="n">show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">m</span><span class="p">,</span> <span class="o">--</span><span class="n">module</span> <span class="n">_MODULE</span>            <span class="n">specify</span> <span class="n">module</span> <span class="n">to</span> <span class="n">run</span> <span class="p">(</span><span class="n">example</span><span class="p">:</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">bios_wp</span><span class="p">)</span>
+  <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">--</span><span class="n">module_args</span> <span class="n">_MODULE_ARGV</span>  <span class="n">additional</span> <span class="n">module</span> <span class="n">arguments</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">verbose</span>                   <span class="n">verbose</span> <span class="n">mode</span>
+  <span class="o">--</span><span class="n">hal</span>                           <span class="n">HAL</span> <span class="n">mode</span>
+  <span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="o">--</span><span class="n">debug</span>                     <span class="n">debug</span> <span class="n">mode</span>
+  <span class="o">-</span><span class="n">l</span><span class="p">,</span> <span class="o">--</span><span class="n">log</span>  <span class="n">LOG</span>                  <span class="n">output</span> <span class="n">to</span> <span class="n">log</span> <span class="n">file</span>
+
+<span class="n">Advanced</span> <span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">platform</span> <span class="n">_PLATFORM</span>            <span class="n">explicitly</span> <span class="n">specify</span> <span class="n">platform</span> <span class="n">code</span>
+  <span class="o">--</span><span class="n">pch</span> <span class="n">_PCH</span>                          <span class="n">explicitly</span> <span class="n">specify</span> <span class="n">PCH</span> <span class="n">code</span>
+  <span class="o">-</span><span class="n">n</span><span class="p">,</span> <span class="o">--</span><span class="n">no_driver</span>                     <span class="n">chipsec</span> <span class="n">won</span><span class="s1">&#39;t need kernel mode functions so don&#39;</span><span class="n">t</span> <span class="n">load</span> <span class="n">chipsec</span> <span class="n">driver</span>
+  <span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">ignore_platform</span>               <span class="n">run</span> <span class="n">chipsec</span> <span class="n">even</span> <span class="k">if</span> <span class="n">the</span> <span class="n">platform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">recognized</span>
+  <span class="o">-</span><span class="n">j</span><span class="p">,</span> <span class="o">--</span><span class="n">json</span> <span class="n">_JSON_OUT</span>                <span class="n">specify</span> <span class="n">filename</span> <span class="k">for</span> <span class="n">JSON</span> <span class="n">output</span>
+  <span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="o">--</span><span class="n">xml</span> <span class="n">_XML_OUT</span>                  <span class="n">specify</span> <span class="n">filename</span> <span class="k">for</span> <span class="n">xml</span> <span class="n">output</span> <span class="p">(</span><span class="n">JUnit</span> <span class="n">style</span><span class="p">)</span>
+  <span class="o">-</span><span class="n">k</span><span class="p">,</span> <span class="o">--</span><span class="n">markdown</span>                      <span class="n">specify</span> <span class="n">filename</span> <span class="k">for</span> <span class="n">markdown</span> <span class="n">output</span>
+  <span class="o">-</span><span class="n">t</span><span class="p">,</span> <span class="o">--</span><span class="n">moduletype</span> <span class="n">USER_MODULE_TAGS</span>   <span class="n">run</span> <span class="n">tests</span> <span class="n">of</span> <span class="n">a</span> <span class="n">specific</span> <span class="nb">type</span> <span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">list_tags</span>                         <span class="nb">list</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">available</span> <span class="n">options</span> <span class="k">for</span> <span class="o">-</span><span class="n">t</span><span class="p">,</span><span class="o">--</span><span class="n">moduletype</span>
+  <span class="o">-</span><span class="n">I</span><span class="p">,</span> <span class="o">--</span><span class="n">include</span> <span class="n">IMPORT_PATHS</span>          <span class="n">specify</span> <span class="n">additional</span> <span class="n">path</span> <span class="n">to</span> <span class="n">load</span> <span class="n">modules</span> <span class="kn">from</span>
+  <span class="o">--</span><span class="n">failfast</span>                          <span class="n">fail</span> <span class="n">on</span> <span class="nb">any</span> <span class="n">exception</span> <span class="ow">and</span> <span class="n">exit</span> <span class="p">(</span><span class="n">don</span><span class="s1">&#39;t mask exceptions)</span>
+  <span class="o">--</span><span class="n">no_time</span>                           <span class="n">don</span><span class="s1">&#39;t log timestamps</span>
+  <span class="o">--</span><span class="n">deltas</span> <span class="n">_DELTAS_FILE</span>               <span class="n">specifies</span> <span class="n">a</span> <span class="n">JSON</span> <span class="n">log</span> <span class="n">file</span> <span class="n">to</span> <span class="n">compute</span> <span class="n">result</span> <span class="n">deltas</span> <span class="kn">from</span>
+  <span class="o">--</span><span class="n">record</span> <span class="n">_TO_FILE</span>                   <span class="n">run</span> <span class="n">chipsec</span> <span class="ow">and</span> <span class="n">clone</span> <span class="n">helper</span> <span class="n">results</span> <span class="n">into</span> <span class="n">JSON</span> <span class="n">file</span>
+  <span class="o">--</span><span class="n">replay</span> <span class="n">_FROM_FILE</span>                 <span class="n">replay</span> <span class="n">a</span> <span class="n">chipsec</span> <span class="n">run</span> <span class="k">with</span> <span class="n">JSON</span> <span class="n">file</span>
+  <span class="o">--</span><span class="n">helper</span> <span class="n">_HELPER</span>                    <span class="n">specify</span> <span class="n">OS</span> <span class="n">Helper</span>
+  <span class="o">-</span><span class="n">nb</span><span class="p">,</span> <span class="o">--</span><span class="n">no_banner</span>                    <span class="n">chipsec</span> <span class="n">won</span><span class="s1">&#39;t display banner information</span>
+  <span class="o">--</span><span class="n">skip_config</span>                       <span class="n">skip</span> <span class="n">configuration</span> <span class="ow">and</span> <span class="n">driver</span> <span class="n">loading</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="chipsec-util-options">
+<h2>chipsec_util options<a class="headerlink" href="#chipsec-util-options" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">chipsec_util</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>                   <span class="n">show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">verbose</span>                <span class="n">verbose</span> <span class="n">mode</span>
+  <span class="o">--</span><span class="n">hal</span>                        <span class="n">HAL</span> <span class="n">mode</span>
+  <span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="o">--</span><span class="n">debug</span>                  <span class="n">debug</span> <span class="n">mode</span>
+  <span class="o">-</span><span class="n">l</span><span class="p">,</span> <span class="o">--</span><span class="n">log</span>  <span class="n">LOG</span>               <span class="n">output</span> <span class="n">to</span> <span class="n">log</span> <span class="n">file</span>
+  <span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="o">--</span><span class="n">platform</span> <span class="n">_PLATFORM</span>     <span class="n">explicitly</span> <span class="n">specify</span> <span class="n">platform</span> <span class="n">code</span>
+  <span class="o">--</span><span class="n">pch</span> <span class="n">_PCH</span>                   <span class="n">explicitly</span> <span class="n">specify</span> <span class="n">PCH</span> <span class="n">code</span>
+  <span class="o">-</span><span class="n">n</span><span class="p">,</span> <span class="o">--</span><span class="n">no_driver</span>              <span class="n">chipsec</span> <span class="n">won</span><span class="s1">&#39;t need kernel mode functions so don&#39;</span><span class="n">t</span> <span class="n">load</span> <span class="n">chipsec</span> <span class="n">driver</span>
+  <span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="o">--</span><span class="n">ignore_platform</span>        <span class="n">run</span> <span class="n">chipsec</span> <span class="n">even</span> <span class="k">if</span> <span class="n">the</span> <span class="n">platform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">recognized</span>
+  <span class="n">Command</span> <span class="n">_CMD</span>                 <span class="n">Util</span> <span class="n">command</span> <span class="n">to</span> <span class="n">run</span>
+  <span class="n">Command</span> <span class="n">_ARGS</span>                <span class="n">All</span> <span class="n">numeric</span> <span class="n">values</span> <span class="n">are</span> <span class="ow">in</span> <span class="nb">hex</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span> <span class="ow">is</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">1</span> <span class="o">-</span> <span class="n">byte</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">word</span><span class="p">,</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">dword</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Running CHIPSEC</a><ul>
+<li><a class="reference internal" href="#running-in-shell">Running in Shell</a></li>
+<li><a class="reference internal" href="#using-as-a-python-package">Using as a Python Package</a></li>
+<li><a class="reference internal" href="#chipsec-main-options">chipsec_main options</a></li>
+<li><a class="reference internal" href="#chipsec-util-options">chipsec_util options</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Using-CHIPSEC-with-Kali-Linux.html"
+                        title="previous chapter">Creating the Kali Linux Live USB</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Interpreting-Results.html"
+                        title="next chapter">Interpreting results</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Interpreting-Results.html" title="Interpreting results"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Using-CHIPSEC-with-Kali-Linux.html" title="Creating the Kali Linux Live USB"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Home.html" >CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Running CHIPSEC</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 27, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>
