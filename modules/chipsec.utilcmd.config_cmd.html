@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>config_cmd module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cpu_cmd module" href="chipsec.utilcmd.cpu_cmd.html" />
+    <link rel="prev" title="cmos_cmd module" href="chipsec.utilcmd.cmos_cmd.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.cpu_cmd.html" title="cpu_cmd module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.cmos_cmd.html" title="cmos_cmd module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">config_cmd module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.utilcmd.config_cmd">
+<span id="config-cmd-module"></span><h1>config_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.config_cmd" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand">
+<em class="property">class </em><code class="sig-name descname">CONFIGCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">config</span> <span class="n">show</span> <span class="p">[</span><span class="n">config</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">config</span> <span class="n">show</span> <span class="n">ALL</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">config</span> <span class="n">show</span> <span class="n">MMIO_BARS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">config</span> <span class="n">show</span> <span class="n">REGISTERS</span> <span class="n">BC</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.bus_details">
+<code class="sig-name descname">bus_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.bus_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.bus_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.control_details">
+<code class="sig-name descname">control_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.control_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.control_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.io_details">
+<code class="sig-name descname">io_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.io_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.io_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.lock_details">
+<code class="sig-name descname">lock_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.lock_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.lock_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.mem_details">
+<code class="sig-name descname">mem_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.mem_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.mem_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.mmio_details">
+<code class="sig-name descname">mmio_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.mmio_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.mmio_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.pci_details">
+<code class="sig-name descname">pci_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.pci_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.pci_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.register_details">
+<code class="sig-name descname">register_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.register_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.register_details" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.requires_driver">
+<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.requires_driver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.config_cmd.CONFIGCommand.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/config_cmd.html#CONFIGCommand.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.config_cmd.CONFIGCommand.show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.utilcmd.cmos_cmd.html"
+                        title="previous chapter">cmos_cmd module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.utilcmd.cpu_cmd.html"
+                        title="next chapter">cpu_cmd module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.cpu_cmd.html" title="cpu_cmd module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.cmos_cmd.html" title="cmos_cmd module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">config_cmd module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Mar 31, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>reg_cmd module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>reg_cmd module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     
@@ -34,10 +34,9 @@
         <li class="right" >
           <a href="chipsec.utilcmd.pci_cmd.html" title="pci_cmd module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">reg_cmd module</a></li> 
       </ul>
     </div>  
@@ -53,15 +52,54 @@
 <dt id="chipsec.utilcmd.reg_cmd.RegisterCommand">
 <em class="property">class </em><code class="sig-name descname">RegisterCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read_field</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write_field</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">get_control</span> <span class="o">&lt;</span><span class="n">control_name</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">set_control</span> <span class="o">&lt;</span><span class="n">control_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>Examples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="n">SMBUS_VID</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="n">HSFC</span> <span class="n">FGO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read_field</span> <span class="n">HSFC</span> <span class="n">FGO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write</span> <span class="n">SMBUS_VID</span> <span class="mh">0x8088</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write_field</span> <span class="n">BC</span> <span class="n">BLE</span> <span class="mh">0x1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">get_control</span> <span class="n">BiosWriteEnable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">set_control</span> <span class="n">BiosLockEnable</span> <span class="mh">0x1</span>
 </pre></div>
 </div>
+<dl class="py method">
+<dt id="chipsec.utilcmd.reg_cmd.RegisterCommand.reg_get_control">
+<code class="sig-name descname">reg_get_control</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand.reg_get_control"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand.reg_get_control" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.reg_cmd.RegisterCommand.reg_read">
+<code class="sig-name descname">reg_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand.reg_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand.reg_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.reg_cmd.RegisterCommand.reg_read_field">
+<code class="sig-name descname">reg_read_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand.reg_read_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand.reg_read_field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.reg_cmd.RegisterCommand.reg_set_control">
+<code class="sig-name descname">reg_set_control</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand.reg_set_control"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand.reg_set_control" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.reg_cmd.RegisterCommand.reg_write">
+<code class="sig-name descname">reg_write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand.reg_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand.reg_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.reg_cmd.RegisterCommand.reg_write_field">
+<code class="sig-name descname">reg_write_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand.reg_write_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand.reg_write_field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="chipsec.utilcmd.reg_cmd.RegisterCommand.requires_driver">
 <code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/reg_cmd.html#RegisterCommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.reg_cmd.RegisterCommand.requires_driver" title="Permalink to this definition">¶</a></dt>
@@ -121,15 +159,14 @@
         <li class="right" >
           <a href="chipsec.utilcmd.pci_cmd.html" title="pci_cmd module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">reg_cmd module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

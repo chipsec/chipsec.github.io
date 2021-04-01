@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>interrupts_cmd module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>interrupts_cmd module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     
@@ -34,10 +34,9 @@
         <li class="right" >
           <a href="chipsec.utilcmd.igd_cmd.html" title="igd_cmd module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">interrupts_cmd module</a></li> 
       </ul>
     </div>  
@@ -77,15 +76,15 @@
 <em class="property">class </em><code class="sig-name descname">SMICommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/interrupts_cmd.html#SMICommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.interrupts_cmd.SMICommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">count</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="o">&lt;</span><span class="n">thread_id</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_code</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_data</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">RAX</span><span class="p">]</span> <span class="p">[</span><span class="n">RBX</span><span class="p">]</span> <span class="p">[</span><span class="n">RCX</span><span class="p">]</span> <span class="p">[</span><span class="n">RDX</span><span class="p">]</span> <span class="p">[</span><span class="n">RSI</span><span class="p">]</span> <span class="p">[</span><span class="n">RDI</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="o">&lt;</span><span class="n">RT_code_start</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">RT_code_end</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_loc</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_file</span><span class="o">|</span><span class="n">payload_string</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="o">&lt;</span><span class="n">thread_id</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_code</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_data</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">RAX</span><span class="p">]</span> <span class="p">[</span><span class="n">RBX</span><span class="p">]</span> <span class="p">[</span><span class="n">RCX</span><span class="p">]</span> <span class="p">[</span><span class="n">RDX</span><span class="p">]</span> <span class="p">[</span><span class="n">RSI</span><span class="p">]</span> <span class="p">[</span><span class="n">RDI</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="o">&lt;</span><span class="n">RT_code_start</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">RT_code_end</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_loc</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_file</span><span class="o">|</span><span class="n">payload_string</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">port</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Examples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">count</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span> <span class="mh">0xAAAAAAAAAAAAAAAA</span> <span class="o">..</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">py</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="mh">0x79dfe000</span> <span class="mh">0x79efdfff</span> <span class="n">ed32d533</span><span class="o">-</span><span class="mf">99e6</span><span class="o">-</span><span class="mi">4209</span><span class="o">-</span><span class="mi">9</span><span class="n">cc02d72cdd998a7</span> <span class="mh">0x79dfaaaa</span> <span class="n">payload</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span> <span class="mh">0xAAAAAAAAAAAAAAAA</span> <span class="o">..</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="mh">0x79dfe000</span> <span class="mh">0x79efdfff</span> <span class="n">ed32d533</span><span class="o">-</span><span class="mf">99e6</span><span class="o">-</span><span class="mi">4209</span><span class="o">-</span><span class="mi">9</span><span class="n">cc02d72cdd998a7</span> <span class="mh">0x79dfaaaa</span> <span class="n">payload</span><span class="o">.</span><span class="n">bin</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -96,6 +95,21 @@
 <dl class="py method">
 <dt id="chipsec.utilcmd.interrupts_cmd.SMICommand.run">
 <code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/interrupts_cmd.html#SMICommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.interrupts_cmd.SMICommand.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.interrupts_cmd.SMICommand.smi_count">
+<code class="sig-name descname">smi_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/interrupts_cmd.html#SMICommand.smi_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.interrupts_cmd.SMICommand.smi_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.interrupts_cmd.SMICommand.smi_send">
+<code class="sig-name descname">smi_send</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/interrupts_cmd.html#SMICommand.smi_send"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.interrupts_cmd.SMICommand.smi_send" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.interrupts_cmd.SMICommand.smi_smmc">
+<code class="sig-name descname">smi_smmc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/interrupts_cmd.html#SMICommand.smi_smmc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.interrupts_cmd.SMICommand.smi_smmc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -147,15 +161,14 @@
         <li class="right" >
           <a href="chipsec.utilcmd.igd_cmd.html" title="igd_cmd module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">interrupts_cmd module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

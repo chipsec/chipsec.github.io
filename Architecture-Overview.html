@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Architecture Overview &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>Architecture Overview &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     
@@ -34,8 +34,7 @@
         <li class="right" >
           <a href="Interpreting-Results.html" title="Interpreting results"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="Home.html" accesskey="U">CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Architecture Overview</a></li> 
       </ul>
     </div>  
@@ -172,14 +171,18 @@
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_4xx.xml.html">pch_4xx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_4xxh.xml.html">pch_4xxh</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_4xxlp.xml.html">pch_4xxlp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_5xxh.xml.html">pch_5xxh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_5xxlp.xml.html">pch_5xxlp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_c60x.xml.html">pch_c60x</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_c61x.xml.html">pch_c61x</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.pch_c620.xml.html">pch_c620</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.qrk.xml.html">qrk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.rkl.xml.html">rkl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.sfdp.xml.html">sfdp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.skl.xml.html">skl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.skx.xml.html">skx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.snb.xml.html">snb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.tglu.xml.html">tglu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/chipsec.cfg.8086.whl.xml.html">whl</a></li>
 </ul>
 </div>
@@ -202,6 +205,7 @@
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.acpi_cmd.html">acpi_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.chipset_cmd.html">chipset_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.cmos_cmd.html">cmos_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.config_cmd.html">config_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.cpu_cmd.html">cpu_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.decode_cmd.html">decode_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.deltas_cmd.html">deltas_cmd module</a></li>
@@ -212,6 +216,7 @@
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.io_cmd.html">io_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.iommu_cmd.html">iommu_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.mem_cmd.html">mem_cmd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.mmcfg_base_cmd.html">mmcfg_base_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.mmcfg_cmd.html">mmcfg_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.mmio_cmd.html">mmio_cmd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/chipsec.utilcmd.msgbus_cmd.html">msgbus_cmd module</a></li>
@@ -442,13 +447,12 @@ specific driver calls</p>
         <li class="right" >
           <a href="Interpreting-Results.html" title="Interpreting results"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="Home.html" >CHIPSEC</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CHIPSEC  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Architecture Overview</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

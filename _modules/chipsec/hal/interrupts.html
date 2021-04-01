@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.hal.interrupts &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.hal.interrupts &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.hal.interrupts</a></li> 
       </ul>
@@ -40,7 +40,7 @@
   <h1>Source code for chipsec.hal.interrupts</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/python</span>
 <span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -74,7 +74,7 @@
 <span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">hal_base</span>
-<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span><span class="p">,</span> <span class="n">print_buffer_bytes</span>
 <span class="kn">from</span> <span class="nn">chipsec.hal.acpi</span> <span class="kn">import</span> <span class="n">ACPI</span>
 <span class="kn">from</span> <span class="nn">chipsec.hal.acpi_tables</span> <span class="kn">import</span> <span class="n">UEFI_TABLE</span>
 <span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">bytestostring</span>
@@ -93,11 +93,11 @@
 <div class="viewcode-block" id="Interrupts.send_SW_SMI"><a class="viewcode-back" href="../../../modules/chipsec.hal.interrupts.html#chipsec.hal.interrupts.Interrupts.send_SW_SMI">[docs]</a>    <span class="k">def</span> <span class="nf">send_SW_SMI</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="n">SMI_data_port_value</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span> <span class="p">):</span>
         <span class="n">SMI_code_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">SMI_data_port_value</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span> <span class="o">|</span> <span class="n">SMI_code_port_value</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
-            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[intr] sending SW SMI: code port 0x</span><span class="si">{:02X}</span><span class="s2"> &lt;- 0x</span><span class="si">{:02X}</span><span class="s2">, data port 0x</span><span class="si">{:02X}</span><span class="s2"> &lt;- 0x</span><span class="si">{:02X}</span><span class="s2"> (0x</span><span class="si">{:04X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SMI_APMC_PORT</span><span class="p">,</span> <span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="n">SMI_APMC_PORT</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">SMI_data_port_value</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">)</span> <span class="p">)</span>
-            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RAX = 0x</span><span class="si">{:016X}</span><span class="s2"> (AX will be overwridden with values of SW SMI ports B2/B3)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rax</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[intr] Sending SW SMI: code port 0x</span><span class="si">{:02X}</span><span class="s2"> &lt;- 0x</span><span class="si">{:02X}</span><span class="s2">, data port 0x</span><span class="si">{:02X}</span><span class="s2"> &lt;- 0x</span><span class="si">{:02X}</span><span class="s2"> (0x</span><span class="si">{:04X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SMI_APMC_PORT</span><span class="p">,</span> <span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="n">SMI_APMC_PORT</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">SMI_data_port_value</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RAX = 0x</span><span class="si">{:016X}</span><span class="s2"> (AX will be overridden with values of SW SMI ports B2/B3)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rax</span><span class="p">)</span> <span class="p">)</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RBX = 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rbx</span><span class="p">)</span> <span class="p">)</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RCX = 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rcx</span><span class="p">)</span> <span class="p">)</span>
-            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RDX = 0x</span><span class="si">{:016X}</span><span class="s2"> (DX will be overwridden with 0x00B2)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rdx</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RDX = 0x</span><span class="si">{:016X}</span><span class="s2"> (DX will be overridden with 0x00B2)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rdx</span><span class="p">)</span> <span class="p">)</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RSI = 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rsi</span><span class="p">)</span> <span class="p">)</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;       RDI = 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_rdi</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">send_sw_smi</span><span class="p">(</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span> <span class="p">)</span></div>
@@ -110,7 +110,7 @@
 
 
 <div class="viewcode-block" id="Interrupts.send_NMI"><a class="viewcode-back" href="../../../modules/chipsec.hal.interrupts.html#chipsec.hal.interrupts.Interrupts.send_NMI">[docs]</a>    <span class="k">def</span> <span class="nf">send_NMI</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[intr] sending NMI# through TCO1_CTL[NMI_NOW]&quot;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[intr] Sending NMI# through TCO1_CTL[NMI_NOW]&quot;</span> <span class="p">)</span>
         <span class="n">reg</span><span class="p">,</span> <span class="n">ba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_IO_space</span><span class="p">(</span><span class="s2">&quot;TCOBASE&quot;</span><span class="p">)</span>
         <span class="n">tcobase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span> <span class="n">ba</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span> <span class="n">tcobase</span> <span class="o">+</span> <span class="n">NMI_TCO1_CTL</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NMI_NOW</span> <span class="p">)</span></div>
@@ -199,7 +199,7 @@
 <span class="sd">  EFI_STATUS                      ReturnStatus;</span>
 <span class="sd">} SMM_CORE_PRIVATE_DATA;</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-<div class="viewcode-block" id="Interrupts.send_smmc_SMI"><a class="viewcode-back" href="../../../modules/chipsec.hal.interrupts.html#chipsec.hal.interrupts.Interrupts.send_smmc_SMI">[docs]</a>    <span class="k">def</span> <span class="nf">send_smmc_SMI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smmc</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">payload_loc</span><span class="p">):</span>
+<div class="viewcode-block" id="Interrupts.send_smmc_SMI"><a class="viewcode-back" href="../../../modules/chipsec.hal.interrupts.html#chipsec.hal.interrupts.Interrupts.send_smmc_SMI">[docs]</a>    <span class="k">def</span> <span class="nf">send_smmc_SMI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smmc</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">payload_loc</span><span class="p">,</span> <span class="n">CommandPort</span><span class="o">=</span><span class="mh">0x0</span><span class="p">,</span> <span class="n">DataPort</span><span class="o">=</span><span class="mh">0x0</span><span class="p">):</span>
         <span class="n">guid_b</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="n">guid</span><span class="p">)</span><span class="o">.</span><span class="n">bytes_le</span>
         <span class="n">payload_sz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
@@ -211,9 +211,20 @@
         <span class="n">ReturnStatus_offset</span> <span class="o">=</span> <span class="n">BufferSize_offset</span> <span class="o">+</span> <span class="mi">8</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="n">smmc</span> <span class="o">+</span> <span class="n">CommBuffer_offset</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="n">payload_loc</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="n">smmc</span> <span class="o">+</span> <span class="n">BufferSize_offset</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="n">payload_sz</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="n">smmc</span> <span class="o">+</span> <span class="n">BufferSize_offset</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_hdr</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="n">payload_loc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_hdr</span><span class="p">),</span> <span class="n">data_hdr</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send_SMI_APMC</span><span class="p">(</span><span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Communication buffer on input&quot;</span><span class="p">)</span>
+            <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">payload_loc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_hdr</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_SMI_APMC</span><span class="p">(</span><span class="n">CommandPort</span><span class="p">,</span> <span class="n">DataPort</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Communication buffer on output&quot;</span><span class="p">)</span>
+            <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">payload_loc</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_hdr</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">ReturnStatus</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">smmc</span> <span class="o">+</span> <span class="n">ReturnStatus_offset</span><span class="p">,</span> <span class="mi">8</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">ReturnStatus</span></div></div>
@@ -251,13 +262,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.hal.interrupts</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

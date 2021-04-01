@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.modules.common.spi_access &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.modules.common.spi_access &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.spi_access</a></li> 
       </ul>
@@ -39,7 +39,7 @@
             
   <h1>Source code for chipsec.modules.common.spi_access</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -64,7 +64,6 @@
 <span class="c1">#</span>
 
 
-
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Checks SPI Flash Region Access Permissions programmed in the Flash Descriptor</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -78,7 +77,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spi</span>    <span class="o">=</span> <span class="n">SPI</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi</span> <span class="o">=</span> <span class="n">SPI</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="spi_access.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.spi_access.html#chipsec.modules.common.spi_access.spi_access.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span></div>
@@ -119,12 +118,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;Software has write access to Management Engine (ME) region in SPI flash&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">fdv</span><span class="p">:</span>
-            <span class="k">if</span>   <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>  <span class="o">==</span> <span class="n">res</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span><span class="s2">&quot;SPI Flash Region Access Permissions in flash descriptor look ok&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>  <span class="o">==</span> <span class="n">res</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed_check</span><span class="p">(</span><span class="s2">&quot;SPI Flash Region Access Permissions are not programmed securely in flash descriptor&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span> <span class="o">==</span> <span class="n">res</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warn_check</span><span class="p">(</span><span class="s2">&quot;Certain SPI flash regions are writeable by software&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span> <span class="o">==</span> <span class="n">res</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s2">&quot;SPI Flash Region Access Permissions in flash descriptor look ok&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span> <span class="o">==</span> <span class="n">res</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;SPI Flash Region Access Permissions are not programmed securely in flash descriptor&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s1">&#39;System may be using alternative protection by including descriptor region in SPI Protected Range Registers&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span> <span class="o">==</span> <span class="n">res</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s2">&quot;Certain SPI flash regions are writeable by software&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warn_check</span><span class="p">(</span><span class="s2">&quot;Either flash descriptor is not valid or not present on this system&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s2">&quot;Either flash descriptor is not valid or not present on this system&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">res</span></div>
 
@@ -171,13 +174,13 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.spi_access</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

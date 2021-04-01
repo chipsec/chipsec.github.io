@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.hal.uefi_platform &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.hal.uefi_platform &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_platform</a></li> 
       </ul>
@@ -1312,8 +1312,8 @@
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;S3 Boot Script AA Parser&#39;</span><span class="p">)</span>
         <span class="n">script_type</span> <span class="o">=</span> <span class="n">S3BootScriptType</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT</span>
         <span class="k">if</span> <span class="n">log_script</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[uefi] Start opcode 0x</span><span class="si">{:X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start_op</span><span class="p">)</span> <span class="p">)</span>
-        <span class="n">script_header_length</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># skip start opcode</span>
-        <span class="n">script_header_length</span> <span class="o">+=</span> <span class="mh">0x34</span>
+        <span class="c1"># MdeModulePkg\Library\PiDxeS3BootScriptLib\BootScriptInternalFormat.h</span>
+        <span class="n">script_header_length</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="s2">&quot;&lt;HBHLHH&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;S3 Boot Script DEFAULT Parser&#39;</span><span class="p">)</span>
         <span class="n">script_type</span> <span class="o">=</span> <span class="n">S3BootScriptType</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_TYPE_DEFAULT</span>
@@ -1387,13 +1387,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_platform</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

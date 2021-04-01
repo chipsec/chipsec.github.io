@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.modules.common.debugenabled &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.modules.common.debugenabled &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.debugenabled</a></li> 
       </ul>
@@ -40,7 +40,7 @@
   <h1>Source code for chipsec.modules.common.debugenabled</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
 <span class="c1">#Copyright (c) 2018, Eclypsium, Inc.</span>
-<span class="c1">#Copyright (c) 2018-2019, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2018-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1"># This program is free software; you can redistribute it and/or</span>
 <span class="c1"># modify it under the terms of the GNU General Public License</span>
@@ -92,7 +92,7 @@
 <div class="viewcode-block" id="debugenabled.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Use CPUID Function 1 to determine if the IA32_DEBUG_INTERFACE MSR is supported.</span>
         <span class="c1"># See IA32 SDM CPUID Instruction for details.  (SDBG ECX bit 11)</span>
-        <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+        <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
         <span class="n">supported</span> <span class="o">=</span> <span class="p">(</span><span class="n">ecx</span> <span class="o">&amp;</span> <span class="n">BIT11</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">supported</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
@@ -196,13 +196,13 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.debugenabled</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>smm_code_chk module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smm_dma module" href="chipsec.modules.common.smm_dma.html" />
+    <link rel="prev" title="smm module" href="chipsec.modules.common.smm.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.common.smm_dma.html" title="smm_dma module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.common.smm.html" title="smm module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" accesskey="U">common package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">smm_code_chk module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-chipsec.modules.common.smm_code_chk">
+<span id="smm-code-chk-module"></span><h1>smm_code_chk module<a class="headerlink" href="#module-chipsec.modules.common.smm_code_chk" title="Permalink to this headline">¶</a></h1>
+<p>SMM_Code_Chk_En is a bit found in the MSR_SMM_FEATURE_CONTROL register.
+Once set to ‘1’, any CPU that attempts to execute SMM code not within the ranges defined by the SMRR will assert an unrecoverable MCE.
+As such, enabling and locking this bit is an important step in mitigating SMM call-out vulnerabilities.
+This CHIPSEC module simply reads the register and checks that SMM_Code_Chk_En is set and locked.</p>
+<dl class="py class">
+<dt id="chipsec.modules.common.smm_code_chk.smm_code_chk">
+<em class="property">class </em><code class="sig-name descname">smm_code_chk</code><a class="reference internal" href="../_modules/chipsec/modules/common/smm_code_chk.html#smm_code_chk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_code_chk.smm_code_chk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
+<dl class="py method">
+<dt id="chipsec.modules.common.smm_code_chk.smm_code_chk.check_SMM_Code_Chk_En">
+<code class="sig-name descname">check_SMM_Code_Chk_En</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smm_code_chk.html#smm_code_chk.check_SMM_Code_Chk_En"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_code_chk.smm_code_chk.check_SMM_Code_Chk_En" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.common.smm_code_chk.smm_code_chk.is_supported">
+<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smm_code_chk.html#smm_code_chk.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_code_chk.smm_code_chk.is_supported" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method should be overwritten by the module returning True or False
+depending whether or not this module is supported in the currently running
+platform.
+To access the currently running platform use</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.modules.common.smm_code_chk.smm_code_chk.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smm_code_chk.html#smm_code_chk.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_code_chk.smm_code_chk.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chipsec.modules.common.smm.html"
+                        title="previous chapter">smm module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chipsec.modules.common.smm_dma.html"
+                        title="next chapter">smm_dma module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.common.smm_dma.html" title="smm_dma module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.modules.common.smm.html" title="smm module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" >common package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">smm_code_chk module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Mar 31, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

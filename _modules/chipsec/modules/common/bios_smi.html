@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.modules.common.bios_smi &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.modules.common.bios_smi &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.bios_smi</a></li> 
       </ul>
@@ -39,7 +39,7 @@
             
   <h1>Source code for chipsec.modules.common.bios_smi</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -83,8 +83,6 @@
 
 <div class="viewcode-block" id="bios_smi.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_smi.html#chipsec.modules.common.bios_smi.bios_smi.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;SmmBiosWriteProtection&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
-           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;TCOSMIEnable&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
-           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;GlobalSMIEnable&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;TCOSMILock&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;SMILock&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;BiosWriteEnable&#39;</span><span class="p">):</span>
@@ -109,26 +107,27 @@
         <span class="c1">#</span>
         <span class="c1"># Checking if global SMI and TCO SMI are enabled (GBL_SMI_EN and TCO_EN bits in SMI_EN register)</span>
         <span class="c1">#</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Checking SMI enables..&quot;</span> <span class="p">)</span>
-        <span class="n">tco_en</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span> <span class="s1">&#39;TCOSMIEnable&#39;</span> <span class="p">)</span>
-        <span class="n">gbl_smi_en</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span> <span class="s1">&#39;GlobalSMIEnable&#39;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Global SMI enable: </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gbl_smi_en</span><span class="p">)</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    TCO SMI enable   : </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tco_en</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;TCOSMIEnable&#39;</span> <span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span> <span class="s1">&#39;GlobalSMIEnable&#39;</span> <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Checking SMI enables..&quot;</span> <span class="p">)</span>
+            <span class="n">tco_en</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span> <span class="s1">&#39;TCOSMIEnable&#39;</span> <span class="p">)</span>
+            <span class="n">gbl_smi_en</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span> <span class="s1">&#39;GlobalSMIEnable&#39;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    Global SMI enable: </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gbl_smi_en</span><span class="p">)</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    TCO SMI enable   : </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tco_en</span><span class="p">)</span> <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">gbl_smi_en</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">ok</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;Global SMI is not enabled&quot;</span> <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">tco_en</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">smm_bwp</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">warn</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;TCO SMI is not enabled. BIOS may not be using it&quot;</span> <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">tco_en</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">smm_bwp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">ok</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;TCO SMI should be enabled if using SMM BIOS region protection&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;All required SMI events are enabled&quot;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">gbl_smi_en</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">ok</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;Global SMI is not enabled&quot;</span> <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tco_en</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">smm_bwp</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">warn</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;TCO SMI is not enabled. BIOS may not be using it&quot;</span> <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">tco_en</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">smm_bwp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">ok</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;TCO SMI should be enabled if using SMM BIOS region protection&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;All required SMI events are enabled&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Checking SMI configuration locks..&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Checking SMI configuration locks..&quot;</span> <span class="p">)</span>
 
         <span class="c1">#</span>
         <span class="c1"># Checking TCO_LOCK</span>
@@ -153,13 +152,13 @@
 
         <span class="k">if</span> <span class="n">ok</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">warn</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span> <span class="s2">&quot;All required SMI sources seem to be enabled and locked&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span> <span class="s2">&quot;All required SMI sources seem to be enabled and locked&quot;</span> <span class="p">)</span>
         <span class="k">elif</span> <span class="n">ok</span> <span class="ow">and</span> <span class="n">warn</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warn_check</span><span class="p">(</span><span class="s2">&quot;One or more warnings detected when checking SMI enable state&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s2">&quot;One or more warnings detected when checking SMI enable state&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed_check</span><span class="p">(</span> <span class="s2">&quot;Not all required SMI sources are enabled and locked&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;Not all required SMI sources are enabled and locked&quot;</span> <span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
 
@@ -205,13 +204,13 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.bios_smi</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

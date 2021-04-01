@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>me_mfg_mode module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>me_mfg_mode module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     
@@ -34,11 +34,10 @@
         <li class="right" >
           <a href="chipsec.modules.common.ia32cfg.html" title="ia32cfg module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.common.html" accesskey="U">common package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" accesskey="U">common package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">me_mfg_mode module</a></li> 
       </ul>
     </div>  
@@ -74,6 +73,17 @@ printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, (fwsts1 &amp; (
 <p><a class="reference external" href="https://github.com/coreboot/coreboot/blob/master/src/southbridge/intel/*/me.h">ME.H</a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">me_hfs</span> <span class="p">{</span>
         <span class="n">u32</span> <span class="n">working_state</span><span class="p">:</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">mfg_mode</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">fpt_bad</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">operation_state</span><span class="p">:</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">fw_init_complete</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">ft_bup_ld_flr</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">update_in_progress</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">error_code</span><span class="p">:</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">operation_mode</span><span class="p">:</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">reserved</span><span class="p">:</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">boot_options_present</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">u32</span> <span class="n">ack_data</span><span class="p">:</span> <span class="mi">3</span><span class="p">;</span>
         <span class="n">u32</span> <span class="n">bios_msg_ack</span><span class="p">:</span> <span class="mi">4</span><span class="p">;</span>
 <span class="p">}</span> <span class="n">__packed</span><span class="p">;</span>
 </pre></div>
@@ -167,16 +177,15 @@ To access the currently running platform use</p>
         <li class="right" >
           <a href="chipsec.modules.common.ia32cfg.html" title="ia32cfg module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.common.html" >common package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" >common package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">me_mfg_mode module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

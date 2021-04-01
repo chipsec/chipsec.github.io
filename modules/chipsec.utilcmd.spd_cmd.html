@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>spd_cmd module &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>spd_cmd module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     
@@ -34,10 +34,9 @@
         <li class="right" >
           <a href="chipsec.utilcmd.smbus_cmd.html" title="smbus_cmd module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">spd_cmd module</a></li> 
       </ul>
     </div>  
@@ -62,7 +61,9 @@
 <p>Examples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spd</span> <span class="n">detect</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spd</span> <span class="n">dump</span> <span class="n">DIMM0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spd</span> <span class="n">read</span>  <span class="mh">0xA0</span> <span class="mh">0x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spd</span> <span class="n">dump</span> <span class="mh">0xA0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spd</span> <span class="n">read</span> <span class="n">DIMM2</span> <span class="mh">0x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spd</span> <span class="n">read</span> <span class="mh">0xA0</span> <span class="mh">0x0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spd</span> <span class="n">write</span> <span class="mh">0xA0</span> <span class="mh">0x0</span> <span class="mh">0xAA</span>
 </pre></div>
 </div>
@@ -74,6 +75,26 @@
 <dl class="py method">
 <dt id="chipsec.utilcmd.spd_cmd.SPDCommand.run">
 <code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spd_cmd.html#SPDCommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spd_cmd.SPDCommand.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.spd_cmd.SPDCommand.spd_detect">
+<code class="sig-name descname">spd_detect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spd_cmd.html#SPDCommand.spd_detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spd_cmd.SPDCommand.spd_detect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.spd_cmd.SPDCommand.spd_dump">
+<code class="sig-name descname">spd_dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spd_cmd.html#SPDCommand.spd_dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spd_cmd.SPDCommand.spd_dump" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.spd_cmd.SPDCommand.spd_read">
+<code class="sig-name descname">spd_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spd_cmd.html#SPDCommand.spd_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spd_cmd.SPDCommand.spd_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="chipsec.utilcmd.spd_cmd.SPDCommand.spd_write">
+<code class="sig-name descname">spd_write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spd_cmd.html#SPDCommand.spd_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spd_cmd.SPDCommand.spd_write" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -125,15 +146,14 @@
         <li class="right" >
           <a href="chipsec.utilcmd.smbus_cmd.html" title="smbus_cmd module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Home.html" >CHIPSEC</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">spd_cmd module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

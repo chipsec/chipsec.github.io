@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.modules.tools.smm.smm_ptr &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.modules.tools.smm.smm_ptr &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.smm.smm_ptr</a></li> 
       </ul>
@@ -39,7 +39,7 @@
             
   <h1>Source code for chipsec.modules.tools.smm.smm_ptr</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -388,8 +388,8 @@
         <span class="n">gprs_addr</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rax&#39;</span><span class="p">:</span> <span class="n">gpr_value</span><span class="p">,</span> <span class="s1">&#39;rbx&#39;</span><span class="p">:</span> <span class="n">gpr_value</span><span class="p">,</span> <span class="s1">&#39;rcx&#39;</span><span class="p">:</span> <span class="n">gpr_value</span><span class="p">,</span> <span class="s1">&#39;rdx&#39;</span><span class="p">:</span> <span class="n">gpr_value</span><span class="p">,</span> <span class="s1">&#39;rsi&#39;</span><span class="p">:</span> <span class="n">gpr_value</span><span class="p">,</span> <span class="s1">&#39;rdi&#39;</span><span class="p">:</span> <span class="n">gpr_value</span><span class="p">}</span>
         <span class="n">gprs_fill</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rax&#39;</span><span class="p">:</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="s1">&#39;rbx&#39;</span><span class="p">:</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="s1">&#39;rcx&#39;</span><span class="p">:</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="s1">&#39;rdx&#39;</span><span class="p">:</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="s1">&#39;rsi&#39;</span><span class="p">:</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">,</span> <span class="s1">&#39;rdi&#39;</span><span class="p">:</span> <span class="n">_FILL_VALUE_QWORD</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] &gt;&gt;&gt; Fuzzing SMI handlers..&quot;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] AX in RAX will be overwridden with values of SW SMI ports 0xB2/0xB3&quot;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    DX in RDX will be overwridden with value 0x00B2&quot;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] AX in RAX will be overridden with values of SW SMI ports 0xB2/0xB3&quot;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    DX in RDX will be overridden with value 0x00B2&quot;</span> <span class="p">)</span>
 
         <span class="n">bad_ptr_cnt</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">_smi_desc</span> <span class="o">=</span> <span class="n">smi_desc</span><span class="p">()</span>
@@ -463,7 +463,7 @@
         <span class="k">return</span> <span class="n">bad_ptr_cnt</span></div>
 
 <div class="viewcode-block" id="smm_ptr.run"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.smm.smm_ptr.html#chipsec.modules.tools.smm.smm_ptr.smm_ptr.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;A tool to test SMI handlers for pointer validation vulnerabilies&quot;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;A tool to test SMI handlers for pointer validation vulnerabilities&quot;</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;Usage: chipsec_main -m tools.smm.smm_ptr [ -a &lt;mode&gt;,&lt;config_file&gt;|&lt;smic_start:smic_end&gt;,&lt;size&gt;,&lt;address&gt; ]&quot;</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;  mode          SMI handlers testing mode&quot;</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    = config    use SMI configuration file &lt;config_file&gt;&quot;</span> <span class="p">)</span>
@@ -480,6 +480,8 @@
         <span class="n">thread_id</span>            <span class="o">=</span> <span class="mh">0x0</span>
 
         <span class="k">global</span> <span class="n">DUMP_GPRS_EVERY_SMI</span>
+        <span class="n">smic_start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">smic_end</span>   <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">test_mode</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
             <span class="k">if</span> <span class="s1">&#39;config&#39;</span> <span class="o">==</span> <span class="n">test_mode</span><span class="p">:</span>
@@ -546,7 +548,7 @@
             <span class="k">if</span> <span class="s1">&#39;config&#39;</span> <span class="o">==</span> <span class="n">test_mode</span><span class="p">:</span>
                 <span class="n">bad_ptr_cnt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">(</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">_smi_config_fname</span><span class="p">,</span> <span class="n">_addr</span><span class="p">,</span> <span class="n">_addr1</span> <span class="p">)</span>
             <span class="k">elif</span> <span class="s1">&#39;fuzz&#39;</span> <span class="o">==</span> <span class="n">test_mode</span> <span class="ow">or</span> <span class="s1">&#39;fuzzmore&#39;</span> <span class="o">==</span> <span class="n">test_mode</span><span class="p">:</span>
-                <span class="n">bad_ptr_cnt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_fuzz</span>  <span class="p">(</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">smic_start</span><span class="p">,</span> <span class="n">smic_end</span><span class="p">,</span> <span class="n">_addr</span><span class="p">,</span> <span class="n">_addr1</span> <span class="p">)</span>
+                <span class="n">bad_ptr_cnt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_fuzz</span><span class="p">(</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">smic_start</span><span class="p">,</span> <span class="n">smic_end</span><span class="p">,</span> <span class="n">_addr</span><span class="p">,</span> <span class="n">_addr1</span> <span class="p">)</span>
         <span class="k">except</span> <span class="n">BadSMIDetected</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
             <span class="n">bad_ptr_cnt</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span> <span class="s2">&quot;Potentially bad SMI detected! Stopped fuzing (see FUZZ_BAIL_ON_1ST_DETECT option)&quot;</span> <span class="p">)</span>
@@ -590,13 +592,13 @@
         <li class="right" >
           <a href="../../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.smm.smm_ptr</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

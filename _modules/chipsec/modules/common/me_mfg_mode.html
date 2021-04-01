@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.modules.common.me_mfg_mode &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.modules.common.me_mfg_mode &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.me_mfg_mode</a></li> 
       </ul>
@@ -40,7 +40,7 @@
   <h1>Source code for chipsec.modules.common.me_mfg_mode</h1><div class="highlight"><pre>
 <span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
 <span class="c1"># Copyright (c) 2018, Eclypsium, Inc.</span>
-<span class="c1"># Copyright (c) 2019-2020, Intel Corporation</span>
+<span class="c1"># Copyright (c) 2019-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1"># This program is free software; you can redistribute it and/or</span>
 <span class="c1"># modify it under the terms of the GNU General Public License</span>
@@ -92,6 +92,17 @@
 
 <span class="sd">    struct me_hfs {</span>
 <span class="sd">            u32 working_state: 4;</span>
+<span class="sd">            u32 mfg_mode: 1;</span>
+<span class="sd">            u32 fpt_bad: 1;</span>
+<span class="sd">            u32 operation_state: 3;</span>
+<span class="sd">            u32 fw_init_complete: 1;</span>
+<span class="sd">            u32 ft_bup_ld_flr: 1;</span>
+<span class="sd">            u32 update_in_progress: 1;</span>
+<span class="sd">            u32 error_code: 4;</span>
+<span class="sd">            u32 operation_mode: 4;</span>
+<span class="sd">            u32 reserved: 4;</span>
+<span class="sd">            u32 boot_options_present: 1;</span>
+<span class="sd">            u32 ack_data: 3;</span>
 <span class="sd">            u32 bios_msg_ack: 4;</span>
 <span class="sd">    } __packed;</span>
 
@@ -182,13 +193,13 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.me_mfg_mode</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

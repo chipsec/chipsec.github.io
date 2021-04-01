@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.utilcmd.io_cmd &#8212; CHIPSEC 1.5.8 documentation</title>
+    <title>chipsec.utilcmd.io_cmd &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.io_cmd</a></li> 
       </ul>
@@ -40,7 +40,7 @@
   <h1>Source code for chipsec.utilcmd.io_cmd</h1><div class="highlight"><pre>
 <span></span><span class="c1"># !/usr/bin/python</span>
 <span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1"># Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1"># Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1"># This program is free software; you can redistribute it and/or</span>
 <span class="c1"># modify it under the terms of the GNU General Public License</span>
@@ -81,16 +81,11 @@
 
 <span class="sd">    &gt;&gt;&gt; chipsec_util io list</span>
 <span class="sd">    &gt;&gt;&gt; chipsec_util io read 0x61 1</span>
-<span class="sd">    &gt;&gt;&gt; chipsec_util io write 0x430 byte 0x0</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_util io write 0x430 1 0x0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PortIOCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.io_cmd.html#chipsec.utilcmd.io_cmd.PortIOCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util uefi&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">PortIOCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-
-        <span class="n">parser_iow</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">parser_iow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;io_port&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;_port&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;io port&quot;</span><span class="p">)</span>
-        <span class="n">parser_iow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;_width&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x4</span><span class="p">],</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;width&quot;</span><span class="p">)</span>
-
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util io&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">PortIOCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
 
         <span class="c1"># list</span>
@@ -98,12 +93,16 @@
         <span class="n">parser_dump</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">io_list</span><span class="p">)</span>
 
         <span class="c1"># read</span>
-        <span class="n">parser_r</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">parser_iow</span><span class="p">])</span>
+        <span class="n">parser_r</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">)</span>
+        <span class="n">parser_r</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;_port&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;io port&quot;</span><span class="p">)</span>
+        <span class="n">parser_r</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;_width&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x4</span><span class="p">],</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;width&quot;</span><span class="p">)</span>
         <span class="n">parser_r</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">io_read</span><span class="p">)</span>
 
         <span class="c1"># write</span>
-        <span class="n">parser_w</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">parser_iow</span><span class="p">])</span>
-        <span class="n">parser_w</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+        <span class="n">parser_w</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;write&#39;</span><span class="p">)</span>
+        <span class="n">parser_w</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;_port&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;io port&quot;</span><span class="p">)</span>
+        <span class="n">parser_w</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;_width&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x4</span><span class="p">],</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;width&quot;</span><span class="p">)</span>
+        <span class="n">parser_w</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;_value&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
         <span class="n">parser_w</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">io_write</span><span class="p">)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
@@ -189,13 +188,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC 1.5.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.io_cmd</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 27, 2021.
+      Last updated on Mar 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>
