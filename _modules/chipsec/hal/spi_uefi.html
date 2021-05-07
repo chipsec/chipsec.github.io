@@ -40,7 +40,7 @@
   <h1>Source code for chipsec.hal.spi_uefi</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/python</span>
 <span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -221,6 +221,11 @@
                     <span class="n">sec</span><span class="o">.</span><span class="n">DataOffset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sec</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">guid0</span><span class="p">,</span> <span class="n">sec</span><span class="o">.</span><span class="n">DataOffset</span><span class="p">,</span> <span class="n">sec</span><span class="o">.</span><span class="n">Attributes</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">EFI_GUID_DEFINED_SECTION</span><span class="p">,</span> <span class="n">sec</span><span class="o">.</span><span class="n">Image</span><span class="p">[</span><span class="n">sec</span><span class="o">.</span><span class="n">HeaderSize</span><span class="p">:</span><span class="n">sec</span><span class="o">.</span><span class="n">HeaderSize</span> <span class="o">+</span> <span class="n">EFI_GUID_DEFINED_SECTION_size</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">guid0</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;GUID is corrupted&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Creating fake GUID of 0000-00-00-0000000&quot;</span><span class="p">)</span>
+                <span class="n">guid0</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s2">&quot;</span>
+
             <span class="n">sec</span><span class="o">.</span><span class="n">Guid</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">bytes_le</span><span class="o">=</span><span class="n">guid0</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">sec</span><span class="o">.</span><span class="n">Guid</span> <span class="o">==</span> <span class="n">EFI_CRC32_GUIDED_SECTION_EXTRACTION_PROTOCOL_GUID</span><span class="p">:</span>
@@ -619,7 +624,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 31, 2021.
+      Last updated on May 07, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

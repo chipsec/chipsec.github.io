@@ -129,8 +129,8 @@
 
 <div class="viewcode-block" id="SMICommand.smi_smmc"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.smi_smmc">[docs]</a>    <span class="k">def</span> <span class="nf">smi_smmc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">payload</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Searching for </span><span class="se">\&#39;</span><span class="s2">smmc</span><span class="se">\&#39;</span><span class="s2"> in range 0x</span><span class="si">{:x}</span><span class="s2">-0x</span><span class="si">{:x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RTC_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">RTC_end</span><span class="p">))</span>
         <span class="c1"># scan for SMM_CORE_PRIVATE_DATA smmc signature</span>
@@ -245,7 +245,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 31, 2021.
+      Last updated on May 07, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

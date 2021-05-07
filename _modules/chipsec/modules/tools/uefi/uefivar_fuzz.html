@@ -39,7 +39,7 @@
             
   <h1>Source code for chipsec.modules.tools.uefi.uefivar_fuzz</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -120,8 +120,9 @@
 <span class="kn">import</span> <span class="nn">struct</span>
 
 <span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">cs_input</span>
-<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">write_file</span>
-<span class="kn">from</span> <span class="nn">chipsec.hal.uefi</span> <span class="kn">import</span> <span class="n">UEFI</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span>          <span class="kn">import</span> <span class="n">write_file</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.uefi</span>      <span class="kn">import</span> <span class="n">UEFI</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span>       <span class="kn">import</span> <span class="n">bytestostring</span>
 
 <span class="kn">from</span> <span class="nn">chipsec.fuzzing</span> <span class="kn">import</span> <span class="n">primitives</span> <span class="k">as</span> <span class="n">prim</span>
 
@@ -133,7 +134,8 @@
 
 <div class="viewcode-block" id="uefivar_fuzz.is_supported"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">supported</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">EFI_supported</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">supported</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_skipped_check</span><span class="p">(</span> <span class="s2">&quot;OS does not support UEFI Runtime API&quot;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">supported</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_skipped</span><span class="p">(</span><span class="s2">&quot;OS does not support UEFI Runtime API&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">supported</span></div>
 
 <div class="viewcode-block" id="uefivar_fuzz.rnd"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.rnd">[docs]</a>    <span class="k">def</span> <span class="nf">rnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -147,11 +149,12 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="uefivar_fuzz.run"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;Fuzz UEFI Variable Interface&quot;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;Fuzz UEFI Variable Interface&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;Are you sure you want to continue fuzzing UEFI variable interface?&quot;</span> <span class="p">)</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">cs_input</span><span class="p">(</span> <span class="s2">&quot;Type &#39;yes&#39; to continue &gt; &quot;</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Are you sure you want to continue fuzzing UEFI variable interface?&quot;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">cs_input</span><span class="p">(</span><span class="s2">&quot;Type &#39;yes&#39; to continue &gt; &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]:</span>
+            <span class="k">return</span>
 
 
         <span class="c1"># Default options</span>
@@ -197,16 +200,22 @@
                 <span class="k">else</span><span class="p">:</span> <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span> <span class="n">ITERATIONS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                <span class="k">else</span><span class="p">:</span> <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
+                    <span class="n">ITERATIONS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span> <span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-                <span class="k">else</span><span class="p">:</span> <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
+                    <span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span> <span class="n">CASE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-                <span class="k">else</span><span class="p">:</span> <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
+                    <span class="n">CASE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">help_text</span><span class="p">:</span>
             <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span> <span class="n">SEED</span> <span class="p">)</span>
@@ -250,14 +259,15 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">_SIZE</span>   <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">CASE</span><span class="p">):</span> <span class="k">continue</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">CASE</span><span class="p">):</span>
+                    <span class="k">continue</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;  Running test #</span><span class="si">{:d}</span><span class="s1">:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span><span class="n">_NAME</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">_GUID</span><span class="p">),</span> <span class="n">_DATA</span><span class="p">,</span> <span class="n">_SIZE</span><span class="p">,</span> <span class="n">_ATTRIB</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">status</span> <span class="p">)</span>
-                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">delete_EFI_variable</span><span class="p">(</span><span class="n">_NAME</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">_GUID</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">status</span> <span class="p">)</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span><span class="n">bytestostring</span><span class="p">(</span><span class="n">_NAME</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">_GUID</span><span class="p">),</span> <span class="n">_DATA</span><span class="p">,</span> <span class="n">_SIZE</span><span class="p">,</span> <span class="n">_ATTRIB</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">delete_EFI_variable</span><span class="p">(</span><span class="n">bytestostring</span><span class="p">(</span><span class="n">_NAME</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">_GUID</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span></div></div>
 </pre></div>
@@ -300,7 +310,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 31, 2021.
+      Last updated on May 07, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

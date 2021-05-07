@@ -69,6 +69,7 @@
 <span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">MTAG_SECUREBOOT</span><span class="p">,</span> <span class="n">MTAG_BIOS</span><span class="p">,</span> <span class="n">OPT_MODIFY</span>
 <span class="kn">from</span> <span class="nn">chipsec.hal.uefi</span> <span class="kn">import</span> <span class="n">UEFI</span><span class="p">,</span> <span class="n">EFI_VARIABLE_NON_VOLATILE</span><span class="p">,</span> <span class="n">EFI_VARIABLE_BOOTSERVICE_ACCESS</span><span class="p">,</span> <span class="n">EFI_VARIABLE_RUNTIME_ACCESS</span><span class="p">,</span> <span class="n">get_attr_string</span>
 <span class="kn">from</span> <span class="nn">chipsec.hal.uefi</span> <span class="kn">import</span> <span class="n">EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS</span><span class="p">,</span> <span class="n">EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS</span><span class="p">,</span> <span class="n">EFI_VARIABLE_APPEND_WRITE</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.uefi_common</span> <span class="kn">import</span> <span class="n">StatusCode</span>
 
 
 <span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_BIOS</span><span class="p">,</span> <span class="n">MTAG_SECUREBOOT</span><span class="p">]</span>
@@ -134,8 +135,8 @@
         <span class="k">if</span> <span class="n">data1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">data2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">data1</span> <span class="o">!=</span> <span class="n">data2</span>
 
-        <span class="n">oldstr</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data1</span><span class="p">)</span>
-        <span class="n">newstr</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data2</span><span class="p">)</span>
+        <span class="n">oldstr</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data1</span><span class="p">)</span>
+        <span class="n">newstr</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data2</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">oldstr</span> <span class="o">!=</span> <span class="n">newstr</span><span class="p">:</span>
             <span class="nb">print</span> <span class="p">(</span><span class="n">oldstr</span><span class="p">)</span>
@@ -154,7 +155,7 @@
         <span class="k">if</span> <span class="n">baddata</span> <span class="o">==</span> <span class="n">origdata</span><span class="p">:</span>
             <span class="n">baddata</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span> <span class="o">*</span><span class="n">datalen</span> <span class="c1">#in case we failed to restore previously</span>
         <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">baddata</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s1">&#39;Writing EFI variable </span><span class="si">{}</span><span class="s1"> did not succeed.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">EFI_SUCCESS</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s1">&#39;Writing EFI variable </span><span class="si">{}</span><span class="s1"> did not succeed.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
         <span class="n">newdata</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">get_EFI_variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff_var</span><span class="p">(</span><span class="n">newdata</span><span class="p">,</span> <span class="n">origdata</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s1">&#39;Corruption of EFI variable of concern </span><span class="si">{}</span><span class="s1">. Trying to recover.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
@@ -174,13 +175,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span> <span class="s2">&quot;Note that UEFI variables may still exist, OS just did not expose runtime UEFI Variable API to read them.</span><span class="se">\n</span><span class="s2">You can extract variables directly from ROM file via &#39;chipsec_util.py uefi nvram bios.bin&#39; command and verify their attributes manually.&quot;</span> <span class="p">)</span>
             <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">SKIPPED</span>
 
-        <span class="n">bsnv_vars</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">bsnv_concern</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">rtnv_vars</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">rtnv_concern</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">modified_concern</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">uefispec_concern</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ro_concern</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rw_variables</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[*] Testing UEFI variables ..&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">vars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -209,12 +206,15 @@
 
                 <span class="k">if</span> <span class="n">do_modify</span><span class="p">:</span>
                     <span class="c1">#self.logger.log(&#39;uefispec_ro_vars&#39;)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Testing modification of </span><span class="si">{}</span><span class="s2"> ..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
                     <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">uefispec_ro_vars</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Testing modification of </span><span class="si">{}</span><span class="s2"> ..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_modify</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
                             <span class="n">ro_concern</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;Variable </span><span class="si">{}</span><span class="s2"> should be read only.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
                             <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_modify</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+                            <span class="n">rw_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">uefispec_concern</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -223,10 +223,17 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">do_modify</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s1">&#39;Variables that should have been read-only and were not:&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ro_concern</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">ro_concern</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s1">&#39;Variables that should have been read-only and were not:&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ro_concern</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">rw_variables</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_unknown</span><span class="p">(</span><span class="s1">&#39;Variables that are read-write (manual investigation is required):&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rw_variables</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
@@ -279,7 +286,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 31, 2021.
+      Last updated on May 07, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

@@ -39,7 +39,7 @@
             
   <h1>Source code for chipsec.modules.common.sgx_check</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2019, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -264,24 +264,24 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;Mcheck marked PRMRR address as invalid&quot;</span> <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying if PRMR mask register is locked&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR mask lock: 0x</span><span class="si">%u</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_mask_lock</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR mask lock: 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_mask_lock</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">prmrr_locked</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;PRMRR MASK register is locked&quot;</span> <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;PRMRR MASK register is not locked&quot;</span> <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
                 <span class="k">if</span> <span class="n">check_uncore_vals</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR uncore base address: 0x</span><span class="si">%012X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_base</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR uncore mask address: 0x</span><span class="si">%012X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_mask</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR uncore base address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_uncore_base</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  PRMRR uncore mask address: 0x</span><span class="si">{:012X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_uncore_mask</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying PRMR uncore address are valid&quot;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR uncore mask valid: 0x</span><span class="si">%u</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_mask_vld</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR uncore mask valid: 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_uncore_mask_vld</span><span class="p">))</span>
                     <span class="k">if</span> <span class="n">prmrr_uncore_mask_vld</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;Mcheck marked uncore PRMRR address as valid&quot;</span> <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span> <span class="s2">&quot;Mcheck marked uncore PRMRR address as invalid&quot;</span> <span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]  Verifying if PRMR uncore mask register is locked&quot;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR uncore mask lock: 0x</span><span class="si">%u</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">prmrr_uncore_mask_lock</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*]      PRMRR uncore mask lock: 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prmrr_uncore_mask_lock</span><span class="p">))</span>
                     <span class="k">if</span> <span class="n">prmrr_uncore_mask_lock</span> <span class="o">==</span> <span class="mh">0x1</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;PMRR uncore MASK register is locked&quot;</span> <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -429,7 +429,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 31, 2021.
+      Last updated on May 07, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

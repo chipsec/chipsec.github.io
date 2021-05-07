@@ -40,7 +40,7 @@
   <h1>Source code for chipsec.helper.linux.linuxhelper</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/python</span>
 <span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -116,6 +116,12 @@
 <span class="n">TIANO</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">TOOLS_DIR</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;TianoCompress&quot;</span><span class="p">)</span>
 <span class="n">EFI</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">TOOLS_DIR</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;TianoCompress&quot;</span><span class="p">)</span>
 <span class="n">BROTLI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">TOOLS_DIR</span><span class="p">,</span> <span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">,</span> <span class="s2">&quot;Brotli&quot;</span><span class="p">)</span>
+
+<span class="n">_tools</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_TIANO</span><span class="p">:</span> <span class="s1">&#39;TianoCompress&#39;</span><span class="p">,</span>
+  <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_LZMA</span><span class="p">:</span> <span class="s1">&#39;LzmaCompress&#39;</span><span class="p">,</span>
+  <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_BROTLI</span><span class="p">:</span> <span class="s1">&#39;Brotli&#39;</span>
+<span class="p">}</span>
 
 <div class="viewcode-block" id="MemoryMapping"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linux.linuxhelper.html#chipsec.helper.linux.linuxhelper.MemoryMapping">[docs]</a><span class="k">class</span> <span class="nc">MemoryMapping</span><span class="p">(</span><span class="n">mmap</span><span class="o">.</span><span class="n">mmap</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Memory mapping based on Python&#39;s mmap.</span>
@@ -813,12 +819,13 @@
             <span class="k">return</span> <span class="p">(</span><span class="n">off</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Reading variable (GET_EFIVAR) did not succeed: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status_dict</span><span class="p">[</span><span class="n">status</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Reading variable (GET_EFIVAR) did not succeed: </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="s1">&#39;UNKNOWN&#39;</span><span class="p">),</span> <span class="n">status</span><span class="p">))</span>
             <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="n">guid</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">attr</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[</span><span class="n">base</span><span class="p">:</span><span class="n">base</span> <span class="o">+</span><span class="n">new_size</span><span class="p">]</span><span class="o">.</span><span class="n">tostring</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[</span><span class="n">base</span><span class="p">:</span><span class="n">base</span> <span class="o">+</span><span class="n">new_size</span><span class="p">]</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
             <span class="n">attr</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">off</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span></div>
 
@@ -881,7 +888,8 @@
         <span class="n">size</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s2">&quot;2I&quot;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Setting EFI (SET_EFIVAR) variable did not succeed: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status_dict</span><span class="p">[</span><span class="n">status</span><span class="p">])</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Setting EFI (SET_EFIVAR) variable did not succeed: &#39;</span><span class="si">{}</span><span class="s2">&#39; (</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="s1">&#39;UNKNOWN&#39;</span><span class="p">),</span> <span class="n">status</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;umount /sys/firmware/efi/efivars; mount -t efivarfs efivarfs /sys/firmware/efi/efivars&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">status</span></div>
@@ -1250,7 +1258,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 31, 2021.
+      Last updated on May 07, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>
