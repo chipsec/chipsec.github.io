@@ -129,6 +129,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MsgBus</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">helper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__MB_MESSAGE_MCR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">opcode</span><span class="p">):</span>
         <span class="n">mcr</span> <span class="o">=</span> <span class="mh">0x0</span>
@@ -149,11 +150,19 @@
         <span class="k">return</span> <span class="n">mdr</span>
 
     <span class="k">def</span> <span class="nf">__hide_p2sb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hide</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span><span class="s2">&quot;P2SBC&quot;</span><span class="p">,</span> <span class="s2">&quot;HIDE&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;reg&#39;</span><span class="p">:</span> <span class="s1">&#39;P2SBC&#39;</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;HIDE&#39;</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span><span class="s2">&quot;P2SB_HIDE&quot;</span><span class="p">,</span> <span class="s2">&quot;HIDE&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;reg&#39;</span><span class="p">:</span> <span class="s1">&#39;P2SB_HIDE&#39;</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="s1">&#39;HIDE&#39;</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">RegisterNotFoundError</span> <span class="p">(</span><span class="s1">&#39;RegisterNotFound: P2SBC&#39;</span><span class="p">)</span>
+
         <span class="n">hidden</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_device_enabled</span><span class="p">(</span><span class="s1">&#39;P2SBC&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">hide</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span><span class="s1">&#39;P2SB_HIDE&#39;</span><span class="p">,</span> <span class="s1">&#39;HIDE&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span><span class="p">[</span><span class="s1">&#39;reg&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span><span class="s1">&#39;P2SB_HIDE&#39;</span><span class="p">,</span> <span class="s1">&#39;HIDE&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span><span class="p">[</span><span class="s1">&#39;reg&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">p2sbHide</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">hidden</span>
 
     <span class="c1">#</span>
@@ -294,7 +303,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 07, 2021.
+      Last updated on Jun 02, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

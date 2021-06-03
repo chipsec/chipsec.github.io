@@ -39,7 +39,7 @@
             
   <h1>Source code for chipsec.modules.tools.uefi.scan_blocked</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -186,15 +186,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">spi</span> <span class="o">=</span> <span class="n">SPI</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
             <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">freg</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">get_SPI_region</span><span class="p">(</span> <span class="n">BIOS</span> <span class="p">)</span>
             <span class="n">image_size</span> <span class="o">=</span> <span class="n">limit</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">base</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] dumping FW image from ROM to </span><span class="si">{}</span><span class="s2">: 0x</span><span class="si">{:08X}</span><span class="s2"> bytes at [0x</span><span class="si">{:08X}</span><span class="s2">:0x</span><span class="si">{:08X}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_file</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">image_size</span><span class="p">)</span> <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] this may take a few minutes (instead, use &#39;chipsec_util spi dump&#39;)...&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Dumping FW image from ROM to </span><span class="si">{}</span><span class="s2">: 0x</span><span class="si">{:08X}</span><span class="s2"> bytes at [0x</span><span class="si">{:08X}</span><span class="s2">:0x</span><span class="si">{:08X}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_file</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">image_size</span><span class="p">)</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] This may take a few minutes (instead, use &#39;chipsec_util spi dump&#39;)...&quot;</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">read_spi_to_file</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">image_file</span> <span class="p">)</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Use provided firmware image</span>
             <span class="n">image_file</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] reading FW image from file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_file</span><span class="p">)</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Reading FW image from file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_file</span><span class="p">)</span> <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span> <span class="n">image_file</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s1">&#39;Unable to read SPI and generate FW image. Access may be blocked.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;No FW image file to read.  Exiting!&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">ERROR</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span>
 
         <span class="c1"># Load JSON config with blocked EFI modules</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg_name</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -202,7 +209,8 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg_pth</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">blockedlist_json</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">efi_blockedlist</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span> <span class="n">blockedlist_json</span> <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_blockedlist</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_blockedlist</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -243,7 +251,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 07, 2021.
+      Last updated on Jun 02, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

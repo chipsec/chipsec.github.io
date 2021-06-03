@@ -85,7 +85,7 @@
 
 <span class="kn">from</span> <span class="nn">chipsec.helper.oshelper</span> <span class="kn">import</span> <span class="n">OsHelperError</span><span class="p">,</span> <span class="n">HWAccessViolationError</span><span class="p">,</span> <span class="n">UnimplementedAPIError</span><span class="p">,</span> <span class="n">UnimplementedNativeAPIError</span>
 <span class="kn">from</span> <span class="nn">chipsec.helper.basehelper</span> <span class="kn">import</span> <span class="n">Helper</span>
-<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">stringtobytes</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">stringtobytes</span><span class="p">,</span> <span class="n">bytestostring</span>
 <span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
 <span class="kn">import</span> <span class="nn">chipsec.file</span>
 <span class="kn">from</span> <span class="nn">chipsec.hal.uefi_common</span> <span class="kn">import</span> <span class="n">EFI_GUID_STR</span>
@@ -791,7 +791,7 @@
         <span class="n">var</span>     <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">data</span>     <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">data</span>
         <span class="n">var_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">if</span> <span class="n">datasize</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">datasize</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
-            <span class="n">attrs_data</span> <span class="o">=</span> <span class="s2">&quot;{message:</span><span class="se">\x00</span><span class="s2">&lt;</span><span class="si">{fill}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="mi">8</span><span class="p">)[:</span><span class="mi">8</span><span class="p">]</span>
+            <span class="n">attrs_data</span> <span class="o">=</span> <span class="s2">&quot;{message:</span><span class="se">\x00</span><span class="s2">&lt;</span><span class="si">{fill}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">bytestostring</span><span class="p">(</span><span class="n">attrs</span><span class="p">),</span> <span class="n">fill</span><span class="o">=</span><span class="mi">8</span><span class="p">)[:</span><span class="mi">8</span><span class="p">]</span>
             <span class="n">attrs</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="n">stringtobytes</span><span class="p">(</span><span class="n">attrs_data</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1079,7 +1079,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 07, 2021.
+      Last updated on Jun 02, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>
