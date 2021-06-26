@@ -2073,6 +2073,41 @@
 
 <span class="c1">########################################################################################################</span>
 <span class="c1">#</span>
+<span class="c1"># WSMT Table</span>
+<span class="c1">#</span>
+<span class="c1">########################################################################################################</span>
+<div class="viewcode-block" id="WSMT"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi_tables.html#chipsec.hal.acpi_tables.WSMT">[docs]</a><span class="k">class</span> <span class="nc">WSMT</span> <span class="p">(</span><span class="n">ACPI_TABLE</span><span class="p">):</span>
+
+    <span class="n">FIXED_COMM_BUFFERS</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">COMM_BUFFER_NESTED_PTR_PROTECTION</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">SYSTEM_RESOURCE_PROTECTION</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixed_comm_buffers</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_buffer_nested_ptr_protection</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_resource_protection</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="WSMT.parse"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi_tables.html#chipsec.hal.acpi_tables.WSMT.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_content</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_content</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">mitigations</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;L&quot;</span><span class="p">,</span> <span class="n">table_content</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixed_comm_buffers</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">mitigations</span> <span class="o">&amp;</span> <span class="n">WSMT</span><span class="o">.</span><span class="n">FIXED_COMM_BUFFERS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_buffer_nested_ptr_protection</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">mitigations</span> <span class="o">&amp;</span> <span class="n">WSMT</span><span class="o">.</span><span class="n">COMM_BUFFER_NESTED_PTR_PROTECTION</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system_resource_protection</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">mitigations</span> <span class="o">&amp;</span> <span class="n">WSMT</span><span class="o">.</span><span class="n">SYSTEM_RESOURCE_PROTECTION</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;------------------------------------------------------------------</span>
+<span class="s2">Windows SMM Mitigations Table (WSMT) Contents</span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">FIXED_COMM_BUFFERS                  : </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">COMM_BUFFER_NESTED_PTR_PROTECTION   : </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">SYSTEM_RESOURCE_PROTECTION          : </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed_comm_buffers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_buffer_nested_ptr_protection</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_resource_protection</span> <span class="p">)</span></div>
+
+<span class="c1">########################################################################################################</span>
+<span class="c1">#</span>
 <span class="c1"># Generic Address Structure</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################################################</span>
@@ -2184,7 +2219,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 17, 2021.
+      Last updated on Jun 25, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

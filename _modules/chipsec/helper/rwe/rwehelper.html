@@ -887,9 +887,12 @@
 <div class="viewcode-block" id="RweHelper.native_get_ACPI_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.rwe.rwehelper.html#chipsec.helper.rwe.rwehelper.RweHelper.native_get_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">native_get_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span> <span class="p">):</span>
         <span class="n">table_size</span> <span class="o">=</span> <span class="mi">36</span>
         <span class="n">tBuffer</span> <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span> <span class="n">table_size</span> <span class="p">)</span>
-        <span class="n">tbl</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">table_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">tbl</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">retVal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetSystemFirmwareTbl</span><span class="p">(</span> <span class="n">FirmwareTableProviderSignature_ACPI</span><span class="p">,</span> <span class="n">tbl</span><span class="p">,</span> <span class="n">tBuffer</span><span class="p">,</span> <span class="n">table_size</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="n">retVal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">retVal</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;GetSystemFirmwareTable(</span><span class="si">{}</span><span class="s1">) returned error: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="n">WinError</span><span class="p">())</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">retVal</span> <span class="o">&gt;</span> <span class="n">table_size</span><span class="p">:</span>
             <span class="n">table_size</span> <span class="o">=</span> <span class="n">retVal</span>
             <span class="n">tBuffer</span>    <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span> <span class="n">table_size</span> <span class="p">)</span>
@@ -1045,7 +1048,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 17, 2021.
+      Last updated on Jun 25, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

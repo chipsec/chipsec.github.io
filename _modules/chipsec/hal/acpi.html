@@ -205,7 +205,7 @@
   <span class="n">ACPI_TABLE_SIG_ERST</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ERST</span><span class="p">,</span>
   <span class="n">ACPI_TABLE_SIG_EINJ</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">EINJ</span><span class="p">,</span>
   <span class="n">ACPI_TABLE_SIG_TPM2</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
-  <span class="n">ACPI_TABLE_SIG_WSMT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+  <span class="n">ACPI_TABLE_SIG_WSMT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">WSMT</span><span class="p">,</span>
   <span class="n">ACPI_TABLE_SIG_DBG2</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
   <span class="n">ACPI_TABLE_SIG_NHLT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
   <span class="n">ACPI_TABLE_SIG_MSCT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">MSCT</span><span class="p">,</span>
@@ -444,11 +444,10 @@
         <span class="k">except</span> <span class="n">oshelper</span><span class="o">.</span><span class="n">UnimplementedNativeAPIError</span><span class="p">:</span>
             <span class="c1"># 2. If didn&#39;t work, try using get_ACPI_table if a helper implemented</span>
             <span class="c1">#    reading ACPI tables via native API which some OS may provide</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">use_native_api</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[acpi] trying to enumerate ACPI tables using get_ACPI_table...&quot;</span> <span class="p">)</span>
-                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ACPI_TABLES</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span> <span class="n">t</span> <span class="p">)</span>
-                    <span class="k">if</span> <span class="n">table</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span> <span class="n">t</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[acpi] trying to enumerate ACPI tables using get_ACPI_table...&quot;</span> <span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ACPI_TABLES</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span> <span class="n">t</span> <span class="p">)</span>
+                <span class="k">if</span> <span class="n">table</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span> <span class="n">t</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span></div>
 
@@ -529,10 +528,9 @@
             <span class="k">except</span> <span class="n">oshelper</span><span class="o">.</span><span class="n">UnimplementedNativeAPIError</span><span class="p">:</span>
                 <span class="c1"># 2. If didn&#39;t work, try using get_ACPI_table if a helper implemented</span>
                 <span class="c1">#    reading ACPI tables via native API which some OS may provide</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">use_native_api</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[acpi] trying to extract ACPI table using get_ACPI_table...&quot;</span> <span class="p">)</span>
-                    <span class="n">t_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
-                    <span class="n">acpi_tables_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">t_data</span> <span class="p">)</span>
+                <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[acpi] trying to extract ACPI table using get_ACPI_table...&quot;</span> <span class="p">)</span>
+                <span class="n">t_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
+                <span class="n">acpi_tables_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">t_data</span> <span class="p">)</span>
 
         <span class="n">acpi_tables</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">acpi_tables_data</span><span class="p">:</span>
@@ -654,7 +652,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 17, 2021.
+      Last updated on Jun 25, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

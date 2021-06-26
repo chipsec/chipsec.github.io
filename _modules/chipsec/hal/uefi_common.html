@@ -1006,10 +1006,10 @@
 <span class="n">EFI_VENDOR_TABLE_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="n">EFI_GUID_FMT</span> <span class="o">+</span> <span class="s1">&#39;Q&#39;</span>
 <span class="n">EFI_VENDOR_TABLE_SIZE</span>   <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_VENDOR_TABLE_FORMAT</span><span class="p">)</span>
 
-<div class="viewcode-block" id="EFI_VENDOR_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_VENDOR_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_VENDOR_TABLE</span><span class="p">(</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_VENDOR_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;VendorGuid VendorTable&#39;</span><span class="p">)</span> <span class="p">):</span>
+<div class="viewcode-block" id="EFI_VENDOR_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_VENDOR_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_VENDOR_TABLE</span><span class="p">(</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_VENDOR_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;VendorGuidData VendorTable&#39;</span><span class="p">)</span> <span class="p">):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 <div class="viewcode-block" id="EFI_VENDOR_TABLE.VendorGuid"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_VENDOR_TABLE.VendorGuid">[docs]</a>    <span class="k">def</span> <span class="nf">VendorGuid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuidData</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="EFI_CONFIGURATION_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_CONFIGURATION_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_CONFIGURATION_TABLE</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
@@ -1147,7 +1147,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 17, 2021.
+      Last updated on Jun 25, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

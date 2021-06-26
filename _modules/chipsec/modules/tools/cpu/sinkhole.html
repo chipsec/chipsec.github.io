@@ -40,7 +40,7 @@
             
   <h1>Source code for chipsec.modules.tools.cpu.sinkhole</h1><div class="highlight"><pre>
 <span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -69,9 +69,8 @@
 <span class="sd">The Memory Sinkhole by Christopher Domas: https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation.pdf (presentation) and https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation-wp.pdf (whitepaper).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">MTAG_SMM</span>
-<span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">cpu</span>
-<span class="kn">import</span> <span class="nn">chipsec.helper.oshelper</span>
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span>   <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">MTAG_SMM</span>
+<span class="kn">from</span> <span class="nn">chipsec.helper.oshelper</span> <span class="kn">import</span> <span class="n">HWAccessViolationError</span>
 
 <span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_SMM</span><span class="p">]</span>
 
@@ -80,24 +79,22 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-
 <div class="viewcode-block" id="sinkhole.is_supported"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.cpu.sinkhole.html#chipsec.modules.tools.cpu.sinkhole.sinkhole.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># @TODO: Currently this module doesn&#39;t work properly on (U)EFI</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">is_windows</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">is_linux</span><span class="p">())</span></div>
-
-<div class="viewcode-block" id="sinkhole.check_LAPIC_SMRR_overlap"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.cpu.sinkhole.html#chipsec.modules.tools.cpu.sinkhole.sinkhole.check_LAPIC_SMRR_overlap">[docs]</a>    <span class="k">def</span> <span class="nf">check_LAPIC_SMRR_overlap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">is_windows</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">is_linux</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="s1">&#39;Not a supported OS: Windows or Linux&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span> <span class="p">)</span> <span class="ow">or</span> \
            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span> <span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span> <span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Couldn&#39;t find definition of required configuration registers&quot;</span> <span class="p">)</span>
-            <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">ERROR</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">check_SMRR_supported</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;SMRR range protection is supported&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t find definition of required configuration registers&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">ERROR</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_skipped_check</span><span class="p">(</span><span class="s2">&quot;CPU does not support SMRR range protection of SMRAM&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">SKIPPED</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
 
+<div class="viewcode-block" id="sinkhole.check_LAPIC_SMRR_overlap"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.cpu.sinkhole.html#chipsec.modules.tools.cpu.sinkhole.sinkhole.check_LAPIC_SMRR_overlap">[docs]</a>    <span class="k">def</span> <span class="nf">check_LAPIC_SMRR_overlap</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="n">smrr_physbase_msr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
         <span class="n">apic_base_msr</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="n">apic_base_msr</span> <span class="p">)</span>
@@ -111,28 +108,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Local APIC Base: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">apic_base</span><span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] SMRR Base      : 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">smrr_base</span><span class="p">)</span> <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Attempting to overlap Local APIC page with SMRR region&quot;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;    writing 0x</span><span class="si">{:X}</span><span class="s2"> to IA32_APIC_BASE[APICBase]..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">smrrbase</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Attempting to overlap Local APIC page with SMRR region&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;   Writing 0x</span><span class="si">{:X}</span><span class="s2"> to IA32_APIC_BASE[APICBase]..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">smrrbase</span><span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span> <span class="s2">&quot;NOTE: The system may hang or process may crash when running this test. In that case, the mitigation to this issue is likely working but we may not be handling the exception generated.&quot;</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="s1">&#39;APICBase&#39;</span><span class="p">,</span> <span class="n">smrrbase</span><span class="p">,</span> <span class="n">preserve_field_position</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cpu_thread</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
-            <span class="n">ex</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;Could modify IA32_APIC_BASE to overlap SMRR&quot;</span> <span class="p">)</span>
-        <span class="k">except</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">oshelper</span><span class="o">.</span><span class="n">HWAccessViolationError</span><span class="p">:</span>
-            <span class="n">ex</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;Could not modify IA32_APIC_BASE to overlap SMRR&quot;</span> <span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="s1">&#39;APICBase&#39;</span><span class="p">,</span> <span class="n">smrrbase</span><span class="p">,</span> <span class="n">preserve_field_position</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cpu_thread</span><span class="o">=</span><span class="mi">0</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;Error encountered when attempting to modify IA32_APIC_BASE&quot;</span><span class="p">)</span>
 
         <span class="n">apic_base_msr_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] new IA32_APIC_BASE: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">apic_base_msr_new</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] New IA32_APIC_BASE: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">apic_base_msr_new</span><span class="p">)</span> <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">apic_base_msr_new</span> <span class="o">==</span> <span class="n">apic_base_msr</span> <span class="ow">and</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">apic_base_msr_new</span> <span class="o">==</span> <span class="n">apic_base_msr</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed_check</span><span class="p">(</span> <span class="s2">&quot;CPU does not seem to have SMM memory sinkhole vulnerability&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;Could not modify IA32_APIC_BASE to overlap SMRR&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s2">&quot;CPU does not seem to have SMM memory sinkhole vulnerability&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;Could modify IA32_APIC_BASE to overlap SMRR&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span> <span class="s1">&#39;IA32_APIC_BASE&#39;</span><span class="p">,</span> <span class="n">apic_base_msr</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[*] Restored original value 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">apic_base_msr</span><span class="p">)</span> <span class="p">)</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed_check</span><span class="p">(</span> <span class="s2">&quot;CPU is succeptible to SMM memory sinkhole vulnerability.  Verify that SMRR is programmed correctly.&quot;</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;CPU is susceptible to SMM memory sinkhole vulnerability.  Verify that SMRR is programmed correctly.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">res</span></div>
 
@@ -141,8 +138,15 @@
     <span class="c1"># Required function: run here all tests from this module</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="sinkhole.run"><a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.cpu.sinkhole.html#chipsec.modules.tools.cpu.sinkhole.sinkhole.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span> <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span> <span class="s2">&quot;x86 SMM Memory Sinkhole&quot;</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_LAPIC_SMRR_overlap</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;x86 SMM Memory Sinkhole&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">check_SMRR_supported</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;SMRR range protection is supported&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_LAPIC_SMRR_overlap</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;CPU does not support SMRR range protection of SMRAM&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -210,7 +214,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 17, 2021.
+      Last updated on Jun 25, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

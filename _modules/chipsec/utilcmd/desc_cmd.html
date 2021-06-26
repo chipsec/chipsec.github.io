@@ -97,7 +97,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Dumping IDT of </span><span class="si">{:d}</span><span class="s2"> CPU threads&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">IDT_all</span><span class="p">(</span> <span class="mi">4</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (acpi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (idt) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="GDTCommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.desc_cmd.html#chipsec.utilcmd.desc_cmd.GDTCommand">[docs]</a><span class="k">class</span> <span class="nc">GDTCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -124,7 +124,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Dumping IDT of </span><span class="si">{:d}</span><span class="s2"> CPU threads&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">GDT_all</span><span class="p">(</span> <span class="mi">4</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (acpi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (gdt) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="LDTCommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.desc_cmd.html#chipsec.utilcmd.desc_cmd.LDTCommand">[docs]</a><span class="k">class</span> <span class="nc">LDTCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -209,7 +209,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 17, 2021.
+      Last updated on Jun 25, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

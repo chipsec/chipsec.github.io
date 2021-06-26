@@ -63,17 +63,26 @@
 <p class="admonition-title">Note</p>
 <p>CHIPSEC has deprecated support for Python2 since June 2020</p>
 </div>
-<p><a class="reference external" href="https://pypi.org/project/pywin32/#files">pywin32</a>: for Windows API support</p>
+<p>To install requirements:</p>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pywin32</span></code></p>
+<div><p><cite>pip install windows_requirements.txt</cite></p>
 </div></blockquote>
-<p><a class="reference external" href="https://pypi.org/project/setuptools/">setuptools</a></p>
+<p>which includes:</p>
 <blockquote>
-<div><p><cite>pip install setuptools</cite></p>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://pypi.org/project/pywin32/#files">pywin32</a>: for Windows API support (<cite>pip install pywin32</cite>)</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/setuptools/">setuptools</a> (<cite>pip install setuptools</cite>)</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/WConio2/">WConio2</a>: Optional. For colored console output (<cite>pip install Wconio2</cite>)</p></li>
+</ul>
 </div></blockquote>
-<p><a class="reference external" href="http://newcenturycomputers.net/projects/wconio.html">WConio</a>: Optional. For colored console output</p>
-<p><a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">Visual Studio and WDK</a>: for building the driver. For best results use the latest available (at least <a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/other-wdk-downloads">WDK 8 and VS 2012</a>)</p>
-<p><a class="reference external" href="https://git-scm.com/">git</a>: open source distributed version control system</p>
+<p>To compile the driver:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">Visual Studio and WDK</a>: for building the driver. For best results use the latest available (at least <a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/other-wdk-downloads">WDK 8 and VS 2012</a>)</p>
+</div></blockquote>
+<p>To clone the repo:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://git-scm.com/">git</a>: open source distributed version control system</p>
+</div></blockquote>
 </div>
 <div class="section" id="building">
 <h2>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h2>
@@ -113,7 +122,7 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
 <li><p>Disable Secure Boot in the BIOS setup screen then disable driver signature checks as in Windows 8 with Secure Boot disabled</p></li>
 </ul>
 </div></blockquote>
-<p><strong>Windows 8 (with Secure Boot disabled) / Windows Server 2012 (with Secure Boot disabled)):</strong></p>
+<p><strong>Windows 10 (with Secure Boot disabled) / Windows 8 (with Secure Boot disabled) / Windows Server 2012 (with Secure Boot disabled):</strong></p>
 <p>Method 1:</p>
 <blockquote>
 <div><ul class="simple">
@@ -290,7 +299,7 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 17, 2021.
+      Last updated on Jun 25, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

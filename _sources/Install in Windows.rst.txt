@@ -18,19 +18,23 @@ Python 3.7 or higher (https://www.python.org/downloads/)
 
    CHIPSEC has deprecated support for Python2 since June 2020 
 
-`pywin32 <https://pypi.org/project/pywin32/#files>`_: for Windows API support
+To install requirements: 
 
-   ``pip install pywin32``
+   `pip install windows_requirements.txt`
 
-`setuptools <https://pypi.org/project/setuptools/>`_
+which includes:
 
-   `pip install setuptools`
+   * `pywin32 <https://pypi.org/project/pywin32/#files>`_: for Windows API support (`pip install pywin32`)
+   * `setuptools <https://pypi.org/project/setuptools/>`_ (`pip install setuptools`)
+   * `WConio2 <https://pypi.org/project/WConio2/>`_: Optional. For colored console output (`pip install Wconio2`)
 
-`WConio <http://newcenturycomputers.net/projects/wconio.html>`_: Optional. For colored console output
+To compile the driver:
 
-`Visual Studio and WDK <https://docs.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk>`_: for building the driver. For best results use the latest available (at least `WDK 8 and VS 2012 <https://docs.microsoft.com/en-us/windows-hardware/drivers/other-wdk-downloads>`_)
+   `Visual Studio and WDK <https://docs.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk>`_: for building the driver. For best results use the latest available (at least `WDK 8 and VS 2012 <https://docs.microsoft.com/en-us/windows-hardware/drivers/other-wdk-downloads>`_)
 
-`git <https://git-scm.com/>`_: open source distributed version control system
+To clone the repo:
+
+   `git <https://git-scm.com/>`_: open source distributed version control system
 
 Building
 --------
@@ -69,7 +73,7 @@ Method 2:
 
    - Disable Secure Boot in the BIOS setup screen then disable driver signature checks as in Windows 8 with Secure Boot disabled
 
-**Windows 8 (with Secure Boot disabled) / Windows Server 2012 (with Secure Boot disabled)):**
+**Windows 10 (with Secure Boot disabled) / Windows 8 (with Secure Boot disabled) / Windows Server 2012 (with Secure Boot disabled):**
 
 Method 1: 
 
