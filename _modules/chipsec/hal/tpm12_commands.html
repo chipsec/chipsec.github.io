@@ -198,11 +198,11 @@
     <span class="n">size</span> <span class="o">=</span> <span class="n">Size</span> <span class="o">&gt;&gt;</span> <span class="mh">0x18</span>
     <span class="k">return</span> <span class="p">(</span> <span class="n">command</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="forceclear"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.forceclear">[docs]</a><span class="k">def</span> <span class="nf">forceclear</span><span class="p">(</span> <span class="n">command_argv</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">forceclear</span><span class="p">(</span> <span class="n">command_argv</span> <span class="p">):</span>
     <span class="n">Size</span> <span class="o">=</span> <span class="mh">0x0A000000</span>
     <span class="n">command</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="n">COMMAND_FORMAT</span><span class="p">,</span> <span class="n">TPM_TAG_RQU_COMMAND</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">TPM_ORD_FORCECLEAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">Size</span> <span class="o">&gt;&gt;</span> <span class="mh">0x18</span>
-    <span class="k">return</span> <span class="p">(</span> <span class="n">command</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span></div>
+    <span class="k">return</span> <span class="p">(</span> <span class="n">command</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -270,7 +270,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

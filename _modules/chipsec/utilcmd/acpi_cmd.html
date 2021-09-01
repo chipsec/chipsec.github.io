@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.acpi_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2019, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -70,7 +69,8 @@
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
 
-<span class="kn">from</span> <span class="nn">chipsec.hal.acpi</span>   <span class="kn">import</span> <span class="n">ACPI</span><span class="p">,</span> <span class="n">AcpiRuntimeError</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.acpi</span>   <span class="kn">import</span> <span class="n">ACPI</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">AcpiRuntimeError</span>
 <span class="kn">from</span> <span class="nn">chipsec.command</span>    <span class="kn">import</span> <span class="n">BaseCommand</span>
 
 <span class="c1"># ###################################################################</span>
@@ -91,7 +91,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util acpi table acpi_table.bin</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ACPICommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.acpi_cmd.html#chipsec.utilcmd.acpi_cmd.ACPICommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">ACPICommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
         <span class="n">parser_list</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">)</span>
@@ -103,13 +103,13 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">acpi_table</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="ACPICommand.acpi_list"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.acpi_cmd.html#chipsec.utilcmd.acpi_cmd.ACPICommand.acpi_list">[docs]</a>    <span class="k">def</span> <span class="nf">acpi_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">acpi_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Enumerating ACPI tables..&quot;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_acpi</span><span class="o">.</span><span class="n">print_ACPI_table_list</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_acpi</span><span class="o">.</span><span class="n">print_ACPI_table_list</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ACPICommand.acpi_table"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.acpi_cmd.html#chipsec.utilcmd.acpi_cmd.ACPICommand.acpi_table">[docs]</a>    <span class="k">def</span> <span class="nf">acpi_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">acpi_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acpi</span><span class="o">.</span><span class="n">is_ACPI_table_present</span><span class="p">(</span> <span class="n">name</span> <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Please specify table name from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_acpi</span><span class="o">.</span><span class="n">tableList</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">)</span>
@@ -119,10 +119,10 @@
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] reading ACPI table </span><span class="si">{}</span><span class="s2"> &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;from file&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_acpi</span><span class="o">.</span><span class="n">dump_ACPI_table</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="p">)</span>
-        <span class="k">return</span></div>
+        <span class="k">return</span>
 
 
-<div class="viewcode-block" id="ACPICommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.acpi_cmd.html#chipsec.utilcmd.acpi_cmd.ACPICommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_acpi</span> <span class="o">=</span> <span class="n">ACPI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
@@ -130,7 +130,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (acpi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (acpi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div>
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;acpi&#39;</span><span class="p">:</span> <span class="n">ACPICommand</span> <span class="p">}</span>
 </pre></div>
@@ -200,7 +200,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

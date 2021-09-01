@@ -50,132 +50,6 @@
   <div class="section" id="module-chipsec.utilcmd.uefi_cmd">
 <span id="uefi-cmd-module"></span><h1>uefi_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.uefi_cmd" title="Permalink to this headline">¶</a></h1>
 <p>The uefi command provides access to UEFI variables, both on the live system and in a SPI flash image file.</p>
-<dl class="py class">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand">
-<em class="property">class </em><code class="sig-name descname">UEFICommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">types</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="nb">list</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">find</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;|&lt;</span><span class="n">GUID</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">read</span><span class="o">|</span><span class="n">var</span><span class="o">-</span><span class="n">write</span><span class="o">|</span><span class="n">var</span><span class="o">-</span><span class="n">delete</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">efi_variable_file</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="o">--</span><span class="n">fwtype</span> <span class="o">&lt;</span><span class="n">rom_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">filetypes</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">nvram</span><span class="p">[</span><span class="o">-</span><span class="n">auth</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">rom_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">fwtype</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">keys</span> <span class="o">&lt;</span><span class="n">keyvar_file</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">tables</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">s3bootscript</span> <span class="p">[</span><span class="n">script_address</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">assemble</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="n">freeform</span> <span class="n">none</span><span class="o">|</span><span class="n">lzma</span><span class="o">|</span><span class="n">tiano</span> <span class="o">&lt;</span><span class="n">raw_file</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">uefi_file</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">insert_before</span><span class="o">|</span><span class="n">insert_after</span><span class="o">|</span><span class="n">replace</span><span class="o">|</span><span class="n">remove</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rom</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">new_rom</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">uefi_file</span><span class="o">&gt;</span>
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">types</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="nb">list</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">find</span> <span class="n">PK</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">read</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">write</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">delete</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span> <span class="n">FV_MM</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">nvram</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span> <span class="n">vss_auth</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">keys</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">tables</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">s3bootscript</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">assemble</span> <span class="n">AAAAAAAA</span><span class="o">-</span><span class="n">BBBB</span><span class="o">-</span><span class="n">CCCC</span><span class="o">-</span><span class="n">DDDD</span><span class="o">-</span><span class="n">EEEEEEEEEEEE</span> <span class="n">freeform</span> <span class="n">lzma</span> <span class="n">uefi</span><span class="o">.</span><span class="n">raw</span> <span class="n">mydriver</span><span class="o">.</span><span class="n">efi</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">replace</span>  <span class="n">AAAAAAAA</span><span class="o">-</span><span class="n">BBBB</span><span class="o">-</span><span class="n">CCCC</span><span class="o">-</span><span class="n">DDDD</span><span class="o">-</span><span class="n">EEEEEEEEEEEE</span> <span class="n">bios</span><span class="o">.</span><span class="n">bin</span> <span class="n">new_bios</span><span class="o">.</span><span class="n">bin</span> <span class="n">mydriver</span><span class="o">.</span><span class="n">efi</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.assemble">
-<code class="sig-name descname">assemble</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.assemble" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.decode">
-<code class="sig-name descname">decode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.decode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.insert_after">
-<code class="sig-name descname">insert_after</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.insert_after"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.insert_after" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.insert_before">
-<code class="sig-name descname">insert_before</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.insert_before"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.insert_before" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.keys">
-<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.keys" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.nvram">
-<code class="sig-name descname">nvram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.nvram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.nvram" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.nvram_auth">
-<code class="sig-name descname">nvram_auth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.nvram_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.nvram_auth" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.remove">
-<code class="sig-name descname">remove</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.remove" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.replace">
-<code class="sig-name descname">replace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.replace" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.requires_driver">
-<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.requires_driver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.s3bootscript">
-<code class="sig-name descname">s3bootscript</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.s3bootscript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.s3bootscript" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.tables">
-<code class="sig-name descname">tables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.tables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.tables" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_delete">
-<code class="sig-name descname">var_delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_find">
-<code class="sig-name descname">var_find</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_find" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_list">
-<code class="sig-name descname">var_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_read">
-<code class="sig-name descname">var_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_read" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_write">
-<code class="sig-name descname">var_write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -257,7 +131,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

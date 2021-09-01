@@ -52,49 +52,6 @@
 <p>Definition for TPMv1.2 commands to use with TPM HAL</p>
 <p>TCG PC Client TPM Specification
 TCG TPM v1.2 Specification</p>
-<dl class="py function">
-<dt id="chipsec.hal.tpm12_commands.continueselftest">
-<code class="sig-name descname">continueselftest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm12_commands.html#continueselftest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm12_commands.continueselftest" title="Permalink to this definition">¶</a></dt>
-<dd><p>TPM_ContinueSelfTest informs the TPM that it should complete self-test of all TPM functions. The TPM may return success immediately and then perform the self-test, or it may perform the self-test and then return success or failure.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.tpm12_commands.forceclear">
-<code class="sig-name descname">forceclear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm12_commands.html#forceclear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm12_commands.forceclear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.tpm12_commands.getcap">
-<code class="sig-name descname">getcap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm12_commands.html#getcap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm12_commands.getcap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns current information regarding the TPM
-CapArea    - Capabilities Area
-SubCapSize - Size of SubCapabilities
-SubCap     - Subcapabilities</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.tpm12_commands.nvread">
-<code class="sig-name descname">nvread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm12_commands.html#nvread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm12_commands.nvread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a value from the NV store
-Index, Offset, Size</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.tpm12_commands.pcrread">
-<code class="sig-name descname">pcrread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm12_commands.html#pcrread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm12_commands.pcrread" title="Permalink to this definition">¶</a></dt>
-<dd><p>The TPM_PCRRead operation provides non-cryptographic reporting  of the contents of a named PCR</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.tpm12_commands.startup">
-<code class="sig-name descname">startup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm12_commands.html#startup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm12_commands.startup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute a tpm_startup command. TPM_Startup is always preceded by TPM_Init, which is the physical indication (a system wide reset) that TPM initialization is necessary
-Type of Startup to be used:
-1: TPM_ST_CLEAR
-2: TPM_ST_STATE
-3: TPM_ST_DEACTIVATED</p>
-</dd></dl>
-
 </div>
 
 
@@ -176,7 +133,7 @@ Type of Startup to be used:
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

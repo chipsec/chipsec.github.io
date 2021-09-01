@@ -49,50 +49,6 @@
             
   <div class="section" id="module-chipsec.utilcmd.vmm_cmd">
 <span id="vmm-cmd-module"></span><h1>vmm_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.vmm_cmd" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand">
-<em class="property">class </em><code class="sig-name descname">VMMCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="o">&lt;</span><span class="n">rax</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rbx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rcx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rdx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rdi</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rsi</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">r8</span><span class="p">]</span> <span class="p">[</span><span class="n">r9</span><span class="p">]</span> <span class="p">[</span><span class="n">r10</span><span class="p">]</span> <span class="p">[</span><span class="n">r11</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="o">&lt;</span><span class="n">eax</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ebx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ecx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">edx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">edi</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">esi</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">pt</span><span class="o">|</span><span class="n">ept</span> <span class="o">&lt;</span><span class="n">ept_pointer</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;.&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="mi">32</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">pt</span> <span class="mh">0x524B01E</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span> <span class="mi">0</span><span class="p">:</span><span class="mf">6.0</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.requires_driver">
-<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.requires_driver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_hypercall">
-<code class="sig-name descname">vmm_hypercall</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.vmm_hypercall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_hypercall" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_pt">
-<code class="sig-name descname">vmm_pt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.vmm_pt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_pt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_virtio">
-<code class="sig-name descname">vmm_virtio</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/vmm_cmd.html#VMMCommand.vmm_virtio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_virtio" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -174,7 +130,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

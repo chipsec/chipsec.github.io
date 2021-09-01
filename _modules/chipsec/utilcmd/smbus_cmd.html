@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.smbus_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -78,7 +77,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util smbus read 0xA0 0x0 0x100</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SMBusCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.smbus_cmd.html#chipsec.utilcmd.smbus_cmd.SMBusCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util smbus&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">SMBusCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
         <span class="n">parser_read</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">)</span>
@@ -94,23 +93,23 @@
         <span class="n">parser_write</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smbus_write</span><span class="p">)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="SMBusCommand.smbus_read"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.smbus_cmd.html#chipsec.utilcmd.smbus_cmd.SMBusCommand.smbus_read">[docs]</a>    <span class="k">def</span> <span class="nf">smbus_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">smbus_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smbus</span><span class="o">.</span><span class="n">read_range</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SMBus read: device 0x</span><span class="si">{:X}</span><span class="s2"> offset 0x</span><span class="si">{:X}</span><span class="s2"> size 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">)</span>
             <span class="n">print_buffer</span><span class="p">(</span> <span class="n">buf</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smbus</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_off</span> <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SMBus read: device 0x</span><span class="si">{:X}</span><span class="s2"> offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_off</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SMBus read: device 0x</span><span class="si">{:X}</span><span class="s2"> offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_off</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SMBusCommand.smbus_write"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.smbus_cmd.html#chipsec.utilcmd.smbus_cmd.SMBusCommand.smbus_write">[docs]</a>    <span class="k">def</span> <span class="nf">smbus_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">smbus_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SMBus write: device 0x</span><span class="si">{:X}</span><span class="s2"> offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_smbus</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_smbus</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SMBusCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.smbus_cmd.html#chipsec.utilcmd.smbus_cmd.SMBusCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_smbus</span> <span class="o">=</span> <span class="n">SMBus</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
@@ -123,7 +122,7 @@
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_smbus</span><span class="o">.</span><span class="n">display_SMBus_info</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (smbus) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (smbus) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div>
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;smbus&#39;</span><span class="p">:</span> <span class="n">SMBusCommand</span> <span class="p">}</span>
 </pre></div>
@@ -193,7 +192,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

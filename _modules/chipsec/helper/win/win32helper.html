@@ -39,8 +39,7 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.helper.win.win32helper</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
 <span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
@@ -84,7 +83,7 @@
 <span class="kn">from</span> <span class="nn">win32file</span> <span class="kn">import</span> <span class="n">FILE_SHARE_READ</span><span class="p">,</span> <span class="n">FILE_SHARE_WRITE</span><span class="p">,</span> <span class="n">OPEN_EXISTING</span><span class="p">,</span> <span class="n">FILE_ATTRIBUTE_NORMAL</span><span class="p">,</span> <span class="n">FILE_FLAG_OVERLAPPED</span><span class="p">,</span> <span class="n">INVALID_HANDLE_VALUE</span>
 <span class="kn">import</span> <span class="nn">win32api</span><span class="o">,</span> <span class="nn">win32process</span><span class="o">,</span> <span class="nn">win32security</span><span class="o">,</span> <span class="nn">win32file</span><span class="o">,</span> <span class="nn">win32serviceutil</span>
 
-<span class="kn">from</span> <span class="nn">chipsec.helper.oshelper</span> <span class="kn">import</span> <span class="n">OsHelperError</span><span class="p">,</span> <span class="n">HWAccessViolationError</span><span class="p">,</span> <span class="n">UnimplementedAPIError</span><span class="p">,</span> <span class="n">UnimplementedNativeAPIError</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">OsHelperError</span><span class="p">,</span> <span class="n">HWAccessViolationError</span><span class="p">,</span> <span class="n">UnimplementedAPIError</span><span class="p">,</span> <span class="n">UnimplementedNativeAPIError</span>
 <span class="kn">from</span> <span class="nn">chipsec.helper.basehelper</span> <span class="kn">import</span> <span class="n">Helper</span>
 <span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">stringtobytes</span><span class="p">,</span> <span class="n">bytestostring</span>
 <span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
@@ -131,8 +130,8 @@
 <span class="n">FILE_READ_ACCESS</span>    <span class="o">=</span> <span class="p">(</span> <span class="mh">0x0001</span> <span class="p">)</span>
 <span class="n">FILE_WRITE_ACCESS</span>   <span class="o">=</span> <span class="p">(</span> <span class="mh">0x0002</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="CTL_CODE"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.CTL_CODE">[docs]</a><span class="k">def</span> <span class="nf">CTL_CODE</span><span class="p">(</span> <span class="n">DeviceType</span><span class="p">,</span> <span class="n">Function</span><span class="p">,</span> <span class="n">Method</span><span class="p">,</span> <span class="n">Access</span> <span class="p">):</span>
-    <span class="k">return</span> <span class="p">((</span><span class="n">DeviceType</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">Access</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">Function</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">Method</span><span class="p">)</span></div>
+<span class="k">def</span> <span class="nf">CTL_CODE</span><span class="p">(</span> <span class="n">DeviceType</span><span class="p">,</span> <span class="n">Function</span><span class="p">,</span> <span class="n">Method</span><span class="p">,</span> <span class="n">Access</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">DeviceType</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">Access</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">Function</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">Method</span><span class="p">)</span>
 
 <span class="c1">#</span>
 <span class="c1"># chipsec driver IOCTL codes</span>
@@ -204,13 +203,13 @@
                                <span class="n">c_int</span><span class="p">,</span>
                                <span class="n">c_int</span><span class="p">]</span>
 
-<div class="viewcode-block" id="packl_ctypes"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.packl_ctypes">[docs]</a><span class="k">def</span> <span class="nf">packl_ctypes</span><span class="p">(</span> <span class="n">lnum</span><span class="p">,</span> <span class="n">bitlength</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">packl_ctypes</span><span class="p">(</span> <span class="n">lnum</span><span class="p">,</span> <span class="n">bitlength</span> <span class="p">):</span>
     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">lnum</span> <span class="o">=</span> <span class="n">long</span><span class="p">(</span><span class="n">lnum</span><span class="p">)</span>
     <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="n">bitlength</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">//</span><span class="mi">8</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span> <span class="n">length</span> <span class="p">)</span>
     <span class="n">PyLong_AsByteArray</span><span class="p">(</span><span class="n">lnum</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># 4th param is for endianness 0 - big, non 0 - little</span>
-    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">raw</span></div>
+    <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">raw</span>
 
 <span class="c1">#</span>
 <span class="c1"># Firmware Table Provider Signatures</span>
@@ -236,7 +235,7 @@
 <span class="s2">Attributes= 0x</span><span class="si">{:08X}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DataOffset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="getEFIvariables_NtEnumerateSystemEnvironmentValuesEx2"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.getEFIvariables_NtEnumerateSystemEnvironmentValuesEx2">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_NtEnumerateSystemEnvironmentValuesEx2</span><span class="p">(</span> <span class="n">nvram_buf</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">getEFIvariables_NtEnumerateSystemEnvironmentValuesEx2</span><span class="p">(</span> <span class="n">nvram_buf</span> <span class="p">):</span>
     <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">buffer</span> <span class="o">=</span> <span class="n">nvram_buf</span>
     <span class="n">bsize</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
@@ -267,16 +266,16 @@
         <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">efi_var_hdr</span><span class="o">.</span><span class="n">Size</span><span class="p">:</span> <span class="k">break</span>
         <span class="n">off</span> <span class="o">=</span> <span class="n">next_var_offset</span>
 
-    <span class="k">return</span> <span class="n">variables</span></div>
+    <span class="k">return</span> <span class="n">variables</span>
 
 
 <span class="k">def</span> <span class="nf">_handle_winerror</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">hr</span><span class="p">):</span>
     <span class="n">_handle_error</span><span class="p">(</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> failed: </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">hr</span><span class="p">)),</span> <span class="n">hr</span> <span class="p">)</span>
 <span class="k">def</span> <span class="nf">_handle_error</span><span class="p">(</span> <span class="n">err</span><span class="p">,</span> <span class="n">hr</span><span class="o">=</span><span class="mi">0</span> <span class="p">):</span>
-    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="n">err</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="n">err</span> <span class="p">)</span>
     <span class="k">raise</span> <span class="n">OsHelperError</span><span class="p">(</span> <span class="n">err</span><span class="p">,</span> <span class="n">hr</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="Win32Helper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper">[docs]</a><span class="k">class</span> <span class="nc">Win32Helper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Win32Helper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
 
     <span class="n">decompression_oder_type1</span> <span class="o">=</span> <span class="p">[</span><span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_TIANO</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UEFI</span><span class="p">]</span>
     <span class="n">decompression_oder_type2</span> <span class="o">=</span> <span class="p">[</span><span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_TIANO</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UEFI</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_LZMA</span><span class="p">,</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_BROTLI</span><span class="p">]</span>
@@ -369,19 +368,19 @@
 <span class="c1"># Driver/service management functions</span>
 <span class="c1">###############################################################################################</span>
 
-<div class="viewcode-block" id="Win32Helper.show_warning"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.show_warning">[docs]</a>    <span class="k">def</span> <span class="nf">show_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">show_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;&quot;</span> <span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;*******************************************************************&quot;</span> <span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;Chipsec should only be used on test systems!&quot;</span> <span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;It should not be installed/deployed on production end-user systems.&quot;</span> <span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;See WARNING.txt&quot;</span> <span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;*******************************************************************&quot;</span> <span class="p">)</span>
-        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;&quot;</span> <span class="p">)</span></div>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;&quot;</span> <span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># Create (register/install) chipsec service</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.create"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">start_driver</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
 
         <span class="c1"># check DRIVER_FILE_PATHS for the DRIVER_FILE_NAME</span>
@@ -433,12 +432,12 @@
             <span class="n">win32service</span><span class="o">.</span><span class="n">CloseServiceHandle</span><span class="p">(</span> <span class="n">hs</span> <span class="p">)</span>
             <span class="n">win32service</span><span class="o">.</span><span class="n">CloseServiceHandle</span><span class="p">(</span> <span class="n">hscm</span> <span class="p">)</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1">#</span>
     <span class="c1"># Remove (delete/unregister/uninstall) chipsec service</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.delete"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span> <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">start_driver</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_existing_service</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
 
@@ -454,12 +453,12 @@
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;RemoveService failed: </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1">#</span>
     <span class="c1"># Start chipsec service</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.start"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">,</span> <span class="n">driver_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">,</span> <span class="n">driver_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># we are in native API mode so not starting the service/driver</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">start_driver</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_existing_service</span> <span class="o">=</span> <span class="p">(</span><span class="n">win32serviceutil</span><span class="o">.</span><span class="n">QueryServiceStatus</span><span class="p">(</span> <span class="n">SERVICE_NAME</span> <span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">win32service</span><span class="o">.</span><span class="n">SERVICE_RUNNING</span><span class="p">)</span>
@@ -480,12 +479,12 @@
             <span class="k">except</span> <span class="n">pywintypes</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
                 <span class="n">_handle_error</span><span class="p">(</span> <span class="s2">&quot;service &#39;</span><span class="si">{}</span><span class="s2">&#39; didn&#39;t start: </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SERVICE_NAME</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">driverpath</span> <span class="o">=</span> <span class="n">win32serviceutil</span><span class="o">.</span><span class="n">LocateSpecificServiceExe</span><span class="p">(</span><span class="n">SERVICE_NAME</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1">#</span>
     <span class="c1"># Stop chipsec service</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.stop"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span> <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">start_driver</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_existing_service</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
 
@@ -507,11 +506,11 @@
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;service &#39;</span><span class="si">{}</span><span class="s2">&#39; didn&#39;t stop: </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SERVICE_NAME</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
 
 
-<div class="viewcode-block" id="Win32Helper.get_driver_handle"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_driver_handle">[docs]</a>    <span class="k">def</span> <span class="nf">get_driver_handle</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_driver_handle</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="c1"># This is bad but DeviceIoControl fails ocasionally if new device handle is not opened every time ;(</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">INVALID_HANDLE_VALUE</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span>
@@ -521,9 +520,9 @@
             <span class="n">_handle_error</span><span class="p">(</span> <span class="n">drv_hndl_error_msg</span><span class="p">,</span> <span class="n">errno</span><span class="o">.</span><span class="n">ENXIO</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[helper] opened device &#39;</span><span class="si">{:.64}</span><span class="s2">&#39; (handle: </span><span class="si">{:08X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DEVICE_FILE</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span><span class="p">))</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span>
 
-<div class="viewcode-block" id="Win32Helper.check_driver_handle"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.check_driver_handle">[docs]</a>    <span class="k">def</span> <span class="nf">check_driver_handle</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">check_driver_handle</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="mh">0x6</span> <span class="o">==</span> <span class="n">kernel32</span><span class="o">.</span><span class="n">GetLastError</span><span class="p">()):</span>
             <span class="c1">#kernel32.CloseHandle( self.driver_handle )</span>
             <span class="n">win32api</span><span class="o">.</span><span class="n">CloseHandle</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span> <span class="p">)</span>
@@ -531,21 +530,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">get_driver_handle</span><span class="p">()</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;Invalid handle (wtf?): re-opened device &#39;</span><span class="si">{:.64}</span><span class="s2">&#39; (new handle: </span><span class="si">{:08X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_file</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_handle</span><span class="p">))</span> <span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1">#</span>
     <span class="c1"># Auxiliary functions</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.get_threads_count"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_threads_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_threads_count</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_threads_count</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">proc_group_count</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel32</span><span class="o">.</span><span class="n">GetActiveProcessorGroupCount</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">proc_group_count</span><span class="p">):</span>
             <span class="n">procs</span> <span class="o">=</span> <span class="n">kernel32</span><span class="o">.</span><span class="n">GetActiveProcessorCount</span><span class="p">(</span> <span class="n">grp</span> <span class="p">)</span>
             <span class="nb">sum</span> <span class="o">=</span> <span class="nb">sum</span> <span class="o">+</span> <span class="n">procs</span>
-        <span class="k">return</span> <span class="nb">sum</span></div>
+        <span class="k">return</span> <span class="nb">sum</span>
 
-<div class="viewcode-block" id="Win32Helper.getcwd"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.getcwd">[docs]</a>    <span class="k">def</span> <span class="nf">getcwd</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\\\\</span><span class="s2">?</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span></div>
+    <span class="k">def</span> <span class="nf">getcwd</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\\\\</span><span class="s2">?</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
 
     <span class="c1">#</span>
     <span class="c1"># Generic IOCTL call function</span>
@@ -574,28 +573,29 @@
 <span class="c1"># Actual driver IOCTL functions to access HW resources</span>
 <span class="c1">###############################################################################################</span>
 
-<div class="viewcode-block" id="Win32Helper.read_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.read_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span> <span class="p">):</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="n">length</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;3I&#39;</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_READ_PHYSMEM</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">out_buf</span></div>
+        <span class="k">return</span> <span class="n">out_buf</span>
 
-<div class="viewcode-block" id="Win32Helper.native_read_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.native_read_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">native_read_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span> <span class="p">):</span>
-        <span class="k">raise</span> <span class="n">UnimplementedNativeAPIError</span><span class="p">(</span> <span class="s2">&quot;native_read_phys_mem&quot;</span> <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">native_read_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">UnimplementedNativeAPIError</span><span class="p">(</span> <span class="s2">&quot;native_read_phys_mem&quot;</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="Win32Helper.write_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.write_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">buf</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">buf</span> <span class="p">):</span>
         <span class="n">in_length</span> <span class="o">=</span> <span class="n">length</span> <span class="o">+</span> <span class="mi">12</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;3I&#39;</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span> <span class="o">+</span> <span class="n">stringtobytes</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_WRITE_PHYSMEM</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="mi">4</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">out_buf</span></div>
+        <span class="k">return</span> <span class="n">out_buf</span>
 
-<div class="viewcode-block" id="Win32Helper.native_write_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.native_write_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">native_write_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">buf</span> <span class="p">):</span>
-        <span class="k">raise</span> <span class="n">UnimplementedNativeAPIError</span><span class="p">(</span> <span class="s2">&quot;native_write_phys_mem&quot;</span> <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">native_write_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">buf</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">UnimplementedNativeAPIError</span><span class="p">(</span> <span class="s2">&quot;native_write_phys_mem&quot;</span> <span class="p">)</span>
 
     <span class="c1"># @TODO: Temporarily the same as read_phys_mem for compatibility</span>
-<div class="viewcode-block" id="Win32Helper.read_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.read_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
         <span class="n">out_size</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;size: </span><span class="si">{}</span><span class="s2"> addr: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[helper] -&gt; read_mmio_reg( phys_address=0x</span><span class="si">{:X}</span><span class="s2">, size=</span><span class="si">{}</span><span class="s2"> )&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;3I&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">phys_address</span><span class="o">&gt;&gt;</span><span class="mi">32</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">,</span> <span class="n">phys_address</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_READ_MMIO</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_size</span> <span class="p">)</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
@@ -607,9 +607,9 @@
         <span class="k">elif</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;=B&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="n">value</span></div>
+        <span class="k">return</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="Win32Helper.write_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.write_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="k">if</span>   <span class="n">size</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=Q&#39;</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=I&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">&amp;</span><span class="mh">0xFFFFFFFF</span> <span class="p">)</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=H&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">&amp;</span><span class="mh">0xFFFF</span> <span class="p">)</span>
@@ -617,29 +617,29 @@
         <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;3I&#39;</span><span class="p">,</span> <span class="p">((</span><span class="n">phys_address</span><span class="o">&gt;&gt;</span><span class="mi">32</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span><span class="p">),</span> <span class="p">(</span><span class="n">phys_address</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span><span class="p">),</span> <span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">buf</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span><span class="n">IOCTL_WRITE_MMIO</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out_buf</span></div>
+        <span class="k">return</span> <span class="n">out_buf</span>
 
-<div class="viewcode-block" id="Win32Helper.alloc_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.alloc_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">max_pa</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">max_pa</span> <span class="p">):</span>
         <span class="n">in_length</span>  <span class="o">=</span> <span class="mi">12</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">16</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;QI&#39;</span><span class="p">,</span> <span class="n">max_pa</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_ALLOC_PHYSMEM</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
         <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;2Q&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Win32Helper.va2pa"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.va2pa">[docs]</a>    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">va</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">va</span> <span class="p">):</span>
         <span class="n">error_code</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">in_length</span>  <span class="o">=</span> <span class="mi">8</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">8</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">va</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_GET_PHYSADDR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
         <span class="n">pa</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># HYPERCALL</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.hypercall"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span> <span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">os_machine</span> <span class="o">==</span> <span class="s1">&#39;AMD64&#39;</span><span class="p">:</span>
             <span class="n">arg_type</span> <span class="o">=</span> <span class="s1">&#39;Q&#39;</span>
             <span class="n">out_length</span> <span class="o">=</span> <span class="mi">8</span>
@@ -648,42 +648,42 @@
             <span class="n">out_length</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="n">in_buf</span>  <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;&lt;11&#39;</span> <span class="o">+</span> <span class="n">arg_type</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_HYPERCALL</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="n">arg_type</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="n">arg_type</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="c1">#</span>
     <span class="c1"># MAP_IO_SPACE</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.map_io_space"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.map_io_space">[docs]</a>    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">cache_type</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">cache_type</span> <span class="p">):</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">8</span>
         <span class="n">in_buf</span>  <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;&lt;3Q&#39;</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">cache_type</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_MAP_IO_SPACE</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
         <span class="n">virtual_address</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;&lt;Q&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">virtual_address</span></div>
+        <span class="k">return</span> <span class="n">virtual_address</span>
 
     <span class="c1">#</span>
     <span class="c1"># FREE_PHYS_MEM</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.free_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.free_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span> <span class="p">):</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">8</span>
         <span class="n">in_buf</span>  <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;&lt;Q&#39;</span><span class="p">,</span> <span class="n">physical_address</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_FREE_PHYSMEM</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
-        <span class="k">return</span></div>
+        <span class="k">return</span>
 
-<div class="viewcode-block" id="Win32Helper.read_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.read_msr">[docs]</a>    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">msr_addr</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">msr_addr</span> <span class="p">):</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">8</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=2I&#39;</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">msr_addr</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_RDMSR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
         <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;2I&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Win32Helper.write_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.write_msr">[docs]</a>    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">edx</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">edx</span> <span class="p">):</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_char</span> <span class="o">*</span> <span class="n">out_length</span><span class="p">)()</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=4I&#39;</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">edx</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_WRMSR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
-        <span class="k">return</span></div>
+        <span class="k">return</span>
 
-<div class="viewcode-block" id="Win32Helper.read_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.read_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
         <span class="n">bdf</span> <span class="o">=</span> <span class="n">PCI_BDF</span><span class="p">(</span> <span class="n">bus</span><span class="o">&amp;</span><span class="mh">0xFFFF</span><span class="p">,</span> <span class="n">device</span><span class="o">&amp;</span><span class="mh">0xFFFF</span><span class="p">,</span> <span class="n">function</span><span class="o">&amp;</span><span class="mh">0xFFFF</span><span class="p">,</span> <span class="n">address</span><span class="o">&amp;</span><span class="mh">0xFFFF</span> <span class="p">)</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="n">size</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;4HB&#39;</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">BUS</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">DEV</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">FUNC</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
@@ -694,24 +694,24 @@
             <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">value</span></div>
+        <span class="k">return</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="Win32Helper.write_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.write_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
         <span class="n">bdf</span> <span class="o">=</span> <span class="n">PCI_BDF</span><span class="p">(</span> <span class="n">bus</span><span class="o">&amp;</span><span class="mh">0xFFFF</span><span class="p">,</span> <span class="n">device</span><span class="o">&amp;</span><span class="mh">0xFFFF</span><span class="p">,</span> <span class="n">function</span><span class="o">&amp;</span><span class="mh">0xFFFF</span><span class="p">,</span> <span class="n">address</span><span class="o">&amp;</span><span class="mh">0xFFFF</span> <span class="p">)</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;4HIB&#39;</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">BUS</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">DEV</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">FUNC</span><span class="p">,</span> <span class="n">bdf</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">WRITE_PCI_CFG_REGISTER</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="Win32Helper.load_ucode_update"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.load_ucode_update">[docs]</a>    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">ucode_update_buf</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">ucode_update_buf</span> <span class="p">):</span>
         <span class="n">in_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ucode_update_buf</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_char</span> <span class="o">*</span> <span class="n">out_length</span><span class="p">)()</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=IH&#39;</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ucode_update_buf</span><span class="p">)</span> <span class="p">)</span> <span class="o">+</span> <span class="n">ucode_update_buf</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_LOAD_UCODE_PATCH</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="Win32Helper.read_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.read_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span><span class="mi">0</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=HB&#39;</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_READ_IO_PORT</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
@@ -721,39 +721,39 @@
             <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">value</span></div>
+        <span class="k">return</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="Win32Helper.write_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.write_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span> <span class="p">):</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=HIB&#39;</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_WRITE_IO_PORT</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="Win32Helper.read_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.read_cr">[docs]</a>    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=HI&#39;</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">cpu_thread_id</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_RDCR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="mi">8</span> <span class="p">)</span>
         <span class="n">value</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;=Q&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span></div>
+        <span class="k">return</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="Win32Helper.write_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.write_cr">[docs]</a>    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=HQI&#39;</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">cpu_thread_id</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_WRCR</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1">#</span>
     <span class="c1"># IDTR/GDTR/LDTR</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.get_descriptor_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_descriptor_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span>  <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span>  <span class="p">):</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;IB&#39;</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_GET_CPU_DESCRIPTOR_TABLE</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="mi">18</span> <span class="p">)</span>
         <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;=HQQ&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span>
 
 
     <span class="c1">#</span>
     <span class="c1"># EFI Variable API</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.EFI_supported"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.EFI_supported">[docs]</a>    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span> <span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span> <span class="bp">self</span><span class="p">):</span>
         <span class="c1"># kern32.GetFirmwareEnvironmentVariable with garbage parameters will cause GetLastError() == 1 reliably on a legacy system</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetFirmwareEnvironmentVariable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">GetFirmwareEnvironmentVariable</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;{00000000-0000-0000-0000-000000000000}&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -762,9 +762,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">GetFirmwareEnvironmentVariableEx</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;{00000000-0000-0000-0000-000000000000}&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">win32api</span><span class="o">.</span><span class="n">GetLastError</span><span class="p">()</span> <span class="o">!=</span><span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+            <span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Win32Helper.get_EFI_variable_full"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_EFI_variable_full">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable_full</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_EFI_variable_full</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
         <span class="n">status</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># EFI_SUCCESS</span>
         <span class="n">efi_var</span> <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span> <span class="n">EFI_VAR_MAX_BUFFER_SIZE</span> <span class="p">)</span>
         <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -784,13 +784,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">efi_var_data</span> <span class="o">=</span> <span class="n">efi_var</span><span class="p">[:</span><span class="n">length</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">efi_var_data</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">efi_var_data</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Win32Helper.get_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
         <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_EFI_variable_full</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">data</span></div>
+        <span class="k">return</span> <span class="n">data</span>
 
-<div class="viewcode-block" id="Win32Helper.set_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.set_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">datasize</span><span class="p">,</span> <span class="n">attrs</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">datasize</span><span class="p">,</span> <span class="n">attrs</span> <span class="p">):</span>
         <span class="n">var</span>     <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">data</span>     <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">data</span>
         <span class="n">var_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="k">if</span> <span class="n">datasize</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">datasize</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
@@ -811,12 +811,12 @@
             <span class="n">status</span> <span class="o">=</span> <span class="n">kernel32</span><span class="o">.</span><span class="n">GetLastError</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;SetFirmwareEnvironmentVariable[Ex] returned error: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">WinError</span><span class="p">())</span> <span class="p">)</span>
             <span class="c1">#raise WinError(errno.EIO, &quot;Unable to set EFI variable&quot;)</span>
-        <span class="k">return</span> <span class="n">status</span></div>
+        <span class="k">return</span> <span class="n">status</span>
 
-<div class="viewcode-block" id="Win32Helper.delete_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.delete_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">datasize</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span> <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">datasize</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="Win32Helper.list_EFI_variables"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.list_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">infcls</span><span class="o">=</span><span class="mi">2</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">infcls</span><span class="o">=</span><span class="mi">2</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[helper] -&gt; NtEnumerateSystemEnvironmentValuesEx( infcls=</span><span class="si">{:d}</span><span class="s1"> )..&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">infcls</span><span class="p">)</span> <span class="p">)</span>
         <span class="n">efi_vars</span> <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span> <span class="n">EFI_VAR_MAX_BUFFER_SIZE</span> <span class="p">)</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">packl_ctypes</span><span class="p">(</span> <span class="n">EFI_VAR_MAX_BUFFER_SIZE</span><span class="p">,</span> <span class="mi">32</span> <span class="p">)</span>
@@ -842,12 +842,12 @@
                     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;*** NTSTATUS: </span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="p">)</span>
                 <span class="k">raise</span> <span class="n">WinError</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[helper] len(efi_vars) = 0x</span><span class="si">{:X}</span><span class="s1"> (should be 0x20000)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">efi_vars</span><span class="p">))</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">getEFIvariables_NtEnumerateSystemEnvironmentValuesEx2</span><span class="p">(</span> <span class="n">efi_vars</span> <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">getEFIvariables_NtEnumerateSystemEnvironmentValuesEx2</span><span class="p">(</span> <span class="n">efi_vars</span> <span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># Interrupts</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.send_sw_smi"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.send_sw_smi">[docs]</a>    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span> <span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">os_machine</span> <span class="o">==</span> <span class="s1">&#39;AMD64&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">os_machine</span> <span class="o">==</span> <span class="s1">&#39;i386&#39;</span><span class="p">):</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[helper] Python architecture must match OS architecture.  Run with </span><span class="si">{}</span><span class="s2"> architecture of python&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">os_machine</span><span class="p">))</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">_smi_msg_t_fmt</span><span class="p">)</span>
@@ -858,7 +858,7 @@
             <span class="n">ret</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="n">_smi_msg_t_fmt</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">ret</span></div>
+        <span class="k">return</span> <span class="n">ret</span>
 
     <span class="k">def</span> <span class="nf">_get_handle_for_pid</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ro</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">pid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -874,7 +874,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pHandle</span>
 
-<div class="viewcode-block" id="Win32Helper.set_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.set_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="n">pHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_handle_for_pid</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">current</span> <span class="o">=</span> <span class="n">win32process</span><span class="o">.</span><span class="n">GetProcessAffinityMask</span><span class="p">(</span><span class="n">pHandle</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
@@ -882,35 +882,35 @@
         <span class="k">except</span> <span class="n">win32process</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;unable to set process affinity&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">current</span></div>
+        <span class="k">return</span> <span class="n">current</span>
 
-<div class="viewcode-block" id="Win32Helper.get_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="n">pHandle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_handle_for_pid</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">win32process</span><span class="o">.</span><span class="n">GetProcessAffinityMask</span><span class="p">(</span><span class="n">pHandle</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">except</span> <span class="n">win32process</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;unable to get the running cpu&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># CPUID</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.cpuid"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.cpuid">[docs]</a>    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span> <span class="p">):</span>
         <span class="n">out_length</span> <span class="o">=</span> <span class="mi">16</span>
         <span class="n">in_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span> <span class="s1">&#39;=2I&#39;</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span> <span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioctl</span><span class="p">(</span> <span class="n">IOCTL_CPUID</span><span class="p">,</span> <span class="n">in_buf</span><span class="p">,</span> <span class="n">out_length</span> <span class="p">)</span>
         <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span> <span class="s1">&#39;4I&#39;</span><span class="p">,</span> <span class="n">out_buf</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Win32Helper.get_ACPI_SDT"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_ACPI_SDT">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="n">sdt</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">native_get_ACPI_table</span><span class="p">(</span> <span class="s1">&#39;XSDT&#39;</span> <span class="p">)</span> <span class="c1"># FirmwareTableID_XSDT</span>
         <span class="n">xsdt</span> <span class="o">=</span> <span class="n">sdt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">xsdt</span><span class="p">:</span>
             <span class="n">sdt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">native_get_ACPI_table</span><span class="p">(</span> <span class="s1">&#39;RSDT&#39;</span> <span class="p">)</span> <span class="c1"># FirmwareTableID_RSDT</span>
-        <span class="k">return</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">xsdt</span></div>
+        <span class="k">return</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">xsdt</span>
 
-<div class="viewcode-block" id="Win32Helper.native_get_ACPI_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.native_get_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">native_get_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">native_get_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span> <span class="p">):</span>
         <span class="n">table_size</span> <span class="o">=</span> <span class="mi">36</span>
         <span class="n">tBuffer</span> <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span> <span class="n">table_size</span> <span class="p">)</span>
         <span class="n">tbl</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">table_name</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
@@ -923,11 +923,11 @@
             <span class="n">table_size</span> <span class="o">=</span> <span class="n">retVal</span>
             <span class="n">tBuffer</span>    <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span> <span class="n">table_size</span> <span class="p">)</span>
             <span class="n">retVal</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetSystemFirmwareTbl</span><span class="p">(</span> <span class="n">FirmwareTableProviderSignature_ACPI</span><span class="p">,</span> <span class="n">tbl</span><span class="p">,</span> <span class="n">tBuffer</span><span class="p">,</span> <span class="n">table_size</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">tBuffer</span><span class="p">[:</span><span class="n">retVal</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">tBuffer</span><span class="p">[:</span><span class="n">retVal</span><span class="p">]</span>
 
     <span class="c1"># ACPI access is implemented through ACPI HAL rather than through kernel module</span>
-<div class="viewcode-block" id="Win32Helper.get_ACPI_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.get_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span> <span class="p">):</span>
-        <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span> <span class="s2">&quot;get_ACPI_table&quot;</span> <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span> <span class="s2">&quot;get_ACPI_table&quot;</span> <span class="p">)</span>
 
 
 
@@ -935,22 +935,22 @@
     <span class="c1"># IOSF Message Bus access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="Win32Helper.msgbus_send_read_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.msgbus_send_read_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;[helper] Message Bus is not supported yet&quot;</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Win32Helper.msgbus_send_write_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.msgbus_send_write_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;[helper] Message Bus is not supported yet&quot;</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Win32Helper.msgbus_send_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.msgbus_send_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;[helper] Message Bus is not supported yet&quot;</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Win32Helper.rotate_list"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.rotate_list">[docs]</a>    <span class="k">def</span> <span class="nf">rotate_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span></div>
+    <span class="k">def</span> <span class="nf">rotate_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
 
-<div class="viewcode-block" id="Win32Helper.unknown_decompress"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.unknown_decompress">[docs]</a>    <span class="k">def</span> <span class="nf">unknown_decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">unknown_decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">):</span>
         <span class="n">failed_times</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompression_oder_type2</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompress_file</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span><span class="p">)</span>
@@ -959,9 +959,9 @@
                 <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">failed_times</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">res</span></div>
+        <span class="k">return</span> <span class="n">res</span>
 
-<div class="viewcode-block" id="Win32Helper.unknown_efi_decompress"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.unknown_efi_decompress">[docs]</a>    <span class="k">def</span> <span class="nf">unknown_efi_decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">unknown_efi_decompress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">):</span>
         <span class="n">failed_times</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompression_oder_type1</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompress_file</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span><span class="p">)</span>
@@ -970,12 +970,12 @@
                 <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">failed_times</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">res</span></div>
+        <span class="k">return</span> <span class="n">res</span>
 
     <span class="c1">#</span>
     <span class="c1"># Compress binary file</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.compress_file"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.compress_file">[docs]</a>    <span class="k">def</span> <span class="nf">compress_file</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compress_file</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span> <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPES</span><span class="p">]:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">encode_str</span> <span class="o">=</span> <span class="s2">&quot; -e -o </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">OutputFileName</span><span class="p">)</span>
@@ -995,12 +995,12 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot compress file(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">FileName</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1">#</span>
     <span class="c1"># Decompress binary</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.decompress_file"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.decompress_file">[docs]</a>    <span class="k">def</span> <span class="nf">decompress_file</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decompress_file</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">CompressedFileName</span><span class="p">,</span> <span class="n">OutputFileName</span><span class="p">,</span> <span class="n">CompressionType</span> <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">CompressionType</span> <span class="ow">in</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPES</span><span class="p">]:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">CompressionType</span> <span class="o">==</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">COMPRESSION_TYPE_UNKNOWN</span><span class="p">:</span>
@@ -1027,24 +1027,24 @@
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
                 <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cannot decompress file(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CompressedFileName</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1">#</span>
     <span class="c1"># Speculation control</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="Win32Helper.retpoline_enabled"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.Win32Helper.retpoline_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># See https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation</span>
         <span class="n">speculation_control</span> <span class="o">=</span> <span class="n">c_uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">SystemSpeculationControlInformation</span> <span class="o">=</span> <span class="mh">0xC9</span>
         <span class="n">SpecCtrlRetpolineEnabled</span> <span class="o">=</span> <span class="mh">0x4000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">NtQuerySystemInformation</span><span class="p">(</span><span class="n">SystemSpeculationControlInformation</span><span class="p">,</span> <span class="n">addressof</span><span class="p">(</span><span class="n">speculation_control</span><span class="p">),</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">speculation_control</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">speculation_control</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="n">SpecCtrlRetpolineEnabled</span></div></div>
+        <span class="k">return</span> <span class="n">speculation_control</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="n">SpecCtrlRetpolineEnabled</span>
 
 <span class="c1">#</span>
 <span class="c1"># Get instance of this OS helper</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="get_helper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.win.win32helper.html#chipsec.helper.win.win32helper.get_helper">[docs]</a><span class="k">def</span> <span class="nf">get_helper</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">Win32Helper</span><span class="p">(</span> <span class="p">)</span></div>
+<span class="k">def</span> <span class="nf">get_helper</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">Win32Helper</span><span class="p">(</span> <span class="p">)</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -1112,7 +1112,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

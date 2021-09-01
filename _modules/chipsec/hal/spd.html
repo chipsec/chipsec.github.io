@@ -39,8 +39,7 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.hal.spd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
 <span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
@@ -228,17 +227,17 @@
 <span class="n">SPD_REVISION_1_1</span> <span class="o">=</span> <span class="mh">0x11</span>
 <span class="n">SPD_REVISION_1_2</span> <span class="o">=</span> <span class="mh">0x12</span>
 <span class="n">SPD_REVISION_1_3</span> <span class="o">=</span> <span class="mh">0x13</span>
-<div class="viewcode-block" id="SPD_REVISION"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD_REVISION">[docs]</a><span class="k">def</span> <span class="nf">SPD_REVISION</span><span class="p">(</span><span class="n">revision</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">.</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">revision</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span> <span class="n">revision</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">)</span> <span class="p">)</span></div>
+<span class="k">def</span> <span class="nf">SPD_REVISION</span><span class="p">(</span><span class="n">revision</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">.</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">revision</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span> <span class="n">revision</span><span class="o">&amp;</span><span class="mh">0xF</span><span class="p">)</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="dram_device_type_name"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.dram_device_type_name">[docs]</a><span class="k">def</span> <span class="nf">dram_device_type_name</span><span class="p">(</span> <span class="n">dram_type</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">dram_device_type_name</span><span class="p">(</span> <span class="n">dram_type</span> <span class="p">):</span>
     <span class="n">dt_name</span> <span class="o">=</span> <span class="n">DRAM_DEVICE_TYPE</span><span class="p">[</span><span class="n">dram_type</span><span class="p">]</span> <span class="k">if</span> <span class="n">dram_type</span> <span class="ow">in</span> <span class="n">DRAM_DEVICE_TYPE</span> <span class="k">else</span> <span class="s1">&#39;unknown&#39;</span>
-    <span class="k">return</span> <span class="n">dt_name</span></div>
+    <span class="k">return</span> <span class="n">dt_name</span>
 
-<div class="viewcode-block" id="module_type_name"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.module_type_name">[docs]</a><span class="k">def</span> <span class="nf">module_type_name</span><span class="p">(</span> <span class="n">module_type</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">module_type_name</span><span class="p">(</span> <span class="n">module_type</span> <span class="p">):</span>
     <span class="n">mt_name</span> <span class="o">=</span> <span class="n">MODULE_TYPE</span><span class="p">[</span><span class="n">module_type</span><span class="p">]</span> <span class="k">if</span> <span class="n">module_type</span> <span class="ow">in</span> <span class="n">MODULE_TYPE</span> <span class="k">else</span> <span class="s1">&#39;unknown&#39;</span>
-    <span class="k">return</span> <span class="n">mt_name</span></div>
+    <span class="k">return</span> <span class="n">mt_name</span>
 
 
 <span class="n">SPD_DDR_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;=4B&#39;</span>
@@ -331,46 +330,46 @@
 <span class="c1">#</span>
 <span class="c1">###############################################################################</span>
 
-<div class="viewcode-block" id="SPD"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD">[docs]</a><span class="k">class</span> <span class="nc">SPD</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">SPD</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">smbus</span> <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span> <span class="o">=</span> <span class="n">smbus</span>
 
-<div class="viewcode-block" id="SPD.read_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.read_byte">[docs]</a>    <span class="k">def</span> <span class="nf">read_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">device</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">read_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">device</span><span class="p">,</span> <span class="n">offset</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SPD.write_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.write_byte">[docs]</a>    <span class="k">def</span> <span class="nf">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="n">device</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbus</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="n">device</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SPD.read_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.read_range">[docs]</a>    <span class="k">def</span> <span class="nf">read_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="mh">0xFF</span><span class="p">)]</span> <span class="o">*</span><span class="n">size</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
             <span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">buffer</span></div>
+        <span class="k">return</span> <span class="n">buffer</span>
 
-<div class="viewcode-block" id="SPD.write_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.write_range">[docs]</a>    <span class="k">def</span> <span class="nf">write_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_range</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
         <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="nb">ord</span><span class="p">(</span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">device</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="SPD.dump_spd_rom"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.dump_spd_rom">[docs]</a>    <span class="k">def</span> <span class="nf">dump_spd_rom</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_range</span><span class="p">(</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">dump_spd_rom</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_range</span><span class="p">(</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x100</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
 
 
     <span class="c1">#</span>
     <span class="c1"># Decoding certain bytes of DIMM SPD: may be dependent on the DRAM type</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="SPD.getDRAMDeviceType"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.getDRAMDeviceType">[docs]</a>    <span class="k">def</span> <span class="nf">getDRAMDeviceType</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getDRAMDeviceType</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
         <span class="n">dram_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">SPD_OFFSET_DRAM_DEVICE_TYPE</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] DRAM Device Type (byte 2): 0x</span><span class="si">{:01X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">dram_type</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">dram_type</span></div>
+        <span class="k">return</span> <span class="n">dram_type</span>
 
-<div class="viewcode-block" id="SPD.getModuleType"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.getModuleType">[docs]</a>    <span class="k">def</span> <span class="nf">getModuleType</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getModuleType</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
         <span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="n">SPD_OFFSET_DDR3_MODULE_TYPE</span><span class="p">,</span> <span class="n">device</span> <span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] Module Type (byte 3): 0x</span><span class="si">{:01X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">module_type</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">module_type</span></div>
+        <span class="k">return</span> <span class="n">module_type</span>
 
-<div class="viewcode-block" id="SPD.isECC"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.isECC">[docs]</a>    <span class="k">def</span> <span class="nf">isECC</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">isECC</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
         <span class="n">device_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDRAMDeviceType</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
         <span class="n">ecc_supported</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">ecc_off</span> <span class="o">=</span> <span class="mi">0</span>
@@ -395,26 +394,26 @@
                 <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] Unable to determine ECC support&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] ECC is </span><span class="si">{}</span><span class="s2">supported by the DIMM (byte </span><span class="si">{:d}</span><span class="s2"> = 0x</span><span class="si">{:02X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">ecc_supported</span> <span class="k">else</span> <span class="s1">&#39;not &#39;</span><span class="p">,</span> <span class="n">ecc_off</span><span class="p">,</span> <span class="n">ecc</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">ecc_supported</span></div>
+        <span class="k">return</span> <span class="n">ecc_supported</span>
 
 
-<div class="viewcode-block" id="SPD.detect"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.detect">[docs]</a>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="n">_dimms</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">SPD_DIMMS</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSPDPresent</span><span class="p">(</span> <span class="n">d</span> <span class="p">):</span> <span class="n">_dimms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">d</span> <span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;Detected the following SPD devices:&quot;</span> <span class="p">)</span>
             <span class="k">for</span> <span class="n">_dimm</span> <span class="ow">in</span> <span class="n">_dimms</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">SPD_DIMMS</span><span class="p">[</span><span class="n">_dimm</span><span class="p">],</span> <span class="n">_dimm</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">_dimms</span></div>
+        <span class="k">return</span> <span class="n">_dimms</span>
 
-<div class="viewcode-block" id="SPD.isSPDPresent"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.isSPDPresent">[docs]</a>    <span class="k">def</span> <span class="nf">isSPDPresent</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">isSPDPresent</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
         <span class="n">device_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDRAMDeviceType</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
         <span class="n">is_spd_present</span> <span class="o">=</span> <span class="p">(</span><span class="n">device_type</span> <span class="o">!=</span> <span class="mh">0xFF</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[spd][0x</span><span class="si">{:02X}</span><span class="s2">] Detecting SPD.. </span><span class="si">{}</span><span class="s2">found (DRAM memory type = 0x</span><span class="si">{:X}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">is_spd_present</span> <span class="k">else</span> <span class="s1">&#39;not &#39;</span><span class="p">,</span> <span class="n">device_type</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">is_spd_present</span></div>
+        <span class="k">return</span> <span class="n">is_spd_present</span>
 
 
-<div class="viewcode-block" id="SPD.decode"><a class="viewcode-back" href="../../../modules/chipsec.hal.spd.html#chipsec.hal.spd.SPD.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">SPD_SMBUS_ADDRESS</span> <span class="p">):</span>
         <span class="n">spd</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">device_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDRAMDeviceType</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
         <span class="n">spd_rom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dump_spd_rom</span><span class="p">(</span> <span class="n">device</span> <span class="p">)</span>
@@ -437,7 +436,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;[spd] Unsupported SPD format&quot;</span> <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">spd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">spd</span> <span class="p">)</span></div></div>
+        <span class="k">if</span> <span class="n">spd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">spd</span> <span class="p">)</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -505,7 +504,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

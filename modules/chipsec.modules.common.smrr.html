@@ -52,31 +52,6 @@
 <span id="smrr-module"></span><h1>smrr module<a class="headerlink" href="#module-chipsec.modules.common.smrr" title="Permalink to this headline">¶</a></h1>
 <p>Researchers demonstrated a way to use CPU cache to effectively change values in SMRAM in <a class="reference external" href="http://www.invisiblethingslab.com/resources/misc09/smm_cache_fun.pdf">Attacking SMM Memory via Intel CPU Cache Poisoning</a> and <a class="reference external" href="http://cansecwest.com/csw09/csw09-duflot.pdf">Getting into the SMRAM: SMM Reloaded</a> . If ring 0 software can make SMRAM cacheable and then populate cache lines at SMBASE with exploit code, then when an SMI is triggered, the CPU could execute the exploit code from cache. System Management Mode Range Registers (SMRRs) force non-cachable behavior and block access to SMRAM when the CPU is not in SMM. These registers need to be enabled/configured by the BIOS.</p>
 <p>This module checks to see that SMRRs are enabled and configured.</p>
-<dl class="py class">
-<dt id="chipsec.modules.common.smrr.smrr">
-<em class="property">class </em><code class="sig-name descname">smrr</code><a class="reference internal" href="../_modules/chipsec/modules/common/smrr.html#smrr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smrr.smrr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
-<dl class="py method">
-<dt id="chipsec.modules.common.smrr.smrr.check_SMRR">
-<code class="sig-name descname">check_SMRR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">do_modify</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smrr.html#smrr.check_SMRR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smrr.smrr.check_SMRR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.common.smrr.smrr.is_supported">
-<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smrr.html#smrr.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smrr.smrr.is_supported" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method should be overwritten by the module returning True or False
-depending whether or not this module is supported in the currently running
-platform.
-To access the currently running platform use</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.common.smrr.smrr.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smrr.html#smrr.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smrr.smrr.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -159,7 +134,7 @@ To access the currently running platform use</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

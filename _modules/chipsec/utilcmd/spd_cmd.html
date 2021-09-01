@@ -39,8 +39,7 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.spd_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
 <span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
@@ -85,7 +84,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util spd write 0xA0 0x0 0xAA</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SPDCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spd_cmd.html#chipsec.utilcmd.spd_cmd.SPDCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">SPDCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
 
@@ -108,20 +107,20 @@
         <span class="n">parser_write</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spd_write</span><span class="p">)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="SPDCommand.spd_detect"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spd_cmd.html#chipsec.utilcmd.spd_cmd.SPDCommand.spd_detect">[docs]</a>    <span class="k">def</span> <span class="nf">spd_detect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spd_detect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Searching for DIMMs with SPD...&quot;</span> <span class="p">)</span>
         <span class="n">_dimms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">_dimms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;Detected the following SPD devices:&quot;</span> <span class="p">)</span>
             <span class="k">for</span> <span class="n">_dimm</span> <span class="ow">in</span> <span class="n">_dimms</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spd</span><span class="o">.</span><span class="n">SPD_DIMMS</span><span class="p">[</span><span class="n">_dimm</span><span class="p">],</span> <span class="n">_dimm</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;Unable to detect SPD devices.&quot;</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;Unable to detect SPD devices.&quot;</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="SPDCommand.spd_dump"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spd_cmd.html#chipsec.utilcmd.spd_cmd.SPDCommand.spd_dump">[docs]</a>    <span class="k">def</span> <span class="nf">spd_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spd_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="o">=</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD_DIMM_ADDRESSES</span><span class="p">[</span> <span class="n">_dev</span> <span class="p">]</span> <span class="k">if</span> <span class="n">_dev</span> <span class="ow">in</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD_DIMM_ADDRESSES</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -131,10 +130,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_dimms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">_dimm</span> <span class="ow">in</span> <span class="n">_dimms</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="n">_dimm</span> <span class="p">)</span></div>
+            <span class="k">for</span> <span class="n">_dimm</span> <span class="ow">in</span> <span class="n">_dimms</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span> <span class="n">_dimm</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="SPDCommand.spd_read"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spd_cmd.html#chipsec.utilcmd.spd_cmd.SPDCommand.spd_read">[docs]</a>    <span class="k">def</span> <span class="nf">spd_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spd_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">_dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="o">=</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD_DIMM_ADDRESSES</span><span class="p">[</span> <span class="n">_dev</span> <span class="p">]</span> <span class="k">if</span> <span class="n">_dev</span> <span class="ow">in</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD_DIMM_ADDRESSES</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">isSPDPresent</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="p">):</span>
@@ -142,10 +141,10 @@
             <span class="k">return</span>
 
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">read_byte</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SPD read: offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SPD read: offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="SPDCommand.spd_write"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spd_cmd.html#chipsec.utilcmd.spd_cmd.SPDCommand.spd_write">[docs]</a>    <span class="k">def</span> <span class="nf">spd_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spd_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">_dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="o">=</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD_DIMM_ADDRESSES</span><span class="p">[</span> <span class="n">_dev</span> <span class="p">]</span> <span class="k">if</span> <span class="n">_dev</span> <span class="ow">in</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD_DIMM_ADDRESSES</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">isSPDPresent</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="p">):</span>
@@ -153,10 +152,10 @@
             <span class="k">return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SPD write: offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span><span class="o">.</span><span class="n">write_byte</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">off</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="SPDCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spd_cmd.html#chipsec.utilcmd.spd_cmd.SPDCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">_smbus</span>    <span class="o">=</span> <span class="n">smbus</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_spd</span> <span class="o">=</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD</span><span class="p">(</span> <span class="n">_smbus</span> <span class="p">)</span>
@@ -173,7 +172,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dev_addr</span> <span class="o">=</span> <span class="n">spd</span><span class="o">.</span><span class="n">SPD_SMBUS_ADDRESS</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (spd) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (spd) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div>
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;spd&#39;</span><span class="p">:</span> <span class="n">SPDCommand</span> <span class="p">}</span>
 </pre></div>
@@ -243,7 +242,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

@@ -105,61 +105,6 @@ chipsec_main.py -m tools.uefi.s3script_modify -a replace_op,dispatch_ep``
 </pre></div>
 </div>
 <p>The option will add a new DISPATCH opcode to the script with entry point to either existing or newly allocated memory.</p>
-<dl class="py class">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify">
-<em class="property">class </em><code class="sig-name descname">s3script_modify</code><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
-<dl class="py attribute">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.DISPATCH_ENTRYPOINT_INSTR">
-<code class="sig-name descname">DISPATCH_ENTRYPOINT_INSTR</code><em class="property"> = '\x90\x90ôô'</em><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.DISPATCH_ENTRYPOINT_INSTR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.get_bootscript">
-<code class="sig-name descname">get_bootscript</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.get_bootscript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.get_bootscript" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.is_supported">
-<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.is_supported" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method should be overwritten by the module returning True or False
-depending whether or not this module is supported in the currently running
-platform.
-To access the currently running platform use</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_add">
-<code class="sig-name descname">modify_s3_add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_opcode</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_add" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch">
-<code class="sig-name descname">modify_s3_dispatch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch_ep">
-<code class="sig-name descname">modify_s3_dispatch_ep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_dispatch_ep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_dispatch_ep" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_mem">
-<code class="sig-name descname">modify_s3_mem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">new_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_mem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_mem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_reg">
-<code class="sig-name descname">modify_s3_reg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">opcode</span></em>, <em class="sig-param"><span class="n">address</span></em>, <em class="sig-param"><span class="n">new_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.modify_s3_reg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.modify_s3_reg" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.uefi.s3script_modify.s3script_modify.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/s3script_modify.html#s3script_modify.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.s3script_modify.s3script_modify.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -243,7 +188,7 @@ To access the currently running platform use</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

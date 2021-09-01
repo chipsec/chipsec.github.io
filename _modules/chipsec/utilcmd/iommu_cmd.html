@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.iommu_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -68,6 +67,7 @@
 <span class="kn">from</span> <span class="nn">chipsec.command</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
 <span class="kn">from</span> <span class="nn">chipsec.hal</span>     <span class="kn">import</span> <span class="n">acpi</span><span class="p">,</span> <span class="n">iommu</span>
 <span class="kn">from</span> <span class="nn">argparse</span>        <span class="kn">import</span> <span class="n">ArgumentParser</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">IOMMUError</span><span class="p">,</span> <span class="n">AcpiRuntimeError</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 
@@ -89,7 +89,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util iommu pt</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="IOMMUCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util iommu&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">IOMMUCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
 
@@ -117,16 +117,16 @@
         <span class="n">parser_pt</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iommu_pt</span><span class="p">)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="IOMMUCommand.iommu_list"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_list">[docs]</a>    <span class="k">def</span> <span class="nf">iommu_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">iommu_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Enumerating supported IOMMU engines..&quot;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">iommu</span><span class="o">.</span><span class="n">IOMMU_ENGINES</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">iommu</span><span class="o">.</span><span class="n">IOMMU_ENGINES</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="IOMMUCommand.iommu_engine"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_engine">[docs]</a>    <span class="k">def</span> <span class="nf">iommu_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">iommu_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">_iommu</span> <span class="o">=</span> <span class="n">iommu</span><span class="o">.</span><span class="n">IOMMU</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">iommu</span><span class="o">.</span><span class="n">IOMMUError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">IOMMUError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
             <span class="nb">print</span> <span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">return</span>
 
@@ -142,7 +142,7 @@
         <span class="k">if</span> <span class="s1">&#39;config&#39;</span> <span class="o">==</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">_acpi</span> <span class="o">=</span> <span class="n">acpi</span><span class="o">.</span><span class="n">ACPI</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
-            <span class="k">except</span> <span class="n">acpi</span><span class="o">.</span><span class="n">AcpiRuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
+            <span class="k">except</span> <span class="n">AcpiRuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
                 <span class="nb">print</span> <span class="p">(</span><span class="n">msg</span><span class="p">)</span>
                 <span class="k">return</span>
 
@@ -157,29 +157,29 @@
             <span class="k">elif</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;pt&#39;</span>     <span class="p">):</span> <span class="n">_iommu</span><span class="o">.</span><span class="n">dump_IOMMU_page_tables</span><span class="p">(</span> <span class="n">e</span> <span class="p">)</span>
             <span class="k">elif</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;status&#39;</span> <span class="p">):</span> <span class="n">_iommu</span><span class="o">.</span><span class="n">dump_IOMMU_status</span><span class="p">(</span> <span class="n">e</span> <span class="p">)</span>
             <span class="k">elif</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;enable&#39;</span> <span class="p">):</span> <span class="n">_iommu</span><span class="o">.</span><span class="n">set_IOMMU_Translation</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
-            <span class="k">elif</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;disable&#39;</span><span class="p">):</span> <span class="n">_iommu</span><span class="o">.</span><span class="n">set_IOMMU_Translation</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span></div>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;disable&#39;</span><span class="p">):</span> <span class="n">_iommu</span><span class="o">.</span><span class="n">set_IOMMU_Translation</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="IOMMUCommand.iommu_config"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_config">[docs]</a>    <span class="k">def</span> <span class="nf">iommu_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">iommu_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IOMMUCommand.iommu_status"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_status">[docs]</a>    <span class="k">def</span> <span class="nf">iommu_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">iommu_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IOMMUCommand.iommu_enable"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_enable">[docs]</a>    <span class="k">def</span> <span class="nf">iommu_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;enable&#39;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">iommu_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;enable&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IOMMUCommand.iommu_disable"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_disable">[docs]</a>    <span class="k">def</span> <span class="nf">iommu_disable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;disable&#39;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">iommu_disable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;disable&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IOMMUCommand.iommu_pt"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_pt">[docs]</a>    <span class="k">def</span> <span class="nf">iommu_pt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;pt&#39;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">iommu_pt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iommu_engine</span><span class="p">(</span><span class="s1">&#39;pt&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="IOMMUCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.iommu_cmd.html#chipsec.utilcmd.iommu_cmd.IOMMUCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (iommu) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (iommu) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div>
 
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;iommu&#39;</span><span class="p">:</span> <span class="n">IOMMUCommand</span> <span class="p">}</span>
@@ -250,7 +250,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

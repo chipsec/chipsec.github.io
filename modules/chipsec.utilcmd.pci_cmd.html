@@ -50,74 +50,6 @@
   <div class="section" id="module-chipsec.utilcmd.pci_cmd">
 <span id="pci-cmd-module"></span><h1>pci_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.pci_cmd" title="Permalink to this headline">¶</a></h1>
 <p>The pci command can enumerate PCI/PCIe devices, enumerate expansion ROMs and allow direct access to PCI configuration registers via bus/device/function.</p>
-<dl class="py class">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand">
-<em class="property">class </em><code class="sig-name descname">PCICommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="nb">enumerate</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">read</span> <span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">width</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">write</span> <span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">dump</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">xrom</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">xrom_address</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">cmd</span> <span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="p">[</span><span class="n">class</span><span class="p">]</span> <span class="p">[</span><span class="n">subclass</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="nb">enumerate</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">read</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x00</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">read</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x88</span> <span class="n">byte</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">write</span> <span class="mi">0</span> <span class="mh">0x1F</span> <span class="mi">0</span> <span class="mh">0xDC</span> <span class="mi">1</span> <span class="mh">0x1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">write</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x98</span> <span class="n">dword</span> <span class="mh">0x004E0040</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">dump</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">dump</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">xrom</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">xrom</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0xFEDF0000</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">cmd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">cmd</span> <span class="mi">1</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.pci_cmd">
-<code class="sig-name descname">pci_cmd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.pci_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.pci_cmd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.pci_dump">
-<code class="sig-name descname">pci_dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.pci_dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.pci_dump" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.pci_enumerate">
-<code class="sig-name descname">pci_enumerate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.pci_enumerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.pci_enumerate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.pci_read">
-<code class="sig-name descname">pci_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.pci_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.pci_read" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.pci_write">
-<code class="sig-name descname">pci_write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.pci_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.pci_write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.pci_xrom">
-<code class="sig-name descname">pci_xrom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.pci_xrom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.pci_xrom" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.requires_driver">
-<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.requires_driver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.pci_cmd.PCICommand.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/pci_cmd.html#PCICommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.pci_cmd.PCICommand.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -199,7 +131,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

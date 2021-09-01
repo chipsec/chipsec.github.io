@@ -39,8 +39,7 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.interrupts_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
 <span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
@@ -90,7 +89,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util smi send 0x0 0xDE 0x0 0xAAAAAAAAAAAAAAAA ..</span>
 <span class="sd">    &gt;&gt;&gt; chipsec_util smi smmc 0x79dfe000 0x79efdfff ed32d533-99e6-4209-9cc02d72cdd998a7 0x79dfaaaa payload.bin</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SMICommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util smi&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">SMICommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
 
@@ -119,16 +118,16 @@
         <span class="n">parser_smmc</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smi_smmc</span><span class="p">)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="SMICommand.smi_count"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.smi_count">[docs]</a>    <span class="k">def</span> <span class="nf">smi_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">smi_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SMI count:&quot;</span> <span class="p">)</span>
         <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
             <span class="n">smi_cnt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;MSR_SMI_COUNT&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">,</span> <span class="n">cpu_thread</span><span class="o">=</span><span class="n">tid</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;  CPU</span><span class="si">{:d}</span><span class="s2">: </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">smi_cnt</span><span class="p">)</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;  CPU</span><span class="si">{:d}</span><span class="s2">: </span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">smi_cnt</span><span class="p">)</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="SMICommand.smi_smmc"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.smi_smmc">[docs]</a>    <span class="k">def</span> <span class="nf">smi_smmc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">smi_smmc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -143,10 +142,10 @@
 
         <span class="n">ReturnStatus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interrupts</span><span class="o">.</span><span class="n">send_smmc_SMI</span><span class="p">(</span><span class="n">smmc_loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload_loc</span><span class="p">,</span> <span class="n">CommandPort</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
         <span class="c1">#TODO Translate ReturnStatus to EFI_STATUS enum</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;ReturnStatus: 0x</span><span class="si">{:x}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ReturnStatus</span><span class="p">,</span> <span class="n">EFI_ERROR_STR</span><span class="p">(</span><span class="n">ReturnStatus</span><span class="p">)))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;ReturnStatus: 0x</span><span class="si">{:x}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ReturnStatus</span><span class="p">,</span> <span class="n">EFI_ERROR_STR</span><span class="p">(</span><span class="n">ReturnStatus</span><span class="p">)))</span>
 
 
-<div class="viewcode-block" id="SMICommand.smi_send"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.smi_send">[docs]</a>    <span class="k">def</span> <span class="nf">smi_send</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">smi_send</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Sending SW SMI (code: 0x</span><span class="si">{:02X}</span><span class="s2">, data: 0x</span><span class="si">{:02X}</span><span class="s2">)..&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMI_data_port_value</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interrupts</span><span class="o">.</span><span class="n">send_SMI_APMC</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMI_code_port_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMI_data_port_value</span> <span class="p">)</span>
@@ -165,10 +164,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RCX: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RDX: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RSI: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RDI: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span> <span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;          RDI: </span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="SMICommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.SMICommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interrupts</span> <span class="o">=</span> <span class="n">Interrupts</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
@@ -179,7 +178,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (smi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (smi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NMICommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.NMICommand">[docs]</a><span class="k">class</span> <span class="nc">NMICommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -190,10 +189,10 @@
 
 <span class="sd">    &gt;&gt;&gt; chipsec_util nmi</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="NMICommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.NMICommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="NMICommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.interrupts_cmd.html#chipsec.utilcmd.interrupts_cmd.NMICommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">interrupts</span> <span class="o">=</span> <span class="n">Interrupts</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
@@ -203,7 +202,7 @@
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Sending NMI#...&quot;</span> <span class="p">)</span>
         <span class="n">interrupts</span><span class="o">.</span><span class="n">send_NMI</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (nmi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (nmi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div>
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;smi&#39;</span><span class="p">:</span> <span class="n">SMICommand</span><span class="p">,</span> <span class="s1">&#39;nmi&#39;</span><span class="p">:</span> <span class="n">NMICommand</span> <span class="p">}</span>
 </pre></div>
@@ -273,7 +272,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

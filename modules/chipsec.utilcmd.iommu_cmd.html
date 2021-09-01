@@ -50,72 +50,6 @@
   <div class="section" id="module-chipsec.utilcmd.iommu_cmd">
 <span id="iommu-cmd-module"></span><h1>iommu_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.iommu_cmd" title="Permalink to this headline">¶</a></h1>
 <p>Command-line utility providing access to IOMMU engines</p>
-<dl class="py class">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand">
-<em class="property">class </em><code class="sig-name descname">IOMMUCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="nb">list</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">config</span> <span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">status</span> <span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">enable</span><span class="o">|</span><span class="n">disable</span> <span class="o">&lt;</span><span class="n">iommu_engine</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">pt</span>
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="nb">list</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">config</span> <span class="n">VTD</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">status</span> <span class="n">GFXVTD</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">enable</span> <span class="n">VTD</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">pt</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_config">
-<code class="sig-name descname">iommu_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.iommu_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_disable">
-<code class="sig-name descname">iommu_disable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.iommu_disable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_disable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_enable">
-<code class="sig-name descname">iommu_enable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.iommu_enable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_enable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_engine">
-<code class="sig-name descname">iommu_engine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cmd</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.iommu_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_engine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_list">
-<code class="sig-name descname">iommu_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.iommu_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_pt">
-<code class="sig-name descname">iommu_pt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.iommu_pt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_pt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_status">
-<code class="sig-name descname">iommu_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.iommu_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.iommu_status" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.requires_driver">
-<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.requires_driver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.iommu_cmd.IOMMUCommand.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/iommu_cmd.html#IOMMUCommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.iommu_cmd.IOMMUCommand.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -197,7 +131,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

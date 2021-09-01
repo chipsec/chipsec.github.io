@@ -51,66 +51,6 @@
 <span id="tpm-module"></span><h1>tpm module<a class="headerlink" href="#module-chipsec.hal.tpm" title="Permalink to this headline">¶</a></h1>
 <p>Trusted Platform Module (TPM) HAL component</p>
 <p><a class="reference external" href="https://trustedcomputinggroup.org">https://trustedcomputinggroup.org</a></p>
-<dl class="py class">
-<dt id="chipsec.hal.tpm.TPM">
-<em class="property">class </em><code class="sig-name descname">TPM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
-<dl class="py method">
-<dt id="chipsec.hal.tpm.TPM.command">
-<code class="sig-name descname">command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">commandName</span></em>, <em class="sig-param"><span class="n">locality</span></em>, <em class="sig-param"><span class="n">command_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send command to the TPM and receive data</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.hal.tpm.TPM.dump_access">
-<code class="sig-name descname">dump_access</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locality</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_access"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_access" title="Permalink to this definition">¶</a></dt>
-<dd><p>View the contents of the register used to gain ownership of the TPM</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.hal.tpm.TPM.dump_didvid">
-<code class="sig-name descname">dump_didvid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locality</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_didvid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_didvid" title="Permalink to this definition">¶</a></dt>
-<dd><p>TPM’s Vendor and Device ID</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.hal.tpm.TPM.dump_intcap">
-<code class="sig-name descname">dump_intcap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locality</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_intcap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_intcap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provides information of which interrupts that particular TPM supports</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.hal.tpm.TPM.dump_intenable">
-<code class="sig-name descname">dump_intenable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locality</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_intenable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_intenable" title="Permalink to this definition">¶</a></dt>
-<dd><p>View the contents of the register used to enable specific interrupts</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.hal.tpm.TPM.dump_rid">
-<code class="sig-name descname">dump_rid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locality</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_rid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_rid" title="Permalink to this definition">¶</a></dt>
-<dd><p>TPM’s Revision ID</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.hal.tpm.TPM.dump_status">
-<code class="sig-name descname">dump_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locality</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>View general status details</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="chipsec.hal.tpm.TPM_RESPONSE_HEADER">
-<em class="property">class </em><code class="sig-name descname">TPM_RESPONSE_HEADER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ResponseTag</span></em>, <em class="sig-param"><span class="n">DataSize</span></em>, <em class="sig-param"><span class="n">ReturnCode</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM_RESPONSE_HEADER"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM_RESPONSE_HEADER" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.tpm.TPM_RESPONSE_HEADER" title="chipsec.hal.tpm.TPM_RESPONSE_HEADER"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.tpm.TPM_RESPONSE_HEADER</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt id="chipsec.hal.tpm.TpmRuntimeError">
-<em class="property">exception </em><code class="sig-name descname">TpmRuntimeError</code><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TpmRuntimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm.TpmRuntimeError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
-</dd></dl>
-
 </div>
 
 
@@ -192,7 +132,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

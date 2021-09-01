@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.exceptions &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="shortcut icon" href="../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.exceptions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.exceptions</h1><div class="highlight"><pre>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1">#This program is free software; you can redistribute it and/or</span>
+<span class="c1">#modify it under the terms of the GNU General Public License</span>
+<span class="c1">#as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1">#This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#You should have received a copy of the GNU General Public License</span>
+<span class="c1">#along with this program; if not, write to the Free Software</span>
+<span class="c1">#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1">#Contact information:</span>
+<span class="c1">#chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="c1">#Chipset</span>
+<div class="viewcode-block" id="UnknownChipsetError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.UnknownChipsetError">[docs]</a><span class="k">class</span> <span class="nc">UnknownChipsetError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="DeviceNotFoundError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.DeviceNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">DeviceNotFoundError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="RegisterNotFoundError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.RegisterNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">RegisterNotFoundError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="RegisterTypeNotFoundError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.RegisterTypeNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">RegisterTypeNotFoundError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CSReadError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.CSReadError">[docs]</a><span class="k">class</span> <span class="nc">CSReadError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CSReadError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<span class="c1">#HAL</span>
+<div class="viewcode-block" id="AcpiRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.AcpiRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">AcpiRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CmosRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.CmosRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">CmosRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+<div class="viewcode-block" id="CmosAccessError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.CmosAccessError">[docs]</a><span class="k">class</span> <span class="nc">CmosAccessError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CPURuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.CPURuntimeError">[docs]</a><span class="k">class</span> <span class="nc">CPURuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CpuIDRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.CpuIDRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">CpuIDRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="IGDRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.IGDRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">IGDRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="PortIORuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.PortIORuntimeError">[docs]</a><span class="k">class</span> <span class="nc">PortIORuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="IOBARRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.IOBARRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">IOBARRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="IOBARNotFoundError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.IOBARNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">IOBARNotFoundError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="IOMMUError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.IOMMUError">[docs]</a><span class="k">class</span> <span class="nc">IOMMUError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MsgBusRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.MsgBusRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">MsgBusRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MsrRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.MsrRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">MsrRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="PciRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.PciRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">PciRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+<div class="viewcode-block" id="PciDeviceNotFoundError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.PciDeviceNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">PciDeviceNotFoundError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MemoryRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.MemoryRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">MemoryRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="MemoryAccessError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.MemoryAccessError">[docs]</a><span class="k">class</span> <span class="nc">MemoryAccessError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SpiRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.SpiRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">SpiRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SpiAccessError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.SpiAccessError">[docs]</a><span class="k">class</span> <span class="nc">SpiAccessError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TpmRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.TpmRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">TpmRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="VirtualMemoryRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.VirtualMemoryRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">VirtualMemoryRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="VirtualMemoryAccessError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.VirtualMemoryAccessError">[docs]</a><span class="k">class</span> <span class="nc">VirtualMemoryAccessError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="VMMRuntimeError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.VMMRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">VMMRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="InvalidMemoryAddress"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.InvalidMemoryAddress">[docs]</a><span class="k">class</span> <span class="nc">InvalidMemoryAddress</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<span class="c1">#OS Helper</span>
+<div class="viewcode-block" id="OsHelperError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.OsHelperError">[docs]</a><span class="k">class</span> <span class="nc">OsHelperError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">errorcode</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">OsHelperError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errorcode</span> <span class="o">=</span> <span class="n">errorcode</span></div>
+
+<div class="viewcode-block" id="HWAccessViolationError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.HWAccessViolationError">[docs]</a><span class="k">class</span> <span class="nc">HWAccessViolationError</span> <span class="p">(</span><span class="n">OsHelperError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="UnimplementedAPIError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.UnimplementedAPIError">[docs]</a><span class="k">class</span> <span class="nc">UnimplementedAPIError</span> <span class="p">(</span><span class="n">OsHelperError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UnimplementedAPIError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; is not implemented&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">api_name</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnimplementedNativeAPIError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.UnimplementedNativeAPIError">[docs]</a><span class="k">class</span> <span class="nc">UnimplementedNativeAPIError</span> <span class="p">(</span><span class="n">UnimplementedAPIError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UnimplementedNativeAPIError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DALHelperError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.DALHelperError">[docs]</a><span class="k">class</span> <span class="nc">DALHelperError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="EfiHelperError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.EfiHelperError">[docs]</a><span class="k">class</span> <span class="nc">EfiHelperError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># Logger</span>
+
+<div class="viewcode-block" id="LoggerError"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.LoggerError">[docs]</a><span class="k">class</span> <span class="nc">LoggerError</span> <span class="p">(</span><span class="ne">RuntimeWarning</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># tools</span>
+<div class="viewcode-block" id="BadSMIDetected"><a class="viewcode-back" href="../../modules/chipsec.exceptions.html#chipsec.exceptions.BadSMIDetected">[docs]</a><span class="k">class</span> <span class="nc">BadSMIDetected</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Download.html">Download CHIPSEC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Contact.html">Contact</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Install%20in%20Windows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Install%20in%20DAL%20Win.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Install%20in%20Linux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Install%20in%20MacOS.html">MacOS Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Running-Chipsec.html">Running CHIPSEC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Interpreting-Results.html">Interpreting results</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Developing.html">Writing Your Own Modules</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.exceptions</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Aug 31, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

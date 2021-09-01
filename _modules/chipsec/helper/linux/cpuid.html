@@ -116,7 +116,7 @@
 <div class="viewcode-block" id="CPUID_struct"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linux.cpuid.html#chipsec.helper.linux.cpuid.CPUID_struct">[docs]</a><span class="k">class</span> <span class="nc">CPUID_struct</span><span class="p">(</span><span class="n">Structure</span><span class="p">):</span>
     <span class="n">_fields_</span> <span class="o">=</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="n">c_uint32</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;eax&quot;</span><span class="p">,</span> <span class="s2">&quot;ebx&quot;</span><span class="p">,</span> <span class="s2">&quot;ecx&quot;</span><span class="p">,</span> <span class="s2">&quot;edx&quot;</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="CPUID"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linux.cpuid.html#chipsec.helper.linux.cpuid.CPUID">[docs]</a><span class="k">class</span> <span class="nc">CPUID</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">CPUID</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">machine</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;AMD64&quot;</span><span class="p">,</span> <span class="s2">&quot;x86_64&quot;</span><span class="p">,</span> <span class="s2">&quot;x86&quot;</span><span class="p">,</span> <span class="s2">&quot;i686&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">SystemError</span><span class="p">(</span><span class="s2">&quot;Only available for x86&quot;</span><span class="p">)</span>
@@ -140,7 +140,7 @@
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">fp</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -223,7 +223,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.spi_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -76,7 +75,8 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">chipsec.command</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
-<span class="kn">from</span> <span class="nn">chipsec.hal.spi</span> <span class="kn">import</span> <span class="n">SPI</span><span class="p">,</span> <span class="n">SpiRuntimeError</span><span class="p">,</span> <span class="n">BIOS</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.spi</span> <span class="kn">import</span> <span class="n">SPI</span><span class="p">,</span> <span class="n">BIOS</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span>   <span class="kn">import</span> <span class="n">SpiRuntimeError</span>
 <span class="kn">from</span> <span class="nn">argparse</span>        <span class="kn">import</span> <span class="n">ArgumentParser</span>
 
 
@@ -96,7 +96,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util spi jedec</span>
 <span class="sd">    &gt;&gt;&gt; chipsec_util spi jedec decode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SPICommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util spi&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">SPICommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
         <span class="n">parser_info</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;info&#39;</span><span class="p">)</span>
@@ -132,13 +132,13 @@
         <span class="n">parser_jedec</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spi_jedec</span><span class="p">)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="SPICommand.spi_info"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_info">[docs]</a>    <span class="k">def</span> <span class="nf">spi_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spi_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] SPI flash memory information</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">display_SPI_map</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">display_SPI_map</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SPICommand.spi_dump"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_dump">[docs]</a>    <span class="k">def</span> <span class="nf">spi_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spi_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Dumping entire SPI flash memory to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg</span><span class="p">)</span> <span class="p">)</span>
         <span class="c1"># @TODO: don&#39;t assume SPI Flash always ends with BIOS region</span>
@@ -150,18 +150,18 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">buf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Dumping SPI Flash didn&#39;t return any data (turn on VERBOSE)&quot;</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Completed SPI flash dump to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="p">)</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Completed SPI flash dump to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_file</span><span class="p">)</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SPICommand.spi_read"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_read">[docs]</a>    <span class="k">def</span> <span class="nf">spi_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spi_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Reading 0x</span><span class="si">{:x}</span><span class="s2"> bytes from SPI Flash starting at FLA = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_fla</span><span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg</span><span class="p">)</span> <span class="p">)</span>
         <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">read_spi_to_file</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_fla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_file</span> <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">buf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;SPI flash read didn&#39;t return any data (turn on VERBOSE)&quot;</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Completed SPI flash memory read&quot;</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Completed SPI flash memory read&quot;</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SPICommand.spi_write"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_write">[docs]</a>    <span class="k">def</span> <span class="nf">spi_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spi_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;File &#39;</span><span class="si">{}</span><span class="s2">&#39; doesn&#39;t exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
             <span class="k">return</span>
@@ -170,17 +170,17 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">write_spi_from_file</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_fla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Completed SPI flash memory write&quot;</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;SPI flash write returned error (turn on VERBOSE)&quot;</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;SPI flash write returned error (turn on VERBOSE)&quot;</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SPICommand.spi_erase"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_erase">[docs]</a>    <span class="k">def</span> <span class="nf">spi_erase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spi_erase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Erasing SPI flash memory block at FLA = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spi_fla</span><span class="p">)</span> <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">erase_spi_block</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_fla</span> <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_result</span><span class="p">(</span> <span class="s2">&quot;Completed SPI flash memory erase&quot;</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;SPI flash erase returned error (turn on VERBOSE)&quot;</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s2">&quot;SPI flash erase returned error (turn on VERBOSE)&quot;</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SPICommand.spi_disable_wp"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_disable_wp">[docs]</a>    <span class="k">def</span> <span class="nf">spi_disable_wp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spi_disable_wp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Trying to disable BIOS write protection..&quot;</span> <span class="p">)</span>
         <span class="c1">#</span>
         <span class="c1"># This write protection only matters for BIOS range in SPI flash memory</span>
@@ -188,12 +188,12 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">disable_BIOS_write_protection</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span> <span class="s2">&quot;BIOS region write protection is disabled in SPI flash&quot;</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;Couldn&#39;t disable BIOS region write protection in SPI flash&quot;</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span> <span class="s2">&quot;Couldn&#39;t disable BIOS region write protection in SPI flash&quot;</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="SPICommand.spi_sfdp"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_sfdp">[docs]</a>    <span class="k">def</span> <span class="nf">spi_sfdp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">get_SPI_SFDP</span><span class="p">()</span></div>
+    <span class="k">def</span> <span class="nf">spi_sfdp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">get_SPI_SFDP</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SPICommand.spi_jedec"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.spi_jedec">[docs]</a>    <span class="k">def</span> <span class="nf">spi_jedec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spi_jedec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">option</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;decode&#39;</span><span class="p">:</span>
             <span class="p">(</span><span class="n">jedec</span><span class="p">,</span> <span class="n">man</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span><span class="o">.</span><span class="n">get_SPI_JEDEC_ID_decoded</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">jedec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
@@ -209,9 +209,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;    JEDEC ID: 0x</span><span class="si">{:06X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jedec_id</span><span class="p">)</span> <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39; JEDEC ID command is not supported &#39;</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39; JEDEC ID command is not supported &#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SPICommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.spi_cmd.html#chipsec.utilcmd.spi_cmd.SPICommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_spi</span> <span class="o">=</span> <span class="n">SPI</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="p">)</span>
         <span class="k">except</span> <span class="n">SpiRuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
@@ -222,7 +222,7 @@
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (spi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (spi) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="p">)</span></div>
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;spi&#39;</span><span class="p">:</span> <span class="n">SPICommand</span> <span class="p">}</span>
 </pre></div>
@@ -292,7 +292,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

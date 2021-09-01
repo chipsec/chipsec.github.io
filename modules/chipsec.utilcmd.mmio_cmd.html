@@ -49,55 +49,6 @@
             
   <div class="section" id="module-chipsec.utilcmd.mmio_cmd">
 <span id="mmio-cmd-module"></span><h1>mmio_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.mmio_cmd" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="chipsec.utilcmd.mmio_cmd.MMIOCommand">
-<em class="property">class </em><code class="sig-name descname">MMIOCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mmio_cmd.html#MMIOCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mmio_cmd.MMIOCommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="nb">list</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="n">dump</span> <span class="o">&lt;</span><span class="n">MMIO_BAR_name</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">offset</span><span class="p">]</span> <span class="p">[</span><span class="n">length</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="n">read</span> <span class="o">&lt;</span><span class="n">MMIO_BAR_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="n">write</span> <span class="o">&lt;</span><span class="n">MMIO_BAR_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="nb">list</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="n">dump</span> <span class="n">MCHBAR</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="n">read</span> <span class="n">SPIBAR</span> <span class="mh">0x74</span> <span class="mh">0x4</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmio</span> <span class="n">write</span> <span class="n">SPIBAR</span> <span class="mh">0x74</span> <span class="mh">0x4</span> <span class="mh">0xFFFF0000</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="chipsec.utilcmd.mmio_cmd.MMIOCommand.dump_bar">
-<code class="sig-name descname">dump_bar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mmio_cmd.html#MMIOCommand.dump_bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mmio_cmd.MMIOCommand.dump_bar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.mmio_cmd.MMIOCommand.list_bars">
-<code class="sig-name descname">list_bars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mmio_cmd.html#MMIOCommand.list_bars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mmio_cmd.MMIOCommand.list_bars" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.mmio_cmd.MMIOCommand.read_bar">
-<code class="sig-name descname">read_bar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mmio_cmd.html#MMIOCommand.read_bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mmio_cmd.MMIOCommand.read_bar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.mmio_cmd.MMIOCommand.requires_driver">
-<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mmio_cmd.html#MMIOCommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mmio_cmd.MMIOCommand.requires_driver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.mmio_cmd.MMIOCommand.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mmio_cmd.html#MMIOCommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mmio_cmd.MMIOCommand.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.mmio_cmd.MMIOCommand.write_bar">
-<code class="sig-name descname">write_bar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/mmio_cmd.html#MMIOCommand.write_bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.mmio_cmd.MMIOCommand.write_bar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -179,7 +130,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

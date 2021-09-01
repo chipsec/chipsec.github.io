@@ -53,36 +53,6 @@
 <p>Just like SMRAM needs to be protected from software executing on the CPU, it also needs to be protected from devices that have direct access to DRAM (DMA). Protection from DMA is configured through proper programming of SMRAM memory range. If BIOS does not correctly configure and lock the configuration, then malware could reprogram configuration and open SMRAM area to DMA access, allowing manipulation of memory that should have been protected.</p>
 <p>DMA attacks were discussed in <a class="reference external" href="http://www.ssi.gouv.fr/archive/fr/sciences/fichiers/lti/pacsec2007-duflot-papier.pdf">Programmed I/O accesses: a threat to Virtual Machine Monitors?</a> and <a class="reference external" href="http://www.ssi.gouv.fr/uploads/IMG/pdf/IT_Defense_2010_final.pdf">System Management Mode Design and Security Issues</a>. This is also discussed in <cite>Summary of Attack against BIOS and Secure Boot</cite> <a class="reference external" href="https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf">https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf</a></p>
 <p>This module examines the configuration and locking of SMRAM range configuration protecting from DMA attacks. If it fails, then DMA protection may not be securely configured to protect SMRAM.</p>
-<dl class="py class">
-<dt id="chipsec.modules.common.smm_dma.smm_dma">
-<em class="property">class </em><code class="sig-name descname">smm_dma</code><a class="reference internal" href="../_modules/chipsec/modules/common/smm_dma.html#smm_dma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_dma.smm_dma" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
-<dl class="py method">
-<dt id="chipsec.modules.common.smm_dma.smm_dma.check_tseg_config">
-<code class="sig-name descname">check_tseg_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smm_dma.html#smm_dma.check_tseg_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_dma.smm_dma.check_tseg_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.common.smm_dma.smm_dma.check_tseg_locks">
-<code class="sig-name descname">check_tseg_locks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smm_dma.html#smm_dma.check_tseg_locks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_dma.smm_dma.check_tseg_locks" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.common.smm_dma.smm_dma.is_supported">
-<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smm_dma.html#smm_dma.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_dma.smm_dma.is_supported" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method should be overwritten by the module returning True or False
-depending whether or not this module is supported in the currently running
-platform.
-To access the currently running platform use</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.common.smm_dma.smm_dma.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/smm_dma.html#smm_dma.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.smm_dma.smm_dma.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -165,7 +135,7 @@ To access the currently running platform use</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

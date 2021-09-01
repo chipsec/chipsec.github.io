@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.chipset_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -68,7 +67,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">chipsec.command</span>    <span class="kn">import</span> <span class="n">BaseCommand</span>
-<span class="kn">from</span> <span class="nn">chipsec.chipset</span>    <span class="kn">import</span> <span class="n">UnknownChipsetError</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span>    <span class="kn">import</span> <span class="n">UnknownChipsetError</span>
 
 <span class="c1"># ###################################################################</span>
 <span class="c1">#</span>
@@ -80,17 +79,17 @@
 <span class="sd">    chipsec_util platform</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PlatformCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.chipset_cmd.html#chipsec.utilcmd.chipset_cmd.PlatformCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="PlatformCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.chipset_cmd.html#chipsec.utilcmd.chipset_cmd.PlatformCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_supported_chipsets</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_chipset</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_pch</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">UnknownChipsetError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="n">msg</span> <span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="n">msg</span> <span class="p">)</span></div>
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;platform&#39;</span><span class="p">:</span> <span class="n">PlatformCommand</span> <span class="p">}</span>
 </pre></div>
@@ -160,7 +159,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

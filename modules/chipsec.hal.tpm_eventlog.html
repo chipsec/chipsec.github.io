@@ -59,57 +59,6 @@
 <a class="reference external" href="https://trustedcomputinggroup.org/wp-content/uploads/EFI-Protocol-Specification-rev13-160330final.pdf">https://trustedcomputinggroup.org/wp-content/uploads/EFI-Protocol-Specification-rev13-160330final.pdf</a></p>
 <p>TCG PC Client Platform Firmware Profile Specification
 <a class="reference external" href="https://trustedcomputinggroup.org/wp-content/uploads/PC-ClientSpecific_Platform_Profile_for_TPM_2p0_Systems_v51.pdf">https://trustedcomputinggroup.org/wp-content/uploads/PC-ClientSpecific_Platform_Profile_for_TPM_2p0_Systems_v51.pdf</a></p>
-<dl class="py class">
-<dt id="chipsec.hal.tpm_eventlog.EFIFirmwareBlob">
-<em class="property">class </em><code class="sig-name descname">EFIFirmwareBlob</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm_eventlog.html#EFIFirmwareBlob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm_eventlog.EFIFirmwareBlob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.tpm_eventlog.TcgPcrEvent" title="chipsec.hal.tpm_eventlog.TcgPcrEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.tpm_eventlog.TcgPcrEvent</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt id="chipsec.hal.tpm_eventlog.PcrLogParser">
-<em class="property">class </em><code class="sig-name descname">PcrLogParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">log</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm_eventlog.html#PcrLogParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm_eventlog.PcrLogParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Iterator over the events of a log.</p>
-<dl class="py method">
-<dt id="chipsec.hal.tpm_eventlog.PcrLogParser.next">
-<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm_eventlog.html#PcrLogParser.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm_eventlog.PcrLogParser.next" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="chipsec.hal.tpm_eventlog.SCRTMVersion">
-<em class="property">class </em><code class="sig-name descname">SCRTMVersion</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm_eventlog.html#SCRTMVersion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm_eventlog.SCRTMVersion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.tpm_eventlog.TcgPcrEvent" title="chipsec.hal.tpm_eventlog.TcgPcrEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.tpm_eventlog.TcgPcrEvent</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt id="chipsec.hal.tpm_eventlog.TcgPcrEvent">
-<em class="property">class </em><code class="sig-name descname">TcgPcrEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pcr_index</span></em>, <em class="sig-param"><span class="n">event_type</span></em>, <em class="sig-param"><span class="n">digest</span></em>, <em class="sig-param"><span class="n">event_size</span></em>, <em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm_eventlog.html#TcgPcrEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm_eventlog.TcgPcrEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>An Event (TPM 1.2 format) as recorded in the SML.</p>
-<dl class="py method">
-<dt id="chipsec.hal.tpm_eventlog.TcgPcrEvent.parse">
-<em class="property">classmethod </em><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">log</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm_eventlog.html#TcgPcrEvent.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm_eventlog.TcgPcrEvent.parse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Try to read an event from the log.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>log (file-like): Log where the event is stored.</p>
-</dd>
-<dt>Returns:</dt><dd><p>An instance of the created event. If a subclass
-exists for such event_type, an object of this class
-is returned. Otherwise, a TcgPcrEvent is returned.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.tpm_eventlog.parse">
-<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">log</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm_eventlog.html#parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.tpm_eventlog.parse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple wrapper around PcrLogParser.</p>
-</dd></dl>
-
 </div>
 
 
@@ -191,7 +140,7 @@ is returned. Otherwise, a TcgPcrEvent is returned.</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

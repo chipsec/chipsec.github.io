@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.hal.acpi</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -74,12 +73,9 @@
 <span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span><span class="p">,</span> <span class="n">print_buffer</span>
 <span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">read_file</span>
 <span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">bytestostring</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">UnimplementedNativeAPIError</span>
 
 <span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">acpi_tables</span><span class="p">,</span> <span class="n">hal_base</span><span class="p">,</span> <span class="n">uefi</span>
-<span class="kn">from</span> <span class="nn">chipsec.helper</span> <span class="kn">import</span> <span class="n">oshelper</span>
-
-<div class="viewcode-block" id="AcpiRuntimeError"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.AcpiRuntimeError">[docs]</a><span class="k">class</span> <span class="nc">AcpiRuntimeError</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-    <span class="k">pass</span></div>
 
 <span class="c1"># ACPI Table Header Format</span>
 <span class="n">ACPI_TABLE_HEADER_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;=4sIBB6s8sI4sI&#39;</span>
@@ -236,7 +232,7 @@
 <span class="n">ACPI_RSDP_EXT_SIZE</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">ACPI_RSDP_FORMAT</span> <span class="o">+</span> <span class="n">ACPI_RSDP_EXT_FORMAT</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">ACPI_RSDP_EXT_SIZE</span> <span class="o">==</span> <span class="mi">36</span>
 
-<div class="viewcode-block" id="RSDP"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.RSDP">[docs]</a><span class="k">class</span> <span class="nc">RSDP</span><span class="p">():</span>
+<span class="k">class</span> <span class="nc">RSDP</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">table_content</span> <span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">table_content</span><span class="p">)</span> <span class="o">==</span> <span class="n">ACPI_RSDP_SIZE</span><span class="p">:</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Signature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Checksum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OEMID</span><span class="p">,</span>
@@ -264,8 +260,8 @@
         <span class="k">return</span> <span class="n">default</span>
 
     <span class="c1"># some sanity checking on RSDP</span>
-<div class="viewcode-block" id="RSDP.is_RSDP_valid"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.RSDP.is_RSDP_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_RSDP_valid</span><span class="p">(</span><span class="bp">self</span> <span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Checksum</span> <span class="ow">and</span> <span class="p">(</span><span class="mh">0x0</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Revision</span> <span class="ow">or</span> <span class="mh">0x2</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">)</span> <span class="p">)</span></div></div>
+    <span class="k">def</span> <span class="nf">is_RSDP_valid</span><span class="p">(</span><span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Checksum</span> <span class="ow">and</span> <span class="p">(</span><span class="mh">0x0</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Revision</span> <span class="ow">or</span> <span class="mh">0x2</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">)</span> <span class="p">)</span>
 
 
 <span class="c1">########################################################################################################</span>
@@ -274,20 +270,20 @@
 <span class="c1">#</span>
 <span class="c1">########################################################################################################</span>
 
-<div class="viewcode-block" id="ACPI"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI">[docs]</a><span class="k">class</span> <span class="nc">ACPI</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ACPI</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ACPI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uefi</span> <span class="o">=</span> <span class="n">uefi</span><span class="o">.</span><span class="n">UEFI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_ACPI_table_list</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ACPI.read_RSDP"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.read_RSDP">[docs]</a>    <span class="k">def</span> <span class="nf">read_RSDP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rsdp_pa</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_RSDP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rsdp_pa</span><span class="p">):</span>
         <span class="n">rsdp_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span> <span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">ACPI_RSDP_SIZE</span><span class="p">)</span>
         <span class="n">rsdp</span> <span class="o">=</span> <span class="n">RSDP</span><span class="p">(</span><span class="n">rsdp_buf</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">Revision</span> <span class="o">&gt;=</span> <span class="mh">0x2</span><span class="p">:</span>
             <span class="n">rsdp_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span> <span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">ACPI_RSDP_EXT_SIZE</span><span class="p">)</span>
             <span class="n">rsdp</span> <span class="o">=</span> <span class="n">RSDP</span><span class="p">(</span><span class="n">rsdp_buf</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">rsdp</span></div>
+        <span class="k">return</span> <span class="n">rsdp</span>
 
     <span class="c1">#</span>
     <span class="c1"># Check RSDP in Extended BIOS Data Area</span>
@@ -377,7 +373,7 @@
     <span class="c1">#</span>
     <span class="c1"># Searches for Root System Description Pointer (RSDP) in various locations for legacy/EFI systems</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.find_RSDP"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.find_RSDP">[docs]</a>    <span class="k">def</span> <span class="nf">find_RSDP</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">find_RSDP</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_RSDP_in_EBDA</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">rsdp_pa</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -392,12 +388,12 @@
         <span class="k">if</span> <span class="n">rsdp_pa</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">rsdp</span> <span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">rsdp</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">rsdp</span><span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># Retrieves System Description Table (RSDT or XSDT) either from RSDP or using OS API</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.get_SDT"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_SDT">[docs]</a>    <span class="k">def</span> <span class="nf">get_SDT</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">search_rsdp</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_SDT</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">search_rsdp</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">search_rsdp</span><span class="p">:</span>
             <span class="p">(</span><span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">rsdp</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_RSDP</span><span class="p">()</span>
             <span class="k">if</span> <span class="mh">0x0</span> <span class="o">==</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">Revision</span><span class="p">:</span>
@@ -421,13 +417,13 @@
         <span class="n">sdt_contents</span> <span class="o">=</span> <span class="n">sdt_buf</span><span class="p">[</span> <span class="n">ACPI_TABLE_HEADER_SIZE</span><span class="p">:</span> <span class="p">]</span>
         <span class="n">sdt</span> <span class="o">=</span> <span class="n">ACPI_TABLES</span><span class="p">[</span><span class="n">ACPI_TABLE_SIG_XSDT</span> <span class="k">if</span> <span class="n">is_xsdt</span> <span class="k">else</span> <span class="n">ACPI_TABLE_SIG_RSDT</span><span class="p">]()</span>
         <span class="n">sdt</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span> <span class="n">sdt_contents</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">is_xsdt</span><span class="p">,</span> <span class="n">sdt_pa</span><span class="p">,</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">sdt_header</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">is_xsdt</span><span class="p">,</span> <span class="n">sdt_pa</span><span class="p">,</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">sdt_header</span><span class="p">)</span>
 
 
     <span class="c1">#</span>
     <span class="c1"># Populates a list of ACPI tables available on the system</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.get_ACPI_table_list"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_ACPI_table_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_table_list</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_ACPI_table_list</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># 1. Try to extract ACPI table(s) from physical memory</span>
             <span class="c1">#    read_physical_mem can be implemented using both</span>
@@ -441,7 +437,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">get_table_list_from_SDT</span><span class="p">(</span><span class="n">sdt</span><span class="p">,</span> <span class="n">is_xsdt</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_DSDT_from_FADT</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">oshelper</span><span class="o">.</span><span class="n">UnimplementedNativeAPIError</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">UnimplementedNativeAPIError</span><span class="p">:</span>
             <span class="c1"># 2. If didn&#39;t work, try using get_ACPI_table if a helper implemented</span>
             <span class="c1">#    reading ACPI tables via native API which some OS may provide</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[acpi] trying to enumerate ACPI tables using get_ACPI_table...&quot;</span> <span class="p">)</span>
@@ -449,24 +445,24 @@
                 <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span> <span class="n">t</span> <span class="p">)</span>
                 <span class="k">if</span> <span class="n">table</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span> <span class="n">t</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span>
 
     <span class="c1">#</span>
     <span class="c1"># Gets table list from entries in RSDT/XSDT</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.get_table_list_from_SDT"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_table_list_from_SDT">[docs]</a>    <span class="k">def</span> <span class="nf">get_table_list_from_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">is_xsdt</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_table_list_from_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">is_xsdt</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[acpi] Getting table list from entries in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;XSDT&#39;</span> <span class="k">if</span> <span class="n">is_xsdt</span> <span class="k">else</span> <span class="s1">&#39;RSDT&#39;</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sdt</span><span class="o">.</span><span class="n">Entries</span><span class="p">:</span>
             <span class="n">_sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span> <span class="n">a</span><span class="p">,</span> <span class="n">ACPI_TABLE_SIG_SIZE</span> <span class="p">)</span>
             <span class="n">_sig</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">_sig</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">_sig</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ACPI_TABLES</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s1">&#39;Unknown ACPI table signature: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_sig</span><span class="p">)</span> <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span> <span class="n">_sig</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span> <span class="n">_sig</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># Gets DSDT from FADT</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.get_DSDT_from_FADT"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_DSDT_from_FADT">[docs]</a>    <span class="k">def</span> <span class="nf">get_DSDT_from_FADT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_DSDT_from_FADT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[acpi] Getting DSDT from FADT&#39;</span> <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ACPI_TABLE_SIG_FACP</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">:</span>
@@ -485,33 +481,33 @@
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;  X_DSDT address = 0x</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:16X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x_dsdt_address</span><span class="p">))</span> <span class="k">if</span> <span class="n">x_dsdt_address</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;Not found&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span> <span class="n">ACPI_TABLE_SIG_DSDT</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsdt_address_to_use</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span> <span class="n">ACPI_TABLE_SIG_DSDT</span> <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsdt_address_to_use</span><span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># Checks is ACPI table with &lt;name&gt; is available on the system</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.is_ACPI_table_present"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.is_ACPI_table_present">[docs]</a>    <span class="k">def</span> <span class="nf">is_ACPI_table_present</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">is_ACPI_table_present</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># Prints a list of ACPI tables available on the system</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.print_ACPI_table_list"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.print_ACPI_table_list">[docs]</a>    <span class="k">def</span> <span class="nf">print_ACPI_table_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">print_ACPI_table_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t get a list of ACPI tables&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[acpi] Found the following ACPI tables:&quot;</span> <span class="p">)</span>
             <span class="k">for</span> <span class="n">tableName</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot; - </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="s2">&quot;0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">tableName</span><span class="p">]]))</span> <span class="p">)</span></div>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot; - </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="s2">&quot;0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">tableName</span><span class="p">]]))</span> <span class="p">)</span>
 
     <span class="c1">#</span>
     <span class="c1"># Retrieves contents of ACPI table from memory or from file</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.get_parse_ACPI_table"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_parse_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_parse_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">isfile</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_parse_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">isfile</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
         <span class="n">acpi_tables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">isfile</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_table</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span> <span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">)</span> <span class="ow">in</span> <span class="n">acpi_tables</span> <span class="k">if</span> <span class="n">table_header_blob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_table</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span> <span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">)</span> <span class="ow">in</span> <span class="n">acpi_tables</span> <span class="k">if</span> <span class="n">table_header_blob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
 
-<div class="viewcode-block" id="ACPI.get_ACPI_table"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">isfile</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">isfile</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
         <span class="n">acpi_tables_data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">isfile</span><span class="p">:</span>
             <span class="n">acpi_tables_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">read_file</span><span class="p">(</span> <span class="n">name</span> <span class="p">))</span>
@@ -525,7 +521,7 @@
                     <span class="n">t_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span> <span class="n">table_address</span> <span class="o">+</span> <span class="mi">4</span> <span class="p">)</span>
                     <span class="n">t_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span> <span class="n">table_address</span><span class="p">,</span> <span class="n">t_size</span> <span class="p">)</span>
                     <span class="n">acpi_tables_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">t_data</span> <span class="p">)</span>
-            <span class="k">except</span> <span class="n">oshelper</span><span class="o">.</span><span class="n">UnimplementedNativeAPIError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="n">UnimplementedNativeAPIError</span><span class="p">:</span>
                 <span class="c1"># 2. If didn&#39;t work, try using get_ACPI_table if a helper implemented</span>
                 <span class="c1">#    reading ACPI tables via native API which some OS may provide</span>
                 <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[acpi] trying to extract ACPI table using get_ACPI_table...&quot;</span> <span class="p">)</span>
@@ -536,12 +532,12 @@
         <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">acpi_tables_data</span><span class="p">:</span>
             <span class="n">acpi_tables</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data</span><span class="p">[</span> <span class="p">:</span> <span class="n">ACPI_TABLE_HEADER_SIZE</span> <span class="p">],</span> <span class="n">data</span><span class="p">[</span> <span class="n">ACPI_TABLE_HEADER_SIZE</span><span class="p">:</span> <span class="p">]))</span>
 
-        <span class="k">return</span> <span class="n">acpi_tables</span></div>
+        <span class="k">return</span> <span class="n">acpi_tables</span>
 
     <span class="c1">#</span>
     <span class="c1"># Dumps contents of ACPI table</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="ACPI.dump_ACPI_table"><a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.dump_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">dump_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">isfile</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">dump_ACPI_table</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">isfile</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
         <span class="n">acpi_tables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parse_ACPI_table</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">isfile</span> <span class="p">)</span>
         <span class="k">for</span> <span class="n">acpi_table</span> <span class="ow">in</span> <span class="n">acpi_tables</span><span class="p">:</span>
             <span class="p">(</span><span class="n">table_header</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">)</span> <span class="o">=</span> <span class="n">acpi_table</span>
@@ -555,7 +551,7 @@
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="n">table</span> <span class="p">)</span>
             <span class="n">print_buffer</span><span class="p">(</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">table_blob</span><span class="p">)</span> <span class="p">)</span>
-            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span></div>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span>
 
     <span class="c1"># --------------------------------------------------------------------</span>
     <span class="c1"># Internal ACPI table parsing functions</span>
@@ -584,7 +580,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">table</span> <span class="o">=</span> <span class="p">(</span><span class="n">ACPI_TABLES</span><span class="p">[</span><span class="n">signature</span><span class="p">])()</span>
             <span class="n">table</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span> <span class="n">contents</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">table</span></div>
+        <span class="k">return</span> <span class="n">table</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -652,7 +648,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

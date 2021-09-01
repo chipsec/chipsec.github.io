@@ -56,134 +56,6 @@
 </div>
 </dd>
 </dl>
-<dl class="py class">
-<dt id="chipsec.hal.spi_uefi.EFIModuleType">
-<em class="property">class </em><code class="sig-name descname">EFIModuleType</code><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#EFIModuleType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.EFIModuleType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt id="chipsec.hal.spi_uefi.EFIModuleType.FILE">
-<code class="sig-name descname">FILE</code><em class="property"> = 4</em><a class="headerlink" href="#chipsec.hal.spi_uefi.EFIModuleType.FILE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="chipsec.hal.spi_uefi.EFIModuleType.FV">
-<code class="sig-name descname">FV</code><em class="property"> = 2</em><a class="headerlink" href="#chipsec.hal.spi_uefi.EFIModuleType.FV" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="chipsec.hal.spi_uefi.EFIModuleType.SECTION">
-<code class="sig-name descname">SECTION</code><em class="property"> = 1</em><a class="headerlink" href="#chipsec.hal.spi_uefi.EFIModuleType.SECTION" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="chipsec.hal.spi_uefi.EFIModuleType.SECTION_EXE">
-<code class="sig-name descname">SECTION_EXE</code><em class="property"> = 0</em><a class="headerlink" href="#chipsec.hal.spi_uefi.EFIModuleType.SECTION_EXE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.FILENAME">
-<code class="sig-name descname">FILENAME</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mod</span></em>, <em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">modn</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#FILENAME"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.FILENAME" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt id="chipsec.hal.spi_uefi.UUIDEncoder">
-<em class="property">class </em><code class="sig-name descname">UUIDEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">skipkeys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ensure_ascii</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">check_circular</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">allow_nan</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">sort_keys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">separators</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#UUIDEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.UUIDEncoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">json.encoder.JSONEncoder</span></code></p>
-<dl class="py method">
-<dt id="chipsec.hal.spi_uefi.UUIDEncoder.default">
-<code class="sig-name descname">default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#UUIDEncoder.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.UUIDEncoder.default" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement this method in a subclass such that it returns
-a serializable object for <code class="docutils literal notranslate"><span class="pre">o</span></code>, or calls the base implementation
-(to raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>).</p>
-<p>For example, to support arbitrary iterators, you could
-implement default like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">iterable</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
-    <span class="c1"># Let the base class default method raise the TypeError</span>
-    <span class="k">return</span> <span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.build_efi_file_tree">
-<code class="sig-name descname">build_efi_file_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">fv_img</span></em>, <em class="sig-param"><span class="n">fwtype</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#build_efi_file_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.build_efi_file_tree" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.build_efi_model">
-<code class="sig-name descname">build_efi_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">fwtype</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#build_efi_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.build_efi_model" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.build_efi_modules_tree">
-<code class="sig-name descname">build_efi_modules_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">fwtype</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">Size</span></em>, <em class="sig-param"><span class="n">offset</span></em>, <em class="sig-param"><span class="n">polarity</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#build_efi_modules_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.build_efi_modules_tree" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.build_efi_tree">
-<code class="sig-name descname">build_efi_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">fwtype</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#build_efi_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.build_efi_tree" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.compress_image">
-<code class="sig-name descname">compress_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">compression_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#compress_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.compress_image" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.decode_uefi_region">
-<code class="sig-name descname">decode_uefi_region</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">pth</span></em>, <em class="sig-param"><span class="n">fname</span></em>, <em class="sig-param"><span class="n">fwtype</span></em>, <em class="sig-param"><span class="n">filetype</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#decode_uefi_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.decode_uefi_region" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.decompress_section_data">
-<code class="sig-name descname">decompress_section_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">section_dir_path</span></em>, <em class="sig-param"><span class="n">sec_fs_name</span></em>, <em class="sig-param"><span class="n">compressed_data</span></em>, <em class="sig-param"><span class="n">compression_type</span></em>, <em class="sig-param"><span class="n">remove_files</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#decompress_section_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.decompress_section_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.dump_efi_module">
-<code class="sig-name descname">dump_efi_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mod</span></em>, <em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">modn</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#dump_efi_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.dump_efi_module" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.modify_uefi_region">
-<code class="sig-name descname">modify_uefi_region</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">command</span></em>, <em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">uefi_file</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#modify_uefi_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.modify_uefi_region" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.parse_uefi_region_from_file">
-<code class="sig-name descname">parse_uefi_region_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">fwtype</span></em>, <em class="sig-param"><span class="n">outpath</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filetype</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#parse_uefi_region_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.parse_uefi_region_from_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.save_efi_tree">
-<code class="sig-name descname">save_efi_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_uefi</span></em>, <em class="sig-param"><span class="n">modules</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">save_modules</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">save_log</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">lvl</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#save_efi_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.save_efi_tree" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.save_efi_tree_filetype">
-<code class="sig-name descname">save_efi_tree_filetype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">modules</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lvl</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">filetype</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">save</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#save_efi_tree_filetype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.save_efi_tree_filetype" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.search_efi_tree">
-<code class="sig-name descname">search_efi_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">modules</span></em>, <em class="sig-param"><span class="n">search_callback</span></em>, <em class="sig-param"><span class="n">match_module_types</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">findall</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#search_efi_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.search_efi_tree" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.hal.spi_uefi.update_efi_tree">
-<code class="sig-name descname">update_efi_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">modules</span></em>, <em class="sig-param"><span class="n">parent_guid</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spi_uefi.html#update_efi_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.hal.spi_uefi.update_efi_tree" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </div>
 
 
@@ -265,7 +137,7 @@ implement default like this:</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

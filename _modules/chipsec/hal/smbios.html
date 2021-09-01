@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.hal.smbios</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2019-2020, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2019-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -226,7 +225,7 @@
     <span class="n">SMBIOS_SYSTEM_INFO_ENTRY_ID</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="n">SMBIOS_SYSTEM_INFO_2_0</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">SMBIOS_SYSTEM_INFO_2_0_ENTRY_FMT</span><span class="p">}</span>
 <span class="p">}</span>
 
-<div class="viewcode-block" id="SMBIOS"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbios.html#chipsec.hal.smbios.SMBIOS">[docs]</a><span class="k">class</span> <span class="nc">SMBIOS</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">SMBIOS</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SMBIOS</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uefi</span> <span class="o">=</span> <span class="n">uefi</span><span class="o">.</span><span class="n">UEFI</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
@@ -338,7 +337,7 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">ep_data</span>
 
-<div class="viewcode-block" id="SMBIOS.find_smbios_table"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbios.html#chipsec.hal.smbios.SMBIOS.find_smbios_table">[docs]</a>    <span class="k">def</span> <span class="nf">find_smbios_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">find_smbios_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Handle the case were we already found the tables</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbios_2_ep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbios_3_ep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -411,9 +410,9 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smbios_3_data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
                 <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;- Failed to read 64bit SMBIOS data&#39;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="SMBIOS.get_raw_structs"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbios.html#chipsec.hal.smbios.SMBIOS.get_raw_structs">[docs]</a>    <span class="k">def</span> <span class="nf">get_raw_structs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_32bit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_raw_structs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_32bit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of raw data blobs for each SMBIOS structure.  The default is to process the 64bit</span>
 <span class="sd">        entries if available unless specifically specified.</span>
@@ -444,9 +443,9 @@
                     <span class="n">ret_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
             <span class="n">raw_data</span><span class="p">,</span> <span class="n">next_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_raw_struct</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">next_offset</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">ret_val</span></div>
+        <span class="k">return</span> <span class="n">ret_val</span>
 
-<div class="viewcode-block" id="SMBIOS.get_header"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbios.html#chipsec.hal.smbios.SMBIOS.get_header">[docs]</a>    <span class="k">def</span> <span class="nf">get_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Getting generic SMBIOS header information&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;- Raw data pointer is None&#39;</span><span class="p">)</span>
@@ -461,9 +460,9 @@
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;- Failed to extract information from raw data&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="k">return</span> <span class="n">header</span></div>
+        <span class="k">return</span> <span class="n">header</span>
 
-<div class="viewcode-block" id="SMBIOS.get_string_list"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbios.html#chipsec.hal.smbios.SMBIOS.get_string_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_string_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_string_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">):</span>
         <span class="n">ret_val</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Getting strings from structure&#39;</span><span class="p">)</span>
@@ -494,9 +493,9 @@
             <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;+ Found </span><span class="si">{:d}</span><span class="s1"> strings&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ret_val</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="n">ret_val</span></div>
+        <span class="k">return</span> <span class="n">ret_val</span>
 
-<div class="viewcode-block" id="SMBIOS.get_decoded_structs"><a class="viewcode-back" href="../../../modules/chipsec.hal.smbios.html#chipsec.hal.smbios.SMBIOS.get_decoded_structs">[docs]</a>    <span class="k">def</span> <span class="nf">get_decoded_structs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_32bit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_decoded_structs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_32bit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">ret_val</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Determine if the structure exists in the table</span>
@@ -538,7 +537,7 @@
                 <span class="k">continue</span>
             <span class="n">ret_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decode_object</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">ret_val</span></div></div>
+        <span class="k">return</span> <span class="n">ret_val</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -606,7 +605,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

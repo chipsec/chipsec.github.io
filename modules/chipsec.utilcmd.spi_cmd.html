@@ -57,76 +57,6 @@
 <p>A basic forensic operation might be to dump the entire SPI flash to a file. This is accomplished as follows:</p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_util.py</span> <span class="pre">spi</span> <span class="pre">dump</span> <span class="pre">rom.bin</span></code></p>
 <p>The file rom.bin will contain the full binary of the SPI flash. It can then be parsed using the decode util command.</p>
-<dl class="py class">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand">
-<em class="property">class </em><code class="sig-name descname">SPICommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argv</span></em>, <em class="sig-param"><span class="n">cs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">info</span><span class="o">|</span><span class="n">dump</span><span class="o">|</span><span class="n">read</span><span class="o">|</span><span class="n">write</span><span class="o">|</span><span class="n">erase</span><span class="o">|</span><span class="n">disable</span><span class="o">-</span><span class="n">wp</span> <span class="p">[</span><span class="n">flash_address</span><span class="p">]</span> <span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">info</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">dump</span> <span class="n">rom</span><span class="o">.</span><span class="n">bin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">read</span> <span class="mh">0x700000</span> <span class="mh">0x100000</span> <span class="n">bios</span><span class="o">.</span><span class="n">bin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">write</span> <span class="mh">0x0</span> <span class="n">flash_descriptor</span><span class="o">.</span><span class="n">bin</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">disable</span><span class="o">-</span><span class="n">wp</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">sfdp</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">jedec</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">jedec</span> <span class="n">decode</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.requires_driver">
-<code class="sig-name descname">requires_driver</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.requires_driver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.requires_driver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_disable_wp">
-<code class="sig-name descname">spi_disable_wp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_disable_wp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_disable_wp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_dump">
-<code class="sig-name descname">spi_dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_dump" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_erase">
-<code class="sig-name descname">spi_erase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_erase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_erase" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_info">
-<code class="sig-name descname">spi_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_info" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_jedec">
-<code class="sig-name descname">spi_jedec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_jedec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_jedec" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_read">
-<code class="sig-name descname">spi_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_read" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_sfdp">
-<code class="sig-name descname">spi_sfdp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_sfdp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_sfdp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.utilcmd.spi_cmd.SPICommand.spi_write">
-<code class="sig-name descname">spi_write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/spi_cmd.html#SPICommand.spi_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.utilcmd.spi_cmd.SPICommand.spi_write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -208,7 +138,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

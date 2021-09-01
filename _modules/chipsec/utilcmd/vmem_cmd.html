@@ -39,9 +39,8 @@
           <div class="body" role="main">
             
   <h1>Source code for chipsec.utilcmd.vmem_cmd</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/python</span>
-<span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1">#Copyright (c) 2010-2020, Intel Corporation</span>
+<span></span><span class="c1">#CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1">#Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1">#This program is free software; you can redistribute it and/or</span>
 <span class="c1">#modify it under the terms of the GNU General Public License</span>
@@ -100,7 +99,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util vmem getphys  0xFED00000</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="VMemCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">VMemCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
 
@@ -141,10 +140,10 @@
         <span class="n">parser_getphys</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;virt_address&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Address (hex)&#39;</span><span class="p">)</span>
         <span class="n">parser_getphys</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vmem_getphys</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="VMemCommand.vmem_read"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.vmem_read">[docs]</a>    <span class="k">def</span> <span class="nf">vmem_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">vmem_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] Reading buffer from memory: VA = 0x</span><span class="si">{:016X}</span><span class="s1">, len = 0x</span><span class="si">{:X}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vmem</span><span class="o">.</span><span class="n">read_virtual_mem</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="p">)</span>
@@ -156,10 +155,10 @@
             <span class="n">write_file</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">buf_file</span><span class="p">,</span> <span class="n">buffer</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] Written 0x</span><span class="si">{:X}</span><span class="s2"> bytes to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">buf_file</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">print_buffer</span><span class="p">(</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="p">)</span></div>
+            <span class="n">print_buffer</span><span class="p">(</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="VMemCommand.vmem_readval"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.vmem_readval">[docs]</a>    <span class="k">def</span> <span class="nf">vmem_readval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">vmem_readval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">width</span> <span class="o">=</span> <span class="mh">0x4</span>
         <span class="n">value</span> <span class="o">=</span> <span class="mh">0x0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -182,10 +181,10 @@
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;Error mapping VA to PA.&#39;</span> <span class="p">)</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] value = 0x</span><span class="si">{:X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] value = 0x</span><span class="si">{:X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="VMemCommand.vmem_write"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.vmem_write">[docs]</a>    <span class="k">def</span> <span class="nf">vmem_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">vmem_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">buf_file</span> <span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buf_file</span><span class="p">)</span>
@@ -203,10 +202,10 @@
             <span class="k">return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] Writing buffer to memory: VA = 0x</span><span class="si">{:016X}</span><span class="s1">, len = 0x</span><span class="si">{:X}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_vmem</span><span class="o">.</span><span class="n">write_virtual_mem</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">buffer</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vmem</span><span class="o">.</span><span class="n">write_virtual_mem</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">buffer</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="VMemCommand.vmem_writeval"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.vmem_writeval">[docs]</a>    <span class="k">def</span> <span class="nf">vmem_writeval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">vmem_writeval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">chipsec_util</span><span class="o">.</span><span class="n">is_option_valid_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">):</span>
             <span class="n">width</span> <span class="o">=</span> <span class="n">chipsec_util</span><span class="o">.</span><span class="n">get_option_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -223,10 +222,10 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s2">&quot;Must specify &lt;length&gt; argument in &#39;mem writeval&#39; as one of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">CMD_OPTS_WIDTH</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;Error mapping VA to PA.&#39;</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="s1">&#39;Error mapping VA to PA.&#39;</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="VMemCommand.vmem_search"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.vmem_search">[docs]</a>    <span class="k">def</span> <span class="nf">vmem_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">vmem_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vmem</span><span class="o">.</span><span class="n">read_virtual_mem</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
@@ -241,10 +240,10 @@
         <span class="k">if</span> <span class="n">offset</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] Target address = 0x</span><span class="si">{:X}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] Could not find the target in the searched range.&#39;</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] Could not find the target in the searched range.&#39;</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="VMemCommand.vmem_allocate"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.vmem_allocate">[docs]</a>    <span class="k">def</span> <span class="nf">vmem_allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">vmem_allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vmem</span><span class="o">.</span><span class="n">alloc_virtual_mem</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
@@ -252,10 +251,10 @@
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] Allocated </span><span class="si">{:X}</span><span class="s1"> bytes of virtual memory:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;          VA = 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">va</span><span class="p">)</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;          PA = 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;          PA = 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="VMemCommand.vmem_getphys"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.vmem_getphys">[docs]</a>    <span class="k">def</span> <span class="nf">vmem_getphys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">vmem_getphys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vmem</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span> <span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
@@ -264,16 +263,16 @@
         <span class="k">if</span> <span class="n">pa</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;[CHIPSEC] Virtual memory:&#39;</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;          VA = 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">virt_address</span><span class="p">)</span> <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;          PA = 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span> <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s1">&#39;          PA = 0x</span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span> <span class="p">)</span>
 
 
-<div class="viewcode-block" id="VMemCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmem_cmd.html#chipsec.utilcmd.vmem_cmd.VMemCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_vmem</span> <span class="o">=</span> <span class="n">virtmem</span><span class="o">.</span><span class="n">VirtMemory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span></div>
 
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;vmem&#39;</span><span class="p">:</span> <span class="n">VMemCommand</span> <span class="p">}</span>
@@ -344,7 +343,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

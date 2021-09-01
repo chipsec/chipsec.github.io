@@ -52,31 +52,6 @@
 <span id="spi-desc-module"></span><h1>spi_desc module<a class="headerlink" href="#module-chipsec.modules.common.spi_desc" title="Permalink to this headline">¶</a></h1>
 <p>The SPI Flash Descriptor indicates read/write permissions for devices to access regions of the flash memory. This module simply reads the Flash Descriptor and checks that software cannot modify the Flash Descriptor itself. If software can write to the Flash Descriptor, then software could bypass any protection defined by it. While often used for debugging, this should not be the case on production systems.</p>
 <p>This module checks that software cannot write to the flash descriptor.</p>
-<dl class="py class">
-<dt id="chipsec.modules.common.spi_desc.spi_desc">
-<em class="property">class </em><code class="sig-name descname">spi_desc</code><a class="reference internal" href="../_modules/chipsec/modules/common/spi_desc.html#spi_desc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.spi_desc.spi_desc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
-<dl class="py method">
-<dt id="chipsec.modules.common.spi_desc.spi_desc.check_flash_access_permissions">
-<code class="sig-name descname">check_flash_access_permissions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/spi_desc.html#spi_desc.check_flash_access_permissions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.spi_desc.spi_desc.check_flash_access_permissions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.common.spi_desc.spi_desc.is_supported">
-<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/spi_desc.html#spi_desc.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.spi_desc.spi_desc.is_supported" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method should be overwritten by the module returning True or False
-depending whether or not this module is supported in the currently running
-platform.
-To access the currently running platform use</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.common.spi_desc.spi_desc.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/common/spi_desc.html#spi_desc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.common.spi_desc.spi_desc.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -159,7 +134,7 @@ To access the currently running platform use</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

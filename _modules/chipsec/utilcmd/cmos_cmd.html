@@ -41,7 +41,7 @@
   <h1>Source code for chipsec.utilcmd.cmos_cmd</h1><div class="highlight"><pre>
 <span></span><span class="c1"># !/usr/bin/python</span>
 <span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
-<span class="c1"># Copyright (c) 2010-2020, Intel Corporation</span>
+<span class="c1"># Copyright (c) 2010-2021, Intel Corporation</span>
 <span class="c1">#</span>
 <span class="c1"># This program is free software; you can redistribute it and/or</span>
 <span class="c1"># modify it under the terms of the GNU General Public License</span>
@@ -64,7 +64,8 @@
 <span class="kn">from</span> <span class="nn">argparse</span>   <span class="kn">import</span> <span class="n">ArgumentParser</span>
 
 <span class="kn">from</span> <span class="nn">chipsec.command</span>    <span class="kn">import</span> <span class="n">BaseCommand</span>
-<span class="kn">from</span> <span class="nn">chipsec.hal.cmos</span>   <span class="kn">import</span> <span class="n">CMOS</span><span class="p">,</span> <span class="n">CmosRuntimeError</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.cmos</span>   <span class="kn">import</span> <span class="n">CMOS</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">CmosRuntimeError</span>
 
 
 <div class="viewcode-block" id="CMOSCommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand">[docs]</a><span class="k">class</span> <span class="nc">CMOSCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
@@ -79,7 +80,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util cmos writeh 0x0 0xCC</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CMOSCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">CMOSCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 
         <span class="n">parser_offset</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -108,29 +109,29 @@
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="n">CMOSCommand</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="CMOSCommand.cmos_dump"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_dump">[docs]</a>    <span class="k">def</span> <span class="nf">cmos_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cmos_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] Dumping CMOS memory..&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CMOSCommand.cmos_readl"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_readl">[docs]</a>    <span class="k">def</span> <span class="nf">cmos_readl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cmos_readl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span><span class="o">.</span><span class="n">read_cmos_low</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] CMOS low byte 0x</span><span class="si">%X</span><span class="s2"> = 0x</span><span class="si">%X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] CMOS low byte 0x</span><span class="si">%X</span><span class="s2"> = 0x</span><span class="si">%X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
 
-<div class="viewcode-block" id="CMOSCommand.cmos_writel"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_writel">[docs]</a>    <span class="k">def</span> <span class="nf">cmos_writel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cmos_writel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span><span class="o">.</span><span class="n">write_cmos_low</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] CMOS low byte 0x</span><span class="si">%X</span><span class="s2"> = 0x</span><span class="si">%X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] CMOS low byte 0x</span><span class="si">%X</span><span class="s2"> = 0x</span><span class="si">%X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
 
-<div class="viewcode-block" id="CMOSCommand.cmos_readh"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_readh">[docs]</a>    <span class="k">def</span> <span class="nf">cmos_readh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cmos_readh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span><span class="o">.</span><span class="n">read_cmos_high</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] CMOS high byte 0x</span><span class="si">%X</span><span class="s2"> = 0x</span><span class="si">%X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] CMOS high byte 0x</span><span class="si">%X</span><span class="s2"> = 0x</span><span class="si">%X</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
 
-<div class="viewcode-block" id="CMOSCommand.cmos_writeh"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_writeh">[docs]</a>    <span class="k">def</span> <span class="nf">cmos_writeh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cmos_writeh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] Writing CMOS high byte 0x</span><span class="si">%X</span><span class="s2"> &lt;- 0x</span><span class="si">%X</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span><span class="o">.</span><span class="n">write_cmos_high</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span><span class="o">.</span><span class="n">write_cmos_high</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CMOSCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.cmos_cmd.html#chipsec.utilcmd.cmos_cmd.CMOSCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cmos</span> <span class="o">=</span> <span class="n">CMOS</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
@@ -139,7 +140,7 @@
             <span class="k">return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] (cmos) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] (cmos) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span></div>
 
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cmos&#39;</span><span class="p">:</span> <span class="n">CMOSCommand</span><span class="p">}</span>
@@ -210,7 +211,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

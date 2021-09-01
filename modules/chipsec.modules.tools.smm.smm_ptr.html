@@ -99,78 +99,6 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">PTR</span></code>: Physical address SMI handler will write to (the module will replace PTR with physical address provided as a command-line argument)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">VAL</span></code>: Value SMI handler will write to PTR address (the module will replace VAL with hardcoded _FILL_VALUE_xx)</p></li>
 </ul>
-<dl class="py exception">
-<dt id="chipsec.modules.tools.smm.smm_ptr.BadSMIDetected">
-<em class="property">exception </em><code class="sig-name descname">BadSMIDetected</code><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#BadSMIDetected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.BadSMIDetected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.modules.tools.smm.smm_ptr.DIFF">
-<code class="sig-name descname">DIFF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">sz</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#DIFF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.DIFF" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="chipsec.modules.tools.smm.smm_ptr.FILL_BUFFER">
-<code class="sig-name descname">FILL_BUFFER</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_fill_byte</span></em>, <em class="sig-param"><span class="n">_fill_size</span></em>, <em class="sig-param"><span class="n">_ptr_in_buffer</span></em>, <em class="sig-param"><span class="n">_ptr</span></em>, <em class="sig-param"><span class="n">_ptr_offset</span></em>, <em class="sig-param"><span class="n">_sig</span></em>, <em class="sig-param"><span class="n">_sig_offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#FILL_BUFFER"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.FILL_BUFFER" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smi_desc">
-<em class="property">class </em><code class="sig-name descname">smi_desc</code><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smi_desc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smi_desc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr">
-<em class="property">class </em><code class="sig-name descname">smm_ptr</code><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.check_memory">
-<code class="sig-name descname">check_memory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_smi_desc</span></em>, <em class="sig-param"><span class="n">fn</span></em>, <em class="sig-param"><span class="n">restore_contents</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.check_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.check_memory" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.fill_memory">
-<code class="sig-name descname">fill_memory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">is_ptr_in_buffer</span></em>, <em class="sig-param"><span class="n">_ptr</span></em>, <em class="sig-param"><span class="n">_ptr_offset</span></em>, <em class="sig-param"><span class="n">_sig</span></em>, <em class="sig-param"><span class="n">_sig_offset</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.fill_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.fill_memory" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.is_supported">
-<code class="sig-name descname">is_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.is_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.is_supported" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method should be overwritten by the module returning True or False
-depending whether or not this module is supported in the currently running
-platform.
-To access the currently running platform use</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_argv</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.send_smi">
-<code class="sig-name descname">send_smi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">smi_code</span></em>, <em class="sig-param"><span class="n">smi_data</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">desc</span></em>, <em class="sig-param"><span class="n">rax</span></em>, <em class="sig-param"><span class="n">rbx</span></em>, <em class="sig-param"><span class="n">rcx</span></em>, <em class="sig-param"><span class="n">rdx</span></em>, <em class="sig-param"><span class="n">rsi</span></em>, <em class="sig-param"><span class="n">rdi</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.send_smi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.send_smi" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.smi_fuzz_iter">
-<code class="sig-name descname">smi_fuzz_iter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_smi_desc</span></em>, <em class="sig-param"><span class="n">fill_contents</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">restore_contents</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.smi_fuzz_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.smi_fuzz_iter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_config">
-<code class="sig-name descname">test_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">_smi_config_fname</span></em>, <em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_addr1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.test_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_fuzz">
-<code class="sig-name descname">test_fuzz</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thread_id</span></em>, <em class="sig-param"><span class="n">smic_start</span></em>, <em class="sig-param"><span class="n">smic_end</span></em>, <em class="sig-param"><span class="n">_addr</span></em>, <em class="sig-param"><span class="n">_addr1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/smm/smm_ptr.html#smm_ptr.test_fuzz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chipsec.modules.tools.smm.smm_ptr.smm_ptr.test_fuzz" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -254,7 +182,7 @@ To access the currently running platform use</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

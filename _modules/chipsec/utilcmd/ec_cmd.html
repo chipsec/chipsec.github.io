@@ -88,7 +88,7 @@
 <span class="sd">    &gt;&gt;&gt; chipsec_util ec index</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ECCommand.requires_driver"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.ec_cmd.html#chipsec.utilcmd.ec_cmd.ECCommand.requires_driver">[docs]</a>    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">ECCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 
         <span class="n">parser_offset</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -120,20 +120,20 @@
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;func&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+            <span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="ECCommand.dump"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.ec_cmd.html#chipsec.utilcmd.ec_cmd.ECCommand.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] EC dump&quot;</span><span class="p">)</span>
 
         <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">read_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-        <span class="n">print_buffer</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span></div>
+        <span class="n">print_buffer</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ECCommand.command"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.ec_cmd.html#chipsec.utilcmd.ec_cmd.ECCommand.command">[docs]</a>    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] Sending EC command 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">write_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">write_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ECCommand.read"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.ec_cmd.html#chipsec.utilcmd.ec_cmd.ECCommand.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">read_range</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] EC memory read: offset 0x</span><span class="si">{:X}</span><span class="s2"> size 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
@@ -141,17 +141,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">read_memory</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">&lt;</span> <span class="mh">0x100</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">read_memory_extended</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] EC memory read: offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_offset</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] EC memory read: offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_offset</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
 
-<div class="viewcode-block" id="ECCommand.write"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.ec_cmd.html#chipsec.utilcmd.ec_cmd.ECCommand.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] EC memory write: offset 0x</span><span class="si">{:X}</span><span class="s2"> = 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wval</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">&lt;</span> <span class="mh">0x100</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">write_memory</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wval</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">write_memory_extended</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wval</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">write_memory_extended</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wval</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ECCommand.index"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.ec_cmd.html#chipsec.utilcmd.ec_cmd.ECCommand.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">read_idx</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
@@ -161,9 +161,9 @@
             <span class="n">mem</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">off</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0x10000</span><span class="p">):</span>
                 <span class="n">mem</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ec</span><span class="o">.</span><span class="n">read_idx</span><span class="p">(</span><span class="n">off</span><span class="p">)))</span>
-            <span class="n">print_buffer</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span></div>
+            <span class="n">print_buffer</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ECCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.ec_cmd.html#chipsec.utilcmd.ec_cmd.ECCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ec</span> <span class="o">=</span> <span class="n">EC</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
@@ -171,7 +171,7 @@
             <span class="nb">print</span> <span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (ec) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span> <span class="s2">&quot;[CHIPSEC] (ec) time elapsed </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span></div>
 
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;ec&#39;</span><span class="p">:</span> <span class="n">ECCommand</span><span class="p">}</span>
@@ -242,7 +242,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 25, 2021.
+      Last updated on Aug 31, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>
