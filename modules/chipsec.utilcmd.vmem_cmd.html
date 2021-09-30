@@ -50,6 +50,27 @@
   <div class="section" id="module-chipsec.utilcmd.vmem_cmd">
 <span id="vmem-cmd-module"></span><h1>vmem_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.vmem_cmd" title="Permalink to this headline">¶</a></h1>
 <p>The vmem command provides direct access to read and write virtual memory.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="o">&lt;</span><span class="n">op</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">length</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">value</span><span class="o">|</span><span class="n">buffer_file</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span> <span class="p">:</span> <span class="mi">64</span><span class="o">-</span><span class="n">bit</span> <span class="n">physical</span> <span class="n">address</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">op</span><span class="o">&gt;</span>               <span class="p">:</span> <span class="n">read</span><span class="o">|</span><span class="n">readval</span><span class="o">|</span><span class="n">write</span><span class="o">|</span><span class="n">writeval</span><span class="o">|</span><span class="n">allocate</span><span class="o">|</span><span class="n">pagedump</span><span class="o">|</span><span class="n">search</span><span class="o">|</span><span class="n">getphys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">length</span><span class="o">&gt;</span>           <span class="p">:</span> <span class="n">byte</span><span class="o">|</span><span class="n">word</span><span class="o">|</span><span class="n">dword</span> <span class="ow">or</span> <span class="n">length</span> <span class="n">of</span> <span class="n">the</span> <span class="n">buffer</span> <span class="kn">from</span> <span class="o">&lt;</span><span class="n">buffer_file</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>            <span class="p">:</span> <span class="n">byte</span><span class="p">,</span> <span class="n">word</span> <span class="ow">or</span> <span class="n">dword</span> <span class="n">value</span> <span class="n">to</span> <span class="n">be</span> <span class="n">written</span> <span class="n">to</span> <span class="n">memory</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">buffer_file</span><span class="o">&gt;</span>      <span class="p">:</span> <span class="n">file</span> <span class="k">with</span> <span class="n">the</span> <span class="n">contents</span> <span class="n">to</span> <span class="n">be</span> <span class="n">written</span> <span class="n">to</span> <span class="n">memory</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">physical_address</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="o">&lt;</span><span class="n">op</span><span class="o">&gt;</span>     <span class="o">&lt;</span><span class="n">virtual_address</span><span class="o">&gt;</span>  <span class="o">&lt;</span><span class="n">length</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">value</span><span class="o">|</span><span class="n">file</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">readval</span>  <span class="mh">0xFED40000</span>         <span class="n">dword</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">read</span>     <span class="mh">0x41E</span>              <span class="mh">0x20</span>     <span class="n">buffer</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">writeval</span> <span class="mh">0xA0000</span>            <span class="n">dword</span>    <span class="mh">0x9090CCCC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">write</span>    <span class="mh">0x100000000</span>        <span class="mh">0x1000</span>   <span class="n">buffer</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">write</span>    <span class="mh">0x100000000</span>        <span class="mh">0x10</span>     <span class="mi">000102030405060708090</span><span class="n">A0B0C0D0E0F</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">allocate</span>                    <span class="mh">0x1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">search</span>   <span class="mh">0xF0000</span>            <span class="mh">0x10000</span>  <span class="n">_SM_</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmem</span> <span class="n">getphys</span>  <span class="mh">0xFED00000</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -131,7 +152,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

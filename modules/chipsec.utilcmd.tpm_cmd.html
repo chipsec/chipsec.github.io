@@ -49,6 +49,26 @@
             
   <div class="section" id="module-chipsec.utilcmd.tpm_cmd">
 <span id="tpm-cmd-module"></span><h1>tpm_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.tpm_cmd" title="Permalink to this headline">¶</a></h1>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">tpm</span> <span class="n">parse_log</span> <span class="o">&lt;</span><span class="n">file</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">tpm</span> <span class="n">state</span> <span class="o">&lt;</span><span class="n">locality</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">tpm</span> <span class="n">command</span> <span class="o">&lt;</span><span class="n">commandName</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">locality</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">command_parameters</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>locality: 0 | 1 | 2 | 3 | 4
+commands - parameters:
+pccrread - pcr number ( 0 - 23 )
+nvread - Index, Offset, Size
+startup - startup type ( 1 - 3 )
+continueselftest
+getcap - Capabilities Area, Size of Sub-capabilities, Sub-capabilities
+forceclear</p>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">tpm</span> <span class="n">parse_log</span> <span class="n">binary_bios_measurements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">tpm</span> <span class="n">state</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">tpm</span> <span class="n">command</span> <span class="n">pcrread</span> <span class="mi">0</span> <span class="mi">17</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">tpm</span> <span class="n">command</span> <span class="n">continueselftest</span> <span class="mi">0</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -130,7 +150,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

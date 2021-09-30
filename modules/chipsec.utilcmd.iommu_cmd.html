@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="mem_cmd module" href="chipsec.utilcmd.mem_cmd.html" />
+    <link rel="next" title="lock_check_cmd module" href="chipsec.utilcmd.lock_check_cmd.html" />
     <link rel="prev" title="io_cmd module" href="chipsec.utilcmd.io_cmd.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,7 +30,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.mem_cmd.html" title="mem_cmd module"
+          <a href="chipsec.utilcmd.lock_check_cmd.html" title="lock_check_cmd module"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="chipsec.utilcmd.io_cmd.html" title="io_cmd module"
@@ -50,6 +50,21 @@
   <div class="section" id="module-chipsec.utilcmd.iommu_cmd">
 <span id="iommu-cmd-module"></span><h1>iommu_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.iommu_cmd" title="Permalink to this headline">¶</a></h1>
 <p>Command-line utility providing access to IOMMU engines</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="nb">list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">config</span> <span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">status</span> <span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">enable</span><span class="o">|</span><span class="n">disable</span> <span class="o">&lt;</span><span class="n">iommu_engine</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">pt</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="nb">list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">config</span> <span class="n">VTD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">status</span> <span class="n">GFXVTD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">enable</span> <span class="n">VTD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">iommu</span> <span class="n">pt</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -93,8 +108,8 @@
   <p class="topless"><a href="chipsec.utilcmd.io_cmd.html"
                         title="previous chapter">io_cmd module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="chipsec.utilcmd.mem_cmd.html"
-                        title="next chapter">mem_cmd module</a></p>
+  <p class="topless"><a href="chipsec.utilcmd.lock_check_cmd.html"
+                        title="next chapter">lock_check_cmd module</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -119,7 +134,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.mem_cmd.html" title="mem_cmd module"
+          <a href="chipsec.utilcmd.lock_check_cmd.html" title="lock_check_cmd module"
              >next</a> |</li>
         <li class="right" >
           <a href="chipsec.utilcmd.io_cmd.html" title="io_cmd module"
@@ -131,7 +146,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

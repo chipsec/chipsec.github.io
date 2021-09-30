@@ -49,6 +49,22 @@
             
   <div class="section" id="module-chipsec.utilcmd.cpu_cmd">
 <span id="cpu-cmd-module"></span><h1>cpu_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.cpu_cmd" title="Permalink to this headline">¶</a></h1>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">info</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">cr</span> <span class="o">&lt;</span><span class="n">thread</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">cr_number</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">cpuid</span> <span class="o">&lt;</span><span class="n">eax</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">ecx</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">pt</span> <span class="p">[</span><span class="n">paging_base_cr3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">topology</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">info</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">cr</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">cr</span> <span class="mi">0</span> <span class="mi">4</span> <span class="mh">0x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">cpuid</span> <span class="mh">0x40000000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cpu</span> <span class="n">topology</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -130,7 +146,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

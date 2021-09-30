@@ -50,6 +50,17 @@
   <div class="section" id="module-chipsec.utilcmd.io_cmd">
 <span id="io-cmd-module"></span><h1>io_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.io_cmd" title="Permalink to this headline">¶</a></h1>
 <p>The io command allows direct access to read and write I/O port space.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">io</span> <span class="nb">list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">io</span> <span class="n">read</span>  <span class="o">&lt;</span><span class="n">io_port</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">io</span> <span class="n">write</span> <span class="o">&lt;</span><span class="n">io_port</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">io</span> <span class="nb">list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">io</span> <span class="n">read</span> <span class="mh">0x61</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">io</span> <span class="n">write</span> <span class="mh">0x430</span> <span class="mi">1</span> <span class="mh">0x0</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -131,7 +142,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

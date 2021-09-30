@@ -54,21 +54,27 @@
 <p>Experimental module that may help checking SMM firmware for MMIO BAR hijacking
 vulnerabilities described in the following presentation:</p>
 <p><a class="reference external" href="http://www.intelsecurity.com/advanced-threat-research/content/data/REConBrussels2017_BARing_the_system.pdf">BARing the System: New vulnerabilities in Coreboot &amp; UEFI based systems</a> by Intel Advanced Threat Research team at RECon Brussels 2017</p>
-<dl class="simple">
+<dl>
 <dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.smm.rogue_mmio_bar</span> <span class="pre">[-a</span> <span class="pre">&lt;smi_start:smi_end&gt;,&lt;b:d.f&gt;]</span></code></p>
-</dd>
-</dl>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">smi_start:smi_end</span></code>: range of SMI codes (written to IO port 0xB2)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">b:d.f</span></code>: PCIe bus/device/function in b:d.f format (in hex)</p></li>
 </ul>
-<dl>
+</dd>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">smm</span><span class="o">.</span><span class="n">rogue_mmio_bar</span> <span class="o">-</span><span class="n">a</span> <span class="mh">0x00</span><span class="p">:</span><span class="mh">0x80</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">smm</span><span class="o">.</span><span class="n">rogue_mmio_bar</span> <span class="o">-</span><span class="n">a</span> <span class="mh">0x00</span><span class="p">:</span><span class="mh">0xFF</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="n">C</span><span class="o">.</span><span class="mi">0</span>
 </pre></div>
 </div>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Look for ‘changes found’ messages for items that should be further investigated.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When running this test, system may freeze, reboot, etc. This is not unexpected behavior and not generally considered a failure.</p>
+</div>
 </div>
 
 
@@ -152,7 +158,7 @@ vulnerabilities described in the following presentation:</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

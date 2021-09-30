@@ -50,6 +50,36 @@
   <div class="section" id="module-chipsec.utilcmd.uefi_cmd">
 <span id="uefi-cmd-module"></span><h1>uefi_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.uefi_cmd" title="Permalink to this headline">¶</a></h1>
 <p>The uefi command provides access to UEFI variables, both on the live system and in a SPI flash image file.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">types</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="nb">list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">find</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;|&lt;</span><span class="n">GUID</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">read</span><span class="o">|</span><span class="n">var</span><span class="o">-</span><span class="n">write</span><span class="o">|</span><span class="n">var</span><span class="o">-</span><span class="n">delete</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">efi_variable_file</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="o">--</span><span class="n">fwtype</span> <span class="o">&lt;</span><span class="n">rom_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">filetypes</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">nvram</span><span class="p">[</span><span class="o">-</span><span class="n">auth</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">rom_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">fwtype</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">keys</span> <span class="o">&lt;</span><span class="n">keyvar_file</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">tables</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">s3bootscript</span> <span class="p">[</span><span class="n">script_address</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">assemble</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="n">freeform</span> <span class="n">none</span><span class="o">|</span><span class="n">lzma</span><span class="o">|</span><span class="n">tiano</span> <span class="o">&lt;</span><span class="n">raw_file</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">uefi_file</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">insert_before</span><span class="o">|</span><span class="n">insert_after</span><span class="o">|</span><span class="n">replace</span><span class="o">|</span><span class="n">remove</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rom</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">new_rom</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">uefi_file</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">types</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="nb">list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">find</span> <span class="n">PK</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">read</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">write</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">delete</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span> <span class="n">FV_MM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">nvram</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span> <span class="n">vss_auth</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">keys</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">tables</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">s3bootscript</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">assemble</span> <span class="n">AAAAAAAA</span><span class="o">-</span><span class="n">BBBB</span><span class="o">-</span><span class="n">CCCC</span><span class="o">-</span><span class="n">DDDD</span><span class="o">-</span><span class="n">EEEEEEEEEEEE</span> <span class="n">freeform</span> <span class="n">lzma</span> <span class="n">uefi</span><span class="o">.</span><span class="n">raw</span> <span class="n">mydriver</span><span class="o">.</span><span class="n">efi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">replace</span>  <span class="n">AAAAAAAA</span><span class="o">-</span><span class="n">BBBB</span><span class="o">-</span><span class="n">CCCC</span><span class="o">-</span><span class="n">DDDD</span><span class="o">-</span><span class="n">EEEEEEEEEEEE</span> <span class="n">bios</span><span class="o">.</span><span class="n">bin</span> <span class="n">new_bios</span><span class="o">.</span><span class="n">bin</span> <span class="n">mydriver</span><span class="o">.</span><span class="n">efi</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -131,7 +161,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

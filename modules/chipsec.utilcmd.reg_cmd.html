@@ -49,6 +49,24 @@
             
   <div class="section" id="module-chipsec.utilcmd.reg_cmd">
 <span id="reg-cmd-module"></span><h1>reg_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.reg_cmd" title="Permalink to this headline">¶</a></h1>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read_field</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write_field</span> <span class="o">&lt;</span><span class="n">reg_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">get_control</span> <span class="o">&lt;</span><span class="n">control_name</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">set_control</span> <span class="o">&lt;</span><span class="n">control_name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="n">SMBUS_VID</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read</span> <span class="n">HSFC</span> <span class="n">FGO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">read_field</span> <span class="n">HSFC</span> <span class="n">FGO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write</span> <span class="n">SMBUS_VID</span> <span class="mh">0x8088</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">write_field</span> <span class="n">BC</span> <span class="n">BLE</span> <span class="mh">0x1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">get_control</span> <span class="n">BiosWriteEnable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">reg</span> <span class="n">set_control</span> <span class="n">BiosLockEnable</span> <span class="mh">0x1</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -130,7 +148,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

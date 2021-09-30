@@ -49,6 +49,27 @@
             
   <div class="section" id="module-chipsec.utilcmd.interrupts_cmd">
 <span id="interrupts-cmd-module"></span><h1>interrupts_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.interrupts_cmd" title="Permalink to this headline">¶</a></h1>
+<p>SMI command:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">count</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="o">&lt;</span><span class="n">thread_id</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_code</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_data</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">RAX</span><span class="p">]</span> <span class="p">[</span><span class="n">RBX</span><span class="p">]</span> <span class="p">[</span><span class="n">RCX</span><span class="p">]</span> <span class="p">[</span><span class="n">RDX</span><span class="p">]</span> <span class="p">[</span><span class="n">RSI</span><span class="p">]</span> <span class="p">[</span><span class="n">RDI</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="o">&lt;</span><span class="n">RT_code_start</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">RT_code_end</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_loc</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_file</span><span class="o">|</span><span class="n">payload_string</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">port</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">count</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span> <span class="mh">0xAAAAAAAAAAAAAAAA</span> <span class="o">..</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="mh">0x79dfe000</span> <span class="mh">0x79efdfff</span> <span class="n">ed32d533</span><span class="o">-</span><span class="mf">99e6</span><span class="o">-</span><span class="mi">4209</span><span class="o">-</span><span class="mi">9</span><span class="n">cc02d72cdd998a7</span> <span class="mh">0x79dfaaaa</span> <span class="n">payload</span><span class="o">.</span><span class="n">bin</span>
+</pre></div>
+</div>
+<p>NMI command:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">nmi</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">nmi</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -130,7 +151,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

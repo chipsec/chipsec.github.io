@@ -50,6 +50,16 @@
   <div class="section" id="module-chipsec.utilcmd.mmcfg_cmd">
 <span id="mmcfg-cmd-module"></span><h1>mmcfg_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.mmcfg_cmd" title="Permalink to this headline">¶</a></h1>
 <p>The mmcfg command allows direct access to memory mapped config space.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmcfg</span> <span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmcfg</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x88</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmcfg</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x88</span> <span class="n">byte</span> <span class="mh">0x1A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmcfg</span> <span class="mi">0</span> <span class="mh">0x1F</span> <span class="mi">0</span> <span class="mh">0xDC</span> <span class="mi">1</span> <span class="mh">0x1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mmcfg</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x98</span> <span class="n">dword</span> <span class="mh">0x004E0040</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -131,7 +141,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

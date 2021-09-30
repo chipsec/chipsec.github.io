@@ -57,6 +57,20 @@
 <p>A basic forensic operation might be to dump the entire SPI flash to a file. This is accomplished as follows:</p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_util.py</span> <span class="pre">spi</span> <span class="pre">dump</span> <span class="pre">rom.bin</span></code></p>
 <p>The file rom.bin will contain the full binary of the SPI flash. It can then be parsed using the decode util command.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">info</span><span class="o">|</span><span class="n">dump</span><span class="o">|</span><span class="n">read</span><span class="o">|</span><span class="n">write</span><span class="o">|</span><span class="n">erase</span><span class="o">|</span><span class="n">disable</span><span class="o">-</span><span class="n">wp</span> <span class="p">[</span><span class="n">flash_address</span><span class="p">]</span> <span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">info</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">dump</span> <span class="n">rom</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">read</span> <span class="mh">0x700000</span> <span class="mh">0x100000</span> <span class="n">bios</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">write</span> <span class="mh">0x0</span> <span class="n">flash_descriptor</span><span class="o">.</span><span class="n">bin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">disable</span><span class="o">-</span><span class="n">wp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">sfdp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">jedec</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">spi</span> <span class="n">jedec</span> <span class="n">decode</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -138,7 +152,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>

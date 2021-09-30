@@ -50,6 +50,28 @@
   <div class="section" id="module-chipsec.utilcmd.pci_cmd">
 <span id="pci-cmd-module"></span><h1>pci_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.pci_cmd" title="Permalink to this headline">¶</a></h1>
 <p>The pci command can enumerate PCI/PCIe devices, enumerate expansion ROMs and allow direct access to PCI configuration registers via bus/device/function.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="nb">enumerate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">read</span> <span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">width</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">write</span> <span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">dump</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">xrom</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="n">xrom_address</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">cmd</span> <span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="p">[</span><span class="n">class</span><span class="p">]</span> <span class="p">[</span><span class="n">subclass</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="nb">enumerate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">read</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">read</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x88</span> <span class="n">byte</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">write</span> <span class="mi">0</span> <span class="mh">0x1F</span> <span class="mi">0</span> <span class="mh">0xDC</span> <span class="mi">1</span> <span class="mh">0x1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">write</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0x98</span> <span class="n">dword</span> <span class="mh">0x004E0040</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">dump</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">dump</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">xrom</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">xrom</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mh">0xFEDF0000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">cmd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">pci</span> <span class="n">cmd</span> <span class="mi">1</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -131,7 +153,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 31, 2021.
+      Last updated on Sep 29, 2021.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
     </div>
   </body>
