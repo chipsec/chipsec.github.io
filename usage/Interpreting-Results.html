@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interpreting results &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Running CHIPSEC" href="Running-Chipsec.html" />
+    <link rel="prev" title="Creating the Kali Linux Live USB" href="../installation/Using-CHIPSEC-with-Kali-Linux.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Running-Chipsec.html" title="Running CHIPSEC"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../installation/Using-CHIPSEC-with-Kali-Linux.html" title="Creating the Kali Linux Live USB"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Interpreting results</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="interpreting-results">
+<h1>Interpreting results<a class="headerlink" href="#interpreting-results" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>DRAFT (work in progress)</p>
+</div>
+<p>In order to improve usability, we are reviewing and improving the
+messages and meaning of information returned by CHIPSEC.</p>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>Currently, the SKIPPED return value is ambiguous. The proposed <strong>new</strong>
+definition of the return values is listed below:</p>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">Generic results meanings</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Result</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PASSED</p></td>
+<td><p>A <strong>mitigation</strong> to a known vulnerability has been detected</p></td>
+</tr>
+<tr class="row-odd"><td><p>FAILED</p></td>
+<td><p>A known <strong>vulnerability</strong> has been detected</p></td>
+</tr>
+<tr class="row-even"><td><p>WARNING</p></td>
+<td><p>We have detected something that could be a vulnerability but <strong>manual analysis is required</strong> to confirm (inconclusive)</p></td>
+</tr>
+<tr class="row-odd"><td><p>SKIPPED NOT IMPLEMENTED</p></td>
+<td><p>CHIPSEC currently has not implemented support for this test on this platform</p></td>
+</tr>
+<tr class="row-even"><td><p>SKIPPED NOT APPLICABLE</p></td>
+<td><p>The issue checked by this module is not applicable to this platform. This result can be ignored</p></td>
+</tr>
+<tr class="row-odd"><td><p>INFORMATION</p></td>
+<td><p>This module does not check for a vulnerability. It just prints information about the system</p></td>
+</tr>
+<tr class="row-even"><td><p>ERROR</p></td>
+<td><p>Something went wrong in the execution of CHIPSEC</p></td>
+</tr>
+<tr class="row-odd"><td><p>DEPRECATED</p></td>
+<td><p>At least one module uses deprecated API</p></td>
+</tr>
+<tr class="row-even"><td><p>EXCEPTION</p></td>
+<td><p>At least one module threw an unexpected exception</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="automated-tests">
+<h2>Automated Tests<a class="headerlink" href="#automated-tests" title="Permalink to this headline">¶</a></h2>
+<p>Each test module can log additional messaging in addition to the return
+value. In an effort to standardize and improve the clarity of this
+messaging, the mapping of result and messages is defined below:</p>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">Modules results meanings</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Test</p></th>
+<th class="head"><p>PASSED message</p></th>
+<th class="head"><p>FAILED message</p></th>
+<th class="head"><p>WARNING message</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>memconfig</p></td>
+<td><p>All memory map registers seem to be locked down</p></td>
+<td><p>Not all memory map registers are locked down</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Remap</p></td>
+<td><p>Memory Remap is configured correctly and locked</p></td>
+<td><p>Memory Remap is not properly configured/locked. Remaping attack may be possible.</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>smm_dma</p></td>
+<td><p>TSEG is properly configured. SMRAM is protected from DMA attacks.</p></td>
+<td><p>TSEG is properly configured, but the configuration is not locked or TSEG is not properly configured. Portions of SMRAM may be vulnerable to DMA attacks</p></td>
+<td><p>TSEG is properly configured but can’t determine if it covers entire SMRAM</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>common.bios_kbrd_buffer</p></td>
+<td><p>“Keyboard buffer is filled with common fill pattern” or “Keyboard buffer looks empty. Pre-boot passwords don’t seem to be exposed</p></td>
+<td><p>FAILED</p></td>
+<td><p>Keyboard buffer is not empty. The test cannot determine conclusively if it contains pre-boot passwords.n The contents might have not been cleared by pre-boot firmware or overwritten with garbage.n Visually inspect the contents of keyboard buffer for pre-boot passwords (BIOS, HDD, full-disk encryption).</p></td>
+<td><p>Also printing a message if size of buffer is revealed. “Was your password %d characters long?”</p></td>
+</tr>
+<tr class="row-even"><td><p>common.bios_smi</p></td>
+<td><p>All required SMI sources seem to be enabled and locked</p></td>
+<td><p>Not all required SMI sources are enabled and locked</p></td>
+<td><p>Not all required SMI sources are enabled and locked, but SPI flash writes are still restricted to SMM</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>common.bios_ts</p></td>
+<td><p>BIOS Interface is locked (including Top Swap Mode)</p></td>
+<td><p>BIOS Interface is not locked (including Top Swap Mode)</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>common.bios_wp</p></td>
+<td><p>BIOS is write protected</p></td>
+<td><p>BIOS should enable all available SMM based write protection mechanisms or configure SPI protected ranges to protect the entire BIOS region. BIOS is NOT protected completely</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>common.ia32cfg</p></td>
+<td><p>IA32_FEATURE_CONTROL MSR is locked on all logical CPUs</p></td>
+<td><p>IA32_FEATURE_CONTROL MSR is not locked on all logical CPUs</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>common.rtclock</p></td>
+<td><p>Protected locations in RTC memory are locked</p></td>
+<td><p>N/A</p></td>
+<td><p>Protected locations in RTC memory are accessible (BIOS may not be using them)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>common.smm</p></td>
+<td><p>Compatible SMRAM is locked down</p></td>
+<td><p>Compatible SMRAM is not properly locked. Expected ( D_LCK = 1, D_OPEN = 0 )</p></td>
+<td><p>N/A</p></td>
+<td><p>Should return SKIPPED_NOT_APPLICABLE when compatible SMRAM is not enabled.</p></td>
+</tr>
+<tr class="row-even"><td><p>common.smrr</p></td>
+<td><p>SMRR protection against cache attack is properly configured</p></td>
+<td><p>SMRR protection against cache attack is not configured properly</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>common.spi_access</p></td>
+<td><p>SPI Flash Region Access Permissions in flash descriptor look ok</p></td>
+<td><p>SPI Flash Region Access Permissions are not programmed securely in flash descriptor</p></td>
+<td><p>Software has write access to GBe region in SPI flash” and “Certain SPI flash regions are writeable by software</p></td>
+<td><p>we have observed production systems reacting badly when GBe was overwritten</p></td>
+</tr>
+<tr class="row-even"><td><p>common.spi_desc</p></td>
+<td><p>SPI flash permissions prevent SW from writing to flash descriptor</p></td>
+<td><p>SPI flash permissions allow SW to write flash descriptor</p></td>
+<td><p>N/A</p></td>
+<td><p>we can probably remove this now that we have spi_access</p></td>
+</tr>
+<tr class="row-odd"><td><p>common.spi_fdopss</p></td>
+<td><p>SPI Flash Descriptor Security Override is disabled</p></td>
+<td><p>SPI Flash Descriptor Security Override is enabled</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>common.spi_lock</p></td>
+<td><p>SPI Flash Controller configuration is locked</p></td>
+<td><p>SPI Flash Controller configuration is not locked</p></td>
+<td><p>N/A</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>common.cpu.spectre_v2</p></td>
+<td><p>CPU and OS support hardware mitigations (enhanced IBRS and STIBP)</p></td>
+<td><p>CPU mitigation (IBRS) is missing</p></td>
+<td><p>CPU supports mitigation (IBRS) but doesn’t support enhanced IBRS” or “CPU supports mitigation (enhanced IBRS) but OS is not using it” or “CPU supports mitigation (enhanced IBRS) but STIBP is not supported/enabled</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>common.secureboot.variables</p></td>
+<td><p>All Secure Boot UEFI variables are protected</p></td>
+<td><p>Not all Secure Boot UEFI variables are protected’ (failure when secure boot is enabled)</p></td>
+<td><p>Not all Secure Boot UEFI variables are protected’ (warning when secure boot is disabled)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>common.uefi.access_uefispec</p></td>
+<td><p>All checked EFI variables are protected according to spec</p></td>
+<td><p>Some EFI variables were not protected according to spec</p></td>
+<td><p>Extra/Missing attributes</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>common.uefi.s3bootscript</p></td>
+<td><p>N/A</p></td>
+<td><p>S3 Boot-Script and Dispatch entry-points do not appear to be protected</p></td>
+<td><p>S3 Boot-Script is not in SMRAM but Dispatch entry-points appear to be protected. Recommend further testing</p></td>
+<td><p>unfortunately, if the boot script is well protected (in SMRAM) we cannot find it at all and end up returning warning</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="tools">
+<h2>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h2>
+<p>CHIPSEC also contains tools such as fuzzers, which require a
+knowledgeable user to run. We can examine the usability of these tools
+as well.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20DAL%20Win.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Linux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20MacOS.html">MacOS Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Windows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Using CHIPSEC</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../installation/Using-CHIPSEC-with-Kali-Linux.html"
+                        title="previous chapter">Creating the Kali Linux Live USB</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Running-Chipsec.html"
+                        title="next chapter">Running CHIPSEC</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Running-Chipsec.html" title="Running CHIPSEC"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../installation/Using-CHIPSEC-with-Kali-Linux.html" title="Creating the Kali Linux Live USB"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Interpreting results</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Nov 01, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>
