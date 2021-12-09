@@ -50,9 +50,41 @@
             
   <div class="section" id="module-chipsec.modules.common.smm_dma">
 <span id="smm-dma-module"></span><h1>smm_dma module<a class="headerlink" href="#module-chipsec.modules.common.smm_dma" title="Permalink to this headline">¶</a></h1>
-<p>Just like SMRAM needs to be protected from software executing on the CPU, it also needs to be protected from devices that have direct access to DRAM (DMA). Protection from DMA is configured through proper programming of SMRAM memory range. If BIOS does not correctly configure and lock the configuration, then malware could reprogram configuration and open SMRAM area to DMA access, allowing manipulation of memory that should have been protected.</p>
-<p>DMA attacks were discussed in <a class="reference external" href="http://www.ssi.gouv.fr/archive/fr/sciences/fichiers/lti/pacsec2007-duflot-papier.pdf">Programmed I/O accesses: a threat to Virtual Machine Monitors?</a> and <a class="reference external" href="http://www.ssi.gouv.fr/uploads/IMG/pdf/IT_Defense_2010_final.pdf">System Management Mode Design and Security Issues</a>. This is also discussed in <cite>Summary of Attack against BIOS and Secure Boot</cite> <a class="reference external" href="https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf">https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf</a></p>
-<p>This module examines the configuration and locking of SMRAM range configuration protecting from DMA attacks. If it fails, then DMA protection may not be securely configured to protect SMRAM.</p>
+<p>SMM TSEG Range Configuration Checks</p>
+<p>This module examines the configuration and locking of SMRAM range configuration protecting from DMA attacks.
+If it fails, then DMA protection may not be securely configured to protect SMRAM.</p>
+<dl>
+<dt>Reference:</dt><dd><p>Just like SMRAM needs to be protected from software executing on the CPU,
+it also needs to be protected from devices that have direct access to DRAM (DMA).
+Protection from DMA is configured through proper programming of SMRAM memory range.
+If BIOS does not correctly configure and lock the configuration,
+then malware could reprogram configuration and open SMRAM area to DMA access,
+allowing manipulation of memory that should have been protected.</p>
+<p>DMA attacks were discussed in <a class="reference external" href="http://www.ssi.gouv.fr/archive/fr/sciences/fichiers/lti/pacsec2007-duflot-papier.pdf">Programmed I/O accesses: a threat to Virtual Machine Monitors?</a>
+and <a class="reference external" href="http://www.ssi.gouv.fr/uploads/IMG/pdf/IT_Defense_2010_final.pdf">System Management Mode Design and Security Issues</a>
+and <cite>Summary of Attack against BIOS and Secure Boot</cite> <a class="reference external" href="https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf">https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf</a></p>
+</dd>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">smm_dma</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">smm_dma</span>
+</pre></div>
+</div>
+</dd>
+<dt>Registers used:</dt><dd><ul class="simple">
+<li><p>TSEGBaseLock (control)</p></li>
+<li><p>TSEGLimitLock (control)</p></li>
+<li><p>MSR_BIOS_DONE.IA_UNTRUSTED</p></li>
+<li><p>PCI0.0.0_TSEGMB.TSEGMB</p></li>
+<li><p>PCI0.0.0_BGSM.BGSM</p></li>
+<li><p>IA32_SMRR_PHYSBASE.PhysBase</p></li>
+<li><p>IA32_SMRR_PHYSMASK.PhysMask</p></li>
+</ul>
+</dd>
+<dt>Supported Platforms:</dt><dd><ul class="simple">
+<li><p>Core (client)</p></li>
+</ul>
+</dd>
+</dl>
 </div>
 
 
@@ -138,8 +170,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Nov 01, 2021.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Last updated on Dec 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.1.
     </div>
   </body>
 </html>

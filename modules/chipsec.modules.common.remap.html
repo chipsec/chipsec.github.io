@@ -51,14 +51,22 @@
   <div class="section" id="module-chipsec.modules.common.remap">
 <span id="remap-module"></span><h1>remap module<a class="headerlink" href="#module-chipsec.modules.common.remap" title="Permalink to this headline">¶</a></h1>
 <p>Check Memory Remapping Configuration</p>
-<p>Reference:
-<a class="reference external" href="http://www.invisiblethingslab.com/resources/bh08/part2-full.pdf">Preventing &amp; Detecting Xen Hypervisor Subversions</a> by Joanna Rutkowska &amp; Rafal Wojtczuk</p>
 <dl>
+<dt>Reference:</dt><dd><p><a class="reference external" href="http://www.invisiblethingslab.com/resources/bh08/part2-full.pdf">Preventing &amp; Detecting Xen Hypervisor Subversions</a> by Joanna Rutkowska &amp; Rafal Wojtczuk</p>
+</dd>
 <dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.remap</span></code></p>
 </dd>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">remap</span>
 </pre></div>
 </div>
+</dd>
+<dt>Registers used:</dt><dd><ul class="simple">
+<li><p>PCI0.0.0_REMAPBASE</p></li>
+<li><p>PCI0.0.0_REMAPLIMIT</p></li>
+<li><p>PCI0.0.0_TOUUD</p></li>
+<li><p>PCI0.0.0_TOLUD</p></li>
+<li><p>PCI0.0.0_TSEGMB</p></li>
+</ul>
 </dd>
 </dl>
 <div class="admonition note">
@@ -150,8 +158,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Nov 01, 2021.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Last updated on Dec 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.1.
     </div>
   </body>
 </html>
