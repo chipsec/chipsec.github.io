@@ -50,8 +50,39 @@
             
   <div class="section" id="module-chipsec.modules.common.smrr">
 <span id="smrr-module"></span><h1>smrr module<a class="headerlink" href="#module-chipsec.modules.common.smrr" title="Permalink to this headline">¶</a></h1>
-<p>Researchers demonstrated a way to use CPU cache to effectively change values in SMRAM in <a class="reference external" href="http://www.invisiblethingslab.com/resources/misc09/smm_cache_fun.pdf">Attacking SMM Memory via Intel CPU Cache Poisoning</a> and <a class="reference external" href="http://cansecwest.com/csw09/csw09-duflot.pdf">Getting into the SMRAM: SMM Reloaded</a> . If ring 0 software can make SMRAM cacheable and then populate cache lines at SMBASE with exploit code, then when an SMI is triggered, the CPU could execute the exploit code from cache. System Management Mode Range Registers (SMRRs) force non-cachable behavior and block access to SMRAM when the CPU is not in SMM. These registers need to be enabled/configured by the BIOS.</p>
+<p>CPU SMM Cache Poisoning / System Management Range Registers check</p>
 <p>This module checks to see that SMRRs are enabled and configured.</p>
+<dl>
+<dt>Reference:</dt><dd><p>Researchers demonstrated a way to use CPU cache to effectively change values in SMRAM in
+<a class="reference external" href="http://www.invisiblethingslab.com/resources/misc09/smm_cache_fun.pdf">Attacking SMM Memory via Intel CPU Cache Poisoning</a>
+and <a class="reference external" href="http://cansecwest.com/csw09/csw09-duflot.pdf">Getting into the SMRAM: SMM Reloaded</a> .
+If ring 0 software can make SMRAM cacheable and then populate cache lines at SMBASE with exploit code,
+then when an SMI is triggered, the CPU could execute the exploit code from cache.
+System Management Mode Range Registers (SMRRs) force non-cachable behavior and block access to SMRAM when the CPU is not in SMM.
+These registers need to be enabled/configured by the BIOS.</p>
+</dd>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.smrr</span> <span class="pre">[-a</span> <span class="pre">modify]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">modify</span></code>: Attempt to modify memory at SMRR base</p></li>
+</ul>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">smrr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">smrr</span> <span class="o">-</span><span class="n">a</span> <span class="n">modify</span>
+</pre></div>
+</div>
+</dd>
+<dt>Registers used:</dt><dd><ul class="simple">
+<li><p>IA32_SMRR_PHYSBASE.PhysBase</p></li>
+<li><p>IA32_SMRR_PHYSBASE.Type</p></li>
+<li><p>IA32_SMRR_PHYSMASK.PhysMask</p></li>
+<li><p>IA32_SMRR_PHYSMASK.Valid</p></li>
+</ul>
+</dd>
+<dt>Supported Platforms:</dt><dd><ul class="simple">
+<li><p>All platforms</p></li>
+</ul>
+</dd>
+</dl>
 </div>
 
 
@@ -137,8 +168,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Nov 01, 2021.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Last updated on Dec 08, 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.1.
     </div>
   </body>
 </html>
