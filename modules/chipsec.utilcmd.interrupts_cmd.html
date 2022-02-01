@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>interrupts_cmd module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="io_cmd module" href="chipsec.utilcmd.io_cmd.html" />
+    <link rel="prev" title="igd_cmd module" href="chipsec.utilcmd.igd_cmd.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.io_cmd.html" title="io_cmd module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.igd_cmd.html" title="igd_cmd module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">interrupts_cmd module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-chipsec.utilcmd.interrupts_cmd">
+<span id="interrupts-cmd-module"></span><h1>interrupts_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.interrupts_cmd" title="Permalink to this headline">¶</a></h1>
+<p>SMI command:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">count</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="o">&lt;</span><span class="n">thread_id</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_code</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">SMI_data</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">RAX</span><span class="p">]</span> <span class="p">[</span><span class="n">RBX</span><span class="p">]</span> <span class="p">[</span><span class="n">RCX</span><span class="p">]</span> <span class="p">[</span><span class="n">RDX</span><span class="p">]</span> <span class="p">[</span><span class="n">RSI</span><span class="p">]</span> <span class="p">[</span><span class="n">RDI</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="o">&lt;</span><span class="n">RT_code_start</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">RT_code_end</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_loc</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">payload_file</span><span class="o">|</span><span class="n">payload_string</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">port</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">count</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">send</span> <span class="mh">0x0</span> <span class="mh">0xDE</span> <span class="mh">0x0</span> <span class="mh">0xAAAAAAAAAAAAAAAA</span> <span class="o">..</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">smi</span> <span class="n">smmc</span> <span class="mh">0x79dfe000</span> <span class="mh">0x79efdfff</span> <span class="n">ed32d533</span><span class="o">-</span><span class="mf">99e6</span><span class="o">-</span><span class="mi">4209</span><span class="o">-</span><span class="mi">9</span><span class="n">cc02d72cdd998a7</span> <span class="mh">0x79dfaaaa</span> <span class="n">payload</span><span class="o">.</span><span class="n">bin</span>
+</pre></div>
+</div>
+<p>NMI command:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">nmi</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">nmi</span>
+</pre></div>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20DAL%20Win.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Linux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20MacOS.html">MacOS Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Windows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.0</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="chipsec.utilcmd.igd_cmd.html"
+                          title="previous chapter">igd_cmd module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="chipsec.utilcmd.io_cmd.html"
+                          title="next chapter">io_cmd module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.io_cmd.html" title="io_cmd module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chipsec.utilcmd.igd_cmd.html" title="igd_cmd module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">interrupts_cmd module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Feb 01, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

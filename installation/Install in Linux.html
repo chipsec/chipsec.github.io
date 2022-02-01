@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Linux Installation &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MacOS Installation" href="Install%20in%20MacOS.html" />
+    <link rel="prev" title="DAL Windows Installation" href="Install%20in%20DAL%20Win.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20MacOS.html" title="MacOS Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20DAL%20Win.html" title="DAL Windows Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Linux Installation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="linux-installation">
+<h1>Linux Installation<a class="headerlink" href="#linux-installation" title="Permalink to this headline">¶</a></h1>
+<dl class="simple">
+<dt>Tested on:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://spins.fedoraproject.org/lxde/">Fedora LXDE 64bit</a></p></li>
+<li><p><a class="reference external" href="https://www.ubuntu.com/download">Ubuntu 64bit</a></p></li>
+<li><p><a class="reference external" href="https://www.debian.org/">Debian 64bit and 32bit</a></p></li>
+<li><p><a class="reference external" href="https://01.org/linux-uefi-validation">Linux UEFI Validation (LUV)</a></p></li>
+<li><p><a class="reference external" href="https://archstrike.org/downloads">ArchStrike Linux</a></p></li>
+<li><p><a class="reference external" href="https://www.kali.org/downloads/">Kali Linux</a></p></li>
+</ul>
+</dd>
+</dl>
+<p>Run CHIPSEC on a desired Linux distribution or create a live Linux image on a USB flash drive and boot to it.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Python 3.7 or higher (<a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a>)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>CHIPSEC has deprecated support for Python2 since June 2020</p>
+</div>
+<p>Install or update necessary dependencies before installing CHIPSEC:</p>
+<p><code class="docutils literal notranslate"><span class="pre">dnf</span> <span class="pre">install</span> <span class="pre">kernel</span> <span class="pre">kernel-devel-$(uname</span> <span class="pre">-r)</span> <span class="pre">python</span> <span class="pre">python-devel</span> <span class="pre">gcc</span> <span class="pre">nasm</span> <span class="pre">redhat-rpm-config</span> <span class="pre">elfutils-libelf-devel</span> <span class="pre">git</span></code></p>
+<p>or</p>
+<p><code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">build-essential</span> <span class="pre">python-dev</span> <span class="pre">python</span> <span class="pre">gcc</span> <span class="pre">linux-headers-$(uname</span> <span class="pre">-r)</span> <span class="pre">nasm</span></code></p>
+<p>or</p>
+<p><code class="docutils literal notranslate"><span class="pre">pacman</span> <span class="pre">-S</span> <span class="pre">python2</span> <span class="pre">python2-setuptools</span> <span class="pre">nasm</span> <span class="pre">linux-headers</span></code></p>
+<p>Install setuptools package:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">setuptools</span></code></p>
+</section>
+<section id="building">
+<h2>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h2>
+<p>Clone CHIPSEC source</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/chipsec/chipsec.git</span></code></p>
+</div></blockquote>
+<p>Build the Driver and Compression Tools</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">-i</span></code></p>
+</div></blockquote>
+</section>
+<section id="creating-a-live-linux-image">
+<h2>Creating a Live Linux image<a class="headerlink" href="#creating-a-live-linux-image" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Download things you will need:</p>
+<ul class="simple">
+<li><p>Desired Linux image (e.g. Fedora LXDE 64bit)</p></li>
+<li><p><a class="reference external" href="https://fedorahosted.org/liveusb-creator/">liveusb-creator</a></p></li>
+</ul>
+</li>
+<li><p>Use liveusb-creator to image a USB stick with the desired Linux
+image. Include as much persistent storage as possible.</p></li>
+<li><p>Reboot to USB</p></li>
+</ol>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Install%20in%20DAL%20Win.html">DAL Windows Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Install%20in%20MacOS.html">MacOS Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Install%20in%20Windows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.0</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="Install%20in%20DAL%20Win.html"
+                          title="previous chapter">DAL Windows Installation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Install%20in%20MacOS.html"
+                          title="next chapter">MacOS Installation</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20MacOS.html" title="MacOS Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Install%20in%20DAL%20Win.html" title="DAL Windows Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Linux Installation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Feb 01, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
