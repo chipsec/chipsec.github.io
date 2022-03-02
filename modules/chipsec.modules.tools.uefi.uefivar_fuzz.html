@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>uefivar_fuzz module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -50,13 +49,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.modules.tools.uefi.uefivar_fuzz">
+  <div class="section" id="module-chipsec.modules.tools.uefi.uefivar_fuzz">
 <span id="uefivar-fuzz-module"></span><h1>uefivar_fuzz module<a class="headerlink" href="#module-chipsec.modules.tools.uefi.uefivar_fuzz" title="Permalink to this headline">¶</a></h1>
 <p>The module is fuzzing UEFI Variable interface.</p>
 <p>The module is using UEFI SetVariable interface to write new UEFI variables
 to SPI flash NVRAM with randomized name/attributes/GUID/data/size.</p>
-<p>Note: this module modifies contents of non-volatile SPI flash memory (UEFI Variable NVRAM).
-This may render system unbootable if firmware doesn’t properly handle variable update/delete operations.</p>
 <p>Usage:</p>
 <blockquote>
 <div><p>chipsec_main -m tools.uefi.uefivar_fuzz [-a &lt;options&gt;]</p>
@@ -66,10 +63,10 @@ This may render system unbootable if firmware doesn’t properly handle variable
 <div><p><code class="docutils literal notranslate"><span class="pre">[-a</span> <span class="pre">&lt;test&gt;,&lt;iterations&gt;,&lt;seed&gt;,&lt;test_case&gt;]</span></code></p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code>  UEFI variable interface to fuzz (all, name, guid, attrib, data, size)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">iterations</span></code>  number of tests to perform (default = 1000)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>  RNG seed to use</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">test_case</span></code> test case # to skip to (combined with seed, can be used to skip to failing test)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code>       : UEFI variable interface to fuzz (all, name, guid, attrib, data, size)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iterations</span></code> : Number of tests to perform (default = 1000)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>       : RNG seed to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_case</span></code>  : Test case # to skip to (combined with seed, can be used to skip to failing test)</p></li>
 </ul>
 </div></blockquote>
 <p>All module arguments are optional</p>
@@ -81,7 +78,21 @@ This may render system unbootable if firmware doesn’t properly handle variable
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">uefivar_fuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">name</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">123456789</span><span class="p">,</span><span class="mi">94</span>
 </pre></div>
 </div>
-</section>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This module returns a WARNING by default to indicate that a manual review is needed.</p></li>
+<li><p>Writes may generate ‘ERROR’s, this can be expected behavior if the environment rejects them.</p></li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>This module modifies contents of non-volatile SPI flash memory (UEFI Variable NVRAM).</p></li>
+<li><p>This may render system unbootable if firmware doesn’t properly handle variable update/delete operations.</p></li>
+</ul>
+</div>
+</div>
 
 
             <div class="clearer"></div>
@@ -108,7 +119,7 @@ This may render system unbootable if firmware doesn’t properly handle variable
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.1</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.2</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -171,7 +182,7 @@ This may render system unbootable if firmware doesn’t properly handle variable
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 01, 2022.
+      Last updated on Mar 01, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
