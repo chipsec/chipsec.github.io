@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Writing Your Own Modules &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -18,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="OS Helpers and Drivers" href="OS-Helpers-and-Drivers.html" />
-    <link rel="prev" title="whl" href="../modules/chipsec.cfg.8086.whl.xml.html" /> 
+    <link rel="prev" title="pch_4xxh" href="../modules/chipsec.cfg.8086.pch_4xxh.xml.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -33,7 +34,7 @@
           <a href="OS-Helpers-and-Drivers.html" title="OS Helpers and Drivers"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../modules/chipsec.cfg.8086.whl.xml.html" title="whl"
+          <a href="../modules/chipsec.cfg.8086.pch_4xxh.xml.html" title="pch_4xxh"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Writing Your Own Modules</a></li> 
@@ -45,7 +46,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="writing-your-own-modules">
+  <section id="writing-your-own-modules">
 <h1>Writing Your Own Modules<a class="headerlink" href="#writing-your-own-modules" title="Permalink to this headline">¶</a></h1>
 <p>Your module class should subclass BaseModule and implement at least the methods named <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and <code class="docutils literal notranslate"><span class="pre">run</span></code>. When chipsec_main runs, it will first run <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and if that returns true, then it will call <code class="docutils literal notranslate"><span class="pre">run</span></code>.</p>
 <p>As of CHIPSEC version 1.2.0, CHIPSEC implements an abstract name for platform <em>controls</em>. Module authors are encouraged to create controls in the XML configuration files for important platform configuration information and then use <code class="docutils literal notranslate"><span class="pre">get_control</span></code> and <code class="docutils literal notranslate"><span class="pre">set_control</span></code> within modules. This abstraction allows modules to test for the abstract control without knowning which register provides it. (This is especially important for test reuse across platform generations.)</p>
@@ -89,7 +90,7 @@
 <p class="admonition-title">See also</p>
 <p><a class="reference external" href="https://github.com/chipsec/chipsec/wiki/files/training/OSFC_2018_CHIPSEC_Workshop.pdf">Creating CHIPSEC modules and commands</a></p>
 </div>
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -133,8 +134,8 @@
 
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="../modules/chipsec.cfg.8086.whl.xml.html"
-                          title="previous chapter">whl</a></p>
+    <p class="topless"><a href="../modules/chipsec.cfg.8086.pch_4xxh.xml.html"
+                          title="previous chapter">pch_4xxh</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -168,14 +169,14 @@
           <a href="OS-Helpers-and-Drivers.html" title="OS Helpers and Drivers"
              >next</a> |</li>
         <li class="right" >
-          <a href="../modules/chipsec.cfg.8086.whl.xml.html" title="whl"
+          <a href="../modules/chipsec.cfg.8086.pch_4xxh.xml.html" title="pch_4xxh"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Writing Your Own Modules</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 01, 2022.
+      Last updated on Mar 03, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
