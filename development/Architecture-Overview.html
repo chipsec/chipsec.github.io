@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Architecture Overview &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -45,13 +46,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="architecture-overview">
+  <section id="architecture-overview">
 <h1>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permalink to this headline">¶</a></h1>
-<div class="figure align-default" id="id1">
+<figure class="align-default" id="id1">
 <img alt="CHIPSEC Architecture" src="../_images/architecture.png" />
-<p class="caption"><span class="caption-text">CHIPSEC Architecture</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-<div class="section" id="core-components">
+<figcaption>
+<p><span class="caption-text">CHIPSEC Architecture</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="core-components">
 <h2>Core components<a class="headerlink" href="#core-components" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><table class="docutils align-default">
@@ -102,10 +105,10 @@
 </tbody>
 </table>
 </div></blockquote>
-</div>
-<div class="section" id="commands">
+</section>
+<section id="commands">
 <h2>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h2>
-<p>Implement functionality of chipsec_util</p>
+<p>Implement functionality of chipsec_util.</p>
 <p>CHIPSEC utilities provide the capability for manual testing and direct hardware access.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -155,10 +158,10 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="hal-hardware-abstraction-layer">
+</section>
+<section id="hal-hardware-abstraction-layer">
 <h2>HAL (Hardware Abstraction Layer)<a class="headerlink" href="#hal-hardware-abstraction-layer" title="Permalink to this headline">¶</a></h2>
-<p>Useful abstractions for common tasks such as accessing the SPI</p>
+<p>Useful abstractions for common tasks such as accessing the SPI.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.hal.html">List of HAL components</a><ul>
@@ -204,8 +207,8 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="fuzzing">
+</section>
+<section id="fuzzing">
 <h2>Fuzzing<a class="headerlink" href="#fuzzing" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
@@ -215,8 +218,8 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="chipsec-main-program-flow">
+</section>
+<section id="chipsec-main-program-flow">
 <h2>CHIPSEC_MAIN Program Flow<a class="headerlink" href="#chipsec-main-program-flow" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Select <a class="reference internal" href="OS-Helpers-and-Drivers.html#os-helpers-and-drivers"><span class="std std-ref">OS Helpers and Drivers</span></a></p>
@@ -231,8 +234,8 @@
 <li><p>Report Results</p></li>
 <li><p>Cleanup</p></li>
 </ol>
-</div>
-<div class="section" id="chipsec-util-program-flow">
+</section>
+<section id="chipsec-util-program-flow">
 <h2>CHIPSEC_UTIL Program Flow<a class="headerlink" href="#chipsec-util-program-flow" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Select <a class="reference internal" href="OS-Helpers-and-Drivers.html#os-helpers-and-drivers"><span class="std std-ref">OS Helpers and Drivers</span></a></p>
@@ -246,30 +249,24 @@
 <li><p>Run Selected Command</p></li>
 <li><p>Cleanup</p></li>
 </ol>
-</div>
-<div class="section" id="auxiliary-components">
+</section>
+<section id="auxiliary-components">
 <h2>Auxiliary components<a class="headerlink" href="#auxiliary-components" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 88%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></td>
-<td><p>setup script to install CHIPSEC as a package</p></td>
-</tr>
-</tbody>
-</table>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code> setup script to install CHIPSEC as a package</p></li>
+</ul>
 </div></blockquote>
-</div>
-<div class="section" id="executable-build-scripts">
+</section>
+<section id="executable-build-scripts">
 <h2>Executable build scripts<a class="headerlink" href="#executable-build-scripts" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">&lt;CHIPSEC_ROOT&gt;/scripts/build_exe_*.py</span></code>  make files to build Windows executables</p>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;CHIPSEC_ROOT&gt;/scripts/build_exe_*.py</span></code> make files to build Windows executables</p></li>
+</ul>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -296,7 +293,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.2</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.3</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -355,7 +352,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 01, 2022.
+      Last updated on Mar 30, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
