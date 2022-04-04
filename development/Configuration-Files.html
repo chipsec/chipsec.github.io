@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Configuration Files &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -45,7 +46,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="configuration-files">
+  <section id="configuration-files">
 <span id="id1"></span><h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h1>
 <p>Provide a human readable abstraction for registers in the system</p>
 <blockquote>
@@ -67,82 +68,91 @@
 </tbody>
 </table>
 </div></blockquote>
-<p>Broken into common and platform specific configuration files</p>
-<p>Used to define controls, registers and bit fields</p>
-<p>Common files always loaded first so the platform files can override
-values</p>
-<p>Correct platform configuration files loaded based off of platform
-detection</p>
+<p>Broken into common and platform specific configuration files.</p>
+<p>Used to define controls, registers and bit fields.</p>
+<p>Common files always loaded first so the platform files can override values.</p>
+<p>Correct platform configuration files loaded based off of platform detection.</p>
+<<<<<<< HEAD
 <div class="section" id="configuration-file-example">
+=======
+<section id="configuration-file-example">
+>>>>>>> 31f6a379149606b90dd9a5cd75a3c21185d76aee
 <h2>Configuration File Example<a class="headerlink" href="#configuration-file-example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;mmio&gt;
-&lt;bar name=&quot;SPIBAR&quot; bus=&quot;0&quot; dev=&quot;0x1F&quot; fun=&quot;5&quot; reg=&quot;0x10&quot; width=&quot;4&quot; mask=&quot;0xFFFFF000&quot; size=&quot;0x1000&quot; desc=&quot;SPI Controller Register Range&quot; offset=&quot;0x0&quot;/&gt;
-&lt;/mmio&gt;
-&lt;registers&gt;
-&lt;register name=&quot;BC&quot; type=&quot;pcicfg&quot; bus=&quot;0&quot; dev=&quot;0x1F&quot; fun=&quot;5&quot; offset=&quot;0xDC&quot; size=&quot;4&quot; desc=&quot;BIOS Control&quot;&gt;
-&lt;field name=&quot;BIOSWE&quot; bit=&quot;0&quot; size=&quot;1&quot; desc=&quot;BIOS Write Enable&quot; /&gt;
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;mmio&gt;</span>
+<span class="nt">&lt;bar</span> <span class="na">name=</span><span class="s">&quot;SPIBAR&quot;</span> <span class="na">bus=</span><span class="s">&quot;0&quot;</span> <span class="na">dev=</span><span class="s">&quot;0x1F&quot;</span> <span class="na">fun=</span><span class="s">&quot;5&quot;</span> <span class="na">reg=</span><span class="s">&quot;0x10&quot;</span> <span class="na">width=</span><span class="s">&quot;4&quot;</span> <span class="na">mask=</span><span class="s">&quot;0xFFFFF000&quot;</span> <span class="na">size=</span><span class="s">&quot;0x1000&quot;</span> <span class="na">desc=</span><span class="s">&quot;SPI Controller Register Range&quot;</span> <span class="na">offset=</span><span class="s">&quot;0x0&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/mmio&gt;</span>
+<span class="nt">&lt;registers&gt;</span>
+<span class="nt">&lt;register</span> <span class="na">name=</span><span class="s">&quot;BC&quot;</span> <span class="na">type=</span><span class="s">&quot;pcicfg&quot;</span> <span class="na">bus=</span><span class="s">&quot;0&quot;</span> <span class="na">dev=</span><span class="s">&quot;0x1F&quot;</span> <span class="na">fun=</span><span class="s">&quot;5&quot;</span> <span class="na">offset=</span><span class="s">&quot;0xDC&quot;</span> <span class="na">size=</span><span class="s">&quot;4&quot;</span> <span class="na">desc=</span><span class="s">&quot;BIOS Control&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;BIOSWE&quot;</span> <span class="na">bit=</span><span class="s">&quot;0&quot;</span> <span class="na">size=</span><span class="s">&quot;1&quot;</span> <span class="na">desc=</span><span class="s">&quot;BIOS Write Enable&quot;</span> <span class="nt">/&gt;</span>
 …
-&lt;field name=&quot;BILD&quot; bit=&quot;7&quot; size=&quot;1&quot; desc=&quot;BIOS Interface Lock Down&quot;/&gt;
-&lt;/register&gt;
-&lt;/registers&gt;
-&lt;controls&gt;
-&lt;control name=&quot;BiosInterfaceLockDown&quot; register=&quot;BC&quot; field=&quot;BILD&quot; desc=&quot;BIOS Interface Lock-Down&quot;/&gt;
-&lt;/controls&gt;
+<span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;BILD&quot;</span> <span class="na">bit=</span><span class="s">&quot;7&quot;</span> <span class="na">size=</span><span class="s">&quot;1&quot;</span> <span class="na">desc=</span><span class="s">&quot;BIOS Interface Lock Down&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/register&gt;</span>
+<span class="nt">&lt;/registers&gt;</span>
+<span class="nt">&lt;controls&gt;</span>
+<span class="nt">&lt;control</span> <span class="na">name=</span><span class="s">&quot;BiosInterfaceLockDown&quot;</span> <span class="na">register=</span><span class="s">&quot;BC&quot;</span> <span class="na">field=</span><span class="s">&quot;BILD&quot;</span> <span class="na">desc=</span><span class="s">&quot;BIOS Interface Lock-Down&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/controls&gt;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="list-of-cfg-components">
+</section>
+<section id="list-of-cfg-components">
 <h2>List of Cfg components<a class="headerlink" href="#list-of-cfg-components" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.apl.xml.html">apl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.avn.xml.html">avn</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.bdw.xml.html">bdw</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.bdx.xml.html">bdx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.byt.xml.html">byt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.cfl.xml.html">cfl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.cht.xml.html">cht</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.cml.xml.html">cml</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.common.xml.html">common</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.dnv.xml.html">dnv</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.glk.xml.html">glk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.hsw.xml.html">hsw</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.hsx.xml.html">hsx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.icl.xml.html">icl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.icx.xml.html">icx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.iommu.xml.html">iommu</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.ivb.xml.html">ivb</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.ivt.xml.html">ivt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.jkt.xml.html">jkt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.kbl.xml.html">kbl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_1xx.xml.html">pch_1xx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_2xx.xml.html">pch_2xx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_3xx.xml.html">pch_3xx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_3xxlp.xml.html">pch_3xxlp</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_3xxop.xml.html">pch_3xxop</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_495.xml.html">pch_495</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_4xx.xml.html">pch_4xx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_4xxh.xml.html">pch_4xxh</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_4xxlp.xml.html">pch_4xxlp</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_5xxh.xml.html">pch_5xxh</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_5xxlp.xml.html">pch_5xxlp</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_c60x.xml.html">pch_c60x</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_c61x.xml.html">pch_c61x</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_c620.xml.html">pch_c620</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.qrk.xml.html">qrk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.rkl.xml.html">rkl</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.sfdp.xml.html">sfdp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_4xxlp.xml.html">pch_4xxlp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.glk.xml.html">glk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.icx.xml.html">icx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.ivt.xml.html">ivt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_2xx.xml.html">pch_2xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.cht.xml.html">cht</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.skx.xml.html">skx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_5xxh.xml.html">pch_5xxh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.jkt.xml.html">jkt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.tpm12.xml.html">tpm12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.apl.xml.html">apl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_495.xml.html">pch_495</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.snb.xml.html">snb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_3xx.xml.html">pch_3xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_3xxop.xml.html">pch_3xxop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_5xxlp.xml.html">pch_5xxlp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.bdx.xml.html">bdx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.cml.xml.html">cml</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.skl.xml.html">skl</a></li>
+<<<<<<< HEAD
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.skx.xml.html">skx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.snb.xml.html">snb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.tglh.xml.html">tglh</a></li>
+=======
+>>>>>>> 31f6a379149606b90dd9a5cd75a3c21185d76aee
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.tglu.xml.html">tglu</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.tpm12.xml.html">tpm12</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.hsx.xml.html">hsx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.qrk.xml.html">qrk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_4xx.xml.html">pch_4xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.common.xml.html">common</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.txt.xml.html">txt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.rkl.xml.html">rkl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_3xxlp.xml.html">pch_3xxlp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.whl.xml.html">whl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.bdw.xml.html">bdw</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.byt.xml.html">byt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.avn.xml.html">avn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_c620.xml.html">pch_c620</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.dnv.xml.html">dnv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.icl.xml.html">icl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.tglh.xml.html">tglh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_c60x.xml.html">pch_c60x</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.kbl.xml.html">kbl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.iommu.xml.html">iommu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.ivb.xml.html">ivb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_c61x.xml.html">pch_c61x</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_1xx.xml.html">pch_1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.cfl.xml.html">cfl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.pch_4xxh.xml.html">pch_4xxh</a></li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -169,7 +179,7 @@ detection</p>
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.2</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.3</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -228,7 +238,7 @@ detection</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 01, 2022.
+      Last updated on Mar 30, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

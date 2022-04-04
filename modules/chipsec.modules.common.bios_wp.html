@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>bios_wp module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -48,15 +49,50 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-chipsec.modules.common.bios_wp">
+  <section id="module-chipsec.modules.common.bios_wp">
 <span id="bios-wp-module"></span><h1>bios_wp module<a class="headerlink" href="#module-chipsec.modules.common.bios_wp" title="Permalink to this headline">¶</a></h1>
 <p>The BIOS region in flash can be protected either using SMM-based protection or using configuration in the SPI controller. However, the SPI controller configuration is set once and locked, which would prevent writes later.</p>
-<p>This module does check both mechanisms. In order to pass this test using SPI controller configuration, the SPI Protected Range registers (PR0-4) will need to cover the entire BIOS region. Often, if this configuration is used at all, it is used only to protect part of the BIOS region (usually the boot block). If other important data (eg. NVRAM) is not protected, however, some vulnerabilities may be possible.</p>
-<p><a class="reference external" href="http://www.c7zero.info/stuff/Windows8SecureBoot_Bulygin-Furtak-Bazhniuk_BHUSA2013.pdf">A Tale of One Software Bypass of Windows 8 Secure Boot</a> described just such an attack. In a system where certain BIOS data was not protected, malware may be able to write to the Platform Key stored on the flash, thereby disabling secure boot.</p>
+<p>This module checks both mechanisms. In order to pass this test using SPI controller configuration, the SPI Protected Range registers (PR0-4) will need to cover the entire BIOS region.
+Often, if this configuration is used at all, it is used only to protect part of the BIOS region (usually the boot block).
+If other important data (eg. NVRAM) is not protected, however, some vulnerabilities may be possible.</p>
+<p><a class="reference external" href="http://www.c7zero.info/stuff/Windows8SecureBoot_Bulygin-Furtak-Bazhniuk_BHUSA2013.pdf">A Tale of One Software Bypass of Windows 8 Secure Boot</a>
+In a system where certain BIOS data was not protected, malware may be able to write to the Platform Key stored on the flash, thereby disabling secure boot.</p>
 <p>SMM based write protection is controlled from the BIOS Control Register. When the BIOS Write Protect Disable bit is set (sometimes called BIOSWE or BIOS Write Enable), then writes are allowed. When cleared, it can also be locked with the BIOS Lock Enable (BLE) bit. When locked, attempts to change the WPD bit will result in generation of an SMI. This way, the SMI handler can decide whether to perform the write.</p>
 <p>As demonstrated in the <a class="reference external" href="https://bromiumlabs.files.wordpress.com/2015/01/speed_racer_whitepaper.pdf">Speed Racer</a> issue, a race condition may exist between the outstanding write and processing of the SMI that is generated. For this reason, the EISS bit (sometimes called SMM_BWP or SMM BIOS Write Protection) must be set to ensure that only SMM can write to the SPI flash.</p>
-<p>This module common.bios_wp will fail if SMM-based protection is not correctly configured and SPI protected ranges (PR registers) do not protect the entire BIOS region.</p>
+<dl>
+<dt>References:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="http://www.c7zero.info/stuff/Windows8SecureBoot_Bulygin-Furtak-Bazhniuk_BHUSA2013.pdf">A Tale of One Software Bypass of Windows 8 Secure Boot</a></p></li>
+<li><p><a class="reference external" href="https://bromiumlabs.files.wordpress.com/2015/01/speed_racer_whitepaper.pdf">Speed Racer</a></p></li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.bios_wp</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">bios_wp</span>
+</pre></div>
 </div>
+</dd>
+<dt>Registers used: (n = 0,1,2,3,4)</dt><dd><ul class="simple">
+<li><p>BiosLockEnable (Control)</p></li>
+<li><p>BiosWriteEnable (Control)</p></li>
+<li><p>SmmBiosWriteProtection (Control)</p></li>
+<li><p>PRn.PRB</p></li>
+<li><p>PRn.RPE</p></li>
+<li><p>PRn.PRL</p></li>
+<li><p>PRn.WPE</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Module will fail if SMM-based protection is not correctly configured and SPI protected ranges (PR registers) do not protect the entire BIOS region.</p></li>
+</ul>
+<<<<<<< HEAD
+</div>
+=======
+>>>>>>> 31f6a379149606b90dd9a5cd75a3c21185d76aee
+</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -83,7 +119,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.2</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.3</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -145,7 +181,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 01, 2022.
+      Last updated on Mar 30, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
