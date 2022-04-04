@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>MacOS Installation &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -45,13 +46,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="macos-installation">
+  <section id="macos-installation">
 <h1>MacOS Installation<a class="headerlink" href="#macos-installation" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>MacOS support is currently in Beta release. There’s no support for M1 chips</p>
 </div>
-<div class="section" id="install-chipsec-dependencies">
+<section id="install-chipsec-dependencies">
 <h2>Install CHIPSEC Dependencies<a class="headerlink" href="#install-chipsec-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>Python 3.7 or higher (<a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a>)</p>
 <div class="admonition note">
@@ -65,35 +66,35 @@
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">csrutil</span> <span class="pre">enable</span> <span class="pre">--without</span> <span class="pre">kext</span></code></p>
 </div></blockquote>
-</div>
-<div class="section" id="building-chipsec">
+</section>
+<section id="building-chipsec">
 <h2>Building Chipsec<a class="headerlink" href="#building-chipsec" title="Permalink to this headline">¶</a></h2>
 <p>Clone CHIPSEC Git repository:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/chipsec/chipsec</span></code></p>
 </div></blockquote>
-</div>
-<div class="section" id="run-chipsec">
+</section>
+<section id="run-chipsec">
 <h2>Run CHIPSEC<a class="headerlink" href="#run-chipsec" title="Permalink to this headline">¶</a></h2>
 <p>Follow steps in section “Using as a Python package” of <a class="reference internal" href="../usage/Running-Chipsec.html#running-chipsec"><span class="std std-ref">Running CHIPSEC</span></a></p>
 <p>To build chipsec.kext on your own and load please follow the instructions in drivers/osx/README</p>
-</div>
-<div class="section" id="chipsec-cleanup">
+</section>
+<section id="chipsec-cleanup">
 <h2>CHIPSEC Cleanup<a class="headerlink" href="#chipsec-cleanup" title="Permalink to this headline">¶</a></h2>
 <p>When done using CHIPSEC, ensure the driver is unloaded and re-enable the System Integrity Protection:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">kextunload</span> <span class="pre">-b</span> <span class="pre">com.google.chipsec</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">csrutil</span> <span class="pre">enable</span></code></p>
 </div></blockquote>
-</div>
-<div class="section" id="build-errors">
+</section>
+<section id="build-errors">
 <h2>Build Errors<a class="headerlink" href="#build-errors" title="Permalink to this headline">¶</a></h2>
 <p>xcodebuild requires xcode error during CHIPSEC install:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sudo</span> <span class="pre">xcode-select</span> <span class="pre">-s</span> <span class="pre">/Applications/Xcode.app/Contents/Developer</span></code></p>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
