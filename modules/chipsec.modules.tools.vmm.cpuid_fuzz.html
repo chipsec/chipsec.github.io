@@ -52,12 +52,48 @@
   <div class="section" id="module-chipsec.modules.tools.vmm.cpuid_fuzz">
 <span id="cpuid-fuzz-module"></span><h1>cpuid_fuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.cpuid_fuzz" title="Permalink to this headline">¶</a></h1>
 <p>Simple CPUID VMM emulation fuzzer</p>
-<blockquote>
-<div><dl class="simple">
-<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.cpuid_fuzz</span> <span class="pre">-l</span> <span class="pre">log.txt</span></code></p>
+<dl>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.cpuid_fuzz</span> <span class="pre">[-a</span> <span class="pre">random]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">random</span></code> : Fuzz in random order (default is sequential)</p></li>
+</ul>
+</dd>
+<dt>Where:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code>: optional line</p></li>
+</ul>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">cpuid_fuzz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">cpuid_fuzz</span> <span class="o">-</span><span class="n">l</span> <span class="n">log</span><span class="o">.</span><span class="n">txt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">cpuid_fuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">random</span>
+</pre></div>
+</div>
+</dd>
+<dt>Additional options set within the module:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">_NO_EAX_TO_FUZZ</span></code>        : No of EAX values to fuzz within each step</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_EAX_FUZZ_STEP</span></code>         : Step to fuzz range of EAX values</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_NO_ITERATIONS_TO_FUZZ</span></code> : Number of iterations if <cite>random</cite> chosen</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FUZZ_ECX_RANDOM</span></code>       : Fuzz ECX with random values?</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_MAX_ECX</span></code>               : Max ECX value</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_EXCLUDE_CPUID</span></code>         : Exclude the following EAX values from fuzzing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FLUSH_LOG_EACH_ITER</span></code>   : Flush log file after each iteration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_LOG_OUT_RESULTS</span></code>       : Log output results</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Additional fuzzer options are set by variables within the module</p></li>
+<li><p>Returns a Warning by default.</p></li>
+<li><p>System may be in an unknown state, further evaluation may be needed.</p></li>
+</ul>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This module is designed to run in a VM environment</p></li>
+</ul>
+</div>
 </div>
 
 
@@ -85,7 +121,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.3</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -148,7 +184,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 30, 2022.
+      Last updated on Apr 27, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
