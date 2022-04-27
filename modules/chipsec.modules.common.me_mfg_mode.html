@@ -50,7 +50,7 @@
             
   <div class="section" id="module-chipsec.modules.common.me_mfg_mode">
 <span id="me-mfg-mode-module"></span><h1>me_mfg_mode module<a class="headerlink" href="#module-chipsec.modules.common.me_mfg_mode" title="Permalink to this headline">¶</a></h1>
-<p>This module checks that ME Manufacturing mode is not enabled</p>
+<p>This module checks that ME Manufacturing mode is not enabled.</p>
 <p>References:</p>
 <p><a class="reference external" href="https://blog.ptsecurity.com/2018/10/intel-me-manufacturing-mode-macbook.html">https://blog.ptsecurity.com/2018/10/intel-me-manufacturing-mode-macbook.html</a></p>
 <p><a class="reference external" href="https://github.com/coreboot/coreboot/blob/master/src/soc/intel/*/include/soc/pci_devs.h">PCI_DEVS.H</a></p>
@@ -95,17 +95,27 @@ printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, (fwsts1 &amp; (
 </div>
 <p>This module checks the following:</p>
 <blockquote>
-<div><p>HFS.MFG_MODE BDF: 0:22:0 offset 0x40 - Bit [4]</p>
+<div><p><code class="docutils literal notranslate"><span class="pre">HFS.MFG_MODE</span> <span class="pre">BDF:</span> <span class="pre">0:22:0</span> <span class="pre">offset</span> <span class="pre">0x40</span> <span class="pre">-</span> <span class="pre">Bit</span> <span class="pre">[4]</span></code></p>
 </div></blockquote>
+<dl>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.me_mfg_mode</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">me_mfg_mode</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <p>The module returns the following results:</p>
 <blockquote>
 <div><p>FAILED : HFS.MFG_MODE is set</p>
 <p>PASSED : HFS.MFG_MODE is not set.</p>
 </div></blockquote>
-<p>Hardware registers used:</p>
-<blockquote>
-<div><p>HFS</p>
-</div></blockquote>
+<dl class="simple">
+<dt>Hardware registers used:</dt><dd><ul class="simple">
+<li><p>HFS.MFG_MODE</p></li>
+</ul>
+</dd>
+</dl>
 </div>
 
 
@@ -133,7 +143,7 @@ printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, (fwsts1 &amp; (
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.3</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -195,7 +205,7 @@ printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, (fwsts1 &amp; (
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 30, 2022.
+      Last updated on Apr 27, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

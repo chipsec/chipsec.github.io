@@ -51,7 +51,29 @@
   <div class="section" id="module-chipsec.modules.common.ia32cfg">
 <span id="ia32cfg-module"></span><h1>ia32cfg module<a class="headerlink" href="#module-chipsec.modules.common.ia32cfg" title="Permalink to this headline">¶</a></h1>
 <p>Tests that IA-32/IA-64 architectural features are configured and locked, including IA32 Model Specific Registers (MSRs)</p>
-<p>Reference: Intel Software Developer’s Manual</p>
+<dl>
+<dt>Reference:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Intel 64 and IA-32 Architectures Software Developer Manual (SDM)</dt><dd><ul>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.ia32cfg</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">ia32cfg</span>
+</pre></div>
+</div>
+</dd>
+<dt>Registers used:</dt><dd><ul class="simple">
+<li><p>IA32_FEATURE_CONTROL</p></li>
+<li><p>Ia32FeatureControlLock (control)</p></li>
+</ul>
+</dd>
+</dl>
 </div>
 
 
@@ -79,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.3</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -141,7 +163,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 30, 2022.
+      Last updated on Apr 27, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

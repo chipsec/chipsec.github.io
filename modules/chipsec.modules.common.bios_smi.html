@@ -53,9 +53,26 @@
 <p>The module checks that SMI events configuration is locked down
 - Global SMI Enable/SMI Lock
 - TCO SMI Enable/TCO Lock</p>
-<p>References:</p>
-<p><a class="reference external" href="http://syscan.org/index.php/download/get/6e597f6067493dd581eed737146f3afb/SyScan2014_CoreyKallenberg_SetupforFailureDefeatingSecureBoot.zip">Setup for Failure: Defeating SecureBoot</a> by Corey Kallenberg, Xeno Kovah, John Butterworth, Sam Cornwell</p>
-<p><cite>Summary of Attacks Against BIOS and Secure Boot</cite> (<a class="reference external" href="https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf">https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf</a>)</p>
+<dl>
+<dt>References:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="http://syscan.org/index.php/download/get/6e597f6067493dd581eed737146f3afb/SyScan2014_CoreyKallenberg_SetupforFailureDefeatingSecureBoot.zip">Setup for Failure: Defeating SecureBoot</a> by Corey Kallenberg, Xeno Kovah, John Butterworth, Sam Cornwell</p></li>
+<li><p><a class="reference external" href="https://www.defcon.org/images/defcon-22/dc-22-presentations/Bulygin-Bazhaniul-Furtak-Loucaides/DEFCON-22-Bulygin-Bazhaniul-Furtak-Loucaides-Summary-of-attacks-against-BIOS-UPDATED.pdf">Summary of Attacks Against BIOS and Secure Boot</a></p></li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.bios_smi</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">bios_smi</span>
+</pre></div>
+</div>
+</dd>
+<dt>Registers used:</dt><dd><ul class="simple">
+<li><p>SmmBiosWriteProtection (Control)</p></li>
+<li><p>TCOSMILock (Control)</p></li>
+<li><p>SMILock (Control)</p></li>
+<li><p>BiosWriteEnable (Control)</p></li>
+</ul>
+</dd>
+</dl>
 </div>
 
 
@@ -83,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC 1.8.3</span></p>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
@@ -145,7 +162,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 30, 2022.
+      Last updated on Apr 27, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
