@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>mmio module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -47,35 +48,35 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-chipsec.hal.mmio">
+  <section id="module-chipsec.hal.mmio">
 <span id="mmio-module"></span><h1>mmio module<a class="headerlink" href="#module-chipsec.hal.mmio" title="Permalink to this headline">¶</a></h1>
 <p>Access to MMIO (Memory Mapped IO) BARs and Memory-Mapped PCI Configuration Space (MMCFG)</p>
 <dl>
-<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_MMIO_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mi">4</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">write_MMIO_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span><span class="p">,</span> <span class="mi">4</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">read_MMIO</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x1000</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_MMIO</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x1000</span> <span class="p">)</span>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_MMIO_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_MMIO_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_MMIO</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_MMIO</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">bar_base</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Access MMIO by BAR name:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_MMIO_BAR_reg</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mi">4</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">write_MMIO_BAR_reg</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span><span class="p">,</span> <span class="mi">4</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_MMIO_BAR_enabled</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_MMIO_BAR_programmed</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_MMIO_BAR</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">list_MMIO_BARs</span><span class="p">(</span> <span class="n">cs</span> <span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_MMIO_BAR_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_MMIO_BAR_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_MMIO_BAR_enabled</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_MMIO_BAR_programmed</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_MMIO_BAR</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="s1">&#39;MCHBAR&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_MMIO_BARs</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Access Memory Mapped Config Space:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_MMCFG_base_address</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">read_mmcfg_reg</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mi">4</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">read_mmcfg_reg</span><span class="p">(</span> <span class="n">cs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_mmcfg_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_mmcfg_reg</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd>
 </dl>
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -115,6 +116,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html">Python Coding Style Guide</a></li>
 </ul>
 
   <div>
@@ -163,7 +168,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Apr 27, 2022.
+      Last updated on May 24, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

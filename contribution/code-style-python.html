@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Python Coding Style Guide &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="venom module" href="../modules/chipsec.modules.tools.vmm.venom.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../modules/chipsec.modules.tools.vmm.venom.html" title="venom module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Python Coding Style Guide</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="python-coding-style-guide">
+<h1>Python Coding Style Guide<a class="headerlink" href="#python-coding-style-guide" title="Permalink to this headline">¶</a></h1>
+<p>CHIPSEC mostly follows the PEP8 with some exceptions.  This attempts to highlight those as well as clarify others.</p>
+<p>Consistency and readability are the goal but not at the expense of readability or functionality.</p>
+<p>If in doubt, follow the existing code style and formatting.</p>
+<ol class="arabic">
+<li><p>PEP8</p>
+<blockquote>
+<div><p>PEP 8 is a set of recommended code style guidelines (conventions) for Python.</p>
+<p><a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP 8</a></p>
+</div></blockquote>
+</li>
+<li><p>Linting tools</p>
+<blockquote>
+<div><p>CHIPSEC includes a Flake8 configuration file</p>
+<p><a class="reference external" href="https://github.com/chipsec/chipsec/blob/master/.flake8">CHIPSEC flake8 config</a></p>
+</div></blockquote>
+</li>
+<li><p>Zen of Python</p>
+<blockquote>
+<div><p>Great philosophy around Python building principles.</p>
+<p><a class="reference external" href="https://www.python.org/dev/peps/pep-0020/">PEP 20</a></p>
+</div></blockquote>
+</li>
+<li><p>Headers and Comments</p>
+<blockquote>
+<div><p>Use single line comments, a single hash/number sign/octothorpe ‘#’.</p>
+<p>Should contain a space immediately after the ‘#’.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Good header comment</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Single vs Double Quotes</p>
+<blockquote>
+<div><p>Single quotes are encouraged but can vary with use case.</p>
+<p>Avoid using backslashes ‘\’ in strings.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;This is a preferred &quot;string&quot;.&#39;</span>
+<span class="s2">&quot;Also an acceptable &#39;string&#39;.&quot;</span>
+
+<span class="s2">&quot;Avoid making this </span><span class="se">\&quot;</span><span class="s2">string</span><span class="se">\&quot;</span><span class="s2">.&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Imports</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Import order:</dt><dd><ol class="arabic simple">
+<li><p>Python standard library</p></li>
+<li><p>Third-party imports</p></li>
+<li><p>CHIPSEC and local application imports</p></li>
+</ol>
+</dd>
+</dl>
+<p>Avoid using <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">*</span></code> or <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">import</span> <span class="pre">*</span></code>.  This could pollute the namespace.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Good</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span>
+
+<span class="c1"># Bad - using &#39;*&#39; and importing sys after local imports</span>
+<span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+</pre></div>
+</div>
+<p>Avoid using <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">imports</span></code>.  These may not work on older or all interpreter versions required in all supported environments.</p>
+</div></blockquote>
+</li>
+<li><p>Line Length</p>
+<blockquote>
+<div><p>Maximum line length should be 120 characters.</p>
+<p>If at or near this limit, consider rewriting (eg simplifying) the line instead of breaking it into multiple lines.</p>
+<p>Long lines can be an indication that too many things are happening at once and/or difficult to read.</p>
+</div></blockquote>
+</li>
+<li><p>Class Names</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">HAL</span></code> and <code class="docutils literal notranslate"><span class="pre">utilcmd</span></code> <strong>classes</strong> should use <strong>UpperCamelCase</strong> (<strong>PascalCase</strong>)
+Words and acronyms are capitalized with no spaces or underscores.</p>
+<p>Test <strong>module</strong> class names MUST match the module name which are typically <strong>snake_case</strong></p>
+</div></blockquote>
+</li>
+<li><p>Constants</p>
+<blockquote>
+<div><p>Constants should use <strong>CAPITALIZATION_WITH_UNDERSCORES</strong></p>
+</div></blockquote>
+</li>
+<li><p>Variable Names</p>
+<blockquote>
+<div><p>Variable names should use <strong>snake_case</strong></p>
+<p>Lower-case text with underscores between words.</p>
+</div></blockquote>
+</li>
+<li><p>Local Variable Names (private)</p>
+<blockquote>
+<div><p>Prefixed with an underscore, <strong>_private_variable</strong></p>
+<p>Not a hard rule but will help minimize any variable name collisions with upstream namespace.</p>
+</div></blockquote>
+</li>
+<li><p>Dunder (double underscore)</p>
+<blockquote>
+<div><p>Avoid using <code class="docutils literal notranslate"><span class="pre">__dunders__</span></code> when naming variables.  Should be used for functions that overwrite or add to classes and only as needed.</p>
+<p>Dunders utilize double (two) underscore characters before and after the name.</p>
+</div></blockquote>
+</li>
+<li><p>Code Indents</p>
+<blockquote>
+<div><p>CHIPSEC uses 4 space ‘tabbed’ indents.</p>
+<p>No mixing spaces and tabs.</p>
+<ul class="simple">
+<li><p>1 indent = 4 spaces</p></li>
+<li><p>No tabs</p></li>
+</ul>
+<p>Recommend updating any IDE used to use 4 space indents by default to help avoid mixing tabs with spaces in the code.</p>
+</div></blockquote>
+</li>
+<li><p>Operator Precedence, Comparisons, and Parentheses</p>
+<blockquote>
+<div><p>If in doubt, wrap evaluated operators into logical sections if using multiple operators or improves readability.</p>
+<p>While not needed in most cases, it can improve readability and limit the possibility of ‘left-to-right chaining’ issues.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preferred</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">test1</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">test2</span> <span class="ow">in</span> <span class="n">data_list</span><span class="p">):</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="c1"># Avoid.  Legal but behavior may not be immediately evident.</span>
+<span class="k">if</span> <span class="kc">True</span> <span class="ow">is</span> <span class="kc">False</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Whitespace</p>
+<blockquote>
+<div><p>No whitespace inside parentheses, brackets, or braces.</p>
+<p>No whitespace before a comma, colon, or semicolons.</p>
+<p>Use whitespace after a comma, colon, or semicolon.</p>
+<p>Use whitespace around operators: +, -, *, **, /, //, %, =, ==, &lt;, &gt;, &lt;=, &gt;=, &lt;&gt;, !=, is, in, is not, not in, &lt;&lt;, &gt;&gt;, &amp;, <a href="#id1"><span class="problematic" id="id2">|</span></a>, ^</p>
+<p>No trailing whitespace.</p>
+</div></blockquote>
+</li>
+<li><p>Non-ASCII Characters</p>
+<blockquote>
+<div><p>If including any non-ASCII characters anywhere in a python file, include the python encoding comment at the beginning of the file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+</pre></div>
+</div>
+<p>No non-ASCII class, function, or variable names.</p>
+</div></blockquote>
+</li>
+<li><p>Docstrings</p>
+<blockquote>
+<div><p>Use three double-quotes for all docstrings.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;String description docstring.&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Semicolons</p>
+<blockquote>
+<div><p>Do not use semicolons.</p>
+</div></blockquote>
+</li>
+<li><p>Try Except</p>
+<blockquote>
+<div><p>Avoid using nested try-except.</p>
+<p>The routine you are calling, may already be using one.</p>
+</div></blockquote>
+</li>
+</ol>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20DAL%20Win.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Linux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20MacOS.html">MacOS Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Windows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/Using-CHIPSEC-with-Kali-Linux.html">Creating the Kali Linux Live USB</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python Coding Style Guide</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../modules/chipsec.modules.tools.vmm.venom.html"
+                          title="previous chapter">venom module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../modules/chipsec.modules.tools.vmm.venom.html" title="venom module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Python Coding Style Guide</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on May 24, 2022.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

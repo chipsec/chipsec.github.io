@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Building a Bootable USB drive with UEFI Shell (x64) &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -45,7 +46,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="building-a-bootable-usb-drive-with-uefi-shell-x64">
+  <section id="building-a-bootable-usb-drive-with-uefi-shell-x64">
 <h1>Building a Bootable USB drive with UEFI Shell (x64)<a class="headerlink" href="#building-a-bootable-usb-drive-with-uefi-shell-x64" title="Permalink to this headline">¶</a></h1>
 <ol class="arabic simple">
 <li><p>Format your media as FAT32</p></li>
@@ -62,7 +63,7 @@
 <li><p>Rename the UEFI shell file to Bootx64.efi</p></li>
 <li><p>Copy the UEFI shell (now Bootx64.efi) to the /efi/boot directory</p></li>
 </ol>
-<div class="section" id="installing-chipsec">
+<section id="installing-chipsec">
 <h2>Installing CHIPSEC<a class="headerlink" href="#installing-chipsec" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Extract the contents of <code class="docutils literal notranslate"><span class="pre">__install__/UEFI/chipsec_py368_uefi_x64.zip</span></code> to the USB drive, as appropriate.</p>
@@ -102,8 +103,8 @@
 </ul>
 </li>
 </ol>
-</div>
-<div class="section" id="run-chipsec-in-uefi-shell">
+</section>
+<section id="run-chipsec-in-uefi-shell">
 <h2>Run CHIPSEC in UEFI Shell<a class="headerlink" href="#run-chipsec-in-uefi-shell" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">fs0:</span></code></p>
@@ -111,8 +112,8 @@
 <p><code class="docutils literal notranslate"><span class="pre">python368.efi</span> <span class="pre">chipsec_main.py</span></code> or <code class="docutils literal notranslate"><span class="pre">python368.efi</span> <span class="pre">chipsec_util.py</span></code></p>
 <p>Next follow steps in section “Basic Usage” of <a class="reference internal" href="../usage/Running-Chipsec.html#running-chipsec"><span class="std std-ref">Running CHIPSEC</span></a></p>
 </div></blockquote>
-</div>
-<div class="section" id="optional-extending-chipsec-uefi-python-3-6-8-functionality">
+</section>
+<section id="optional-extending-chipsec-uefi-python-3-6-8-functionality">
 <h2>(OPTIONAL) Extending CHIPSEC UEFI Python 3.6.8 functionality<a class="headerlink" href="#optional-extending-chipsec-uefi-python-3-6-8-functionality" title="Permalink to this headline">¶</a></h2>
 <p>Skip this section if you don’t plan on extending native UEFI functionality for CHIPSEC.</p>
 <p>Native functions accessing HW resources are built directly into Python UEFI port in built-in edk2 module. If you want to add more native functionality to Python UEFI port for CHIPSEC, you’ll need to re-build Python for UEFI:</p>
@@ -120,15 +121,17 @@
 <li><p>Start with <a class="reference external" href="https://github.com/tianocore/edk2-libc/blob/master/AppPkg/Applications/Python/Python-3.6.8/Py368ReadMe.txt">Py368Readme.txt</a></p>
 <blockquote>
 <div><ul class="simple">
-<li><p>For a UDK2018 overview, visit <a class="reference external" href="https://github.com/tianocore/tianocore.github.io/wiki/UDK2018-How-to-Build">UDK2018 How to Build</a></p></li>
+<li><p>Latest EDK2, visit <a class="reference external" href="https://github.com/tianocore/edk2">Tianocore EDK2 Github</a>  (Make sure to update submodules)</p></li>
+<li><p>Latest EDK2-LIBC, visit <a class="reference external" href="https://github.com/tianocore/edk2-libc">Tianocore EDK2-LIBC Github</a></p></li>
+<li><p>Follow setup steps described in the <code class="docutils literal notranslate"><span class="pre">Py368Readme.txt</span></code></p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>Import files from the <a class="reference external" href="https://github.com/chipsec/chipsec/tree/master/chipsec_tools/edk2/PythonEFI">CHIPSEC Python 3.6.8 port for EFI Shell</a></p>
+<li><p>Import files from the <a class="reference external" href="https://github.com/chipsec/chipsec/tree/main/chipsec_tools/edk2/PythonEFI">CHIPSEC Python 3.6.8 port for EFI Shell</a></p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Replace existing  <code class="docutils literal notranslate"><span class="pre">AppPkg/Applications/Python/Python-3.6.8/PyMod-3.6.8/Modules/edk2module.c</span></code> file with <a class="reference external" href="https://github.com/chipsec/chipsec/blob/master/chipsec_tools/edk2/PythonEFI/edk2module.c">edk2module.c</a></p></li>
-<li><p>Copy <a class="reference external" href="https://github.com/chipsec/chipsec/blob/master/chipsec_tools/edk2/PythonEFI/cpu.asm">cpu.asm</a> file to <code class="docutils literal notranslate"><span class="pre">AppPkg/Applications/Python/Python-3.6.8/PyMode-3.6.8/Modules/</span></code></p></li>
+<li><p>Replace existing  <code class="docutils literal notranslate"><span class="pre">AppPkg/Applications/Python/Python-3.6.8/PyMod-3.6.8/Modules/edk2module.c</span></code> file with <a class="reference external" href="https://github.com/chipsec/chipsec/blob/main/chipsec_tools/edk2/PythonEFI/edk2module.c">edk2module.c</a></p></li>
+<li><p>Copy <a class="reference external" href="https://github.com/chipsec/chipsec/blob/main/chipsec_tools/edk2/PythonEFI/cpu.asm">cpu.asm</a> file to <code class="docutils literal notranslate"><span class="pre">AppPkg/Applications/Python/Python-3.6.8/PyMode-3.6.8/Modules/</span></code></p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">PyMod-$(PYTHON_VERSION)/Modules/cpu.asm</span></code> line under the <code class="docutils literal notranslate"><span class="pre">[Sources.X64]</span></code> section in <code class="docutils literal notranslate"><span class="pre">AppPkg/Applications/Python/Python-3.6.8/Python368.inf</span></code></p></li>
 </ul>
 </div></blockquote>
@@ -143,8 +146,8 @@
 </li>
 <li><p>Build and directory creation steps are covered in the <code class="docutils literal notranslate"><span class="pre">Py368ReadMe.txt</span></code></p></li>
 </ol>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -184,6 +187,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html">Python Coding Style Guide</a></li>
 </ul>
 
   <div>
@@ -230,7 +237,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Apr 27, 2022.
+      Last updated on May 24, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
