@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Interpreting results &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -45,20 +46,20 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="interpreting-results">
-<h1>Interpreting results<a class="headerlink" href="#interpreting-results" title="Permalink to this headline">¶</a></h1>
+  <section id="interpreting-results">
+<span id="id1"></span><h1>Interpreting results<a class="headerlink" href="#interpreting-results" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>DRAFT (work in progress)</p>
 </div>
 <p>In order to improve usability, we are reviewing and improving the
 messages and meaning of information returned by CHIPSEC.</p>
-<div class="section" id="results">
+<section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
 <p>Currently, the SKIPPED return value is ambiguous. The proposed <strong>new</strong>
 definition of the return values is listed below:</p>
-<table class="colwidths-given docutils align-default" id="id1">
-<caption><span class="caption-text">Generic results meanings</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">Generic results meanings</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -78,34 +79,25 @@ definition of the return values is listed below:</p>
 <tr class="row-even"><td><p>WARNING</p></td>
 <td><p>We have detected something that could be a vulnerability but <strong>manual analysis is required</strong> to confirm (inconclusive)</p></td>
 </tr>
-<tr class="row-odd"><td><p>SKIPPED NOT IMPLEMENTED</p></td>
-<td><p>CHIPSEC currently has not implemented support for this test on this platform</p></td>
-</tr>
-<tr class="row-even"><td><p>SKIPPED NOT APPLICABLE</p></td>
+<tr class="row-odd"><td><p>NOT_APPLICABLE (SKIPPED)</p></td>
 <td><p>The issue checked by this module is not applicable to this platform. This result can be ignored</p></td>
 </tr>
-<tr class="row-odd"><td><p>INFORMATION</p></td>
+<tr class="row-even"><td><p>INFORMATION</p></td>
 <td><p>This module does not check for a vulnerability. It just prints information about the system</p></td>
 </tr>
-<tr class="row-even"><td><p>ERROR</p></td>
+<tr class="row-odd"><td><p>ERROR</p></td>
 <td><p>Something went wrong in the execution of CHIPSEC</p></td>
-</tr>
-<tr class="row-odd"><td><p>DEPRECATED</p></td>
-<td><p>At least one module uses deprecated API</p></td>
-</tr>
-<tr class="row-even"><td><p>EXCEPTION</p></td>
-<td><p>At least one module threw an unexpected exception</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="automated-tests">
+</section>
+<section id="automated-tests">
 <h2>Automated Tests<a class="headerlink" href="#automated-tests" title="Permalink to this headline">¶</a></h2>
 <p>Each test module can log additional messaging in addition to the return
 value. In an effort to standardize and improve the clarity of this
 messaging, the mapping of result and messages is defined below:</p>
-<table class="colwidths-given docutils align-default" id="id2">
-<caption><span class="caption-text">Modules results meanings</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-text">Modules results meanings</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 20%" />
@@ -238,14 +230,14 @@ messaging, the mapping of result and messages is defined below:</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="tools">
+</section>
+<section id="tools">
 <h2>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h2>
 <p>CHIPSEC also contains tools such as fuzzers, which require a
 knowledgeable user to run. We can examine the usability of these tools
 as well.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -285,6 +277,10 @@ as well.</p>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html">Python Coding Style Guide</a></li>
 </ul>
 
   <div>
@@ -331,7 +327,7 @@ as well.</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Apr 27, 2022.
+      Last updated on May 24, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

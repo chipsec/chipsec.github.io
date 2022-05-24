@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>CHIPSEC Modules &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
@@ -45,7 +46,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="chipsec-modules">
+  <section id="chipsec-modules">
 <h1>CHIPSEC Modules<a class="headerlink" href="#chipsec-modules" title="Permalink to this headline">¶</a></h1>
 <p>A CHIPSEC module is just a python class that inherits from BaseModule and implements <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and <code class="docutils literal notranslate"><span class="pre">run</span></code>. Modules are stored under the chipsec installation directory in a subdirectory “modules”. The “modules” directory contains one subdirectory for each chipset that chipsec supports. There is also a directory for common modules that should apply to every platform.</p>
 <blockquote>
@@ -136,7 +137,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Compatability SMRAM is not locked</p></td>
+<tr class="row-even"><td><p>Compatibility SMRAM is not locked</p></td>
 <td><p>common.smm</p></td>
 <td></td>
 </tr>
@@ -180,7 +181,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 <td><p>common.bios_wp, common.secureboot.variables</p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>Key exchange keys and whitelist/blacklist</p></td>
+<tr class="row-odd"><td><p>Key exchange keys</p></td>
 <td><p>common.secureboot.variables</p></td>
 <td></td>
 </tr>
@@ -276,7 +277,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 <td><p>common.ia32cfg</p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>Memory mamp is not locked</p></td>
+<tr class="row-even"><td><p>Memory map is not locked</p></td>
 <td><p>memconfig</p></td>
 <td></td>
 </tr>
@@ -333,7 +334,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>SmmRuntime vulnerability</p></td>
-<td><p>tools.uefi.blacklist</p></td>
+<td><p>tools.uefi.scan_blocked</p></td>
 <td></td>
 </tr>
 </tbody>
@@ -498,7 +499,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </tr>
 </tbody>
 </table>
-<div class="section" id="modules">
+<section id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
@@ -609,8 +610,8 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -650,6 +651,10 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html">Python Coding Style Guide</a></li>
 </ul>
 
   <div>
@@ -696,7 +701,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Apr 27, 2022.
+      Last updated on May 24, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
