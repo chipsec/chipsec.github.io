@@ -52,10 +52,39 @@
             
   <section id="module-chipsec.modules.tools.cpu.sinkhole">
 <span id="sinkhole-module"></span><h1>sinkhole module<a class="headerlink" href="#module-chipsec.modules.tools.cpu.sinkhole" title="Permalink to this headline">¶</a></h1>
-<p>This module checks if CPU is affected by ‘The SMM memory sinkhole’ vulnerability by Christopher Domas</p>
-<p>NOTE: The system may hang when running this test. In that case, the mitigation to this issue is likely working but we may not be handling the exception generated.</p>
-<p>References:</p>
-<p>The Memory Sinkhole by Christopher Domas: <a class="reference external" href="https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation.pdf">https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation.pdf</a> (presentation) and <a class="reference external" href="https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation-wp.pdf">https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation-wp.pdf</a> (whitepaper).</p>
+<p>This module checks if CPU is affected by ‘The SMM memory sinkhole’ vulnerability</p>
+<dl>
+<dt>References:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation.pdf">Memory Sinkhole presentation by Christopher Domas</a></p></li>
+<li><p><a class="reference external" href="https://www.blackhat.com/docs/us-15/materials/us-15-Domas-The-Memory-Sinkhole-Unleashing-An-x86-Design-Flaw-Allowing-Universal-Privilege-Escalation-wp.pdf">Memory Sinkhole whitepaper</a></p></li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.cpu.sinkhole</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">sinkhole</span>
+</pre></div>
+</div>
+</dd>
+<dt>Registers used:</dt><dd><ul class="simple">
+<li><p>IA32_APIC_BASE.APICBase</p></li>
+<li><p>IA32_SMRR_PHYSBASE.PhysBase</p></li>
+<li><p>IA32_SMRR_PHYSMASK</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Supported OS: Windows or Linux</p></li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>The system may hang when running this test.</p></li>
+<li><p>In that case, the mitigation to this issue is likely working but we may not be handling the exception generated.</p></li>
+</ul>
+</div>
 </section>
 
 
@@ -95,6 +124,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Sample Util Command</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -150,7 +181,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 24, 2022.
+      Last updated on Jun 22, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

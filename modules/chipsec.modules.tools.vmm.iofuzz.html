@@ -53,12 +53,55 @@
   <section id="module-chipsec.modules.tools.vmm.iofuzz">
 <span id="iofuzz-module"></span><h1>iofuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.iofuzz" title="Permalink to this headline">¶</a></h1>
 <p>Simple port I/O VMM emulation fuzzer</p>
-<blockquote>
-<div><dl class="simple">
-<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.iofuzz</span> <span class="pre">[-a</span> <span class="pre">&lt;mode&gt;,&lt;count&gt;,&lt;iterations&gt;]</span> <span class="pre">-l</span> <span class="pre">log.txt</span></code></p>
+<dl>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.iofuzz</span> <span class="pre">[-a</span> <span class="pre">&lt;mode&gt;,&lt;count&gt;,&lt;iterations&gt;]</span></code></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;mode&gt;</span></code><span class="classifier">SMI handlers testing mode</span></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">exhaustive</span></code> : Fuzz all I/O ports exhaustively (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">random</span></code>     : Fuzz randomly chosen I/O ports</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;count&gt;</span></code>        : Number of times to write to each port (default = 1000)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;iterations&gt;</span></code>   : Number of I/O ports to fuzz (default = 1000000 in random mode)</p></li>
+</ul>
+</dd>
+<dt>Where:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code>: optional line</p></li>
+</ul>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">iofuzz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">iofuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">random</span><span class="p">,</span><span class="mi">9000</span><span class="p">,</span><span class="mi">4000000</span>
+</pre></div>
+</div>
+</dd>
+<dt>Additional options set within the module:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MAX_PORTS</span></code>                 : Maximum ports</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MAX_PORT_VALUE</span></code>            : Maximum port value to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEFAULT_PORT_WRITE_COUNT</span></code>  : Default port write count if not specified with switches</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEFAULT_RANDOM_ITERATIONS</span></code> : Default port write iterations if not specified with switches</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FLUSH_LOG_EACH_ITER</span></code>      : Flush log after each iteration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FUZZ_SPECIAL_VALUES</span></code>      : Specify to use 1-2-4 byte values</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_EXCLUDE_PORTS</span></code>            : Ports to exclude (list)</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Returns a Warning by default</p></li>
+<li><p>System may be in an unknown state, further evaluation may be needed</p></li>
+</ul>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This module is designed to run in a VM environment</p></li>
+<li><p>Behavior on physical HW is undefined</p></li>
+</ul>
+</div>
 </section>
 
 
@@ -98,6 +141,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Sample Util Command</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -153,7 +198,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 24, 2022.
+      Last updated on Jun 22, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

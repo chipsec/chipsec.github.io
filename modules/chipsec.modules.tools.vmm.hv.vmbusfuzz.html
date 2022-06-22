@@ -55,17 +55,35 @@
 <span id="vmbusfuzz-module"></span><h1>vmbusfuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.hv.vmbusfuzz" title="Permalink to this headline">¶</a></h1>
 <p>Hyper-V VMBus generic fuzzer</p>
 <dl>
-<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.hv.vmbusfuzz</span> <span class="pre">-a</span> <span class="pre">fuzz,&lt;parameters&gt;</span> <span class="pre">-l</span> <span class="pre">log.txt</span></code></p>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.hv.vmbusfuzz</span> <span class="pre">-a</span> <span class="pre">fuzz,&lt;parameters&gt;</span></code></p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">all</span></code>          fuzzing all bytes</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">hv</span></code>           fuzzing HyperV message header</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vmbus</span></code>        fuzzing HyperV message body / VMBUS message</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;pos&gt;,&lt;size&gt;</span></code> fuzzing number of bytes at specific position</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">all</span></code>          : Fuzzing all bytes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hv</span></code>           : Fuzzing HyperV message header</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vmbus</span></code>        : Fuzzing HyperV message body / VMBUS message</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;pos&gt;,&lt;size&gt;</span></code> : Fuzzing number of bytes at specific position</p></li>
 </ul>
 </dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">hv</span><span class="o">.</span><span class="n">vmbusfuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">fuzz</span><span class="p">,</span><span class="nb">all</span> <span class="o">-</span><span class="n">l</span> <span class="n">log</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</dd>
 </dl>
-<p>Note: the fuzzer is incompatible with native VMBus driver (<code class="docutils literal notranslate"><span class="pre">vmbus.sys</span></code>). To use it, remove <code class="docutils literal notranslate"><span class="pre">vmbus.sys</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The fuzzer is incompatible with native VMBus driver (<code class="docutils literal notranslate"><span class="pre">vmbus.sys</span></code>). To use it, remove <code class="docutils literal notranslate"><span class="pre">vmbus.sys</span></code></p></li>
+<li><p>Returns a Warning by default</p></li>
+<li><p>System may be in an unknown state, further evaluation may be needed</p></li>
+</ul>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This module is designed to run in a VM environment</p></li>
+<li><p>Behavior on physical HW is undefined</p></li>
+</ul>
+</div>
 </section>
 
 
@@ -105,6 +123,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Sample Util Command</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -161,7 +181,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 24, 2022.
+      Last updated on Jun 22, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

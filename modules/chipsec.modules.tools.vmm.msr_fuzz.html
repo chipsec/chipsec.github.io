@@ -53,12 +53,46 @@
   <section id="module-chipsec.modules.tools.vmm.msr_fuzz">
 <span id="msr-fuzz-module"></span><h1>msr_fuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.msr_fuzz" title="Permalink to this headline">¶</a></h1>
 <p>Simple CPU Module Specific Register (MSR) VMM emulation fuzzer</p>
-<blockquote>
-<div><dl class="simple">
-<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.msr_fuzz</span> <span class="pre">[-a</span> <span class="pre">random]</span> <span class="pre">-l</span> <span class="pre">log.txt</span></code></p>
+<dl>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.vmm.msr_fuzz</span> <span class="pre">[-a</span> <span class="pre">random]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-a</span></code> : random = use random values (default = sequential numbering)</p></li>
+</ul>
+</dd>
+<dt>Where:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code>: optional line</p></li>
+</ul>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">msr_fuzz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">msr_fuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">random</span>
+</pre></div>
+</div>
+</dd>
+<dt>Additional options set within the module:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">_NO_ITERATIONS_TO_FUZZ</span></code> : Number of iterations to fuzz randomly</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_READ_MSR</span></code>              : Specify to read MSR when fuzzing it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FLUSH_LOG_EACH_MSR</span></code>    : Flush log file before each MSR</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FUZZ_VALUE_0_all1s</span></code>    : Try all 0 &amp; all 1 values to be written to each MSR</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FUZZ_VALUE_5A</span></code>         : Try 0x5A values to be written to each MSR</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FUZZ_VALUE_RND</span></code>        : Try random values to be written to each MSR</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_EXCLUDE_MSR</span></code>           : MSR values to exclude (list)</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Returns a Warning by default</p></li>
+<li><p>System may be in an unknown state, further evaluation may be needed</p></li>
+</ul>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This module is designed to run in a VM environment</p></li>
+<li><p>Behavior on physical HW is undefined</p></li>
+</ul>
+</div>
 </section>
 
 
@@ -98,6 +132,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Sample Util Command</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -153,7 +189,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 24, 2022.
+      Last updated on Jun 22, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

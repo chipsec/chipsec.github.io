@@ -56,8 +56,8 @@
 <dl>
 <dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.vmm.pcie_fuzz</span> <span class="pre">[-a</span> <span class="pre">&lt;bus&gt;</span> <span class="pre">&lt;dev&gt;</span> <span class="pre">&lt;fun&gt;]</span></code></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;bus&gt;</span></code> : Bus # to fuzz      (in hex)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;dev&gt;</span></code> : Device # to fuzz   (in hex)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;bus&gt;</span></code> : Bus # to fuzz (in hex)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;dev&gt;</span></code> : Device # to fuzz (in hex)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;fun&gt;</span></code> : Function # to fuzz (in hex)</p></li>
 </ul>
 </dd>
@@ -71,18 +71,28 @@
 </pre></div>
 </div>
 </dd>
+<dt>Additional options set within the module:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IO_FUZZ</span></code>       : Set to fuzz IO BARs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CALC_BAR_SIZE</span></code> : Set to calculate BAR sizes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMEOUT</span></code>       : Timeout between memory writes (seconds)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ACTIVE_RANGE</span></code>  : Set to fuzz MMIO BAR in Active range</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BIT_FLIP</span></code>      : Set to fuzz using bit flips</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_EXCLUDE_BAR</span></code>  : BARs to exclude (list)</p></li>
+</ul>
+</dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>Returns a Warning by default.</p></li>
-<li><p>System may be in an unknown state, further evaluation may be needed.</p></li>
+<li><p>Returns a Warning by default</p></li>
+<li><p>System may be in an unknown state, further evaluation may be needed</p></li>
 </ul>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <ul class="simple">
 <li><p>This module is designed to run in a VM environment</p></li>
+<li><p>Behavior on physical HW is undefined</p></li>
 </ul>
 </div>
 </section>
@@ -124,6 +134,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Sample Util Command</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -179,7 +191,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 24, 2022.
+      Last updated on Jun 22, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
