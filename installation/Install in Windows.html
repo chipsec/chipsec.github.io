@@ -50,8 +50,8 @@
 <h1>Windows Installation<a class="headerlink" href="#windows-installation" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line">CHIPSEC supports the following versions:</div>
-<div class="line">Windows 8, 8.1, 10 - x86 and AMD64</div>
-<div class="line">Windows Server 2012, 2016 - x86 and AMD64</div>
+<div class="line">Windows 8, 8.1, 10, 11 - x86 and AMD64</div>
+<div class="line">Windows Server 2012, 2016, 2019, 2022 - x86 and AMD64</div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -78,7 +78,12 @@
 </div></blockquote>
 <p>To compile the driver:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">Visual Studio and WDK</a>: for building the driver. For best results use the latest available (at least <a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/other-wdk-downloads">WDK 8 and VS 2012</a>)</p>
+<div><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk">Visual Studio and WDK</a>: for building the driver.</p>
+<p>For best results use the latest available (<strong>VS2022 + SDK/WDK 11</strong> or <strong>VS2019 + SDK/WDK 10 or 11</strong>)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure to install compatible VS/SDK/WDK versions and the spectre mitigation packages</p>
+</div>
 </div></blockquote>
 <p>To clone the repo:</p>
 <blockquote>
@@ -103,32 +108,32 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
 </section>
 <section id="turn-off-kernel-driver-signature-checks">
 <h2>Turn off kernel driver signature checks<a class="headerlink" href="#turn-off-kernel-driver-signature-checks" title="Permalink to this headline">¶</a></h2>
-<p><strong>Windows 10 64-bit</strong></p>
+<p><strong>Enable boot menu</strong></p>
 <p>In CMD shell:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">bcdedit</span> <span class="pre">/set</span> <span class="pre">{bootmgr}</span> <span class="pre">displaybootmenu</span> <span class="pre">yes</span></code></p>
 </div></blockquote>
-<p><strong>Windows 10 64-bit / Windows 8, 8.1 64-bit (with Secure Boot enabled) / Windows Server 2016 64-bit / Windows Server 2012 64-bit (with Secure Boot enabled):</strong></p>
+<p><strong>With Secure Boot enabled:</strong></p>
 <p>Method 1:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>In CMD shell: <code class="docutils literal notranslate"><span class="pre">shutdown</span> <span class="pre">/r</span> <span class="pre">/t</span> <span class="pre">0</span> <span class="pre">/o</span></code> or Start button &gt; Power icon &gt; SHIFT key + Restart</p></li>
-<li><p>Navigate: Troubleshooting &gt; Advanced Settings &gt; Startup Settings &gt; Reboot</p></li>
+<li><p>In CMD shell: <code class="docutils literal notranslate"><span class="pre">shutdown</span> <span class="pre">/r</span> <span class="pre">/t</span> <span class="pre">0</span> <span class="pre">/o</span></code> or Start button -&gt; Power icon -&gt; SHIFT key + Restart</p></li>
+<li><p>Navigate: Troubleshooting -&gt; Advanced Settings -&gt; Startup Settings -&gt; Reboot</p></li>
 <li><p>After reset choose F7 or 7 “Disable driver signature checks”</p></li>
 </ul>
 </div></blockquote>
 <p>Method 2:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Disable Secure Boot in the BIOS setup screen then disable driver signature checks as in Windows 8 with Secure Boot disabled</p></li>
+<li><p>Disable Secure Boot in the BIOS setup screen then disable driver signature checks as with Secure Boot disabled</p></li>
 </ul>
 </div></blockquote>
-<p><strong>Windows 10 (with Secure Boot disabled) / Windows 8 (with Secure Boot disabled) / Windows Server 2012 (with Secure Boot disabled):</strong></p>
+<p><strong>With Secure Boot disabled:</strong></p>
 <p>Method 1:</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt>Boot in Test mode (allows self-signed certificates) </dt><dd><ul>
+<dt>Boot in Test mode (allows self-signed certificates)</dt><dd><ul>
 <li><p>Start CMD.EXE as Adminstrator <code class="docutils literal notranslate"><span class="pre">BcdEdit</span> <span class="pre">/set</span> <span class="pre">TESTSIGNING</span> <span class="pre">ON</span></code></p></li>
 <li><p>Reboot</p></li>
 <li><dl class="simple">
@@ -148,7 +153,7 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
 <p>Method 2:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Press F8 when booting Windows and choose “No driver signatures enforcement” option to turn off driver signature checks at all</p></li>
+<li><p>Press F8 when booting Windows and choose “No driver signatures enforcement” option to turn off driver signature checks</p></li>
 </ul>
 </div></blockquote>
 </section>
@@ -165,26 +170,15 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
 </div></blockquote>
 <p>Method 2:</p>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p>Open a VS developer command prompt</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">cd</span> <span class="pre">&lt;CHIPSEC_ROOT_DIR&gt;\drivers\win7</span></code></p></li>
-<li><dl class="simple">
-<dt>Build driver using msbuild command:</dt><dd><ul>
-<li><dl class="simple">
-<dt>For 32 bit:</dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">msbuild</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>For 64 bit:</dt><dd><ul>
+<li><dl>
+<dt>Build driver using msbuild command:</dt><dd><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">msbuild</span> <span class="pre">/p:Platform=x64</span></code></p></li>
 </ul>
-</dd>
-</dl>
-</li>
-</ul>
+<p>or
+- <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">msbuild</span> <span class="pre">/p:Platform=x32</span></code></p>
 </dd>
 </dl>
 </li>
@@ -312,7 +306,7 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jul 27, 2022.
+      Last updated on Aug 26, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
