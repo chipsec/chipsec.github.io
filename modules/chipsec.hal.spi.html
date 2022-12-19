@@ -48,30 +48,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.hal.spi">
-<span id="spi-module"></span><h1>spi module<a class="headerlink" href="#module-chipsec.hal.spi" title="Permalink to this headline">¶</a></h1>
-<p>Access to SPI Flash parts</p>
-<dl>
-<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_spi</span><span class="p">(</span> <span class="n">spi_fla</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">write_spi</span><span class="p">(</span> <span class="n">spi_fla</span><span class="p">,</span> <span class="n">buf</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">erase_spi_block</span><span class="p">(</span> <span class="n">spi_fla</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">get_SPI_JEDEC_ID</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">get_SPI_JEDEC_ID_decoded</span><span class="p">()</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>!! IMPORTANT:
-Size of the data chunk used in SPI read cycle (in bytes)
-default = maximum 64 bytes (remainder is read in 4 byte chunks)</p>
-<p>If you want to change logic to read SPI Flash in 4 byte chunks:
-SPI_READ_WRITE_MAX_DBC = 4</p>
-<p>&#64;TBD: SPI write cycles operate on 4 byte chunks (not optimized yet)</p>
-<p>Approximate performance (on 2-core SMT Intel Core i5-4300U (Haswell) CPU 1.9GHz):
-SPI read: ~7 sec per 1MB (with DBC=64)</p>
-</div>
+  <section id="spi-module">
+<h1>spi module<a class="headerlink" href="#spi-module" title="Permalink to this headline">¶</a></h1>
 </section>
 
 
@@ -120,6 +98,7 @@ SPI read: ~7 sec per 1MB (with DBC=64)</p>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#f-strings">f-Strings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
 </ul>
 
   <div>
@@ -168,7 +147,7 @@ SPI read: ~7 sec per 1MB (with DBC=64)</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 28, 2022.
+      Last updated on Dec 19, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
