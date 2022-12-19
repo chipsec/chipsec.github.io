@@ -216,18 +216,24 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
 <p>The routine you are calling, may already be using one.</p>
 </div></blockquote>
 </li>
+<li><p>Avoid for-else and while-else loops</p>
+<blockquote>
+<div><p>The loop behavior for these can be counterintuitive.</p>
+<p>If they have to be used, make sure to properly document the expected behavior / work-flow.</p>
+</div></blockquote>
+</li>
 </ol>
 </section>
 <section id="f-strings">
 <h1>f-Strings<a class="headerlink" href="#f-strings" title="Permalink to this headline">¶</a></h1>
-<table class="colwidths-given docutils align-default" id="id2">
-<caption><span class="caption-text">PEP versions supported by CHIPSEC</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">PEP versions supported by CHIPSEC</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 14%" />
-<col style="width: 30%" />
+<col style="width: 27%" />
 <col style="width: 30%" />
 <col style="width: 14%" />
-<col style="width: 12%" />
+<col style="width: 14%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>PEP / bpo</p></th>
@@ -238,7 +244,7 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0498/">PEP 3107</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0498/">PEP 498</a></p></td>
 <td><p>Literal String Interpolation</p></td>
 <td><p>Adds a new string formatting mechanism: Literal String Interpolation, f-strings</p></td>
 <td><p>3.6</p></td>
@@ -260,14 +266,14 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
 </dd>
 </dl>
 <p>This table lists which Type Hint PEPs are in scope for CHIPSEC.</p>
-<table class="colwidths-given docutils align-default" id="id3">
-<caption><span class="caption-text">PEP versions supported by CHIPSEC</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">PEP versions supported by CHIPSEC</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 14%" />
-<col style="width: 30%" />
+<col style="width: 27%" />
 <col style="width: 30%" />
 <col style="width: 14%" />
-<col style="width: 12%" />
+<col style="width: 14%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>PEP</p></th>
@@ -304,7 +310,7 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0544/">PEP 544</a></p></td>
 <td><p>Protocols: Structural subtyping (static duck typing)</p></td>
-<td><p>Specify type metadata for static type checkers and other third party tools</p></td>
+<td><p>Specify type metadata for static type checkers and other third-party tools</p></td>
 <td><p>3.8</p></td>
 <td><p>No</p></td>
 </tr>
@@ -320,16 +326,16 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
 <td><p>3.8</p></td>
 <td><p>No</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0593/">PEP 593</a></p></td>
-<td><p>Flexible function and variable annotations</p></td>
-<td><p>Adds an Annotated type to the typing module to decorate existing types with context-specific metadata.</p></td>
-<td><p>3.9</p></td>
-<td><p>No</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0598/">PEP 598</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0589/">PEP 589</a></p></td>
 <td><p>TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys</p></td>
 <td><p>Support dictionary object with a specific set of string keys, each with a value of a specific type</p></td>
 <td><p>3.8</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0593/">PEP 593</a></p></td>
+<td><p>Flexible function and variable annotations</p></td>
+<td><p>Adds an Annotated type to the typing module to decorate existing types with context-specific metadata.</p></td>
+<td><p>3.9</p></td>
 <td><p>No</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0604/">PEP 604</a></p></td>
@@ -395,6 +401,36 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
 </tbody>
 </table>
 </section>
+<section id="walrus-operator">
+<h1>Walrus Operator (:=)<a class="headerlink" href="#walrus-operator" title="Permalink to this headline">¶</a></h1>
+<p>At this time, Assignment Expressions (Walrus operator) are not supported.</p>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-text">PEP versions supported by CHIPSEC</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 27%" />
+<col style="width: 30%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>PEP</p></th>
+<th class="head"><p>Title</p></th>
+<th class="head"><p>Summary</p></th>
+<th class="head"><p>Python Version</p></th>
+<th class="head"><p>Supported</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://peps.python.org/pep-0572/">PEP 572</a></p></td>
+<td><p>Assignment Expressions</p></td>
+<td><p>Adds a way to assign to variables within an expression</p></td>
+<td><p>3.8</p></td>
+<td><p>No</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 
 
             <div class="clearer"></div>
@@ -442,6 +478,7 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
 <li class="toctree-l1"><a class="reference internal" href="#python-coding-style-guide">Python Coding Style Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#f-strings">f-Strings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#walrus-operator">Walrus Operator (:=)</a></li>
 </ul>
 
   <div>
@@ -480,7 +517,7 @@ Words and acronyms are capitalized with no spaces or underscores.</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 28, 2022.
+      Last updated on Dec 19, 2022.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
