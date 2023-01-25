@@ -48,8 +48,23 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="msr-module">
-<h1>msr module<a class="headerlink" href="#msr-module" title="Permalink to this headline">¶</a></h1>
+  <section id="module-chipsec.hal.msr">
+<span id="msr-module"></span><h1>msr module<a class="headerlink" href="#module-chipsec.hal.msr" title="Permalink to this headline">¶</a></h1>
+<p>Access to CPU resources (for each CPU thread): Model Specific Registers (MSR), IDT/GDT</p>
+<dl>
+<dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_msr</span><span class="p">(</span> <span class="mh">0x8B</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_msr</span><span class="p">(</span> <span class="mh">0x79</span><span class="p">,</span> <span class="mh">0x12345678</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_IDTR</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_GDTR</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dump_Descriptor_Table</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">DESCRIPTOR_TABLE_CODE_IDTR</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">IDT</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">GDT</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">IDT_all</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">GDT_all</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </section>
 
 
@@ -98,6 +113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#f-strings">f-Strings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
 </ul>
 
@@ -147,7 +163,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 19, 2022.
+      Last updated on Jan 25, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
