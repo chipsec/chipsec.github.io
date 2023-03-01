@@ -189,18 +189,12 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
 <div><p><code class="docutils literal notranslate"><span class="pre">&lt;CHIPSEC_ROOT_DIR&gt;\chipsec\helper\win\win7_amd64</span> <span class="pre">(or</span> <span class="pre">i386)</span></code></p>
 </div></blockquote>
 <p><strong>Build the compression tools</strong></p>
-<p>Method 1:</p>
+<p>Method:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Navigate to the chipsec_toolscompression directory</p></li>
-<li><p>run the build.cmd</p></li>
-</ul>
-</div></blockquote>
-<p>Method 2:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Download compression tools from <a class="reference external" href="https://github.com/tianocore/edk2-BaseTools-win32/archive/master.zip">https://github.com/tianocore/edk2-BaseTools-win32/archive/master.zip</a></p></li>
-<li><p>Unzip the archive into the chipsec_tools/compression/bin directory</p></li>
+<li><p>Run <cite>python setup.py build</cite></p></li>
+<li><p>Copy the <cite>EfiCompressor.cp&lt;pyver&gt;-win_&lt;arch&gt;.pyd</cite> file from  build/lib.win-&lt;arch&gt;-&lt;pyver&gt; to the root chipsec directory</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Alternate Method to load CHIPSEC service/driver</strong></p>
@@ -311,7 +305,7 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 03, 2023.
+      Last updated on Mar 01, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
