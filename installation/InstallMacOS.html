@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>result_deltas module &#8212; CHIPSEC  documentation</title>
+    <title>MacOS Installation &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
@@ -17,7 +17,9 @@
     
     <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DAL Windows Installation" href="InstallWinDAL.html" />
+    <link rel="prev" title="Linux Installation" href="InstallLinux.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,8 +30,14 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="InstallWinDAL.html" title="DAL Windows Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="InstallLinux.html" title="Linux Installation"
+             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">result_deltas module</a></li> 
+        <li class="nav-item nav-item-this"><a href="">MacOS Installation</a></li> 
       </ul>
     </div>  
 
@@ -38,8 +46,54 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.result_deltas">
-<span id="result-deltas-module"></span><h1>result_deltas module<a class="headerlink" href="#module-chipsec.result_deltas" title="Permalink to this headline">¶</a></h1>
+  <section id="macos-installation">
+<h1>MacOS Installation<a class="headerlink" href="#macos-installation" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>MacOS support is currently in Beta release. There’s no support for M1 chips</p>
+</div>
+<section id="install-chipsec-dependencies">
+<h2>Install CHIPSEC Dependencies<a class="headerlink" href="#install-chipsec-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Python 3.7 or higher (<a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a>)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>CHIPSEC has deprecated support for Python2 since June 2020</p>
+</div>
+<p>Install XCODE from the App Store (for best results use version 11 or newer)</p>
+<p>Install PIP and setuptools packages. Please see instructions <a class="reference external" href="http://docs.python-guide.org/en/latest/starting/install/osx/">here</a></p>
+<p>Turn the System Integrity Protection (SIP) off. See <a class="reference external" href="https://developer.apple.com/library/mac/documentation/Security/Conceptual/System_Integrity_Protection_Guide/ConfiguringSystemIntegrityProtection/ConfiguringSystemIntegrityProtection.html">Configuring SIP</a></p>
+<p>An alternative to disabling SIP and allowing untrusted/unsigned kexts to load can be enabled by running the following command:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">csrutil</span> <span class="pre">enable</span> <span class="pre">--without</span> <span class="pre">kext</span></code></p>
+</div></blockquote>
+</section>
+<section id="building-chipsec">
+<h2>Building Chipsec<a class="headerlink" href="#building-chipsec" title="Permalink to this headline">¶</a></h2>
+<p>Clone CHIPSEC Git repository:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/chipsec/chipsec</span></code></p>
+</div></blockquote>
+</section>
+<section id="run-chipsec">
+<h2>Run CHIPSEC<a class="headerlink" href="#run-chipsec" title="Permalink to this headline">¶</a></h2>
+<p>Follow steps in section “Using as a Python package” of <a class="reference internal" href="../usage/Running-Chipsec.html#running-chipsec"><span class="std std-ref">Running CHIPSEC</span></a></p>
+<p>To build chipsec.kext on your own and load please follow the instructions in drivers/osx/README</p>
+</section>
+<section id="chipsec-cleanup">
+<h2>CHIPSEC Cleanup<a class="headerlink" href="#chipsec-cleanup" title="Permalink to this headline">¶</a></h2>
+<p>When done using CHIPSEC, ensure the driver is unloaded and re-enable the System Integrity Protection:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">kextunload</span> <span class="pre">-b</span> <span class="pre">com.google.chipsec</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">csrutil</span> <span class="pre">enable</span></code></p>
+</div></blockquote>
+</section>
+<section id="build-errors">
+<h2>Build Errors<a class="headerlink" href="#build-errors" title="Permalink to this headline">¶</a></h2>
+<p>xcodebuild requires xcode error during CHIPSEC install:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sudo</span> <span class="pre">xcode-select</span> <span class="pre">-s</span> <span class="pre">/Applications/Xcode.app/Contents/Developer</span></code></p>
+</div></blockquote>
+</section>
 </section>
 
 
@@ -59,12 +113,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../start/Download.html">Download CHIPSEC</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20DAL%20Win.html">DAL Windows Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Linux.html">Linux Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20MacOS.html">MacOS Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation/Install%20in%20Windows.html">Windows Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation/USB%20with%20UEFI%20Shell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MacOS Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
 <ul>
@@ -92,6 +146,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
 </ul>
 
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="InstallLinux.html"
+                          title="previous chapter">Linux Installation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="InstallWinDAL.html"
+                          title="next chapter">DAL Windows Installation</a></p>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -115,12 +179,18 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="InstallWinDAL.html" title="DAL Windows Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="InstallLinux.html" title="Linux Installation"
+             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">result_deltas module</a></li> 
+        <li class="nav-item nav-item-this"><a href="">MacOS Installation</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Mar 01, 2023.
+      Last updated on Mar 30, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
