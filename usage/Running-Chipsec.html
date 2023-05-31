@@ -78,23 +78,23 @@
 <section id="using-as-a-python-package">
 <h2>Using as a Python Package<a class="headerlink" href="#using-as-a-python-package" title="Permalink to this headline">¶</a></h2>
 <p>Install CHIPSEC manually or from PyPI. You can then use CHIPSEC from your Python project or from the Python shell:</p>
-<p>To install and run CHIPSEC as a package:</p>
-<p><code class="docutils literal notranslate"><span class="pre"># python setup.py install</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre"># sudo chipsec_main</span></code></p>
+<p>To install and run CHIPSEC as a package:</p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sudo</span> <span class="pre">chipsec_main</span></code></p>
 <p>From the Python shell:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">chipsec_main</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span><span class="s1">&#39;common.bios_wp&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;-m common.bios_wp&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">chipsec_util</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s1">&#39;spi&#39;</span><span class="p">,</span><span class="s1">&#39;info&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;spi info&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>To use CHIPSEC <em>in place</em> without installing it:</p>
-<p><code class="docutils literal notranslate"><span class="pre"># python setup.py build_ext -i</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre"># sudo python chipsec_main.py</span></code></p>
+<p>To use CHIPSEC <em>in place</em> without installing it:</p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">-i</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sudo</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span></code></p>
 </section>
 <section id="chipsec-main-options">
 <h2>chipsec_main options<a class="headerlink" href="#chipsec-main-options" title="Permalink to this headline">¶</a></h2>
@@ -173,7 +173,6 @@
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/InstallLinux.html">Linux Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation/InstallMacOS.html">MacOS Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/InstallWindows.html">Windows Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
@@ -248,7 +247,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 05, 2023.
+      Last updated on May 31, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
