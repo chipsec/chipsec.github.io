@@ -69,13 +69,11 @@ or <code class="docutils literal notranslate"><span class="pre">chipsec/helper/c
 <p>A new helper folder should be created under
 <code class="docutils literal notranslate"><span class="pre">chipsec/helper/new_helper</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/new_helper/__init__.py</span></code> within the new folder needs to
-add the helper to avail_helpers list</p>
+add the helper name to list <code class="docutils literal notranslate"><span class="pre">__all__</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">from</span> <span class="nn">chipsec.helper.oshelper</span> <span class="kn">import</span> <span class="n">avail_helpers</span>
 
 <span class="k">if</span> <span class="s2">&quot;linux&quot;</span> <span class="o">==</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
     <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;linuxhelper&quot;</span> <span class="p">]</span>
-    <span class="n">avail_helpers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;linuxhelper&quot;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
 </pre></div>
@@ -103,7 +101,6 @@ Base Class</p>
 <li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.helper.linuxnative.html">linuxnative package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.helper.windows.html">windows package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.helper.basehelper.html">basehelper module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.helper.helpers.html">helpers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.helper.oshelper.html">oshelper module</a></li>
 </ul>
 </li>
@@ -205,7 +202,7 @@ Base Class</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on May 31, 2023.
+      Last updated on Jun 28, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
