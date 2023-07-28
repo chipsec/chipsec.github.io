@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Sample Util Command &#8212; CHIPSEC  documentation</title>
+    <title>&lt;no title&gt; &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
@@ -37,7 +37,7 @@
           <a href="Sample-Module-Code.html" title="Sample module code template"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Sample Util Command</a></li> 
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
       </ul>
     </div>  
 
@@ -46,41 +46,40 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="sample-util-command">
-<h1>Sample Util Command<a class="headerlink" href="#sample-util-command" title="Permalink to this headline">¶</a></h1>
+  <blockquote>
+<div><p>Util Command</p>
+</div></blockquote>
+<hr class="docutils" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># chipsec_util.py commands live in chipsec/utilcmd/</span>
 <span class="c1"># Example file name: &lt;command_display_name&gt;_cmd.py</span>
 
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 
-<span class="kn">from</span> <span class="nn">chipsec.command</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span> <span class="nn">chipsec.command</span> <span class="kn">import</span> <span class="n">BaseCommand</span><span class="p">,</span> <span class="n">toLoad</span>
 
 <span class="k">class</span> <span class="nc">CommandClass</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &gt;&gt;&gt; chipsec_util command_display_name action</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">toLoad</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">toLoad</span><span class="o">.</span><span class="n">All</span>
 
-    <span class="k">def</span> <span class="nf">requires_driver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util command_display_name&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">CommandClass</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
         <span class="n">parser_entrypoint</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;action&#39;</span><span class="p">)</span>
         <span class="n">parser_entrypoint</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[CHIPSEC] (command_display_name) time elapsed </span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span>
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;command_display_name&#39;</span><span class="p">:</span> <span class="n">CommandClass</span><span class="p">}</span>
 </pre></div>
 </div>
-</section>
 
 
             <div class="clearer"></div>
@@ -111,14 +110,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Configuration-Files.html">Configuration Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Developing.html">Writing Your Own Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample module code template</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Sample Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -171,11 +169,11 @@
           <a href="Sample-Module-Code.html" title="Sample module code template"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Sample Util Command</a></li> 
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 28, 2023.
+      Last updated on Jul 28, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>

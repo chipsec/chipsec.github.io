@@ -49,33 +49,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.modules.common.rtclock">
-<span id="rtclock-module"></span><h1>rtclock module<a class="headerlink" href="#module-chipsec.modules.common.rtclock" title="Permalink to this headline">¶</a></h1>
-<p>Checks for RTC memory locks.
-Since we do not know what RTC memory will be used for on a specific platform, we return WARNING (rather than FAILED) if the memory is not locked.</p>
-<dl>
-<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.rtclock</span> <span class="pre">[-a</span> <span class="pre">modify]</span></code></p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">modify</span></code>: Attempt to modify CMOS values</p></li>
-</ul>
-</dd>
-<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">rtclock</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">rtclock</span> <span class="o">-</span><span class="n">a</span> <span class="n">modify</span>
-</pre></div>
-</div>
-</dd>
-<dt>Registers used:</dt><dd><ul class="simple">
-<li><p>RC.LL</p></li>
-<li><p>RC.UL</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>This module will only run on Core platforms</p></li>
-</ul>
-</div>
+  <section id="rtclock-module">
+<h1>rtclock module<a class="headerlink" href="#rtclock-module" title="Permalink to this headline">¶</a></h1>
 </section>
 
 
@@ -114,7 +89,6 @@ Since we do not know what RTC memory will be used for on a specific platform, we
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Sample Util Command</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -174,7 +148,7 @@ Since we do not know what RTC memory will be used for on a specific platform, we
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 28, 2023.
+      Last updated on Jul 28, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
