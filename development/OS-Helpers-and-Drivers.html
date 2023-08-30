@@ -60,26 +60,10 @@
 </section>
 <section id="create-a-new-helper">
 <h2>Create a New Helper<a class="headerlink" href="#create-a-new-helper" title="Permalink to this headline">¶</a></h2>
-<p>Helper needs to be added to the import list either within helpers.py or
-custom_helpers.py</p>
+<p>Helper needs to be added into the helper folder with a folder structure like: <code class="docutils literal notranslate"><span class="pre">chipsec/helper/&lt;type&gt;/&lt;type&gt;helper.py</span></code></p>
 <section id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
-<p>The new helper should be added to either <code class="docutils literal notranslate"><span class="pre">chipsec/helper/helpers.py</span></code>
-or <code class="docutils literal notranslate"><span class="pre">chipsec/helper/custom_helpers.py</span></code></p>
-<p>A new helper folder should be created under
-<code class="docutils literal notranslate"><span class="pre">chipsec/helper/new_helper</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/new_helper/__init__.py</span></code> within the new folder needs to
-add the helper name to list <code class="docutils literal notranslate"><span class="pre">__all__</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">platform</span>
-
-<span class="k">if</span> <span class="s2">&quot;linux&quot;</span> <span class="o">==</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-    <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;linuxhelper&quot;</span> <span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/new_helper/new_helper.py</span></code> should import from Helper
-Base Class</p>
+<p>The new helper should be added to <code class="docutils literal notranslate"><span class="pre">chipsec/helper/new/newhelper.py</span></code> and should import from Helper Base Class</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chipsec.helper.basehelper</span> <span class="kn">import</span> <span class="n">Helper</span>
 <span class="k">class</span> <span class="nc">NewHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
 
@@ -202,7 +186,7 @@ Base Class</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jul 28, 2023.
+      Last updated on Aug 30, 2023.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
