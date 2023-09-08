@@ -1,21 +1,19 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Configuration Files &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="&lt;no title&gt;" href="../modules/chipsec.cfg.8086.html" />
@@ -47,14 +45,10 @@
           <div class="body" role="main">
             
   <section id="configuration-files">
-<span id="id1"></span><h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this heading">¶</a></h1>
 <p>Provide a human readable abstraction for registers in the system</p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 43%" />
-<col style="width: 57%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086</span></code></p></td>
 <td><p>platform specific configuration xml files</p></td>
@@ -73,7 +67,7 @@
 <p>Common files always loaded first so the platform files can override values.</p>
 <p>Correct platform configuration files loaded based off of platform detection.</p>
 <section id="configuration-file-example">
-<h2>Configuration File Example<a class="headerlink" href="#configuration-file-example" title="Permalink to this headline">¶</a></h2>
+<h2>Configuration File Example<a class="headerlink" href="#configuration-file-example" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;mmio&gt;</span>
 <span class="nt">&lt;bar</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;SPIBAR&quot;</span><span class="w"> </span><span class="na">bus=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">dev=</span><span class="s">&quot;0x1F&quot;</span><span class="w"> </span><span class="na">fun=</span><span class="s">&quot;5&quot;</span><span class="w"> </span><span class="na">reg=</span><span class="s">&quot;0x10&quot;</span><span class="w"> </span><span class="na">width=</span><span class="s">&quot;4&quot;</span><span class="w"> </span><span class="na">mask=</span><span class="s">&quot;0xFFFFF000&quot;</span><span class="w"> </span><span class="na">size=</span><span class="s">&quot;0x1000&quot;</span><span class="w"> </span><span class="na">desc=</span><span class="s">&quot;SPI Controller Register Range&quot;</span><span class="w"> </span><span class="na">offset=</span><span class="s">&quot;0x0&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/mmio&gt;</span>
@@ -91,7 +85,7 @@
 </div>
 </section>
 <section id="list-of-cfg-components">
-<h2>List of Cfg components<a class="headerlink" href="#list-of-cfg-components" title="Permalink to this headline">¶</a></h2>
+<h2>List of Cfg components<a class="headerlink" href="#list-of-cfg-components" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.cfg.8086.ehl.xml.html">ehl</a></li>
@@ -198,6 +192,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#type-hints">Type Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
 </ul>
 
   <div>
@@ -219,7 +214,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -244,8 +239,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 30, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Sep 08, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>
