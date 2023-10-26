@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>vmm_cmd module &#8212; CHIPSEC  documentation</title>
+    <title>generate_test_id module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="hal package" href="chipsec.hal.html" />
-    <link rel="prev" title="vmem_cmd module" href="chipsec.utilcmd.vmem_cmd.html" /> 
+    <link rel="next" title="wsmt module" href="chipsec.modules.tools.wsmt.html" />
+    <link rel="prev" title="venom module" href="chipsec.modules.tools.vmm.venom.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,15 +29,16 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.html" title="hal package"
+          <a href="chipsec.modules.tools.wsmt.html" title="wsmt module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.vmem_cmd.html" title="vmem_cmd module"
+          <a href="chipsec.modules.tools.vmm.venom.html" title="venom module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">vmm_cmd module</a></li> 
+          <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" accesskey="U">tools package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">generate_test_id module</a></li> 
       </ul>
     </div>  
 
@@ -46,21 +47,20 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.utilcmd.vmm_cmd">
-<span id="vmm-cmd-module"></span><h1>vmm_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.vmm_cmd" title="Permalink to this heading">¶</a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="o">&lt;</span><span class="n">rax</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rbx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rcx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rdx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rdi</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">rsi</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">r8</span><span class="p">]</span> <span class="p">[</span><span class="n">r9</span><span class="p">]</span> <span class="p">[</span><span class="n">r10</span><span class="p">]</span> <span class="p">[</span><span class="n">r11</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="o">&lt;</span><span class="n">eax</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ebx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ecx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">edx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">edi</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">esi</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">pt</span><span class="o">|</span><span class="n">ept</span> <span class="o">&lt;</span><span class="n">ept_pointer</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">bus</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">device</span><span class="o">&gt;.&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">]</span>
+  <section id="module-chipsec.modules.tools.generate_test_id">
+<span id="generate-test-id-module"></span><h1>generate_test_id module<a class="headerlink" href="#module-chipsec.modules.tools.generate_test_id" title="Permalink to this heading">¶</a></h1>
+<p>Generate a test ID using hashlib from the test’s file name (no file extension). 
+Hash is truncated to 28 bits.</p>
+<dl>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">common.tools.generate_test_id</span> <span class="pre">-a</span> <span class="pre">&lt;test</span> <span class="pre">name&gt;</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">generate_test_id</span> <span class="o">-</span><span class="n">a</span> <span class="n">remap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">generate_test_id</span> <span class="o">-</span><span class="n">a</span> <span class="n">s3bootscript</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">common</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">generate_test_id</span> <span class="o">-</span><span class="n">a</span> <span class="n">bios_ts</span>
 </pre></div>
 </div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">hypercall</span> <span class="mi">32</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">pt</span> <span class="mh">0x524B01E</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">vmm</span> <span class="n">virtio</span> <span class="mi">0</span><span class="p">:</span><span class="mf">6.0</span>
-</pre></div>
-</div>
+</dd>
+</dl>
 </section>
 
 
@@ -93,13 +93,13 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
 <ul>
@@ -114,13 +114,13 @@
 
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="chipsec.utilcmd.vmem_cmd.html"
-                          title="previous chapter">vmem_cmd module</a></p>
+    <p class="topless"><a href="chipsec.modules.tools.vmm.venom.html"
+                          title="previous chapter">venom module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="chipsec.hal.html"
-                          title="next chapter">hal package</a></p>
+    <p class="topless"><a href="chipsec.modules.tools.wsmt.html"
+                          title="next chapter">wsmt module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -146,15 +146,16 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.html" title="hal package"
+          <a href="chipsec.modules.tools.wsmt.html" title="wsmt module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.vmem_cmd.html" title="vmem_cmd module"
+          <a href="chipsec.modules.tools.vmm.venom.html" title="venom module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">vmm_cmd module</a></li> 
+          <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">generate_test_id module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
