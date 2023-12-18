@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.library.bits &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.library.bits</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.library.bits</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2023, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="n">BIT0</span> <span class="o">=</span> <span class="mh">0x0001</span>
+<span class="n">BIT1</span> <span class="o">=</span> <span class="mh">0x0002</span>
+<span class="n">BIT2</span> <span class="o">=</span> <span class="mh">0x0004</span>
+<span class="n">BIT3</span> <span class="o">=</span> <span class="mh">0x0008</span>
+<span class="n">BIT4</span> <span class="o">=</span> <span class="mh">0x0010</span>
+<span class="n">BIT5</span> <span class="o">=</span> <span class="mh">0x0020</span>
+<span class="n">BIT6</span> <span class="o">=</span> <span class="mh">0x0040</span>
+<span class="n">BIT7</span> <span class="o">=</span> <span class="mh">0x0080</span>
+<span class="n">BIT8</span> <span class="o">=</span> <span class="mh">0x0100</span>
+<span class="n">BIT9</span> <span class="o">=</span> <span class="mh">0x0200</span>
+<span class="n">BIT10</span> <span class="o">=</span> <span class="mh">0x0400</span>
+<span class="n">BIT11</span> <span class="o">=</span> <span class="mh">0x0800</span>
+<span class="n">BIT12</span> <span class="o">=</span> <span class="mh">0x1000</span>
+<span class="n">BIT13</span> <span class="o">=</span> <span class="mh">0x2000</span>
+<span class="n">BIT14</span> <span class="o">=</span> <span class="mh">0x4000</span>
+<span class="n">BIT15</span> <span class="o">=</span> <span class="mh">0x8000</span>
+<span class="n">BIT16</span> <span class="o">=</span> <span class="mh">0x00010000</span>
+<span class="n">BIT17</span> <span class="o">=</span> <span class="mh">0x00020000</span>
+<span class="n">BIT18</span> <span class="o">=</span> <span class="mh">0x00040000</span>
+<span class="n">BIT19</span> <span class="o">=</span> <span class="mh">0x00080000</span>
+<span class="n">BIT20</span> <span class="o">=</span> <span class="mh">0x00100000</span>
+<span class="n">BIT21</span> <span class="o">=</span> <span class="mh">0x00200000</span>
+<span class="n">BIT22</span> <span class="o">=</span> <span class="mh">0x00400000</span>
+<span class="n">BIT23</span> <span class="o">=</span> <span class="mh">0x00800000</span>
+<span class="n">BIT24</span> <span class="o">=</span> <span class="mh">0x01000000</span>
+<span class="n">BIT25</span> <span class="o">=</span> <span class="mh">0x02000000</span>
+<span class="n">BIT26</span> <span class="o">=</span> <span class="mh">0x04000000</span>
+<span class="n">BIT27</span> <span class="o">=</span> <span class="mh">0x08000000</span>
+<span class="n">BIT28</span> <span class="o">=</span> <span class="mh">0x10000000</span>
+<span class="n">BIT29</span> <span class="o">=</span> <span class="mh">0x20000000</span>
+<span class="n">BIT30</span> <span class="o">=</span> <span class="mh">0x40000000</span>
+<span class="n">BIT31</span> <span class="o">=</span> <span class="mh">0x80000000</span>
+<span class="n">BIT32</span> <span class="o">=</span> <span class="mh">0x100000000</span>
+<span class="n">BIT33</span> <span class="o">=</span> <span class="mh">0x200000000</span>
+<span class="n">BIT34</span> <span class="o">=</span> <span class="mh">0x400000000</span>
+<span class="n">BIT35</span> <span class="o">=</span> <span class="mh">0x800000000</span>
+<span class="n">BIT36</span> <span class="o">=</span> <span class="mh">0x1000000000</span>
+<span class="n">BIT37</span> <span class="o">=</span> <span class="mh">0x2000000000</span>
+<span class="n">BIT38</span> <span class="o">=</span> <span class="mh">0x4000000000</span>
+<span class="n">BIT39</span> <span class="o">=</span> <span class="mh">0x8000000000</span>
+<span class="n">BIT40</span> <span class="o">=</span> <span class="mh">0x10000000000</span>
+<span class="n">BIT41</span> <span class="o">=</span> <span class="mh">0x20000000000</span>
+<span class="n">BIT42</span> <span class="o">=</span> <span class="mh">0x40000000000</span>
+<span class="n">BIT43</span> <span class="o">=</span> <span class="mh">0x80000000000</span>
+<span class="n">BIT44</span> <span class="o">=</span> <span class="mh">0x100000000000</span>
+<span class="n">BIT45</span> <span class="o">=</span> <span class="mh">0x200000000000</span>
+<span class="n">BIT46</span> <span class="o">=</span> <span class="mh">0x400000000000</span>
+<span class="n">BIT47</span> <span class="o">=</span> <span class="mh">0x800000000000</span>
+<span class="n">BIT48</span> <span class="o">=</span> <span class="mh">0x1000000000000</span>
+<span class="n">BIT49</span> <span class="o">=</span> <span class="mh">0x2000000000000</span>
+<span class="n">BIT50</span> <span class="o">=</span> <span class="mh">0x4000000000000</span>
+<span class="n">BIT51</span> <span class="o">=</span> <span class="mh">0x8000000000000</span>
+<span class="n">BIT52</span> <span class="o">=</span> <span class="mh">0x10000000000000</span>
+<span class="n">BIT53</span> <span class="o">=</span> <span class="mh">0x20000000000000</span>
+<span class="n">BIT54</span> <span class="o">=</span> <span class="mh">0x40000000000000</span>
+<span class="n">BIT55</span> <span class="o">=</span> <span class="mh">0x80000000000000</span>
+<span class="n">BIT56</span> <span class="o">=</span> <span class="mh">0x100000000000000</span>
+<span class="n">BIT57</span> <span class="o">=</span> <span class="mh">0x200000000000000</span>
+<span class="n">BIT58</span> <span class="o">=</span> <span class="mh">0x400000000000000</span>
+<span class="n">BIT59</span> <span class="o">=</span> <span class="mh">0x800000000000000</span>
+<span class="n">BIT60</span> <span class="o">=</span> <span class="mh">0x1000000000000000</span>
+<span class="n">BIT61</span> <span class="o">=</span> <span class="mh">0x2000000000000000</span>
+<span class="n">BIT62</span> <span class="o">=</span> <span class="mh">0x4000000000000000</span>
+<span class="n">BIT63</span> <span class="o">=</span> <span class="mh">0x8000000000000000</span>
+
+
+<div class="viewcode-block" id="bit">
+<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.bit">[docs]</a>
+<span class="k">def</span> <span class="nf">bit</span><span class="p">(</span><span class="n">bit_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">bit_num</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="is_set">
+<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.is_set">[docs]</a>
+<span class="k">def</span> <span class="nf">is_set</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bit_mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">val</span> <span class="o">&amp;</span> <span class="n">bit_mask</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="scan_single_bit_mask">
+<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.scan_single_bit_mask">[docs]</a>
+<span class="k">def</span> <span class="nf">scan_single_bit_mask</span><span class="p">(</span><span class="n">bit_mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">bit_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">bit_mask</span> <span class="o">&gt;&gt;</span> <span class="n">bit_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">bit_num</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="is_all_ones">
+<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.is_all_ones">[docs]</a>
+<span class="k">def</span> <span class="nf">is_all_ones</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="n">width</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="p">(</span><span class="n">mask</span> <span class="o">&amp;</span> <span class="n">value</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="ones_complement">
+<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.ones_complement">[docs]</a>
+<span class="k">def</span> <span class="nf">ones_complement</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">number_of_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">number_of_bits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">^</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="get_bits">
+<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.get_bits">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bits</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nbits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">start</span>
+    <span class="n">ret</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">nbits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.library.bits</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

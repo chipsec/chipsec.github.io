@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.paging &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.paging</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.hal.paging</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2010-2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">x64/IA-64 Paging functionality including x86 page tables, Extended Page Tables (EPT) and VT-d page tables</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">chipsec.defines</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">InvalidMemoryAddress</span>
+
+<span class="n">ADDR_MASK</span> <span class="o">=</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">MASK_64b</span>
+<span class="n">MAXPHYADDR</span> <span class="o">=</span> <span class="mh">0x000FFFFFFFFFF000</span>
+
+<span class="n">SIZE_4KB</span> <span class="o">=</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">BOUNDARY_4KB</span>
+<span class="n">SIZE_2MB</span> <span class="o">=</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">BOUNDARY_2MB</span>
+<span class="n">SIZE_1GB</span> <span class="o">=</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">BOUNDARY_1GB</span>
+<span class="n">ADDR_4KB</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFFFF000</span> <span class="o">&amp;</span> <span class="n">MAXPHYADDR</span>
+<span class="n">ADDR_2MB</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFE00000</span> <span class="o">&amp;</span> <span class="n">MAXPHYADDR</span>
+<span class="n">ADDR_1GB</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFC0000000</span> <span class="o">&amp;</span> <span class="n">MAXPHYADDR</span>
+
+<span class="n">TranslationType</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>  <span class="c1"># TODO: TypedDict (PEP589)</span>
+
+<div class="viewcode-block" id="c_translation">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation">[docs]</a>
+<span class="k">class</span> <span class="nc">c_translation</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">:</span> <span class="n">TranslationType</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="c_translation.is_translation_exist">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.is_translation_exist">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_translation_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">((</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">size</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="c_translation.get_translation">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.get_translation">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">addr</span>
+        <span class="n">ADDR_4KB</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFFFF000</span>
+        <span class="n">ADDR_2MB</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFE00000</span>
+        <span class="n">ADDR_1GB</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFC0000000</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_translation_exist</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">ADDR_4KB</span><span class="p">,</span> <span class="s1">&#39;4KB&#39;</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span><span class="p">][</span><span class="s1">&#39;addr&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="p">(</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ADDR_4KB</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_translation_exist</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">ADDR_2MB</span><span class="p">,</span> <span class="s1">&#39;2MB&#39;</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="n">ADDR_2MB</span><span class="p">][</span><span class="s1">&#39;addr&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="p">(</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ADDR_2MB</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_translation_exist</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">ADDR_1GB</span><span class="p">,</span> <span class="s1">&#39;1GB&#39;</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="n">ADDR_1GB</span><span class="p">][</span><span class="s1">&#39;addr&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="p">(</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ADDR_1GB</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="c_translation.get_pages_by_physaddr">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.get_pages_by_physaddr">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_pages_by_physaddr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">SIZE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;4KB&#39;</span><span class="p">:</span> <span class="n">ADDR_4KB</span><span class="p">,</span> <span class="s1">&#39;2MB&#39;</span><span class="p">:</span> <span class="n">ADDR_2MB</span><span class="p">,</span> <span class="s1">&#39;1GB&#39;</span><span class="p">:</span> <span class="n">ADDR_1GB</span><span class="p">}</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="n">SIZE</span><span class="p">[</span><span class="n">page</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">page</span><span class="p">[</span><span class="s1">&#39;addr&#39;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">size</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">addr</span> <span class="o">&amp;</span> <span class="n">size</span><span class="p">):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="c_translation.get_address_space">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.get_address_space">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_address_space</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">mem_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mem_range</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mem_range</span><span class="p">:</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">total</span></div>
+
+
+<div class="viewcode-block" id="c_translation.get_mem_range">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.get_mem_range">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mem_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noattr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">SIZE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;4KB&#39;</span><span class="p">:</span> <span class="n">SIZE_4KB</span><span class="p">,</span> <span class="s1">&#39;2MB&#39;</span><span class="p">:</span> <span class="n">SIZE_2MB</span><span class="p">,</span> <span class="s1">&#39;1GB&#39;</span><span class="p">:</span> <span class="n">SIZE_1GB</span><span class="p">}</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="s1">&#39;addr&#39;</span><span class="p">]:</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="n">mem_range</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">perm</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">]</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="n">SIZE</span><span class="p">[</span><span class="n">perm</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="n">noattr</span><span class="p">:</span>
+                <span class="n">attr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">mem_range</span> <span class="o">==</span> <span class="p">[]):</span>
+                <span class="n">mem_range</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">addr</span><span class="p">,</span> <span class="n">addr</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span> <span class="n">attr</span><span class="p">]]</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">mem_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">addr</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">mem_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">attr</span><span class="p">):</span>
+                <span class="n">mem_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">size</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mem_range</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">addr</span><span class="p">,</span> <span class="n">addr</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span> <span class="n">attr</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">mem_range</span></div>
+
+
+<div class="viewcode-block" id="c_translation.add_page">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.add_page">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">phys</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;4KB&#39;</span><span class="p">,</span> <span class="s1">&#39;2MB&#39;</span><span class="p">,</span> <span class="s1">&#39;4MB&#39;</span><span class="p">,</span> <span class="s1">&#39;1GB&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Invalid size!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">virt</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="n">phys</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="n">attr</span><span class="p">}</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_translation.del_page">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.del_page">[docs]</a>
+    <span class="k">def</span> <span class="nf">del_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">addr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_translation.expand_pages">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_translation.expand_pages">[docs]</a>
+    <span class="k">def</span> <span class="nf">expand_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_size</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">SIZE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1GB&#39;</span><span class="p">:</span> <span class="s1">&#39;2MB&#39;</span><span class="p">,</span> <span class="s1">&#39;2MB&#39;</span><span class="p">:</span> <span class="s1">&#39;4KB&#39;</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">virt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">virt</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">virt</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">]</span>
+            <span class="n">phys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">virt</span><span class="p">][</span><span class="s1">&#39;addr&#39;</span><span class="p">]</span>
+            <span class="n">pgsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="s1">&#39;2MB&#39;</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="n">exp_size</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">512</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_page</span><span class="p">(</span><span class="n">virt</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">pgsize</span><span class="p">,</span> <span class="n">phys</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">pgsize</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">[</span><span class="n">exp_size</span><span class="p">],</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_reverse_translation">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_reverse_translation">[docs]</a>
+<span class="k">class</span> <span class="nc">c_reverse_translation</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">TranslationType</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_translation</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">virt</span> <span class="ow">in</span> <span class="n">translation</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">phys</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="n">virt</span><span class="p">][</span><span class="s1">&#39;addr&#39;</span><span class="p">]</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="n">virt</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="n">virt</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">phys</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_translation</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reverse_translation</span><span class="p">[</span><span class="n">phys</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse_translation</span><span class="p">[</span><span class="n">phys</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="n">virt</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="n">attr</span><span class="p">})</span>
+
+<div class="viewcode-block" id="c_reverse_translation.get_reverse_translation">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_reverse_translation.get_reverse_translation">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_reverse_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span>  <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="n">ADDR_4KB</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFFFF000</span>
+        <span class="n">addr</span> <span class="o">&amp;=</span> <span class="n">ADDR_4KB</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_translation</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span> <span class="k">if</span> <span class="n">addr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_translation</span> <span class="k">else</span> <span class="p">[]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_paging_memory_access">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging_memory_access">[docs]</a>
+<span class="k">class</span> <span class="nc">c_paging_memory_access</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="o">=</span> <span class="n">cs</span>
+
+<div class="viewcode-block" id="c_paging_memory_access.readmem">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging_memory_access.readmem">[docs]</a>
+    <span class="k">def</span> <span class="nf">readmem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_paging_with_2nd_level_translation">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging_with_2nd_level_translation">[docs]</a>
+<span class="k">class</span> <span class="nc">c_paging_with_2nd_level_translation</span><span class="p">(</span><span class="n">c_paging_memory_access</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="n">c_paging_memory_access</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation_level2</span> <span class="o">=</span> <span class="n">c_translation</span><span class="p">()</span>
+
+<div class="viewcode-block" id="c_paging_with_2nd_level_translation.readmem">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging_with_2nd_level_translation.readmem">[docs]</a>
+    <span class="k">def</span> <span class="nf">readmem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">phys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation_level2</span><span class="o">.</span><span class="n">get_translation</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">phys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[paging] get_translation(): phys is None. Returning 0.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">phys</span> <span class="o">!=</span> <span class="n">addr</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;_0x</span><span class="si">{</span><span class="n">phys</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">c_paging_with_2nd_level_translation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">readmem</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">phys</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_paging">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging">[docs]</a>
+<span class="k">class</span> <span class="nc">c_paging</span><span class="p">(</span><span class="n">c_paging_with_2nd_level_translation</span><span class="p">,</span> <span class="n">c_translation</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="n">c_paging_with_2nd_level_translation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
+        <span class="n">c_translation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">did</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">failure</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canonical_msb</span> <span class="o">=</span> <span class="mi">47</span>
+
+<div class="viewcode-block" id="c_paging.get_canonical">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.get_canonical">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_canonical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">canonical_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">ADDR_MASK</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canonical_msb</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">ADDR_MASK</span>
+        <span class="n">canonical_va</span> <span class="o">=</span> <span class="p">(</span><span class="n">va</span> <span class="o">|</span> <span class="n">canonical_mask</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">va</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">canonical_msb</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x1</span> <span class="k">else</span> <span class="n">va</span>
+        <span class="k">return</span> <span class="n">canonical_va</span></div>
+
+
+<div class="viewcode-block" id="c_paging.get_field">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.get_field">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">entry</span> <span class="o">&gt;&gt;</span> <span class="n">desc</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">desc</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="c_paging.set_field">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.set_field">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="n">desc</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">desc</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="c_paging.read_entries">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.read_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readmem</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">_0x</span><span class="si">{</span><span class="n">addr</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">)</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;512Q&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="p">[[</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+
+        <span class="n">same</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)):</span>
+            <span class="n">same</span> <span class="o">=</span> <span class="n">same</span> <span class="ow">and</span> <span class="p">(</span><span class="n">entries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">same</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">entries</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">entries</span></div>
+
+
+<div class="viewcode-block" id="c_paging.print_info">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.print_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> physical address ranges:&#39;</span><span class="p">)</span>
+        <span class="n">mem_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mem_range</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mem_range</span><span class="p">)):</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">mem_range</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    0x</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1"> - 0x</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">12</span><span class="si">:</span><span class="s1">8d</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> pages:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    0x</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> KB, address space: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_address_space</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">20</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> MB&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_paging.check_misconfig">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.check_misconfig">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_misconfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">addr_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">&amp;</span> <span class="n">MAXPHYADDR</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">addr_list</span><span class="p">]</span>
+        <span class="n">mem_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mem_range</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">addr_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mem_range</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">mem_range</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">addr</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">addr</span> <span class="o">&lt;</span> <span class="n">mem_range</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*** WARNING: PAGE TABLES MISCONFIGURATION  0x</span><span class="si">{</span><span class="n">addr</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_paging.save_configuration">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.save_configuration">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation_level2</span><span class="o">.</span><span class="n">translation</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[paging] Error saving: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_paging.load_configuration">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.load_configuration">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">translation_level2</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[paging] Error loading: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_paging.read_pt_and_show_status">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.read_pt_and_show_status">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pt_and_show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[paging] Reading </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> page tables at 0x</span><span class="si">{</span><span class="n">ptr</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_page_tables</span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">InvalidMemoryAddress</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">translation_level2</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">failure</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    Invalid </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> Page Tables!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[paging] </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> page tables&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">failure</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[paging] size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> KB, address space: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_address_space</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">20</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> MB&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_paging.read_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_paging.read_page_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Function needs to be implemented by child class&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_4level_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables">[docs]</a>
+<span class="k">class</span> <span class="nc">c_4level_page_tables</span><span class="p">(</span><span class="n">c_paging</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="n">c_paging</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
+        <span class="c1"># constants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PHYSICAL_ADDR_NAME</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PML4_INDX</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1FF</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">39</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PDPT_INDX</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1FF</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PD_INDX</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1FF</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">21</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PT_INDX</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1FF</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PT_NAME</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;EPTP&#39;</span><span class="p">,</span> <span class="s1">&#39;PML4E&#39;</span><span class="p">,</span> <span class="s1">&#39;PDPTE&#39;</span><span class="p">,</span> <span class="s1">&#39;PDE&#39;</span><span class="p">,</span> <span class="s1">&#39;PTE&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PT_SIZE</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;1GB&#39;</span><span class="p">,</span> <span class="s1">&#39;2MB&#39;</span><span class="p">,</span> <span class="s1">&#39;4KB&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="c_4level_page_tables.get_virt_addr">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.get_virt_addr">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_virt_addr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pde_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pte_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">ofs1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_field</span><span class="p">(</span><span class="n">pml4e_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PML4_INDX</span><span class="p">)</span>
+        <span class="n">ofs2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_field</span><span class="p">(</span><span class="n">pdpte_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PDPT_INDX</span><span class="p">)</span>
+        <span class="n">ofs3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_field</span><span class="p">(</span><span class="n">pde_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PD_INDX</span><span class="p">)</span>
+        <span class="n">ofs4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_field</span><span class="p">(</span><span class="n">pte_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PT_INDX</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ofs1</span> <span class="o">|</span> <span class="n">ofs2</span> <span class="o">|</span> <span class="n">ofs3</span> <span class="o">|</span> <span class="n">ofs4</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.print_entry">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.print_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lvl</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">va</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">perm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">canonical_va</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_canonical</span><span class="p">(</span><span class="n">va</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="s2">&quot;  &quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">lvl</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">PT_NAME</span><span class="p">[</span><span class="n">lvl</span><span class="p">]</span><span class="si">:</span><span class="s1">6</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">pa</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">perm</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PT_SIZE</span><span class="p">[</span><span class="n">lvl</span><span class="p">]</span>
+            <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s1"> PAGE  </span><span class="si">{</span><span class="n">perm</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pa</span> <span class="o">==</span> <span class="n">va</span><span class="p">:</span>
+                <span class="n">info</span> <span class="o">+=</span> <span class="s1">&#39;1:1 mapping&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">info</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">PHYSICAL_ADDR_NAME</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">canonical_va</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_page</span><span class="p">(</span><span class="n">canonical_va</span><span class="p">,</span> <span class="n">pa</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">perm</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.read_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.read_page_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="n">ptr</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="o">=</span> <span class="n">addr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="p">{</span><span class="n">addr</span><span class="p">:</span> <span class="s1">&#39;pml4&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_pml4</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.is_present">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.is_present">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">entry</span> <span class="o">&amp;</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">BIT0</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.is_bigpage">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.is_bigpage">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_bigpage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">entry</span> <span class="o">&amp;</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">BIT7</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.read_pml4">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.read_pml4">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pml4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pml4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pml4&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pml4e_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pml4</span><span class="p">)):</span>
+            <span class="n">pml4e</span> <span class="o">=</span> <span class="n">pml4</span><span class="p">[</span><span class="n">pml4e_index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pml4e</span><span class="p">):</span>
+                <span class="n">addr</span> <span class="o">=</span> <span class="n">pml4e</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pdpt&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">read_pdpt</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.get_attr">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.get_attr">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">entry</span> <span class="o">&amp;</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">BIT1</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;W&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="s2">&quot;R&quot;</span>
+        <span class="k">if</span> <span class="n">entry</span> <span class="o">&amp;</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">defines</span><span class="o">.</span><span class="n">BIT2</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;U&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;S&#39;</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.read_pdpt">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.read_pdpt">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pdpt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pdpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pdpt&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pdpte_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pdpt</span><span class="p">)):</span>
+            <span class="n">pdpte</span> <span class="o">=</span> <span class="n">pdpt</span><span class="p">[</span><span class="n">pdpte_index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pdpte</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bigpage</span><span class="p">(</span><span class="n">pdpte</span><span class="p">):</span>
+                    <span class="n">virt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_virt_addr</span><span class="p">(</span><span class="n">pml4e_index</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">)</span>
+                    <span class="n">phys</span> <span class="o">=</span> <span class="n">pdpte</span> <span class="o">&amp;</span> <span class="n">ADDR_1GB</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">phys</span><span class="p">,</span> <span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">pdpte</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">addr</span> <span class="o">=</span> <span class="n">pdpte</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pd&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">read_pd</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.read_pd">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.read_pd">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pd&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pde_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pd</span><span class="p">)):</span>
+            <span class="n">pde</span> <span class="o">=</span> <span class="n">pd</span><span class="p">[</span><span class="n">pde_index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pde</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bigpage</span><span class="p">(</span><span class="n">pde</span><span class="p">):</span>
+                    <span class="n">virt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_virt_addr</span><span class="p">(</span><span class="n">pml4e_index</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">,</span> <span class="n">pde_index</span><span class="p">)</span>
+                    <span class="n">phys</span> <span class="o">=</span> <span class="n">pde</span> <span class="o">&amp;</span> <span class="n">ADDR_2MB</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">phys</span><span class="p">,</span> <span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">pde</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">addr</span> <span class="o">=</span> <span class="n">pde</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pt&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">read_pt</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">,</span> <span class="n">pde_index</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.read_pt">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.read_pt">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pde_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pte_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pt</span><span class="p">)):</span>
+            <span class="n">pte</span> <span class="o">=</span> <span class="n">pt</span><span class="p">[</span><span class="n">pte_index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pte</span><span class="p">):</span>
+                <span class="n">virt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_virt_addr</span><span class="p">(</span><span class="n">pml4e_index</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">,</span> <span class="n">pde_index</span><span class="p">,</span> <span class="n">pte_index</span><span class="p">)</span>
+                <span class="n">phys</span> <span class="o">=</span> <span class="n">pte</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">phys</span><span class="p">,</span> <span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">pte</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_4level_page_tables.read_entry_by_virt_addr">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_4level_page_tables.read_entry_by_virt_addr">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_entry_by_virt_addr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Page Table pointer is undefined!&#39;</span><span class="p">)</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span>
+        <span class="n">pml4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pml4&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="n">pml4e</span> <span class="o">=</span> <span class="n">pml4</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PML4_INDX</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pml4e</span><span class="p">):</span>
+            <span class="n">addr</span> <span class="o">=</span> <span class="n">pml4e</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+            <span class="n">pdpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pdpt&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+            <span class="n">pdpte</span> <span class="o">=</span> <span class="n">pdpt</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PDPT_INDX</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pdpte</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bigpage</span><span class="p">(</span><span class="n">pdpte</span><span class="p">):</span>
+                    <span class="n">addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">pdpte</span> <span class="o">&amp;</span> <span class="n">ADDR_1GB</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">virt</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ADDR_1GB</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="n">addr</span><span class="p">,</span> <span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">pdpte</span><span class="p">),</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="s1">&#39;1GB&#39;</span><span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">addr</span> <span class="o">=</span> <span class="n">pdpte</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                    <span class="n">pd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pd&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+                    <span class="n">pde</span> <span class="o">=</span> <span class="n">pd</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PD_INDX</span><span class="p">)]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pde</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bigpage</span><span class="p">(</span><span class="n">pde</span><span class="p">):</span>
+                            <span class="n">addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">pde</span> <span class="o">&amp;</span> <span class="n">ADDR_2MB</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">virt</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ADDR_2MB</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="n">addr</span><span class="p">,</span> <span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">pde</span><span class="p">),</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="s1">&#39;2MB&#39;</span><span class="p">}</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">addr</span> <span class="o">=</span> <span class="n">pde</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                            <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pt&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+                            <span class="n">pte</span> <span class="o">=</span> <span class="n">pt</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PT_INDX</span><span class="p">)]</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pte</span><span class="p">):</span>
+                                <span class="n">addr</span> <span class="o">=</span> <span class="p">(</span><span class="n">pte</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">virt</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ADDR_4KB</span><span class="p">)</span>
+                                <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="n">addr</span><span class="p">,</span> <span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">pte</span><span class="p">),</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="s1">&#39;4KB&#39;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;addr&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_ia32e_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_ia32e_page_tables">[docs]</a>
+<span class="k">class</span> <span class="nc">c_ia32e_page_tables</span><span class="p">(</span><span class="n">c_4level_page_tables</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="n">c_4level_page_tables</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
+        <span class="c1"># constants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PHYSICAL_ADDR_NAME</span> <span class="o">=</span> <span class="s1">&#39;VA&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PT_NAME</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CR3P&#39;</span><span class="p">,</span> <span class="s1">&#39;PML4E&#39;</span><span class="p">,</span> <span class="s1">&#39;PDPTE&#39;</span><span class="p">,</span> <span class="s1">&#39;PDE&#39;</span><span class="p">,</span> <span class="s1">&#39;PTE&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RW</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">US</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BIGPAGE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}</span>
+
+<div class="viewcode-block" id="c_ia32e_page_tables.is_present">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_ia32e_page_tables.is_present">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="c_ia32e_page_tables.is_bigpage">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_ia32e_page_tables.is_bigpage">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_bigpage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BIGPAGE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="c_ia32e_page_tables.get_attr">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_ia32e_page_tables.get_attr">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">RW_DESC</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;W&#39;</span><span class="p">]</span>
+        <span class="n">US_DESC</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">RW_DESC</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">RW</span><span class="p">)]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">US_DESC</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">US</span><span class="p">)]</span><span class="si">}</span><span class="s1">&#39;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_pae_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_pae_page_tables">[docs]</a>
+<span class="k">class</span> <span class="nc">c_pae_page_tables</span><span class="p">(</span><span class="n">c_ia32e_page_tables</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="n">c_ia32e_page_tables</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
+        <span class="c1"># constants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PML4_INDX</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x000</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">39</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PDPT_INDX</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x003</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PT_NAME</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;CR3&#39;</span><span class="p">,</span> <span class="s1">&#39;PDPTE&#39;</span><span class="p">,</span> <span class="s1">&#39;PDE&#39;</span><span class="p">,</span> <span class="s1">&#39;PTE&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="c_pae_page_tables.read_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_pae_page_tables.read_page_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="n">ptr</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="o">=</span> <span class="n">addr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt</span> <span class="o">=</span> <span class="p">{</span><span class="n">addr</span><span class="p">:</span> <span class="s1">&#39;pdpt&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_pdpt</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_pae_page_tables.read_pml4">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_pae_page_tables.read_pml4">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pml4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;PAE Page tables have no PML4!&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="c_pae_page_tables.read_pdpt">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_pae_page_tables.read_pdpt">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pdpt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pml4e_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pml4e_index</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;PAE Page tables have no PML4!&#39;</span><span class="p">)</span>
+        <span class="n">pdpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pdpt&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pdpte_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">pdpte</span> <span class="o">=</span> <span class="n">pdpt</span><span class="p">[</span><span class="n">pdpte_index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pdpte</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bigpage</span><span class="p">(</span><span class="n">pdpte</span><span class="p">):</span>
+                    <span class="n">virt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_virt_addr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">)</span>
+                    <span class="n">phys</span> <span class="o">=</span> <span class="n">pdpte</span> <span class="o">&amp;</span> <span class="n">ADDR_1GB</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">phys</span><span class="p">,</span> <span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">pdpte</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">addr</span> <span class="o">=</span> <span class="n">pdpte</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pd&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">print_entry</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">read_pd</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pdpte_index</span><span class="p">)</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_extended_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_extended_page_tables">[docs]</a>
+<span class="k">class</span> <span class="nc">c_extended_page_tables</span><span class="p">(</span><span class="n">c_4level_page_tables</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="n">c_4level_page_tables</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
+        <span class="c1"># constants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PHYSICAL_ADDR_NAME</span> <span class="o">=</span> <span class="s1">&#39;GPA&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">XWR</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x7</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MEM_TYPE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x7</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BIGPAGE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canonical_msb</span> <span class="o">=</span> <span class="mi">63</span>
+
+<div class="viewcode-block" id="c_extended_page_tables.is_present">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_extended_page_tables.is_present">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span>  <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">XWR</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="c_extended_page_tables.is_bigpage">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_extended_page_tables.is_bigpage">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_bigpage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BIGPAGE</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="c_extended_page_tables.get_attr">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_extended_page_tables.get_attr">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">XWR_DESC</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;---&#39;</span><span class="p">,</span> <span class="s1">&#39;--R&#39;</span><span class="p">,</span> <span class="s1">&#39;-W-&#39;</span><span class="p">,</span> <span class="s1">&#39;-WR&#39;</span><span class="p">,</span> <span class="s1">&#39;X--&#39;</span><span class="p">,</span> <span class="s1">&#39;X-R&#39;</span><span class="p">,</span> <span class="s1">&#39;XW-&#39;</span><span class="p">,</span> <span class="s1">&#39;XWR&#39;</span><span class="p">]</span>
+        <span class="n">MEM_DESC</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;UC&#39;</span><span class="p">,</span> <span class="s1">&#39;WC&#39;</span><span class="p">,</span> <span class="s1">&#39;02&#39;</span><span class="p">,</span> <span class="s1">&#39;03&#39;</span><span class="p">,</span> <span class="s1">&#39;WT&#39;</span><span class="p">,</span> <span class="s1">&#39;WP&#39;</span><span class="p">,</span> <span class="s1">&#39;WB&#39;</span><span class="p">,</span> <span class="s1">&#39;UC-&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">XWR_DESC</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">XWR</span><span class="p">)]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">MEM_DESC</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">MEM_TYPE</span><span class="p">)]</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+<div class="viewcode-block" id="c_extended_page_tables.read_pt_and_show_status">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_extended_page_tables.read_pt_and_show_status">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pt_and_show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">c_extended_page_tables</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">read_pt_and_show_status</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ptr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_misconfig</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pt</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_extended_page_tables.map_bigpage_1G">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_extended_page_tables.map_bigpage_1G">[docs]</a>
+    <span class="k">def</span> <span class="nf">map_bigpage_1G</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Page Table pointer is undefined!&#39;</span><span class="p">)</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointer</span>
+        <span class="n">pml4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pml4&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+        <span class="n">pml4e</span> <span class="o">=</span> <span class="n">pml4</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">virt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PML4_INDX</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_present</span><span class="p">(</span><span class="n">pml4e</span><span class="p">):</span>
+            <span class="n">addr</span> <span class="o">=</span> <span class="n">pml4e</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+            <span class="n">pdpt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;pdpt&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
+            <span class="n">new_entry</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;Q&#39;</span><span class="p">,</span> <span class="p">((</span><span class="n">pdpt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">|</span> <span class="mh">0x87</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">ADDR_4KB</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="n">addr</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">new_entry</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="c_vtd_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_vtd_page_tables">[docs]</a>
+<span class="k">class</span> <span class="nc">c_vtd_page_tables</span><span class="p">(</span><span class="n">c_extended_page_tables</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="n">c_extended_page_tables</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
+        <span class="c1"># constants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DID_BUS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DID_DEV</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x1F</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DID_FUN</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x07</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RE_LO_P</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x01</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CE_HI_AW</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x07</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CE_HI_AVAIL</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x0F</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CE_HI_DID</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_P</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x01</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_FPD</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x01</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_T</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="mh">0x03</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+        <span class="c1"># variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domains</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpt</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="c_vtd_page_tables.read_vtd_context">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_vtd_page_tables.read_vtd_context">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_vtd_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">txt</span>
+            <span class="n">addr</span> <span class="o">=</span> <span class="n">ptr</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">domains</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cpt</span> <span class="o">=</span> <span class="p">{</span><span class="n">addr</span><span class="p">:</span> <span class="s1">&#39;root&#39;</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_re</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[paging] VT-d domains:&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  0x</span><span class="si">{</span><span class="n">domain</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[paging] Total VT-d domains: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">)</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[paging] VT-d context entries:&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">source_id</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_context_entry</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="n">source_id</span><span class="p">])</span>
+
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[paging] VT-d context pages:&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpt</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    0x</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1">  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cpt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">txt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_vtd_page_tables.read_re">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_vtd_page_tables.read_re">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_re</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">re</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;re&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ree_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="p">)):</span>
+            <span class="n">ree_lo</span> <span class="o">=</span> <span class="n">re</span><span class="p">[</span><span class="n">ree_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ree_hi</span> <span class="o">=</span> <span class="n">re</span><span class="p">[</span><span class="n">ree_index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">ree_lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">RE_LO_P</span><span class="p">):</span>
+                <span class="n">addr</span> <span class="o">=</span> <span class="n">ree_lo</span> <span class="o">&amp;</span> <span class="n">ADDR_4KB</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">read_ce</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">ree_index</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cpt</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;context&#39;</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_vtd_page_tables.read_ce">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_vtd_page_tables.read_ce">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_ce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ree_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_entries</span><span class="p">(</span><span class="s1">&#39;ce&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cee_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ce</span><span class="p">)):</span>
+            <span class="n">cee_lo</span> <span class="o">=</span> <span class="n">ce</span><span class="p">[</span><span class="n">cee_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cee_hi</span> <span class="o">=</span> <span class="n">ce</span><span class="p">[</span><span class="n">cee_index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee_lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_P</span><span class="p">):</span>
+                <span class="n">source_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">ree_index</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">cee_index</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="n">source_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">cee_lo</span><span class="p">,</span> <span class="n">cee_hi</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee_lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_T</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">slptptr</span> <span class="o">=</span> <span class="n">cee_lo</span> <span class="o">&amp;</span> <span class="n">MAXPHYADDR</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">[</span><span class="n">slptptr</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_vtd_page_tables.print_context_entry">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_vtd_page_tables.print_context_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_context_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cee</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_P</span><span class="p">):</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DID_BUS</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DID_DEV</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DID_FUN</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_HI_DID</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_HI_AVAIL</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_HI_AW</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_T</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">cee</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">CE_LO_FPD</span><span class="p">),</span>
+                <span class="n">cee</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">MAXPHYADDR</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{:02X}</span><span class="s1">:</span><span class="si">{:02X}</span><span class="s1">.</span><span class="si">{:X}</span><span class="s1">  DID: </span><span class="si">{:02X}</span><span class="s1">  AVAIL: </span><span class="si">{:X}</span><span class="s1">  AW: </span><span class="si">{:X}</span><span class="s1">  T: </span><span class="si">{:X}</span><span class="s1">  FPD: </span><span class="si">{:X}</span><span class="s1">  SLPTPTR: </span><span class="si">{:016X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">info</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_vtd_page_tables.read_page_tables">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_vtd_page_tables.read_page_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Page Tables for domain 0x</span><span class="si">{</span><span class="n">ptr</span><span class="si">:</span><span class="s1">013X</span><span class="si">}</span><span class="s1">: &#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">c_vtd_page_tables</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">read_page_tables</span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="c_vtd_page_tables.read_pt_and_show_status">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.paging.html#chipsec.hal.paging.c_vtd_page_tables.read_pt_and_show_status">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_pt_and_show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">c_vtd_page_tables</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">read_pt_and_show_status</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ptr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_misconfig</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cpt</span><span class="p">))</span>
+        <span class="k">return</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.paging</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

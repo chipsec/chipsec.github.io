@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.uefi.uefivar_fuzz &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.uefi.uefivar_fuzz</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.uefi.uefivar_fuzz</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2010-2022, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The module is fuzzing UEFI Variable interface.</span>
+
+<span class="sd">The module is using UEFI SetVariable interface to write new UEFI variables</span>
+<span class="sd">to SPI flash NVRAM with randomized name/attributes/GUID/data/size.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    ``chipsec_main -m tools.uefi.uefivar_fuzz [-a &lt;options&gt;]``</span>
+
+<span class="sd">Options:</span>
+
+<span class="sd">    ``[-a &lt;test&gt;,&lt;iterations&gt;,&lt;seed&gt;,&lt;test_case&gt;]``</span>
+
+<span class="sd">        - ``test``       : UEFI variable interface to fuzz (all, name, guid, attrib, data, size)</span>
+<span class="sd">        - ``iterations`` : Number of tests to perform (default = 1000)</span>
+<span class="sd">        - ``seed``       : RNG seed to use</span>
+<span class="sd">        - ``test_case``  : Test case # to skip to (combined with seed, can be used to skip to failing test)</span>
+
+<span class="sd">    All module arguments are optional</span>
+
+<span class="sd">Examples::</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m tools.uefi.uefivar_fuzz</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m tools.uefi.uefivar_fuzz -a all,100000</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m tools.uefi.uefivar_fuzz -a data,1000,123456789</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m tools.uefi.uefivar_fuzz -a name,1,123456789,94</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    - This module returns a WARNING by default to indicate that a manual review is needed.</span>
+<span class="sd">    - Writes may generate &#39;ERROR&#39;s, this can be expected behavior if the environment rejects them.</span>
+
+<span class="sd">.. warning::</span>
+<span class="sd">    - This module modifies contents of non-volatile SPI flash memory (UEFI Variable NVRAM).</span>
+<span class="sd">    - This may render system UNBOOTABLE if firmware doesn&#39;t properly handle variable update/delete operations.</span>
+
+<span class="sd">.. important::</span>
+<span class="sd">    - Evaluate the platform for expected behavior to determine PASS/FAIL.</span>
+<span class="sd">    - Behavior can include platform stability and retaining protections.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">uuid4</span><span class="p">,</span> <span class="n">UUID</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">write_file</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.uefi</span> <span class="kn">import</span> <span class="n">UEFI</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">bytestostring</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.fuzzing</span> <span class="kn">import</span> <span class="n">primitives</span> <span class="k">as</span> <span class="n">prim</span>
+
+
+<div class="viewcode-block" id="uefivar_fuzz">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz">[docs]</a>
+<span class="k">class</span> <span class="nc">uefivar_fuzz</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span> <span class="o">=</span> <span class="n">UEFI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="uefivar_fuzz.is_supported">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.is_supported">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">supported</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">EFI_supported</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">supported</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;OS does not support UEFI Runtime API.  Skipping module.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
+        <span class="k">return</span> <span class="n">supported</span></div>
+
+
+<div class="viewcode-block" id="uefivar_fuzz.rnd">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.rnd">[docs]</a>
+    <span class="k">def</span> <span class="nf">rnd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">rnum</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">rnum</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">rnum</span></div>
+
+
+<div class="viewcode-block" id="uefivar_fuzz.usage">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.usage">[docs]</a>
+    <span class="k">def</span> <span class="nf">usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">translate</span><span class="p">({</span><span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;`&#39;</span><span class="p">):</span> <span class="kc">None</span><span class="p">}))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="uefivar_fuzz.run">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html#chipsec.modules.tools.uefi.uefivar_fuzz.uefivar_fuzz.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;Fuzz UEFI Variable Interface&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s2">&quot;Are you sure you want to continue fuzzing UEFI variable interface?&quot;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Type &#39;yes&#39; to continue &gt; &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Default options</span>
+        <span class="n">_NAME</span> <span class="o">=</span> <span class="s1">&#39;FuzzerVarName&#39;</span>
+        <span class="n">_GUID</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="s1">&#39;414C4694-F4CF-0525-69AF-C99C8596530F&#39;</span><span class="p">)</span>
+        <span class="n">_ATTRIB</span> <span class="o">=</span> <span class="mh">0x07</span>
+        <span class="n">_SIZE</span> <span class="o">=</span> <span class="mh">0x08</span>
+        <span class="n">_DATA</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">)</span> <span class="o">*</span> <span class="n">_SIZE</span>
+
+        <span class="n">ITERATIONS</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="p">())</span>
+        <span class="n">CASE</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">BOUND_STR</span> <span class="o">=</span> <span class="mi">255</span>  <span class="c1"># tested value that can be increased or decreased to fit the limit bounds</span>
+        <span class="n">BOUND_INT</span> <span class="o">=</span> <span class="mi">1000</span>
+
+        <span class="n">FUZZ_NAME</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">FUZZ_GUID</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">FUZZ_ATTRIB</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">FUZZ_DATA</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">FUZZ_SIZE</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Init fuzzing primitives</span>
+        <span class="n">name_prim</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">_NAME</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="n">BOUND_STR</span><span class="p">)</span>
+        <span class="n">attrib_prim</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">dword</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">_ATTRIB</span><span class="p">)</span>  <span class="c1"># i think the attrib field is 4 bytes large?</span>
+        <span class="n">data_prim</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">random_data</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">_DATA</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">BOUND_INT</span><span class="p">)</span>
+
+        <span class="n">help_text</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">):</span>
+            <span class="n">fz_cli</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="o">!=</span> <span class="n">fz_cli</span><span class="p">:</span>
+                <span class="n">FUZZ_NAME</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">FUZZ_GUID</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">FUZZ_ATTRIB</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">FUZZ_DATA</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">FUZZ_SIZE</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="o">==</span> <span class="n">fz_cli</span><span class="p">:</span>
+                    <span class="n">FUZZ_NAME</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="s1">&#39;guid&#39;</span> <span class="o">==</span> <span class="n">fz_cli</span><span class="p">:</span>
+                    <span class="n">FUZZ_GUID</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="s1">&#39;attrib&#39;</span> <span class="o">==</span> <span class="n">fz_cli</span><span class="p">:</span>
+                    <span class="n">FUZZ_ATTRIB</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="s1">&#39;data&#39;</span> <span class="o">==</span> <span class="n">fz_cli</span><span class="p">:</span>
+                    <span class="n">FUZZ_DATA</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="s1">&#39;size&#39;</span> <span class="o">==</span> <span class="n">fz_cli</span><span class="p">:</span>
+                    <span class="n">FUZZ_SIZE</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="n">ITERATIONS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                    <span class="n">CASE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">help_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">help_text</span><span class="p">:</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+            <span class="n">write_file</span><span class="p">(</span><span class="s1">&#39;SEED.txt&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">SEED</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">):</span>
+                <span class="n">fz_cli</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Test      : </span><span class="si">{</span><span class="n">fz_cli</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iterations: </span><span class="si">{</span><span class="n">ITERATIONS</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Seed      : </span><span class="si">{</span><span class="n">SEED</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Test case : </span><span class="si">{</span><span class="n">CASE</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ITERATIONS</span> <span class="o">+</span> <span class="n">CASE</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">FUZZ_NAME</span><span class="p">:</span>
+                    <span class="n">_NAME</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="k">if</span> <span class="n">name_prim</span><span class="o">.</span><span class="n">mutate</span><span class="p">():</span>
+                        <span class="n">_NAME</span> <span class="o">=</span> <span class="n">name_prim</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># if mutate() returns false, we need to reload the primitive</span>
+                        <span class="n">name_prim</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">_NAME</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="n">BOUND_STR</span><span class="p">)</span>
+                        <span class="n">_NAME</span> <span class="o">=</span> <span class="n">name_prim</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">FUZZ_GUID</span><span class="p">:</span>
+                    <span class="n">_GUID</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">FUZZ_ATTRIB</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">attrib_prim</span><span class="o">.</span><span class="n">mutate</span><span class="p">():</span>
+                        <span class="n">_ATTRIB</span> <span class="o">=</span> <span class="n">attrib_prim</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">attrib_prim</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">dword</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">_ATTRIB</span><span class="p">)</span>
+                        <span class="n">_ATTRIB</span> <span class="o">=</span> <span class="n">attrib_prim</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">FUZZ_DATA</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">data_prim</span><span class="o">.</span><span class="n">mutate</span><span class="p">():</span>
+                        <span class="n">_DATA</span> <span class="o">=</span> <span class="n">data_prim</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">data_prim</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">random_data</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">_DATA</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">BOUND_INT</span><span class="p">)</span>
+                        <span class="n">data_prim</span><span class="o">.</span><span class="n">mutate</span><span class="p">()</span>
+                        <span class="n">_DATA</span> <span class="o">=</span> <span class="n">data_prim</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">FUZZ_SIZE</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">_DATA</span><span class="p">:</span>
+                        <span class="n">_SIZE</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">_DATA</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_SIZE</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="n">CASE</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Running test #</span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span><span class="n">bytestostring</span><span class="p">(</span><span class="n">_NAME</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">_GUID</span><span class="p">),</span> <span class="n">_DATA</span><span class="p">,</span> <span class="n">_SIZE</span><span class="p">,</span> <span class="n">_ATTRIB</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uefi</span><span class="o">.</span><span class="n">delete_EFI_variable</span><span class="p">(</span><span class="n">bytestostring</span><span class="p">(</span><span class="n">_NAME</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">_GUID</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s1">&#39;Fuzzing complete: platform is in an unknown state.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s1">&#39;Evaluate the platform for expected behavior to determine PASS/FAIL&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s1">&#39;Behavior can include platform stability and retaining protections.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.uefi.uefivar_fuzz</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

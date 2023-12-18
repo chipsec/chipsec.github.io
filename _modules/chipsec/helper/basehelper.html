@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.helper.basehelper &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.helper.basehelper</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.helper.basehelper</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2019-2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">chipsec.library.types</span> <span class="kn">import</span> <span class="n">EfiVariableType</span>
+    <span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="n">Array</span>
+
+<span class="c1"># Base class for the helpers</span>
+
+
+<div class="viewcode-block" id="Helper">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper">[docs]</a>
+<span class="k">class</span> <span class="nc">Helper</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">__metaclass__</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s1">&#39;registry&#39;</span><span class="p">):</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">registry</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">))</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver_loaded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_system</span> <span class="o">=</span> <span class="s1">&#39;basehelper&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_release</span> <span class="o">=</span> <span class="s1">&#39;0.0&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_version</span> <span class="o">=</span> <span class="s1">&#39;0.0&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">os_machine</span> <span class="o">=</span> <span class="s1">&#39;base&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Helper&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driverpath</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="Helper.create">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.create">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.start">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.start">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.stop">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.stop">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.delete">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.delete">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.get_info">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.get_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">driverpath</span></div>
+
+
+    <span class="c1">#################################################################################################</span>
+    <span class="c1"># Actual OS helper functionality accessible to HAL components</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Read/Write PCI configuration registers via legacy CF8/CFC ports</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.read_pci_reg">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.read_pci_reg">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.write_pci_reg">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.write_pci_reg">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># read/write mmio</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.read_mmio_reg">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.read_mmio_reg">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.write_mmio_reg">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.write_mmio_reg">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># physical_address is 64 bit integer</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.read_phys_mem">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.read_phys_mem">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.write_phys_mem">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.write_phys_mem">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.alloc_phys_mem">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.alloc_phys_mem">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.free_phys_mem">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.free_phys_mem">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.va2pa">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.va2pa">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virtual_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.map_io_space">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.map_io_space">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Read/Write I/O port</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.read_io_port">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.read_io_port">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.write_io_port">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.write_io_port">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Read/Write CR registers</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.read_cr">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.read_cr">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.write_cr">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.write_cr">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Read/Write MSR on a specific CPU thread</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.read_msr">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.read_msr">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.write_msr">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.write_msr">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">edx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Load CPU microcode update on a specific CPU thread</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.load_ucode_update">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.load_ucode_update">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ucode_update_buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Read IDTR/GDTR/LDTR on a specific CPU thread</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.get_descriptor_table">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.get_descriptor_table">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># EFI Variable API</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.EFI_supported">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.EFI_supported">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.get_EFI_variable">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.get_EFI_variable">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.set_EFI_variable">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.set_EFI_variable">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.delete_EFI_variable">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.delete_EFI_variable">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.list_EFI_variables">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.list_EFI_variables">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]]]:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># ACPI</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.get_ACPI_SDT">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.get_ACPI_SDT">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;Array&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.get_ACPI_table">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.get_ACPI_table">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;Array&#39;</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># CPUID</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.cpuid">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.cpuid">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># IOSF Message Bus access</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.msgbus_send_read_message">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.msgbus_send_read_message">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.msgbus_send_write_message">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.msgbus_send_write_message">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mdr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.msgbus_send_message">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.msgbus_send_message">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mdr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Affinity</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.get_affinity">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.get_affinity">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Helper.set_affinity">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.set_affinity">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Logical CPU count</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.get_threads_count">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.get_threads_count">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_threads_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Send SW SMI</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.send_sw_smi">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.send_sw_smi">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Hypercall</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.hypercall">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.hypercall">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rdx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">r8</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">r9</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">r10</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">r11</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rbx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rdi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rsi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Speculation control</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="Helper.retpoline_enabled">
+<a class="viewcode-back" href="../../../modules/chipsec.helper.basehelper.html#chipsec.helper.basehelper.Helper.retpoline_enabled">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.helper.basehelper</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>
