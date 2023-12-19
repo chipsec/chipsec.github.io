@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.tools.secureboot.te &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.secureboot.te</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.tools.secureboot.te</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2010-2022, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tool to test for &#39;TE Header&#39; vulnerability in Secure Boot implementations as described in</span>
+<span class="sd">`All Your Boot Are Belong To Us &lt;http://www.c7zero.info/stuff/AllYourBoot_csw14-intel-final.pdf&gt;`_</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">  ``chipsec_main.py -m tools.secureboot.te [-a &lt;mode&gt;,&lt;cfg_file&gt;,&lt;efi_file&gt;]``</span>
+<span class="sd">      - ``&lt;mode&gt;``</span>
+
+<span class="sd">          * ``generate_te``     (default) convert PE EFI binary ``&lt;efi_file&gt;`` to TE binary</span>
+<span class="sd">          * ``replace_bootloader``  replace bootloader files listed in ``&lt;cfg_file&gt;`` on ESP with modified ``&lt;efi_file&gt;``</span>
+<span class="sd">          * ``restore_bootloader``  restore original bootloader files from ``.bak`` files</span>
+
+<span class="sd">      - ``&lt;cfg_file&gt;``  path to config file listing paths to bootloader files to replace</span>
+<span class="sd">      - ``&lt;efi_file&gt;``  path to EFI binary to convert to TE binary. If no file path is provided, the tool will look for Shell.efi</span>
+
+<span class="sd">Examples:</span>
+
+<span class="sd">Convert Shell.efi PE/COFF EFI executable to TE executable:</span>
+
+<span class="sd">  ``chipsec_main.py -m tools.secureboot.te -a generate_te,Shell.efi``</span>
+
+<span class="sd">Replace bootloaders listed in te.cfg file with TE version of Shell.efi executable:</span>
+
+<span class="sd">  ``chipsec_main.py -m tools.secureboot.te -a replace_bootloader,te.cfg,Shell.efi``</span>
+
+<span class="sd">Restore bootloaders listed in te.cfg file:</span>
+
+<span class="sd">  ``chipsec_main.py -m tools.secureboot.te -a restore_bootloader,te.cfg``</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+
+
+<span class="n">DEFAULT_PE_FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;chipsec/modules/tools/secureboot/Shell.efi&quot;</span>
+<span class="n">DEFAULT_CONFIG_FILE_PATH</span> <span class="o">=</span> <span class="s1">&#39;chipsec/modules/tools/secureboot/te.cfg&#39;</span>
+
+<span class="c1"># typedef struct _IMAGE_DOS_HEADER</span>
+<span class="c1"># {</span>
+<span class="c1">#      WORD e_magic;</span>
+<span class="c1">#      WORD e_cblp;</span>
+<span class="c1">#      WORD e_cp;</span>
+<span class="c1">#      WORD e_crlc;</span>
+<span class="c1">#      WORD e_cparhdr;</span>
+<span class="c1">#      WORD e_minalloc;</span>
+<span class="c1">#      WORD e_maxalloc;</span>
+<span class="c1">#      WORD e_ss;</span>
+<span class="c1">#      WORD e_sp;</span>
+<span class="c1">#      WORD e_csum;</span>
+<span class="c1">#      WORD e_ip;</span>
+<span class="c1">#      WORD e_cs;</span>
+<span class="c1">#      WORD e_lfarlc;</span>
+<span class="c1">#      WORD e_ovno;</span>
+<span class="c1">#      WORD e_res[4];</span>
+<span class="c1">#      WORD e_oemid;</span>
+<span class="c1">#      WORD e_oeminfo;</span>
+<span class="c1">#      WORD e_res2[10];</span>
+<span class="c1">#      LONG e_lfanew;</span>
+<span class="c1"># } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;</span>
+
+<span class="n">IMAGE_DOS_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;14H4HHH10Hi&quot;</span>
+<span class="n">IMAGE_DOS_HEADER_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">IMAGE_DOS_HEADER</span><span class="p">)</span>
+<span class="n">E_MAGIC</span> <span class="o">=</span> <span class="mh">0x5A4D</span>
+<span class="n">E_MAGIC_STR</span> <span class="o">=</span> <span class="s2">&quot;MZ&quot;</span>
+
+<span class="c1"># typedef struct _IMAGE_DATA_DIRECTORY</span>
+<span class="c1"># {</span>
+<span class="c1">#      ULONG VirtualAddress;</span>
+<span class="c1">#      ULONG Size;</span>
+<span class="c1"># } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;</span>
+
+<span class="n">IMAGE_DATA_DIRECTORY</span> <span class="o">=</span> <span class="s2">&quot;&lt;II&quot;</span>
+<span class="n">IMAGE_DATA_DIRECTORY_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">IMAGE_DATA_DIRECTORY</span><span class="p">)</span>
+
+<span class="n">IMAGE_NUMBEROF_DIRECTORY_ENTRIES</span> <span class="o">=</span> <span class="mi">16</span>
+
+<span class="c1"># typedef struct _IMAGE_OPTIONAL_HEADER</span>
+<span class="c1"># {</span>
+<span class="c1">#      WORD Magic;</span>
+<span class="c1">#      UCHAR MajorLinkerVersion;</span>
+<span class="c1">#      UCHAR MinorLinkerVersion;</span>
+<span class="c1">#      ULONG SizeOfCode;</span>
+<span class="c1">#      ULONG SizeOfInitializedData;</span>
+<span class="c1">#      ULONG SizeOfUninitializedData;</span>
+<span class="c1">#      ULONG AddressOfEntryPoint;</span>
+<span class="c1">#      ULONG BaseOfCode;</span>
+<span class="c1">#      ULONG BaseOfData;</span>
+<span class="c1">#      ULONG ImageBase;</span>
+<span class="c1">#      ULONG SectionAlignment;</span>
+<span class="c1">#      ULONG FileAlignment;</span>
+<span class="c1">#      WORD MajorOperatingSystemVersion;</span>
+<span class="c1">#      WORD MinorOperatingSystemVersion;</span>
+<span class="c1">#      WORD MajorImageVersion;</span>
+<span class="c1">#      WORD MinorImageVersion;</span>
+<span class="c1">#      WORD MajorSubsystemVersion;</span>
+<span class="c1">#      WORD MinorSubsystemVersion;</span>
+<span class="c1">#      ULONG Win32VersionValue;</span>
+<span class="c1">#      ULONG SizeOfImage;</span>
+<span class="c1">#      ULONG SizeOfHeaders;</span>
+<span class="c1">#      ULONG CheckSum;</span>
+<span class="c1">#      WORD Subsystem;</span>
+<span class="c1">#      WORD DllCharacteristics;</span>
+<span class="c1">#      ULONG SizeOfStackReserve;</span>
+<span class="c1">#      ULONG SizeOfStackCommit;</span>
+<span class="c1">#      ULONG SizeOfHeapReserve;</span>
+<span class="c1">#      ULONG SizeOfHeapCommit;</span>
+<span class="c1">#      ULONG LoaderFlags;</span>
+<span class="c1">#      ULONG NumberOfRvaAndSizes;</span>
+<span class="c1">#      IMAGE_DATA_DIRECTORY DataDirectory[16];</span>
+<span class="c1"># } IMAGE_OPTIONAL_HEADER, *PIMAGE_OPTIONAL_HEADER;</span>
+
+<span class="n">IMAGE_OPTIONAL_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;HBB9I6H4I2H6I&quot;</span>
+<span class="n">IMAGE_OPTIONAL_HEADER_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">IMAGE_OPTIONAL_HEADER</span><span class="p">)</span>
+<span class="n">IMAGE_NT_OPTIONAL_HDR32_MAGIC</span> <span class="o">=</span> <span class="mh">0x10b</span>
+
+<span class="c1"># typedef struct {</span>
+<span class="c1">#   //</span>
+<span class="c1">#   // Standard fields.</span>
+<span class="c1">#   //</span>
+<span class="c1">#   UINT16                    Magic;</span>
+<span class="c1">#   UINT8                     MajorLinkerVersion;</span>
+<span class="c1">#   UINT8                     MinorLinkerVersion;</span>
+<span class="c1">#   UINT32                    SizeOfCode;</span>
+<span class="c1">#   UINT32                    SizeOfInitializedData;</span>
+<span class="c1">#   UINT32                    SizeOfUninitializedData;</span>
+<span class="c1">#   UINT32                    AddressOfEntryPoint;</span>
+<span class="c1">#   UINT32                    BaseOfCode;</span>
+<span class="c1">#   //</span>
+<span class="c1">#   // NT additional fields.</span>
+<span class="c1">#   //</span>
+<span class="c1">#   UINT64                    ImageBase;</span>
+<span class="c1">#   UINT32                    SectionAlignment;</span>
+<span class="c1">#   UINT32                    FileAlignment;</span>
+<span class="c1">#   UINT16                    MajorOperatingSystemVersion;</span>
+<span class="c1">#   UINT16                    MinorOperatingSystemVersion;</span>
+<span class="c1">#   UINT16                    MajorImageVersion;</span>
+<span class="c1">#   UINT16                    MinorImageVersion;</span>
+<span class="c1">#   UINT16                    MajorSubsystemVersion;</span>
+<span class="c1">#   UINT16                    MinorSubsystemVersion;</span>
+<span class="c1">#   UINT32                    Win32VersionValue;</span>
+<span class="c1">#   UINT32                    SizeOfImage;</span>
+<span class="c1">#   UINT32                    SizeOfHeaders;</span>
+<span class="c1">#   UINT32                    CheckSum;</span>
+<span class="c1">#   UINT16                    Subsystem;</span>
+<span class="c1">#   UINT16                    DllCharacteristics;</span>
+<span class="c1">#   UINT64                    SizeOfStackReserve;</span>
+<span class="c1">#   UINT64                    SizeOfStackCommit;</span>
+<span class="c1">#   UINT64                    SizeOfHeapReserve;</span>
+<span class="c1">#   UINT64                    SizeOfHeapCommit;</span>
+<span class="c1">#   UINT32                    LoaderFlags;</span>
+<span class="c1">#   UINT32                    NumberOfRvaAndSizes;</span>
+<span class="c1">#   EFI_IMAGE_DATA_DIRECTORY  DataDirectory[EFI_IMAGE_NUMBER_OF_DIRECTORY_ENTRIES];</span>
+<span class="c1"># } EFI_IMAGE_OPTIONAL_HEADER64;</span>
+
+<span class="n">IMAGE_OPTIONAL_HEADER64</span> <span class="o">=</span> <span class="s2">&quot;&lt;HBBIIIIIQIIHHHHHHIIIIHHQQQQII&quot;</span>
+<span class="n">IMAGE_OPTIONAL_HEADER64_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">IMAGE_OPTIONAL_HEADER64</span><span class="p">)</span>
+<span class="n">IMAGE_NT_OPTIONAL_HDR64_MAGIC</span> <span class="o">=</span> <span class="mh">0x20b</span>
+
+<span class="c1"># typedef struct _IMAGE_FILE_HEADER</span>
+<span class="c1"># {</span>
+<span class="c1">#      WORD Machine;</span>
+<span class="c1">#      WORD NumberOfSections;</span>
+<span class="c1">#      ULONG TimeDateStamp;</span>
+<span class="c1">#      ULONG PointerToSymbolTable;</span>
+<span class="c1">#      ULONG NumberOfSymbols;</span>
+<span class="c1">#      WORD SizeOfOptionalHeader;</span>
+<span class="c1">#      WORD Characteristics;</span>
+<span class="c1"># } IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;</span>
+
+<span class="n">IMAGE_FILE_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;2H3I2H&quot;</span>
+<span class="n">IMAGE_FILE_HEADER_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">IMAGE_FILE_HEADER</span><span class="p">)</span>
+
+<span class="c1"># typedef struct _IMAGE_NT_HEADERS</span>
+<span class="c1"># {</span>
+<span class="c1">#      ULONG Signature;</span>
+<span class="c1">#      IMAGE_FILE_HEADER FileHeader;</span>
+<span class="c1">#      IMAGE_OPTIONAL_HEADER OptionalHeader;</span>
+<span class="c1"># } IMAGE_NT_HEADERS, *PIMAGE_NT_HEADERS;</span>
+
+<span class="n">IMAGE_NT_SIGNATURE</span> <span class="o">=</span> <span class="mh">0x00004550</span>
+<span class="n">IMAGE_NT_HEADERS_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="n">IMAGE_FILE_HEADER_size</span> <span class="o">+</span> <span class="n">IMAGE_OPTIONAL_HEADER_size</span> <span class="o">+</span> <span class="n">IMAGE_NUMBEROF_DIRECTORY_ENTRIES</span> <span class="o">*</span> <span class="n">IMAGE_DATA_DIRECTORY_size</span><span class="p">)</span>
+
+<span class="c1"># typedef struct _IMAGE_SECTION_HEADER</span>
+<span class="c1"># {</span>
+<span class="c1">#      UCHAR Name[8];</span>
+<span class="c1">#      ULONG Misc;</span>
+<span class="c1">#      ULONG VirtualAddress;</span>
+<span class="c1">#      ULONG SizeOfRawData;</span>
+<span class="c1">#      ULONG PointerToRawData;</span>
+<span class="c1">#      ULONG PointerToRelocations;</span>
+<span class="c1">#      ULONG PointerToLinenumbers;</span>
+<span class="c1">#      WORD NumberOfRelocations;</span>
+<span class="c1">#      WORD NumberOfLinenumbers;</span>
+<span class="c1">#      ULONG Characteristics;</span>
+<span class="c1"># } IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;</span>
+
+<span class="n">IMAGE_SECTION_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;8s6I2HI&quot;</span>
+<span class="n">IMAGE_SECTION_HEADER_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">IMAGE_SECTION_HEADER</span><span class="p">)</span>
+
+<span class="c1"># PE executable structure</span>
+<span class="c1">#</span>
+<span class="c1">#   MS-DOS header</span>
+<span class="c1">#     ...</span>
+<span class="c1">#     e_lfanew -------------------+</span>
+<span class="c1">#                                 |</span>
+<span class="c1">#                                 |</span>
+<span class="c1">#   IMAGE_NT_HEADERS Header  &lt;----+</span>
+<span class="c1">#    ...</span>
+<span class="c1">#   SECTION TABLE</span>
+<span class="c1">#    ...</span>
+<span class="c1"># TE header</span>
+<span class="c1">#</span>
+<span class="c1"># typedef struct {</span>
+<span class="c1">#   UINT16                    Signature;            // signature for TE format = &quot;VZ&quot;</span>
+<span class="c1">#   UINT16                    Machine;              // from the original file header</span>
+<span class="c1">#   UINT8                     NumberOfSections;     // from the original file header</span>
+<span class="c1">#   UINT8                     Subsystem;            // from original optional header</span>
+<span class="c1">#   UINT16                    StrippedSize;         // how many bytes we removed from the header</span>
+<span class="c1">#   UINT32                    AddressOfEntryPoint;  // offset to entry point -- from original optional header</span>
+<span class="c1">#   UINT32                    BaseOfCode;           // from original image -- required for ITP debug</span>
+<span class="c1">#   UINT64                    ImageBase;            // from original file header</span>
+<span class="c1">#   IMAGE_DATA_DIRECTORY      DataDirectory[2];     // only base relocation and debug directory</span>
+<span class="c1"># } EFI_TE_IMAGE_HEADER;</span>
+
+<span class="n">EFI_TE_IMAGE_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;HHBBHIIQ&quot;</span>
+<span class="n">EFI_TE_IMAGE_HEADER_SIGNATURE</span> <span class="o">=</span> <span class="mh">0x5A56</span>
+
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_EXPORT</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_IMPORT</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_RESOURCE</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_EXCEPTION</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_SECURITY</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_BASERELOC</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_DEBUG</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_COPYRIGHT</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_GLOBALPTR</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_TLS</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">EFI_IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">EFI_TE_IMAGE_DIRECTORY_ENTRY_BASERELOC</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">EFI_TE_IMAGE_DIRECTORY_ENTRY_DEBUG</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<div class="viewcode-block" id="IsValidPEHeader">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.IsValidPEHeader">[docs]</a>
+<span class="k">def</span> <span class="nf">IsValidPEHeader</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="n">IMAGE_DOS_HEADER_size</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">signature</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;H&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">signature</span> <span class="o">!=</span> <span class="n">E_MAGIC</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">e_lfanew</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">IMAGE_DOS_HEADER_size</span> <span class="o">-</span> <span class="mi">4</span><span class="p">:</span><span class="n">IMAGE_DOS_HEADER_size</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">e_lfanew</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">-</span> <span class="n">e_lfanew</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">IMAGE_NT_HEADERS_size</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">pe_signature</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">e_lfanew</span><span class="p">:</span><span class="n">e_lfanew</span> <span class="o">+</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">pe_signature</span> <span class="o">!=</span> <span class="n">IMAGE_NT_SIGNATURE</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="replace_header">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.replace_header">[docs]</a>
+<span class="k">def</span> <span class="nf">replace_header</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">IsValidPEHeader</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">e_lfanew</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">IMAGE_DOS_HEADER_size</span> <span class="o">-</span> <span class="mi">4</span><span class="p">:</span><span class="n">IMAGE_DOS_HEADER_size</span><span class="p">])</span>
+    <span class="c1">#                          TimeDateStamp, PointerToSymbolTable, NumberOfSymbols, SizeOfOptionalHeader, Characteristics</span>
+    <span class="n">Machine</span><span class="p">,</span> <span class="n">NumberOfSections</span><span class="p">,</span> <span class="n">u1</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">u3</span><span class="p">,</span> <span class="n">SizeOfOptionalHeader</span><span class="p">,</span> <span class="n">u5</span> \
+        <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">IMAGE_FILE_HEADER</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">e_lfanew</span> <span class="o">+</span> <span class="mi">4</span><span class="p">:</span><span class="n">e_lfanew</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">IMAGE_FILE_HEADER_size</span><span class="p">])</span>
+    <span class="n">StrippedSize</span> <span class="o">=</span> <span class="n">e_lfanew</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">IMAGE_FILE_HEADER_size</span> <span class="o">+</span> <span class="n">SizeOfOptionalHeader</span>
+    <span class="k">if</span> <span class="n">StrippedSize</span> <span class="o">&gt;</span> <span class="n">size</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">StrippedSize</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mh">0xffff</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">dof</span> <span class="o">=</span> <span class="n">e_lfanew</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">IMAGE_FILE_HEADER_size</span>
+    <span class="n">Magic</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;H&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">dof</span><span class="p">:</span><span class="n">dof</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">Magic</span> <span class="o">==</span> <span class="n">IMAGE_NT_OPTIONAL_HDR32_MAGIC</span><span class="p">:</span>
+        <span class="n">Magic</span><span class="p">,</span> <span class="n">MajorLinkerVersion</span><span class="p">,</span> <span class="n">MinorLinkerVersion</span><span class="p">,</span> <span class="n">SizeOfCode</span><span class="p">,</span> <span class="n">SizeOfInitializedData</span><span class="p">,</span> \
+            <span class="n">SizeOfUninitializedData</span><span class="p">,</span> <span class="n">AddressOfEntryPoint</span><span class="p">,</span> <span class="n">BaseOfCode</span><span class="p">,</span> <span class="n">BaseOfData</span><span class="p">,</span> <span class="n">ImageBase</span><span class="p">,</span>  \
+            <span class="n">SectionAlignment</span><span class="p">,</span> <span class="n">FileAlignment</span><span class="p">,</span> <span class="n">MajorOperatingSystemVersion</span><span class="p">,</span> <span class="n">MinorOperatingSystemVersion</span><span class="p">,</span> \
+            <span class="n">MajorImageVersion</span><span class="p">,</span> <span class="n">MinorImageVersion</span><span class="p">,</span> <span class="n">MajorSubsystemVersion</span><span class="p">,</span> <span class="n">MinorSubsystemVersion</span><span class="p">,</span> \
+            <span class="n">Win32VersionValue</span><span class="p">,</span> <span class="n">SizeOfImage</span><span class="p">,</span> <span class="n">SizeOfHeaders</span><span class="p">,</span> <span class="n">CheckSum</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">DllCharacteristics</span><span class="p">,</span> \
+            <span class="n">SizeOfStackReserve</span><span class="p">,</span> <span class="n">SizeOfStackCommit</span><span class="p">,</span> <span class="n">SizeOfHeapReserve</span><span class="p">,</span> <span class="n">SizeOfHeapCommit</span><span class="p">,</span> <span class="n">LoaderFlags</span><span class="p">,</span> \
+            <span class="n">NumberOfRvaAndSizes</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">IMAGE_OPTIONAL_HEADER</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">dof</span><span class="p">:</span><span class="n">dof</span> <span class="o">+</span> <span class="n">IMAGE_OPTIONAL_HEADER_size</span><span class="p">])</span>
+        <span class="n">dof</span> <span class="o">=</span> <span class="n">dof</span> <span class="o">+</span> <span class="n">IMAGE_OPTIONAL_HEADER_size</span>
+    <span class="k">elif</span> <span class="n">Magic</span> <span class="o">==</span> <span class="n">IMAGE_NT_OPTIONAL_HDR64_MAGIC</span><span class="p">:</span>
+        <span class="n">Magic</span><span class="p">,</span> <span class="n">MajorLinkerVersion</span><span class="p">,</span> <span class="n">MinorLinkerVersion</span><span class="p">,</span> <span class="n">SizeOfCode</span><span class="p">,</span> <span class="n">SizeOfInitializedData</span><span class="p">,</span> \
+            <span class="n">SizeOfUninitializedData</span><span class="p">,</span> <span class="n">AddressOfEntryPoint</span><span class="p">,</span> <span class="n">BaseOfCode</span><span class="p">,</span> <span class="n">ImageBase</span><span class="p">,</span> <span class="n">SectionAlignment</span><span class="p">,</span> \
+            <span class="n">FileAlignment</span><span class="p">,</span> <span class="n">MajorOperatingSystemVersion</span><span class="p">,</span> <span class="n">MinorOperatingSystemVersion</span><span class="p">,</span> <span class="n">MajorImageVersion</span><span class="p">,</span> \
+            <span class="n">MinorImageVersion</span><span class="p">,</span> <span class="n">MajorSubsystemVersion</span><span class="p">,</span> <span class="n">MinorSubsystemVersion</span><span class="p">,</span> <span class="n">Win32VersionValue</span><span class="p">,</span> \
+            <span class="n">SizeOfImage</span><span class="p">,</span> <span class="n">SizeOfHeaders</span><span class="p">,</span> <span class="n">CheckSum</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">DllCharacteristics</span><span class="p">,</span> <span class="n">SizeOfStackReserve</span><span class="p">,</span> \
+            <span class="n">SizeOfStackCommit</span><span class="p">,</span> <span class="n">SizeOfHeapReserve</span><span class="p">,</span> <span class="n">SizeOfHeapCommit</span><span class="p">,</span> <span class="n">LoaderFlags</span><span class="p">,</span> <span class="n">NumberOfRvaAndSizes</span> \
+            <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">IMAGE_OPTIONAL_HEADER64</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">dof</span><span class="p">:</span><span class="n">dof</span> <span class="o">+</span> <span class="n">IMAGE_OPTIONAL_HEADER64_size</span><span class="p">])</span>
+        <span class="n">dof</span> <span class="o">=</span> <span class="n">dof</span> <span class="o">+</span> <span class="n">IMAGE_OPTIONAL_HEADER64_size</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">NumberOfSections</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mh">0xFF</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">Subsystem</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mh">0xFF</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">basereloc_off</span> <span class="o">=</span> <span class="n">dof</span> <span class="o">+</span> <span class="n">EFI_IMAGE_DIRECTORY_ENTRY_BASERELOC</span> <span class="o">*</span> <span class="n">IMAGE_DATA_DIRECTORY_size</span>
+    <span class="n">debug_off</span> <span class="o">=</span> <span class="n">dof</span> <span class="o">+</span> <span class="n">EFI_IMAGE_DIRECTORY_ENTRY_DEBUG</span> <span class="o">*</span> <span class="n">IMAGE_DATA_DIRECTORY_size</span>
+    <span class="n">BASERELOC</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s2">&quot;</span>
+    <span class="n">DEBUG</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">NumberOfRvaAndSizes</span> <span class="o">&gt;</span> <span class="n">EFI_IMAGE_DIRECTORY_ENTRY_BASERELOC</span><span class="p">:</span>
+        <span class="n">BASERELOC</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">basereloc_off</span><span class="p">:</span><span class="n">basereloc_off</span> <span class="o">+</span> <span class="n">IMAGE_DATA_DIRECTORY_size</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">NumberOfRvaAndSizes</span> <span class="o">&gt;</span> <span class="n">EFI_IMAGE_DIRECTORY_ENTRY_DEBUG</span><span class="p">:</span>
+        <span class="n">DEBUG</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">debug_off</span><span class="p">:</span><span class="n">debug_off</span> <span class="o">+</span> <span class="n">IMAGE_DATA_DIRECTORY_size</span><span class="p">]</span>
+    <span class="n">te_header</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">EFI_TE_IMAGE_HEADER</span><span class="p">,</span>
+                            <span class="n">EFI_TE_IMAGE_HEADER_SIGNATURE</span><span class="p">,</span> <span class="n">Machine</span><span class="p">,</span> <span class="n">NumberOfSections</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">StrippedSize</span><span class="p">,</span> <span class="n">AddressOfEntryPoint</span><span class="p">,</span> <span class="n">BaseOfCode</span><span class="p">,</span> <span class="n">ImageBase</span><span class="p">)</span>
+    <span class="n">te_data</span> <span class="o">=</span> <span class="n">te_header</span> <span class="o">+</span> <span class="n">BASERELOC</span> <span class="o">+</span> <span class="n">DEBUG</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">StrippedSize</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">te_data</span></div>
+
+
+
+<div class="viewcode-block" id="produce_te">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.produce_te">[docs]</a>
+<span class="k">def</span> <span class="nf">produce_te</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">outfname</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">te_data</span> <span class="o">=</span> <span class="n">replace_header</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">te_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fte</span><span class="p">:</span>
+        <span class="n">fte</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">te_data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="replace_efi_binary">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.replace_efi_binary">[docs]</a>
+<span class="k">def</span> <span class="nf">replace_efi_binary</span><span class="p">(</span><span class="n">orig_efi_binary</span><span class="p">,</span> <span class="n">new_efi_binary</span><span class="p">):</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[*] Replacing EFI binary </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">orig_efi_binary</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">..&#39;</span><span class="p">)</span>
+    <span class="n">te_binary</span> <span class="o">=</span> <span class="n">new_efi_binary</span> <span class="o">+</span> <span class="s1">&#39;.te&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">te_binary</span><span class="p">):</span>
+        <span class="n">produce_te</span><span class="p">(</span><span class="n">new_efi_binary</span><span class="p">,</span> <span class="n">te_binary</span><span class="p">)</span>
+    <span class="c1"># back up original binary</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">orig_efi_binary</span> <span class="o">+</span> <span class="s1">&#39;.bak&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">backup</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">orig_efi_binary</span><span class="p">,</span> <span class="n">backup</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">te_binary</span><span class="p">,</span> <span class="n">orig_efi_binary</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot replace binary (</span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="umount">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.umount">[docs]</a>
+<span class="k">def</span> <span class="nf">umount</span><span class="p">(</span><span class="n">drive</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">drive</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&quot;mountvol.exe&quot;</span><span class="p">,</span> <span class="n">drive</span><span class="p">,</span> <span class="s2">&quot;/D&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">res</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot unmount EFI System partition: </span><span class="si">{</span><span class="n">res</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_efi_mount">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.get_efi_mount">[docs]</a>
+<span class="k">def</span> <span class="nf">get_efi_mount</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">),</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%c</span><span class="s1">:</span><span class="se">\\</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">l</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&quot;mountvol.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%c</span><span class="s2">:</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">l</span><span class="p">,</span> <span class="s2">&quot;/S&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot mount EFI System partition (status = </span><span class="si">{</span><span class="n">res</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%c</span><span class="s1">:</span><span class="se">\\</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">l</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;Cannot mount EFI System partition. No drive letters to use.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_bootloader_paths">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.get_bootloader_paths">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bootloader_paths</span><span class="p">(</span><span class="n">cfg_file</span><span class="p">):</span>
+    <span class="n">bootloader_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cfg_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fcfg</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[*] reading paths from </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">cfg_file</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">..&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fcfg</span><span class="p">:</span>
+            <span class="n">bl_path</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">bl_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    adding path </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">bl_path</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">..&#39;</span><span class="p">)</span>
+                <span class="n">bootloader_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bl_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bootloader_paths</span></div>
+
+
+
+<div class="viewcode-block" id="replace_bootloader">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.replace_bootloader">[docs]</a>
+<span class="k">def</span> <span class="nf">replace_bootloader</span><span class="p">(</span><span class="n">bootloader_paths</span><span class="p">,</span> <span class="n">new_bootloader_file</span><span class="p">,</span> <span class="n">do_mount</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Replacing bootloaders on EFI System Partition (ESP)...&quot;</span><span class="p">)</span>
+    <span class="n">dsk</span> <span class="o">=</span> <span class="n">get_efi_mount</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_mount</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">dsk</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pth</span> <span class="ow">in</span> <span class="n">bootloader_paths</span><span class="p">:</span>
+            <span class="n">bootloader_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dsk</span><span class="p">,</span> <span class="n">pth</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bootloader_path</span><span class="p">):</span>
+                <span class="n">replace_efi_binary</span><span class="p">(</span><span class="n">bootloader_path</span><span class="p">,</span> <span class="n">new_bootloader_file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Bootloader </span><span class="si">{</span><span class="n">bootloader_path</span><span class="si">}</span><span class="s1"> does not exist on ESP&#39;</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">do_mount</span><span class="p">:</span>
+            <span class="n">umount</span><span class="p">(</span><span class="n">dsk</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] You will need to reboot the system to see the changes&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="restore_efi_binary">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.restore_efi_binary">[docs]</a>
+<span class="k">def</span> <span class="nf">restore_efi_binary</span><span class="p">(</span><span class="n">orig_efi_binary</span><span class="p">):</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[*] Restoring </span><span class="si">{</span><span class="n">orig_efi_binary</span><span class="si">}</span><span class="s1">..&#39;</span><span class="p">)</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">orig_efi_binary</span> <span class="o">+</span> <span class="s2">&quot;.bak&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">backup</span><span class="p">):</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot restore original binary: </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">backup</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1"> not found&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">orig_efi_binary</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">orig_efi_binary</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">backup</span><span class="p">,</span> <span class="n">orig_efi_binary</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot restore original binary (</span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="restore_bootloader">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.restore_bootloader">[docs]</a>
+<span class="k">def</span> <span class="nf">restore_bootloader</span><span class="p">(</span><span class="n">bootloader_paths</span><span class="p">,</span> <span class="n">do_mount</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Restoring bootloaders on EFI System Partition (ESP)...&quot;</span><span class="p">)</span>
+    <span class="n">dsk</span> <span class="o">=</span> <span class="n">get_efi_mount</span><span class="p">()</span> <span class="k">if</span> <span class="n">do_mount</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">dsk</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">pth</span> <span class="ow">in</span> <span class="n">bootloader_paths</span><span class="p">:</span>
+        <span class="n">bootloader_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dsk</span><span class="p">,</span> <span class="n">pth</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bootloader_path</span><span class="p">):</span>
+            <span class="n">restore_efi_binary</span><span class="p">(</span><span class="n">bootloader_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">do_mount</span><span class="p">:</span>
+        <span class="n">umount</span><span class="p">(</span><span class="n">dsk</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] You will need to reboot the system to see the changes&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="confirm">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.confirm">[docs]</a>
+<span class="k">def</span> <span class="nf">confirm</span><span class="p">():</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;***************************************************************************************&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* RUNNING THIS TOOL MAY RESULT IN UNBOOTABLE OS!&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* USE IT FOR TESTING PURPOSES ON TEST SYSTEMS ONLY&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* The tool converts PE/COFF EFI executables to TE EFI executables.&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* The tool can also automatically replace files (boot loaders)&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* listed in the configuration file with the generated TE executable.&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* If after reboot, TE executable runs then the firmware doesn&#39;t properly&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* enforce Secure Boot checks on TE EFI executables&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* If TE executable doesn&#39;t run then the firmware correctly blocked it.&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* To restore OS boot loader in this case you may use one of the following:&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* - Disable Secure Boot in BIOS, boot to external drive (e.g. Linux or UEFI shell)&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;*   then restore original boot loader executables from .bak files&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;* - On Windows, use recovery mode which should automatically restore correct executables&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="s2">&quot;***************************************************************************************&quot;</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Type &#39;yes&#39; to continue running the tool &gt; &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="usage">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.usage">[docs]</a>
+<span class="k">def</span> <span class="nf">usage</span><span class="p">():</span>
+    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Usage:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;chipsec_main.py -m tools.secureboot.te [-a &lt;mode&gt;,&lt;cfg_file&gt;,&lt;efi_file&gt;]</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;    &lt;mode&gt;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;      generate_te        - (default) convert PE EFI binary &lt;efi_file&gt; to TE binary</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;      replace_bootloader - replace bootloader files listed in &lt;cfg_file&gt; on ESP with modified &lt;efi_file&gt;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;      restore_bootloader - restore original bootloader files from .bak files</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;    &lt;cfg_file&gt;           - path to config file listing paths to bootloader files to replace</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;    &lt;efi_file&gt;           - path to EFI binary to convert to TE binary</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;                           If no file path is provided, the tool will look for Shell.efi</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="te">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.te">[docs]</a>
+<span class="k">class</span> <span class="nc">te</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="p">(</span><span class="mh">0x2d6c9a9</span><span class="p">,</span> <span class="s1">&#39;https://chipsec.github.io/modules/chipsec.modules.tools.secureboot.te.html&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="te.is_supported">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.te.is_supported">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#win8 = self.cs.helper.is_win8_or_greater()</span>
+        <span class="n">efi_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">EFI_supported</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">efi_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_not_applicable</span><span class="p">(</span><span class="s2">&quot;OS did not boot in UEFI mode&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">efi_mode</span></div>
+
+
+<div class="viewcode-block" id="te.run">
+<a class="viewcode-back" href="../../../../../modules/chipsec.modules.tools.secureboot.te.html#chipsec.modules.tools.secureboot.te.te.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;&#39;TE Header&#39; Secure Boot Bypass Test&quot;</span><span class="p">)</span>
+        <span class="n">usage</span><span class="p">()</span>
+
+        <span class="n">sts</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">do_mount</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">DEFAULT_PE_FILE_PATH</span>
+        <span class="n">te_cfg</span> <span class="o">=</span> <span class="n">DEFAULT_CONFIG_FILE_PATH</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;generate_te&#39;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;generate_te&#39;</span> <span class="o">==</span> <span class="n">mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">file_path</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot find file </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">ACCESS_RW</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+            <span class="n">sts</span> <span class="o">=</span> <span class="n">replace_efi_binary</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;restore_bootloader&#39;</span> <span class="o">==</span> <span class="n">mode</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;replace_bootloader&#39;</span> <span class="o">==</span> <span class="n">mode</span><span class="p">):</span>
+            <span class="n">confirm</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">te_cfg</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">te_cfg</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot find file </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">te_cfg</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">ACCESS_RW</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+            <span class="n">bootloader_paths</span> <span class="o">=</span> <span class="n">get_bootloader_paths</span><span class="p">(</span><span class="n">te_cfg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bootloader_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] no bootloaders to replace. Exit...&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">FEATURE_DISABLED</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span> 
+
+            <span class="n">do_mount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">os_helper</span><span class="o">.</span><span class="n">is_windows</span><span class="p">()</span>  <span class="c1"># @TODO</span>
+            <span class="k">if</span> <span class="s1">&#39;restore_bootloader&#39;</span> <span class="o">==</span> <span class="n">mode</span><span class="p">:</span>
+                <span class="n">sts</span> <span class="o">=</span> <span class="n">restore_bootloader</span><span class="p">(</span><span class="n">bootloader_paths</span><span class="p">,</span> <span class="n">do_mount</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;replace_bootloader&#39;</span> <span class="o">==</span> <span class="n">mode</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">file_path</span> <span class="o">=</span> <span class="n">module_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">sts</span> <span class="o">=</span> <span class="n">replace_bootloader</span><span class="p">(</span><span class="n">bootloader_paths</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">do_mount</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid mode: </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sts</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span><span class="p">)</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">RESTORE</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../../index.html">
+              <img class="logo" src="../../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.secureboot.te</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

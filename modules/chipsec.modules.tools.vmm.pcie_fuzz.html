@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pcie_fuzz module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <title>chipsec.modules.tools.vmm.pcie_fuzz module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pcie_overlap_fuzz module" href="chipsec.modules.tools.vmm.pcie_overlap_fuzz.html" />
-    <link rel="prev" title="msr_fuzz module" href="chipsec.modules.tools.vmm.msr_fuzz.html" /> 
+    <link rel="next" title="chipsec.modules.tools.vmm.pcie_overlap_fuzz module" href="chipsec.modules.tools.vmm.pcie_overlap_fuzz.html" />
+    <link rel="prev" title="chipsec.modules.tools.vmm.msr_fuzz module" href="chipsec.modules.tools.vmm.msr_fuzz.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,17 +29,17 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.pcie_overlap_fuzz.html" title="pcie_overlap_fuzz module"
+          <a href="chipsec.modules.tools.vmm.pcie_overlap_fuzz.html" title="chipsec.modules.tools.vmm.pcie_overlap_fuzz module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.msr_fuzz.html" title="msr_fuzz module"
+          <a href="chipsec.modules.tools.vmm.msr_fuzz.html" title="chipsec.modules.tools.vmm.msr_fuzz module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" accesskey="U">vmm package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">pcie_fuzz module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >chipsec.modules.tools package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" accesskey="U">chipsec.modules.tools.vmm package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.pcie_fuzz module</a></li> 
       </ul>
     </div>  
 
@@ -49,7 +49,7 @@
           <div class="body" role="main">
             
   <section id="module-chipsec.modules.tools.vmm.pcie_fuzz">
-<span id="pcie-fuzz-module"></span><h1>pcie_fuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.pcie_fuzz" title="Permalink to this heading">¶</a></h1>
+<span id="chipsec-modules-tools-vmm-pcie-fuzz-module"></span><h1>chipsec.modules.tools.vmm.pcie_fuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.pcie_fuzz" title="Link to this heading">¶</a></h1>
 <p>Simple PCIe device Memory-Mapped I/O (MMIO) and I/O ranges VMM emulation fuzzer</p>
 <dl>
 <dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.vmm.pcie_fuzz</span> <span class="pre">[-a</span> <span class="pre">&lt;bus&gt;</span> <span class="pre">&lt;dev&gt;</span> <span class="pre">&lt;fun&gt;]</span></code></p>
@@ -93,6 +93,67 @@
 <li><p>Behavior on physical HW is undefined</p></li>
 </ul>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pcie_fuzz</span></span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.find_active_range">
+<span class="sig-name descname"><span class="pre">find_active_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.find_active_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.find_active_range" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_io_bar">
+<span class="sig-name descname"><span class="pre">fuzz_io_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_io_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_io_bar" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar">
+<span class="sig-name descname"><span class="pre">fuzz_mmio_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is64bit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4096</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_mmio_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range">
+<span class="sig-name descname"><span class="pre">fuzz_mmio_bar_in_active_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is64bit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_mmio_bar_in_active_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range_bit_flip">
+<span class="sig-name descname"><span class="pre">fuzz_mmio_bar_in_active_range_bit_flip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is64bit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_mmio_bar_in_active_range_bit_flip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range_bit_flip" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range_random">
+<span class="sig-name descname"><span class="pre">fuzz_mmio_bar_in_active_range_random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is64bit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_mmio_bar_in_active_range_random"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_in_active_range_random" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_random">
+<span class="sig-name descname"><span class="pre">fuzz_mmio_bar_random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is64bit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4096</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_mmio_bar_random"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_mmio_bar_random" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_offset">
+<span class="sig-name descname"><span class="pre">fuzz_offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_off</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is64bit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_offset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_pcie_device">
+<span class="sig-name descname"><span class="pre">fuzz_pcie_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_pcie_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_pcie_device" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_unaligned">
+<span class="sig-name descname"><span class="pre">fuzz_unaligned</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_off</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is64bit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.fuzz_unaligned"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.fuzz_unaligned" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_argv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/pcie_fuzz.html#pcie_fuzz.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.pcie_fuzz.pcie_fuzz.run" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -147,12 +208,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.modules.tools.vmm.msr_fuzz.html"
-                          title="previous chapter">msr_fuzz module</a></p>
+                          title="previous chapter">chipsec.modules.tools.vmm.msr_fuzz module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.modules.tools.vmm.pcie_overlap_fuzz.html"
-                          title="next chapter">pcie_overlap_fuzz module</a></p>
+                          title="next chapter">chipsec.modules.tools.vmm.pcie_overlap_fuzz module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -178,22 +239,22 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.pcie_overlap_fuzz.html" title="pcie_overlap_fuzz module"
+          <a href="chipsec.modules.tools.vmm.pcie_overlap_fuzz.html" title="chipsec.modules.tools.vmm.pcie_overlap_fuzz module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.msr_fuzz.html" title="msr_fuzz module"
+          <a href="chipsec.modules.tools.vmm.msr_fuzz.html" title="chipsec.modules.tools.vmm.msr_fuzz module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" >vmm package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">pcie_fuzz module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >chipsec.modules.tools package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" >chipsec.modules.tools.vmm package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.pcie_fuzz module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 26, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>uefi_search module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <title>chipsec.hal.uefi_search module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="virtmem module" href="chipsec.hal.virtmem.html" />
-    <link rel="prev" title="uefi_platform module" href="chipsec.hal.uefi_platform.html" /> 
+    <link rel="next" title="chipsec.hal.virtmem module" href="chipsec.hal.virtmem.html" />
+    <link rel="prev" title="chipsec.hal.uefi_platform module" href="chipsec.hal.uefi_platform.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.virtmem.html" title="virtmem module"
+          <a href="chipsec.hal.virtmem.html" title="chipsec.hal.virtmem module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_platform.html" title="uefi_platform module"
+          <a href="chipsec.hal.uefi_platform.html" title="chipsec.hal.uefi_platform module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">uefi_search module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_search module</a></li> 
       </ul>
     </div>  
 
@@ -47,7 +47,7 @@
           <div class="body" role="main">
             
   <section id="module-chipsec.hal.uefi_search">
-<span id="uefi-search-module"></span><h1>uefi_search module<a class="headerlink" href="#module-chipsec.hal.uefi_search" title="Permalink to this heading">¶</a></h1>
+<span id="chipsec-hal-uefi-search-module"></span><h1>chipsec.hal.uefi_search module<a class="headerlink" href="#module-chipsec.hal.uefi_search" title="Link to this heading">¶</a></h1>
 <p>UEFI image search auxillary functionality</p>
 <dl>
 <dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec</span><span class="o">.</span><span class="n">hal</span><span class="o">.</span><span class="n">uefi_search</span><span class="o">.</span><span class="n">check_match_criteria</span><span class="p">(</span><span class="n">efi_module</span><span class="p">,</span> <span class="n">match_criteria</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
@@ -55,6 +55,16 @@
 </div>
 </dd>
 </dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_search.check_match_criteria">
+<span class="sig-name descname"><span class="pre">check_match_criteria</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">efi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_SECTION" title="chipsec.hal.uefi_fv.EFI_SECTION"><span class="pre">EFI_SECTION</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">criteria</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_search.html#check_match_criteria"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_search.check_match_criteria" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_search.check_rules">
+<span class="sig-name descname"><span class="pre">check_rules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">efi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_SECTION" title="chipsec.hal.uefi_fv.EFI_SECTION"><span class="pre">EFI_SECTION</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_log</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bLog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_search.html#check_rules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_search.check_rules" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -109,12 +119,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.hal.uefi_platform.html"
-                          title="previous chapter">uefi_platform module</a></p>
+                          title="previous chapter">chipsec.hal.uefi_platform module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.hal.virtmem.html"
-                          title="next chapter">virtmem module</a></p>
+                          title="next chapter">chipsec.hal.virtmem module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -140,20 +150,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.virtmem.html" title="virtmem module"
+          <a href="chipsec.hal.virtmem.html" title="chipsec.hal.virtmem module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_platform.html" title="uefi_platform module"
+          <a href="chipsec.hal.uefi_platform.html" title="chipsec.hal.uefi_platform module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">uefi_search module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_search module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 26, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

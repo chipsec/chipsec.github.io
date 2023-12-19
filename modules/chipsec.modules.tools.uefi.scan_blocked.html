@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>scan_blocked module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <title>chipsec.modules.tools.uefi.scan_blocked module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="scan_image module" href="chipsec.modules.tools.uefi.scan_image.html" />
-    <link rel="prev" title="s3script_modify module" href="chipsec.modules.tools.uefi.s3script_modify.html" /> 
+    <link rel="next" title="chipsec.modules.tools.uefi.scan_image module" href="chipsec.modules.tools.uefi.scan_image.html" />
+    <link rel="prev" title="chipsec.modules.tools.uefi.s3script_modify module" href="chipsec.modules.tools.uefi.s3script_modify.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,17 +29,17 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.uefi.scan_image.html" title="scan_image module"
+          <a href="chipsec.modules.tools.uefi.scan_image.html" title="chipsec.modules.tools.uefi.scan_image module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.uefi.s3script_modify.html" title="s3script_modify module"
+          <a href="chipsec.modules.tools.uefi.s3script_modify.html" title="chipsec.modules.tools.uefi.s3script_modify module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.uefi.html" accesskey="U">uefi package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">scan_blocked module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >chipsec.modules.tools package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.uefi.html" accesskey="U">chipsec.modules.tools.uefi package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.uefi.scan_blocked module</a></li> 
       </ul>
     </div>  
 
@@ -49,7 +49,7 @@
           <div class="body" role="main">
             
   <section id="module-chipsec.modules.tools.uefi.scan_blocked">
-<span id="scan-blocked-module"></span><h1>scan_blocked module<a class="headerlink" href="#module-chipsec.modules.tools.uefi.scan_blocked" title="Permalink to this heading">¶</a></h1>
+<span id="chipsec-modules-tools-uefi-scan-blocked-module"></span><h1>chipsec.modules.tools.uefi.scan_blocked module<a class="headerlink" href="#module-chipsec.modules.tools.uefi.scan_blocked" title="Link to this heading">¶</a></h1>
 <p>This module checks current contents of UEFI firmware ROM or specified firmware image for blocked EFI binaries
 which can be EFI firmware volumes, EFI executable binaries (PEI modules, DXE drivers..) or EFI sections.
 The module can find EFI binaries by their UI names, EFI GUIDs, MD5/SHA-1/SHA-256 hashes
@@ -82,6 +82,41 @@ If a bad or vulnerable binary is not detected then its ‘signature’ needs to 
 and no kernel driver is required when firmware image is specified</p></li>
 </ul>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.modules.tools.uefi.scan_blocked.scan_blocked">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scan_blocked</span></span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/scan_blocked.html#scan_blocked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.scan_blocked.scan_blocked" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.uefi.scan_blocked.scan_blocked.blockedlist_callback">
+<span class="sig-name descname"><span class="pre">blockedlist_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">efi_module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/scan_blocked.html#scan_blocked.blockedlist_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.blockedlist_callback" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.uefi.scan_blocked.scan_blocked.check_blockedlist">
+<span class="sig-name descname"><span class="pre">check_blockedlist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/scan_blocked.html#scan_blocked.check_blockedlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.check_blockedlist" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.uefi.scan_blocked.scan_blocked.is_supported">
+<span class="sig-name descname"><span class="pre">is_supported</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/scan_blocked.html#scan_blocked.is_supported"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.is_supported" title="Link to this definition">¶</a></dt>
+<dd><p>This method should be overwritten by the module returning True or False
+depending whether or not this module is supported in the currently running
+platform.
+To access the currently running platform use</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.uefi.scan_blocked.scan_blocked.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_argv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/scan_blocked.html#scan_blocked.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.run" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.tools.uefi.scan_blocked.scan_blocked.usage">
+<span class="sig-name descname"><span class="pre">usage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/uefi/scan_blocked.html#scan_blocked.usage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.uefi.scan_blocked.scan_blocked.usage" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -136,12 +171,12 @@ and no kernel driver is required when firmware image is specified</p></li>
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.modules.tools.uefi.s3script_modify.html"
-                          title="previous chapter">s3script_modify module</a></p>
+                          title="previous chapter">chipsec.modules.tools.uefi.s3script_modify module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.modules.tools.uefi.scan_image.html"
-                          title="next chapter">scan_image module</a></p>
+                          title="next chapter">chipsec.modules.tools.uefi.scan_image module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -167,22 +202,22 @@ and no kernel driver is required when firmware image is specified</p></li>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.uefi.scan_image.html" title="scan_image module"
+          <a href="chipsec.modules.tools.uefi.scan_image.html" title="chipsec.modules.tools.uefi.scan_image module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.uefi.s3script_modify.html" title="s3script_modify module"
+          <a href="chipsec.modules.tools.uefi.s3script_modify.html" title="chipsec.modules.tools.uefi.s3script_modify module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.uefi.html" >uefi package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">scan_blocked module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >chipsec.modules.tools package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.uefi.html" >chipsec.modules.tools.uefi package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.uefi.scan_blocked module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 26, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
