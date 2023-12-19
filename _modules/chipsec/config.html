@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.config &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.config</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.config</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2023, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">fnmatch</span> <span class="kn">import</span> <span class="n">fnmatch</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">is_hex</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">CSConfigError</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">get_main_dir</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">chipsec.parsers</span> <span class="kn">import</span> <span class="n">Stage</span>
+<span class="kn">from</span> <span class="nn">chipsec.parsers</span> <span class="kn">import</span> <span class="n">stage_info</span><span class="p">,</span> <span class="n">config_data</span>
+
+<span class="n">LOAD_COMMON</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">CHIPSET_ID_UNKNOWN</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">CHIPSET_CODE_UNKNOWN</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<span class="n">PROC_FAMILY</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">PCH_CODE_PREFIX</span> <span class="o">=</span> <span class="s1">&#39;PCH_&#39;</span>
+
+
+<div class="viewcode-block" id="Cfg">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg">[docs]</a>
+<span class="k">class</span> <span class="nc">Cfg</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">REGISTERS</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MMIO_BARS</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">IO_BARS</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">IMA_REGISTERS</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MEMORY_RANGES</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CONTROLS</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BUS</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOCKS</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOCKEDBY</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">XML_CONFIG_LOADED</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">proc_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proc_codes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pch_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pch_codes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_extra</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parsers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpuid</span> <span class="o">=</span> <span class="mh">0xFFFFF</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">detection_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Initialize CPU and PCH artifacts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vid</span> <span class="o">=</span> <span class="mh">0xFFFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">did</span> <span class="o">=</span> <span class="mh">0xFFFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rid</span> <span class="o">=</span> <span class="mh">0xFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">CHIPSET_CODE_UNKNOWN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">longname</span> <span class="o">=</span> <span class="s2">&quot;Unrecognized Platform&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pch_vid</span> <span class="o">=</span> <span class="mh">0xFFFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pch_did</span> <span class="o">=</span> <span class="mh">0xFFFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pch_rid</span> <span class="o">=</span> <span class="mh">0xFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pch_code</span> <span class="o">=</span> <span class="n">CHIPSET_CODE_UNKNOWN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pch_longname</span> <span class="o">=</span> <span class="s1">&#39;Unrecognized PCH&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">req_pch</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1">###</span>
+    <span class="c1"># Private functions</span>
+    <span class="c1">###</span>
+    <span class="k">def</span> <span class="nf">_make_hex_key_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">int_val</span><span class="p">):</span>
+        <span class="n">str_val</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">int_val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">str_val</span>
+
+    <span class="c1">###</span>
+    <span class="c1"># PCI device tree enumeration</span>
+    <span class="c1">###</span>
+<div class="viewcode-block" id="Cfg.set_pci_data">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.set_pci_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_pci_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_devices</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;CONFIG_PCI_RAW&#39;</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;CONFIG_PCI_RAW&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">vid</span><span class="p">,</span> <span class="n">did</span><span class="p">,</span> <span class="n">rid</span> <span class="ow">in</span> <span class="n">enum_devices</span><span class="p">:</span>
+            <span class="n">vid_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="n">vid</span><span class="p">)</span>
+            <span class="n">did_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="n">did</span><span class="p">)</span>
+            <span class="n">pci_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;bus&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">b</span><span class="p">],</span>
+                <span class="s1">&#39;dev&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+                <span class="s1">&#39;fun&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span>
+                <span class="s1">&#39;vid&#39;</span><span class="p">:</span> <span class="n">vid</span><span class="p">,</span>
+                <span class="s1">&#39;did&#39;</span><span class="p">:</span> <span class="n">did</span><span class="p">,</span>
+                <span class="s1">&#39;rid&#39;</span><span class="p">:</span> <span class="n">rid</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">vid_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">did_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">]</span> <span class="o">=</span> <span class="n">pci_data</span>
+            <span class="k">elif</span> <span class="n">b</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">][</span><span class="s1">&#39;bus&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">][</span><span class="s1">&#39;bus&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span></div>
+
+
+    <span class="c1">###</span>
+    <span class="c1"># Platform detection functions</span>
+    <span class="c1">###</span>
+<div class="viewcode-block" id="Cfg.get_chipset_code">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.get_chipset_code">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_chipset_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span></div>
+
+
+<div class="viewcode-block" id="Cfg.get_pch_code">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.get_pch_code">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_pch_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pch_code</span></div>
+
+
+<div class="viewcode-block" id="Cfg.is_pch_req">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.is_pch_req">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_pch_req</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">req_pch</span></div>
+
+
+<div class="viewcode-block" id="Cfg.print_platform_info">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.print_platform_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_platform_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Platform: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">longname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">CPUID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cpuid</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">VID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vid</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">DID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">did</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">RID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rid</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="Cfg.print_pch_info">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.print_pch_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_pch_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Platform: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_longname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">VID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_vid</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">DID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_did</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">RID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_rid</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Cfg.print_supported_chipsets">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.print_supported_chipsets">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_supported_chipsets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fmtStr</span> <span class="o">=</span> <span class="s2">&quot; </span><span class="si">{:4}</span><span class="s2"> | </span><span class="si">{:4}</span><span class="s2"> | </span><span class="si">{:14}</span><span class="s2"> | </span><span class="si">{:6}</span><span class="s2"> | </span><span class="si">{:40}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Supported platforms:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">fmtStr</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;VID&quot;</span><span class="p">,</span> <span class="s2">&quot;DID&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Long Name&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">85</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_vid</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc_dictionary</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_did</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc_dictionary</span><span class="p">[</span><span class="n">_vid</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc_dictionary</span><span class="p">[</span><span class="n">_vid</span><span class="p">][</span><span class="n">_did</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">fmtStr</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_vid</span><span class="p">,</span> <span class="n">_did</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;longname&#39;</span><span class="p">][:</span><span class="mi">40</span><span class="p">]))</span></div>
+
+
+    <span class="c1">###</span>
+    <span class="c1"># Private config functions</span>
+    <span class="c1">###</span>
+    <span class="k">def</span> <span class="nf">_get_stage_parsers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">):</span>
+        <span class="n">handlers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">parser</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parsers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_stage</span><span class="p">()</span> <span class="o">!=</span> <span class="n">stage</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">handlers</span>
+
+    <span class="k">def</span> <span class="nf">_update_supported_platforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf_data</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">family</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">proc_code</span><span class="p">:</span>
+            <span class="n">fam</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">family</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">fam</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PROC_FAMILY</span><span class="p">:</span>
+                <span class="n">PROC_FAMILY</span><span class="p">[</span><span class="n">fam</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">PROC_FAMILY</span><span class="p">[</span><span class="n">fam</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">proc_code</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">proc_code</span><span class="p">:</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc_dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proc_codes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">proc_code</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">proc_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">proc_code</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">proc_code</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">pch_code</span><span class="p">:</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pch_dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pch_codes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">pch_code</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">pch_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">pch_code</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">pch_code</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_dictionary</span>
+            <span class="k">if</span> <span class="s1">&#39;devices&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="s1">&#39;devices&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="s1">&#39;devices&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf_data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">vid_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dest</span><span class="p">:</span>
+            <span class="n">dest</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">vid_str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">sku</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">sku_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">did</span> <span class="ow">in</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;did&#39;</span><span class="p">]:</span>
+                <span class="n">did_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="n">did</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">did_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dest</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">vid_str</span><span class="p">]:</span>
+                    <span class="n">dest</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;req_pch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">req_pch</span>
+                <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;detect&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">detect_vals</span>
+                <span class="n">dest</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sku</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_find_sku_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_ref</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">detect_val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">possible_sku</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">vid_str</span> <span class="ow">in</span> <span class="n">dict_ref</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">did_str</span> <span class="ow">in</span> <span class="n">dict_ref</span><span class="p">[</span><span class="n">vid_str</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">sku</span> <span class="ow">in</span> <span class="n">dict_ref</span><span class="p">[</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">code</span> <span class="ow">and</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">code</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">code</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">vid_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="k">if</span> <span class="n">did_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">]:</span>
+                            <span class="k">continue</span>
+                        <span class="k">if</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;detect&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">detect_val</span> <span class="ow">and</span> <span class="n">detect_val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;detect&#39;</span><span class="p">]:</span>
+                            <span class="n">possible_sku</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sku</span><span class="p">)</span>
+                            <span class="k">continue</span>
+                    <span class="k">return</span> <span class="n">sku</span>
+        <span class="k">if</span> <span class="n">possible_sku</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_sku</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s2">&quot;Multiple SKUs found for detection value&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">possible_sku</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="k">def</span> <span class="nf">_find_did</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sku</span><span class="p">):</span>
+        <span class="n">vid_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="n">sku</span><span class="p">[</span><span class="s1">&#39;vid&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;did&#39;</span> <span class="ow">in</span> <span class="n">sku</span> <span class="ow">and</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;did&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;did&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">did</span> <span class="ow">in</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;did&#39;</span><span class="p">]:</span>
+                <span class="n">did_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="n">did</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">did_str</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="n">did</span>
+        <span class="k">return</span> <span class="mh">0xFFFF</span>
+
+    <span class="k">def</span> <span class="nf">_get_config_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fxml</span><span class="p">):</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">fxml</span><span class="o">.</span><span class="n">xml_file</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">&#39;configuration&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_load_sec_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_list</span><span class="p">,</span> <span class="n">stage</span><span class="p">):</span>
+        <span class="n">stage_str</span> <span class="o">=</span> <span class="s1">&#39;core&#39;</span> <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="n">Stage</span><span class="o">.</span><span class="n">CORE_SUPPORT</span> <span class="k">else</span> <span class="s1">&#39;custom&#39;</span>
+        <span class="n">tag_handlers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage_parsers</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">load_list</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">tag_handlers</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">fxml</span> <span class="ow">in</span> <span class="n">load_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Loading </span><span class="si">{}</span><span class="s1"> config data: [</span><span class="si">{}</span><span class="s1">] - </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stage_str</span><span class="p">,</span>
+                                                                                 <span class="n">fxml</span><span class="o">.</span><span class="n">dev_name</span><span class="p">,</span>
+                                                                                 <span class="n">fxml</span><span class="o">.</span><span class="n">xml_file</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fxml</span><span class="o">.</span><span class="n">xml_file</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[-] File not found: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fxml</span><span class="o">.</span><span class="n">xml_file</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">config_root</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_config_iter</span><span class="p">(</span><span class="n">fxml</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_handlers</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Loading </span><span class="si">{}</span><span class="s1"> data...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config_root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                        <span class="n">tag_handlers</span><span class="p">[</span><span class="n">tag</span><span class="p">](</span><span class="n">node</span><span class="p">,</span> <span class="n">fxml</span><span class="p">)</span>
+
+    <span class="c1">###</span>
+    <span class="c1"># Config loading functions</span>
+    <span class="c1">###</span>
+<div class="viewcode-block" id="Cfg.load_parsers">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.load_parsers">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_parsers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">parser_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="s1">&#39;chipsec&#39;</span><span class="p">,</span> <span class="s1">&#39;cfg&#39;</span><span class="p">,</span> <span class="s1">&#39;parsers&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">parser_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">CSConfigError</span><span class="p">(</span><span class="s1">&#39;Unable to locate configuration parsers: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parser_path</span><span class="p">))</span>
+        <span class="n">parser_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">parser_path</span><span class="p">))</span>
+                        <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;*.py&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;__init__.py&#39;</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">parser</span> <span class="ow">in</span> <span class="n">parser_files</span><span class="p">:</span>
+            <span class="n">parser_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;chipsec&#39;</span><span class="p">,</span> <span class="s1">&#39;cfg&#39;</span><span class="p">,</span> <span class="s1">&#39;parsers&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">parser</span><span class="p">)[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Importing parser: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parser_name</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">parser_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Failed to import </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parser_name</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;parsers&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Missing parsers variable: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parser</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">parsers</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">parser_obj</span> <span class="o">=</span> <span class="n">obj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Failed to create object: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">parser</span><span class="p">))</span>
+                    <span class="k">continue</span>
+                <span class="n">parser_obj</span><span class="o">.</span><span class="n">startup</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parsers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parser_obj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Cfg.add_extra_configs">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.add_extra_configs">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_extra_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loadnow</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="s1">&#39;chipsec&#39;</span><span class="p">,</span> <span class="s1">&#39;cfg&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_extra</span> <span class="o">=</span> <span class="p">[</span><span class="n">config_data</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+                               <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;*.xml&#39;</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_extra</span> <span class="o">=</span> <span class="p">[</span><span class="n">config_data</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+                               <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;*.xml&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">filename</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CSConfigError</span><span class="p">(</span><span class="s1">&#39;Unable to locate configuration file(s): </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">loadnow</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_extra</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_load_sec_configs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_extra</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">EXTRA</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Cfg.load_platform_info">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.load_platform_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_platform_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tag_handlers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage_parsers</span><span class="p">(</span><span class="n">Stage</span><span class="o">.</span><span class="n">GET_INFO</span><span class="p">)</span>
+        <span class="n">cfg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="s1">&#39;chipsec&#39;</span><span class="p">,</span> <span class="s1">&#39;cfg&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Locate all root configuration files</span>
+        <span class="n">cfg_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cfg_vids</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="ow">and</span> <span class="n">is_hex</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">vid_str</span> <span class="ow">in</span> <span class="n">cfg_vids</span><span class="p">:</span>
+            <span class="n">root_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">,</span> <span class="n">vid_str</span><span class="p">)</span>
+            <span class="n">cfg_files</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">config_data</span><span class="p">(</span><span class="n">vid_str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_path</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+                             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root_path</span><span class="p">))</span>
+                             <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;*.xml&#39;</span><span class="p">)])</span>
+
+        <span class="c1"># Process platform info data and generate lookup tables</span>
+        <span class="k">for</span> <span class="n">fxml</span> <span class="ow">in</span> <span class="n">cfg_files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Processing platform config information: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fxml</span><span class="o">.</span><span class="n">xml_file</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">config_root</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_config_iter</span><span class="p">(</span><span class="n">fxml</span><span class="p">):</span>
+                <span class="n">stage_data</span> <span class="o">=</span> <span class="n">stage_info</span><span class="p">(</span><span class="n">fxml</span><span class="o">.</span><span class="n">vid_str</span><span class="p">,</span> <span class="n">config_root</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_handlers</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config_root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">tag_handlers</span><span class="p">[</span><span class="n">tag</span><span class="p">](</span><span class="n">node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_supported_platforms</span><span class="p">(</span><span class="n">fxml</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Create platform global data</span>
+        <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proc_codes</span><span class="p">:</span>
+            <span class="nb">globals</span><span class="p">()[</span><span class="s2">&quot;CHIPSET_CODE_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">upper</span><span class="p">())]</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">pc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pch_codes</span><span class="p">:</span>
+            <span class="nb">globals</span><span class="p">()[</span><span class="s2">&quot;PCH_CODE_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pc</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">())]</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Cfg.platform_detection">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.platform_detection">[docs]</a>
+    <span class="k">def</span> <span class="nf">platform_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc_code</span><span class="p">,</span> <span class="n">pch_code</span><span class="p">,</span> <span class="n">cpuid</span><span class="p">):</span>
+        <span class="c1"># Detect processor files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cpuid</span> <span class="o">=</span> <span class="n">cpuid</span>
+        <span class="n">sku</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_sku_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proc_dictionary</span><span class="p">,</span> <span class="n">proc_code</span><span class="p">,</span> <span class="n">cpuid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sku</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vid</span> <span class="o">=</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;vid&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">did</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_did</span><span class="p">(</span><span class="n">sku</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">proc_code</span><span class="p">:</span>
+                <span class="n">vid_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vid</span><span class="p">)</span>
+                <span class="n">did_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">did</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">][</span><span class="s1">&#39;rid&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">longname</span> <span class="o">=</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;longname&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">req_pch</span> <span class="o">=</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;req_pch&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Detect PCH files</span>
+        <span class="n">sku</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_sku_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_dictionary</span><span class="p">,</span> <span class="n">pch_code</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sku</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pch_vid</span> <span class="o">=</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;vid&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pch_did</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_did</span><span class="p">(</span><span class="n">sku</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pch_code</span> <span class="o">=</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pch_code</span><span class="p">:</span>
+                <span class="n">vid_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_vid</span><span class="p">)</span>
+                <span class="n">did_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_hex_key_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_did</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pch_rid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONFIG_PCI_RAW</span><span class="p">[</span><span class="n">vid_str</span><span class="p">][</span><span class="n">did_str</span><span class="p">][</span><span class="s1">&#39;rid&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pch_longname</span> <span class="o">=</span> <span class="n">sku</span><span class="p">[</span><span class="s1">&#39;longname&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Create XML file load list</span>
+        <span class="k">if</span> <span class="n">LOAD_COMMON</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_common_xml</span><span class="p">())</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pch_code</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pch_code</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;devices&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">platform_xml_files</span><span class="p">[</span><span class="s1">&#39;devices&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="Cfg.load_platform_config">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.load_platform_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_platform_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sec_load_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tag_handlers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stage_parsers</span><span class="p">(</span><span class="n">Stage</span><span class="o">.</span><span class="n">DEVICE_CFG</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fxml</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Loading primary config data: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fxml</span><span class="o">.</span><span class="n">xml_file</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">config_root</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_config_iter</span><span class="p">(</span><span class="n">fxml</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_handlers</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[*] Collecting </span><span class="si">{}</span><span class="s1"> configuration data...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config_root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                        <span class="n">sec_load_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tag_handlers</span><span class="p">[</span><span class="n">tag</span><span class="p">](</span><span class="n">node</span><span class="p">,</span> <span class="n">fxml</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_sec_configs</span><span class="p">(</span><span class="n">sec_load_list</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">CORE_SUPPORT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_sec_configs</span><span class="p">(</span><span class="n">sec_load_list</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">CUST_SUPPORT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_extra</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_load_sec_configs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_extra</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">EXTRA</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Cfg.get_common_xml">
+<a class="viewcode-back" href="../../modules/chipsec.config.html#chipsec.config.Cfg.get_common_xml">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_common_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cfg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="s1">&#39;chipsec&#39;</span><span class="p">,</span> <span class="s1">&#39;cfg&#39;</span><span class="p">)</span>
+        <span class="n">vid</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vid</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="c1"># Locate all common configuration files</span>
+        <span class="n">cfg_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cfg_vids</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span> <span class="ow">and</span> <span class="n">is_hex</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">cfg_vids</span><span class="p">:</span>
+            <span class="n">root_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">,</span> <span class="n">vid</span><span class="p">)</span>
+            <span class="n">cfg_files</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">config_data</span><span class="p">(</span><span class="n">vid</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_path</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+                             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root_path</span><span class="p">))</span>
+                             <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;*.xml&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;common*&#39;</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">cfg_files</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.config</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

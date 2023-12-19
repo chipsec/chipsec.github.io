@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.utilcmd.lock_check_cmd &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.lock_check_cmd</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.utilcmd.lock_check_cmd</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util check list</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util check lock &lt;lockname&gt;</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util check lock &lt;lockname1, lockname2, ...&gt;</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util check all</span>
+
+<span class="sd">Examples:</span>
+
+<span class="sd">&gt;&gt;&gt; chipsec_util check list</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util check lock DebugLock</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util check all</span>
+
+<span class="sd">KEY:</span>
+<span class="sd">    Lock Name - Name of Lock within configuration file</span>
+<span class="sd">    State     - Lock Configuration</span>
+<span class="sd">    </span>
+<span class="sd">        Undefined - Lock is not defined within configuration</span>
+<span class="sd">        Undoc     - Lock is missing configuration information</span>
+<span class="sd">        Hidden    - Lock is in a disabled or hidden state (unable to read the lock)</span>
+<span class="sd">        Unlocked  - Lock does not match value within configuration</span>
+<span class="sd">        Locked    - Lock matches value within configuration</span>
+<span class="sd">        RW/O      - Lock is identified as register is RW/O</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.command</span> <span class="kn">import</span> <span class="n">BaseCommand</span><span class="p">,</span> <span class="n">toLoad</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.locks</span> <span class="kn">import</span> <span class="n">locks</span><span class="p">,</span> <span class="n">LockResult</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">is_set</span>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand">[docs]</a>
+<span class="k">class</span> <span class="nc">LOCKCHECKCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+
+    <span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;0.5&quot;</span>
+
+<div class="viewcode-block" id="LOCKCHECKCommand.requirements">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.requirements">[docs]</a>
+    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">toLoad</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">toLoad</span><span class="o">.</span><span class="n">All</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.parse_arguments">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.parse_arguments">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util check&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="n">LOCKCHECKCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+        <span class="n">parser_lockname</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">parser_lockname</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;lockname&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;locknames&quot;</span><span class="p">)</span>
+
+        <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
+
+        <span class="c1"># list</span>
+        <span class="n">parser_list</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">)</span>
+        <span class="n">parser_list</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">list_locks</span><span class="p">)</span>
+
+        <span class="c1"># checkall</span>
+        <span class="n">parser_checkall</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">parser_checkall</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkall_locks</span><span class="p">)</span>
+
+        <span class="c1"># check</span>
+        <span class="n">parser_check</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;lock&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">parser_lockname</span><span class="p">])</span>
+        <span class="n">parser_check</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">check_lock</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.set_up">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.set_up">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flip_consistency_checking</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">consistency_checking</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flip_consistency_checking</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">consistency_checking</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">set_always_flush</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_locks</span> <span class="o">=</span> <span class="n">locks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LOCKCHECKCommand.tear_down">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.tear_down">[docs]</a>
+    <span class="k">def</span> <span class="nf">tear_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">set_always_flush</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flip_consistency_checking</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">consistency_checking</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.log_key">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.log_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">log_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">KEY:</span>
+<span class="se">\t</span><span class="s2">Lock Name - Name of Lock within configuration file</span>
+<span class="se">\t</span><span class="s2">State - Lock Configuration</span>
+<span class="se">\t\t</span><span class="s2">Undefined - Lock is not defined within configuration</span>
+<span class="se">\t\t</span><span class="s2">Undoc - Lock is missing configuration information</span>
+<span class="se">\t\t</span><span class="s2">Hidden - Lock is in a disabled or hidden state (unable to read the lock)</span>
+<span class="se">\t\t</span><span class="s2">Unlocked - Lock does not match value within configuration</span>
+<span class="se">\t\t</span><span class="s2">Locked - Lock matches value within configuration</span>
+<span class="se">\t\t</span><span class="s2">RW/O - Lock is identified as register is RW/O</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.log_header">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.log_header">[docs]</a>
+    <span class="k">def</span> <span class="nf">log_header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot;Lock Name&quot;</span><span class="si">:</span><span class="s1">^27</span><span class="si">}</span><span class="s1">|</span><span class="si">{</span><span class="s2">&quot;State&quot;</span><span class="si">:</span><span class="s1">^16</span><span class="si">}</span><span class="s1">|</span><span class="si">{</span><span class="s2">&quot;Consistent&quot;</span><span class="si">:</span><span class="s1">^16</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="s2">&quot;-&quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">58</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.list_locks">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.list_locks">[docs]</a>
+    <span class="k">def</span> <span class="nf">list_locks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Locks identified within the configuration:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">lock</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locks</span><span class="o">.</span><span class="n">get_locks</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.checkall_locks">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.checkall_locks">[docs]</a>
+    <span class="k">def</span> <span class="nf">checkall_locks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">locks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locks</span><span class="o">.</span><span class="n">get_locks</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">locks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Did not find any locks&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_key</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_header</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">lock</span> <span class="ow">in</span> <span class="n">locks</span><span class="p">:</span>
+            <span class="n">is_locked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locks</span><span class="o">.</span><span class="n">is_locked</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span>
+            <span class="n">is_locked_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_log</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">is_locked</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">is_locked_str</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.check_lock">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.check_lock">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_key</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_header</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">lock</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lockname</span><span class="p">:</span>
+            <span class="n">is_locked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locks</span><span class="o">.</span><span class="n">is_locked</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span>
+            <span class="n">is_locked_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_log</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">is_locked</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">is_locked_str</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="LOCKCHECKCommand.check_log">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.lock_check_cmd.html#chipsec.utilcmd.lock_check_cmd.LOCKCHECKCommand.check_log">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_locked</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">consistent</span> <span class="o">=</span> <span class="s2">&quot;N/A&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_set</span><span class="p">(</span><span class="n">is_locked</span><span class="p">,</span> <span class="n">LockResult</span><span class="o">.</span><span class="n">DEFINED</span><span class="p">):</span>
+            <span class="n">res_str</span> <span class="o">=</span> <span class="s1">&#39;Undefined&#39;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_set</span><span class="p">(</span><span class="n">is_locked</span><span class="p">,</span> <span class="n">LockResult</span><span class="o">.</span><span class="n">HAS_CONFIG</span><span class="p">):</span>
+            <span class="n">res_str</span> <span class="o">=</span> <span class="s1">&#39;Undoc&#39;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_set</span><span class="p">(</span><span class="n">is_locked</span><span class="p">,</span> <span class="n">LockResult</span><span class="o">.</span><span class="n">CAN_READ</span><span class="p">):</span>
+            <span class="n">res_str</span> <span class="o">=</span> <span class="s1">&#39;Hidden&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_lock_type</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;RW/O&quot;</span><span class="p">:</span>
+            <span class="n">res_str</span> <span class="o">=</span> <span class="s1">&#39;RW/O&#39;</span>
+        <span class="k">elif</span> <span class="n">is_set</span><span class="p">(</span><span class="n">is_locked</span><span class="p">,</span> <span class="n">LockResult</span><span class="o">.</span><span class="n">LOCKED</span><span class="p">):</span>
+            <span class="n">res_str</span> <span class="o">=</span> <span class="s1">&#39;Locked&#39;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_set</span><span class="p">(</span><span class="n">is_locked</span><span class="p">,</span> <span class="n">LockResult</span><span class="o">.</span><span class="n">LOCKED</span><span class="p">):</span>
+            <span class="n">res_str</span> <span class="o">=</span> <span class="s1">&#39;UnLocked&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res_str</span> <span class="o">=</span> <span class="s1">&#39;Unknown&#39;</span>
+        <span class="k">if</span> <span class="n">res_str</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;RW/O&quot;</span><span class="p">,</span> <span class="s2">&quot;Locked&quot;</span><span class="p">,</span> <span class="s2">&quot;UnLocked&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">is_set</span><span class="p">(</span><span class="n">is_locked</span><span class="p">,</span> <span class="n">LockResult</span><span class="o">.</span><span class="n">INCONSISTENT</span><span class="p">):</span>
+            <span class="n">consistent</span> <span class="o">=</span> <span class="s2">&quot;No&quot;</span>
+        <span class="k">elif</span> <span class="n">res_str</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;RW/O&quot;</span><span class="p">,</span> <span class="s2">&quot;Locked&quot;</span><span class="p">,</span> <span class="s2">&quot;UnLocked&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_set</span><span class="p">(</span><span class="n">is_locked</span><span class="p">,</span> <span class="n">LockResult</span><span class="o">.</span><span class="n">INCONSISTENT</span><span class="p">):</span>
+            <span class="n">consistent</span> <span class="o">=</span> <span class="s2">&quot;Yes&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lock</span><span class="p">[:</span><span class="mi">26</span><span class="p">]</span><span class="si">:</span><span class="s1">27</span><span class="si">}</span><span class="s1">|  </span><span class="si">{</span><span class="n">res_str</span><span class="si">:</span><span class="s1">14</span><span class="si">}</span><span class="s1">|</span><span class="si">{</span><span class="n">consistent</span><span class="si">:</span><span class="s1">^16</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+</div>
+
+
+
+<span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;check&#39;</span><span class="p">:</span> <span class="n">LOCKCHECKCommand</span><span class="p">}</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.lock_check_cmd</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

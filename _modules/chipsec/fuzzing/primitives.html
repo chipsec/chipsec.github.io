@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.fuzzing.primitives &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.fuzzing.primitives</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.fuzzing.primitives</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+
+
+<span class="c1">########################################################################################################################</span>
+
+
+<div class="viewcode-block" id="base_primitive">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.base_primitive">[docs]</a>
+<span class="k">class</span> <span class="nc">base_primitive</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The primitive base class implements common functionality shared across most primitives.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">False</span>     <span class="c1"># this flag is raised when the mutations are exhausted.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span> <span class="o">=</span> <span class="p">[]</span>        <span class="c1"># library of static fuzz heuristics to cycle through.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="o">=</span> <span class="kc">True</span>      <span class="c1"># flag controlling whether or not the given primitive is to be fuzzed.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">=</span> <span class="mi">0</span>         <span class="c1"># current mutation index into the fuzz library.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># original value of primitive.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>        <span class="c1"># rendered value of primitive.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># current value of primitive.</span>
+
+<div class="viewcode-block" id="base_primitive.exhaust">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.base_primitive.exhaust">[docs]</a>
+    <span class="k">def</span> <span class="nf">exhaust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Exhaust the possible mutations for this primitive.</span>
+
+<span class="sd">        @rtype:  Integer</span>
+<span class="sd">        @return: The number of mutations to reach exhaustion</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mutations</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mutations</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span>
+
+        <span class="k">return</span> <span class="n">num</span></div>
+
+
+<div class="viewcode-block" id="base_primitive.mutate">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.base_primitive.mutate">[docs]</a>
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Mutate the primitive by stepping through the fuzz library, return False on completion.</span>
+
+<span class="sd">        @rtype:  Boolean</span>
+<span class="sd">        @return: True on success, False otherwise.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># if we&#39;ve ran out of mutations, raise the completion flag.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mutations</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># if fuzzing was disabled or complete, and mutate() is called, ensure the original value is restored.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># update the current value from the fuzz library.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span><span class="p">]</span>
+
+        <span class="c1"># increment the mutation count.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="base_primitive.num_mutations">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.base_primitive.num_mutations">[docs]</a>
+    <span class="k">def</span> <span class="nf">num_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Calculate and return the total number of mutations for this individual primitive.</span>
+
+<span class="sd">        @rtype:  Integer</span>
+<span class="sd">        @return: Number of mutated forms this primitive can take</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="base_primitive.render">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.base_primitive.render">[docs]</a>
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Nothing fancy on render, simply return the value.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span></div>
+
+
+<div class="viewcode-block" id="base_primitive.reset">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.base_primitive.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Reset this primitive to the starting mutation state.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span></div>
+</div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="delim">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.delim">[docs]</a>
+<span class="k">class</span> <span class="nc">delim</span><span class="p">(</span><span class="n">base_primitive</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Represent a delimiter such as :,\r,\n, ,=,&gt;,&lt; etc... Mutations include repetition, substitution and exclusion.</span>
+
+<span class="sd">        @type  value:    Character</span>
+<span class="sd">        @param value:    Original value</span>
+<span class="sd">        @type  fuzzable: Boolean</span>
+<span class="sd">        @param fuzzable: (Optional, def=True) Enable/disable fuzzing of this primitive</span>
+<span class="sd">        @type  name:     String</span>
+<span class="sd">        @param name:     (Optional, def=None) Specifying a name gives you direct access to a primitive</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">delim</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="o">=</span> <span class="n">fuzzable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;delim&quot;</span>   <span class="c1"># for ease of object identification</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># build the library of fuzz heuristics.</span>
+        <span class="c1">#</span>
+
+        <span class="c1"># if the default delim is not blank, repeat it a bunch of times.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">25</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+
+        <span class="c1"># try omitting the delimiter.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># if the delimiter is a space, try throwing out some tabs.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+
+        <span class="c1"># toss in some other common delimiters:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> &quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t\r\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;%&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;^&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;: &quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;:7&quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">512</span><span class="p">)</span></div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="group">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.group">[docs]</a>
+<span class="k">class</span> <span class="nc">group</span><span class="p">(</span><span class="n">base_primitive</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This primitive represents a list of static values, stepping through each one on mutation. You can tie a block</span>
+<span class="sd">        to a group primitive to specify that the block should cycle through all possible mutations for *each* value</span>
+<span class="sd">        within the group. The group primitive is useful for example for representing a list of valid opcodes.</span>
+
+<span class="sd">        @type  name:   String</span>
+<span class="sd">        @param name:   Name of group</span>
+<span class="sd">        @type  values: List or raw data</span>
+<span class="sd">        @param values: List of possible raw values this group can take.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;group&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># sanity check that values list only contains strings (or raw data)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;Value list may only contain strings or raw data&quot;</span>
+
+<div class="viewcode-block" id="group.mutate">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.group.mutate">[docs]</a>
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Move to the next item in the values list.</span>
+
+<span class="sd">        @rtype:  False</span>
+<span class="sd">        @return: False</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mutations</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># if fuzzing was disabled or complete, and mutate() is called, ensure the original value is restored.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># step through the value list.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span><span class="p">]</span>
+
+        <span class="c1"># increment the mutation count.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="group.num_mutations">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.group.num_mutations">[docs]</a>
+    <span class="k">def</span> <span class="nf">num_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Number of values in this primitive.</span>
+
+<span class="sd">        @rtype:  Integer</span>
+<span class="sd">        @return: Number of values in this primitive.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="random_data">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.random_data">[docs]</a>
+<span class="k">class</span> <span class="nc">random_data</span><span class="p">(</span><span class="n">base_primitive</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">max_mutations</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generate a random chunk of data while maintaining a copy of the original. A random length range can be specified.</span>
+<span class="sd">        For a static length, set min/max length to be the same.</span>
+
+<span class="sd">        @type  value:         Raw</span>
+<span class="sd">        @param value:         Original value</span>
+<span class="sd">        @type  min_length:    Integer</span>
+<span class="sd">        @param min_length:    Minimum length of random block</span>
+<span class="sd">        @type  max_length:    Integer</span>
+<span class="sd">        @param max_length:    Maximum length of random block</span>
+<span class="sd">        @type  max_mutations: Integer</span>
+<span class="sd">        @param max_mutations: (Optional, def=25) Number of mutations to make before reverting to default</span>
+<span class="sd">        @type  fuzzable:      Boolean</span>
+<span class="sd">        @param fuzzable:      (Optional, def=True) Enable/disable fuzzing of this primitive</span>
+<span class="sd">        @type  step:          Integer</span>
+<span class="sd">        @param step:          (Optional, def=None) If not null, step count between min and max reps, otherwise random</span>
+<span class="sd">        @type  name:          String</span>
+<span class="sd">        @param name:          (Optional, def=None) Specifying a name gives you direct access to a primitive</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">random_data</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">=</span> <span class="n">min_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="n">max_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_mutations</span> <span class="o">=</span> <span class="n">max_mutations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="o">=</span> <span class="n">fuzzable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;random_data&quot;</span>  <span class="c1"># for ease of object identification</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_mutations</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="random_data.mutate">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.random_data.mutate">[docs]</a>
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Mutate the primitive value returning False on completion.</span>
+
+<span class="sd">        @rtype:  Boolean</span>
+<span class="sd">        @return: True on success, False otherwise.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># if we&#39;ve ran out of mutations, raise the completion flag.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mutations</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># if fuzzing was disabled or complete, and mutate() is called, ensure the original value is restored.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># select a random length for this string.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">)</span>
+        <span class="c1"># select a length function of the mutant index and the step.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span>
+
+        <span class="c1"># reset the value and generate a random string of the determined length.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+
+        <span class="c1"># increment the mutation count.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="random_data.num_mutations">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.random_data.num_mutations">[docs]</a>
+    <span class="k">def</span> <span class="nf">num_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Calculate and return the total number of mutations for this individual primitive.</span>
+
+<span class="sd">        @rtype:  Integer</span>
+<span class="sd">        @return: Number of mutated forms this primitive can take</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_mutations</span></div>
+</div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="static">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.static">[docs]</a>
+<span class="k">class</span> <span class="nc">static</span><span class="p">(</span><span class="n">base_primitive</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Primitive that contains static content.</span>
+
+<span class="sd">        @type  value: Raw</span>
+<span class="sd">        @param value: Raw static data</span>
+<span class="sd">        @type  name:  String</span>
+<span class="sd">        @param name:  (Optional, def=None) Specifying a name gives you direct access to a primitive</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">static</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="o">=</span> <span class="kc">False</span>       <span class="c1"># every primitive needs this attribute.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;static&quot;</span>    <span class="c1"># for ease of object identification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="static.mutate">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.static.mutate">[docs]</a>
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Do nothing.</span>
+
+<span class="sd">        @rtype:  False</span>
+<span class="sd">        @return: False</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="static.num_mutations">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.static.num_mutations">[docs]</a>
+    <span class="k">def</span> <span class="nf">num_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Return 0.</span>
+
+<span class="sd">        @rtype:  0</span>
+<span class="sd">        @return: 0</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="mi">0</span></div>
+</div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="string">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.string">[docs]</a>
+<span class="k">class</span> <span class="nc">string</span><span class="p">(</span><span class="n">base_primitive</span><span class="p">):</span>
+    <span class="c1"># store fuzz_library as a class variable to avoid copying the ~70MB structure across each instantiated primitive.</span>
+    <span class="n">fuzz_library</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Primitive that cycles through a library of &quot;bad&quot; strings. The class variable &#39;fuzz_library&#39; contains a list of</span>
+<span class="sd">        smart fuzz values global across all instances. The &#39;this_library&#39; variable contains fuzz values specific to</span>
+<span class="sd">        the instantiated primitive. This allows us to avoid copying the near ~70MB fuzz_library data structure across</span>
+<span class="sd">        each instantiated primitive.</span>
+
+<span class="sd">        @type  value:    String</span>
+<span class="sd">        @param value:    Default string value</span>
+<span class="sd">        @type  size:     Integer</span>
+<span class="sd">        @param size:     (Optional, def=-1) Static size of this field, leave -1 for dynamic.</span>
+<span class="sd">        @type  padding:  Character</span>
+<span class="sd">        @param padding:  (Optional, def=&quot;\\x00&quot;) Value to use as padding to fill static field size.</span>
+<span class="sd">        @type  encoding: String</span>
+<span class="sd">        @param encoding: (Optonal, def=&quot;ascii&quot;) String encoding, ex: utf_16_le for Microsoft Unicode.</span>
+<span class="sd">        @type  fuzzable: Boolean</span>
+<span class="sd">        @param fuzzable: (Optional, def=True) Enable/disable fuzzing of this primitive</span>
+<span class="sd">        @type  max_len:  Integer</span>
+<span class="sd">        @param max_len:  (Optional, def=0) Maximum string length</span>
+<span class="sd">        @type  name:     String</span>
+<span class="sd">        @param name:     (Optional, def=None) Specifying a name gives you direct access to a primitive</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="o">=</span> <span class="n">fuzzable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>  <span class="c1"># for ease of object identification</span>
+
+        <span class="c1"># add this specific primitives repitition values to the unique fuzz library.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">this_library</span> <span class="o">=</span> \
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+
+                <span class="c1"># UTF-8</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\xfe</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\xfe</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\xfe</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="c1"># if the fuzz library has not yet been initialized, do so with all the global values.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="p">:</span>
+            <span class="n">string</span><span class="o">.</span><span class="n">fuzz_library</span> <span class="o">=</span> \
+                <span class="p">[</span>
+                    <span class="c1"># omission.</span>
+                    <span class="s2">&quot;&quot;</span><span class="p">,</span>
+
+                    <span class="c1"># strings ripped from spike (and some others I added)</span>
+                    <span class="s2">&quot;/.:/&quot;</span> <span class="o">+</span> <span class="s2">&quot;A&quot;</span> <span class="o">*</span> <span class="mi">5000</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\x00\x00</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;/.../&quot;</span> <span class="o">+</span> <span class="s2">&quot;A&quot;</span> <span class="o">*</span> <span class="mi">5000</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\x00\x00</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;/.../.../.../.../.../.../.../.../.../.../&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;/../../../../../../../../../../../../etc/passwd&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;/../../../../../../../../../../../../boot.ini&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;..:..:..:..:..:..:..:..:..:..:..:..:..:&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\\\\</span><span class="s2">*&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\\\\</span><span class="s2">?</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;/</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">5000</span><span class="p">,</span>
+                    <span class="s2">&quot;/.&quot;</span> <span class="o">*</span> <span class="mi">5000</span><span class="p">,</span>
+                    <span class="s2">&quot;!@#$</span><span class="si">%%</span><span class="s2">^#$%#$@#$%$$@#$%^^**(()&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%01%</span><span class="s2">02</span><span class="si">%03%</span><span class="s2">04</span><span class="si">%0a%0d%0a</span><span class="s2">ADSF&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%01%</span><span class="s2">02%03@</span><span class="si">%04%</span><span class="s2">0a</span><span class="si">%0d%0a</span><span class="s2">ADSF&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;/%00/&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;%00/&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;%00&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%u</span><span class="s2">0000&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;%</span><span class="se">\xfe\xf0</span><span class="s2">%</span><span class="se">\x00\xff</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;%</span><span class="se">\xfe\xf0</span><span class="s2">%</span><span class="se">\x01\xff</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span>
+
+                    <span class="c1"># format strings.</span>
+                    <span class="s2">&quot;%n&quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+                    <span class="s2">&quot;%n&quot;</span> <span class="o">*</span> <span class="mi">500</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">%n</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">500</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">500</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">500</span><span class="p">,</span>
+
+                    <span class="c1"># command injection.</span>
+                    <span class="s2">&quot;|touch /tmp/SULLEY&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;;touch /tmp/SULLEY;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;|notepad&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;;notepad;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">notepad</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+
+                    <span class="c1"># SQL injection.</span>
+                    <span class="s2">&quot;1;SELECT%20*&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;&#39;sqlattempt1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;(sqlattempt2)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;OR%201=1&quot;</span><span class="p">,</span>
+
+                    <span class="c1"># some binary strings.</span>
+                    <span class="s2">&quot;</span><span class="se">\xde\xad\xbe\xef</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\xde\xad\xbe\xef</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\xde\xad\xbe\xef</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\xde\xad\xbe\xef</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\xde\xad\xbe\xef</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+
+                    <span class="c1"># miscellaneous.</span>
+                    <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+                    <span class="s2">&quot;&lt;&gt;&quot;</span> <span class="o">*</span> <span class="mi">500</span><span class="p">,</span>         <span class="c1"># sendmail crackaddr (http://lsd-pl.net/other/sendmail.txt)</span>
+                <span class="p">]</span>
+
+            <span class="c1"># add some long strings.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;3&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;a=&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;%&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;}&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x14</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xFE</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># expands to 4 characters under utf16</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_long_strings</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xFF</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># expands to 4 characters under utf16</span>
+
+            <span class="c1"># add some long strings with null bytes thrown in the middle of it.</span>
+            <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">32767</span><span class="p">,</span> <span class="mh">0xFFFF</span><span class="p">]:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span> <span class="o">*</span> <span class="n">length</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:]</span>
+                <span class="n">string</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+            <span class="c1"># if the optional file &#39;.fuzz_strings&#39; is found, parse each line as a new entry for the fuzz library.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;.fuzz_strings&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">fuzz_string</span> <span class="ow">in</span> <span class="n">fh</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+                    <span class="n">fuzz_string</span> <span class="o">=</span> <span class="n">fuzz_string</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">fuzz_string</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                        <span class="n">string</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fuzz_string</span><span class="p">)</span>
+
+                <span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="c1"># delete strings which length is greater than max_len.</span>
+        <span class="k">if</span> <span class="n">max_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_len</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_library</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">this_library</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">s</span><span class="p">[:</span><span class="n">max_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_library</span><span class="p">]))</span>
+
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_len</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">s</span><span class="p">[:</span><span class="n">max_len</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="string.add_long_strings">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.string.add_long_strings">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_long_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Given a sequence, generate a number of selectively chosen strings lengths of the given sequence and add to the</span>
+<span class="sd">        string heuristic library.</span>
+
+<span class="sd">        @type  sequence: String</span>
+<span class="sd">        @param sequence: Sequence to repeat for creation of fuzz strings.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">257</span><span class="p">,</span> <span class="mi">511</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">513</span><span class="p">,</span> <span class="mi">1023</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">2049</span><span class="p">,</span> <span class="mi">4095</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">4097</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span>
+                       <span class="mi">32762</span><span class="p">,</span> <span class="mi">32763</span><span class="p">,</span> <span class="mi">32764</span><span class="p">,</span> <span class="mi">32765</span><span class="p">,</span> <span class="mi">32766</span><span class="p">,</span> <span class="mi">32767</span><span class="p">,</span> <span class="mi">32768</span><span class="p">,</span> <span class="mi">32769</span><span class="p">,</span> <span class="mh">0xFFFF</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mh">0xFFFF</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mh">0xFFFF</span><span class="p">,</span> <span class="mh">0xFFFF</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                       <span class="mh">0xFFFF</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">99999</span><span class="p">,</span> <span class="mi">100000</span><span class="p">,</span> <span class="mi">500000</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">]:</span>
+
+            <span class="n">long_string</span> <span class="o">=</span> <span class="n">sequence</span> <span class="o">*</span> <span class="n">length</span>
+            <span class="n">string</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">long_string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="string.mutate">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.string.mutate">[docs]</a>
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Mutate the primitive by stepping through the fuzz library extended with the &quot;this&quot; library, return False on</span>
+<span class="sd">        completion.</span>
+
+<span class="sd">        @rtype:  Boolean</span>
+<span class="sd">        @return: True on success, False otherwise.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># loop through the fuzz library until a suitable match is found.</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># if we&#39;ve ran out of mutations, raise the completion flag.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mutations</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># if fuzzing was disabled or complete, and mutate() is called, ensure the original value is restored.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_complete</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="c1"># update the current value from the fuzz library.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">this_library</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span><span class="p">]</span>
+
+            <span class="c1"># increment the mutation count.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mutant_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># if the size parameter is disabled, break out of the loop right now.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="c1"># ignore library items greater then user-supplied length.</span>
+            <span class="c1"># TODO: might want to make this smarter.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># pad undersized library items.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="string.num_mutations">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.string.num_mutations">[docs]</a>
+    <span class="k">def</span> <span class="nf">num_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Calculate and return the total number of mutations for this individual primitive.</span>
+
+<span class="sd">        @rtype:  Integer</span>
+<span class="sd">        @return: Number of mutated forms this primitive can take</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">this_library</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="string.render">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.string.render">[docs]</a>
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Render the primitive, encode the string according to the specified encoding.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># try to encode the string properly and fall back to the default value on failure.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span></div>
+</div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="bit_field">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.bit_field">[docs]</a>
+<span class="k">class</span> <span class="nc">bit_field</span><span class="p">(</span><span class="n">base_primitive</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">max_num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endian</span><span class="o">=</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;binary&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_range</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        The bit field primitive represents a number of variable length and is used to define all other integer types.</span>
+
+<span class="sd">        @type  value:      Integer</span>
+<span class="sd">        @param value:      Default integer value</span>
+<span class="sd">        @type  width:      Integer</span>
+<span class="sd">        @param width:      Width of bit fields</span>
+<span class="sd">        @type  endian:     Character</span>
+<span class="sd">        @param endian:     (Optional, def=LITTLE_ENDIAN) Endianess of the bit field (LITTLE_ENDIAN: &lt;, BIG_ENDIAN: &gt;)</span>
+<span class="sd">        @type  format:     String</span>
+<span class="sd">        @param format:     (Optional, def=binary) Output format, &quot;binary&quot; or &quot;ascii&quot;</span>
+<span class="sd">        @type  signed:     Boolean</span>
+<span class="sd">        @param signed:     (Optional, def=False) Make size signed vs. unsigned (applicable only with format=&quot;ascii&quot;)</span>
+<span class="sd">        @type  full_range: Boolean</span>
+<span class="sd">        @param full_range: (Optional, def=False) If enabled the field mutates through *all* possible values.</span>
+<span class="sd">        @type  fuzzable:   Boolean</span>
+<span class="sd">        @param fuzzable:   (Optional, def=True) Enable/disable fuzzing of this primitive</span>
+<span class="sd">        @type  name:       String</span>
+<span class="sd">        @param name:       (Optional, def=None) Specifying a name gives you direct access to a primitive</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">bit_field</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The supplied value must be either an Int, Long, List or Tuple.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">=</span> <span class="n">max_num</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endian</span> <span class="o">=</span> <span class="n">endian</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">signed</span> <span class="o">=</span> <span class="n">signed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">full_range</span> <span class="o">=</span> <span class="n">full_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuzzable</span> <span class="o">=</span> <span class="n">fuzzable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>        <span class="c1"># rendered value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cyclic_index</span> <span class="o">=</span> <span class="mi">0</span>         <span class="c1"># when cycling through non-mutating values</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_decimal</span><span class="p">(</span><span class="s2">&quot;1&quot;</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># build the fuzz library.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_range</span><span class="p">:</span>
+            <span class="c1"># add all possible values.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_num</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="c1"># Use the supplied values as the fuzz library.</span>
+                <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># try only &quot;smart&quot; values.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">//</span> <span class="mi">8</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">//</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span> <span class="o">//</span> <span class="mi">32</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_num</span><span class="p">)</span>
+
+        <span class="c1"># if the optional file &#39;.fuzz_ints&#39; is found, parse each line as a new entry for the fuzz library.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;.fuzz_ints&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">fuzz_int</span> <span class="ow">in</span> <span class="n">fh</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+                <span class="c1"># convert the line into an integer, continue on failure.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">fuzz_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fuzz_int</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">fuzz_int</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_num</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fuzz_int</span><span class="p">)</span>
+
+            <span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+<div class="viewcode-block" id="bit_field.add_integer_boundaries">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.bit_field.add_integer_boundaries">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_integer_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">integer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add the supplied integer and border cases to the integer fuzz heuristics library.</span>
+
+<span class="sd">        @type  integer: Int</span>
+<span class="sd">        @param integer: Integer to append to fuzz heuristics</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="n">case</span> <span class="o">=</span> <span class="n">integer</span> <span class="o">+</span> <span class="n">i</span>
+
+            <span class="c1"># ensure the border case falls within the valid range for this field.</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">case</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_num</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">case</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fuzz_library</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">case</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="bit_field.render">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.bit_field.render">[docs]</a>
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Render the primitive.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># binary formatting.</span>
+        <span class="c1">#</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;binary&quot;</span><span class="p">:</span>
+            <span class="n">bit_stream</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">rendered</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+
+            <span class="c1"># pad the bit stream to the next byte boundary.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">%</span> <span class="mi">8</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">bit_stream</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_binary</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bit_stream</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">8</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">%</span> <span class="mi">8</span><span class="p">))</span>
+                <span class="n">bit_stream</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_binary</span><span class="p">()</span>
+
+            <span class="c1"># convert the bit stream from a string of bits into raw bytes.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bit_stream</span><span class="p">)</span> <span class="o">//</span> <span class="mi">8</span><span class="p">):</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="n">bit_stream</span><span class="p">[</span><span class="mi">8</span> <span class="o">*</span> <span class="n">i</span><span class="p">:</span><span class="mi">8</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">8</span><span class="p">]</span>
+                <span class="n">rendered</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_decimal</span><span class="p">(</span><span class="n">chunk</span><span class="p">))</span>
+
+            <span class="c1"># if necessary, convert the endianess of the raw bytes.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">endian</span> <span class="o">==</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span>
+                <span class="n">rendered</span> <span class="o">=</span> <span class="n">rendered</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="n">rendered</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># ascii formatting.</span>
+        <span class="c1">#</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if the sign flag is raised and we are dealing with a signed integer (first bit is 1).</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_binary</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+                <span class="n">max_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_decimal</span><span class="p">(</span><span class="s2">&quot;1&quot;</span> <span class="o">+</span> <span class="s2">&quot;0&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+                <span class="c1"># mask off the sign bit.</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_decimal</span><span class="p">(</span><span class="s2">&quot;1&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+                <span class="c1"># account for the fact that the negative scale works backwards.</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">max_num</span> <span class="o">-</span> <span class="n">val</span> <span class="o">-</span> <span class="mi">1</span>
+
+                <span class="c1"># toss in the negative sign.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="o">~</span><span class="n">val</span>
+
+            <span class="c1"># unsigned integer or positive signed integer.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rendered</span></div>
+
+
+<div class="viewcode-block" id="bit_field.to_binary">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.bit_field.to_binary">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bit_count</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Convert a number to a binary string.</span>
+
+<span class="sd">        @type  number:    Integer</span>
+<span class="sd">        @param number:    (Optional, def=self.value) Number to convert</span>
+<span class="sd">        @type  bit_count: Integer</span>
+<span class="sd">        @param bit_count: (Optional, def=self.width) Width of bit string</span>
+
+<span class="sd">        @rtype:  String</span>
+<span class="sd">        @return: Bit string</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="c1"># We have been given a list to cycle through that is not being mutated...</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cyclic_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+                    <span class="c1"># Reset the index.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cyclic_index</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cyclic_index</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cyclic_index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">bit_count</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bit_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">((</span><span class="n">number</span> <span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">bit_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="bit_field.to_decimal">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.bit_field.to_decimal">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_decimal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binary</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Convert a binary string to a decimal number.</span>
+
+<span class="sd">        @type  binary: String</span>
+<span class="sd">        @param binary: Binary string</span>
+
+<span class="sd">        @rtype:  Integer</span>
+<span class="sd">        @return: Converted bit string</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="byte">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.byte">[docs]</a>
+<span class="k">class</span> <span class="nc">byte</span> <span class="p">(</span><span class="n">bit_field</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">endian</span><span class="o">=</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;binary&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_range</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;byte&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">endian</span> <span class="o">+</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">bit_field</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">endian</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">signed</span><span class="p">,</span> <span class="n">full_range</span><span class="p">,</span> <span class="n">fuzzable</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="word">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.word">[docs]</a>
+<span class="k">class</span> <span class="nc">word</span> <span class="p">(</span><span class="n">bit_field</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">endian</span><span class="o">=</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;binary&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_range</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;word&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">endian</span> <span class="o">+</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">bit_field</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">endian</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">signed</span><span class="p">,</span> <span class="n">full_range</span><span class="p">,</span> <span class="n">fuzzable</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="dword">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.dword">[docs]</a>
+<span class="k">class</span> <span class="nc">dword</span> <span class="p">(</span><span class="n">bit_field</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">endian</span><span class="o">=</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;binary&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_range</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;dword&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">endian</span> <span class="o">+</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">bit_field</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">endian</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">signed</span><span class="p">,</span> <span class="n">full_range</span><span class="p">,</span> <span class="n">fuzzable</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+
+<span class="c1">########################################################################################################################</span>
+<div class="viewcode-block" id="qword">
+<a class="viewcode-back" href="../../../modules/chipsec.fuzzing.primitives.html#chipsec.fuzzing.primitives.qword">[docs]</a>
+<span class="k">class</span> <span class="nc">qword</span> <span class="p">(</span><span class="n">bit_field</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">endian</span><span class="o">=</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;binary&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_range</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fuzzable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_type</span> <span class="o">=</span> <span class="s2">&quot;qword&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">endian</span> <span class="o">+</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">bit_field</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">endian</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">signed</span><span class="p">,</span> <span class="n">full_range</span><span class="p">,</span> <span class="n">fuzzable</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.fuzzing.primitives</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

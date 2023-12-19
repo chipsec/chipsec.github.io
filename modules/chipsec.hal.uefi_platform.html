@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>uefi_platform module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <title>chipsec.hal.uefi_platform module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="uefi_search module" href="chipsec.hal.uefi_search.html" />
-    <link rel="prev" title="uefi_fv module" href="chipsec.hal.uefi_fv.html" /> 
+    <link rel="next" title="chipsec.hal.uefi_search module" href="chipsec.hal.uefi_search.html" />
+    <link rel="prev" title="chipsec.hal.uefi_fv module" href="chipsec.hal.uefi_fv.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_search.html" title="uefi_search module"
+          <a href="chipsec.hal.uefi_search.html" title="chipsec.hal.uefi_search module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_fv.html" title="uefi_fv module"
+          <a href="chipsec.hal.uefi_fv.html" title="chipsec.hal.uefi_fv module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">uefi_platform module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_platform module</a></li> 
       </ul>
     </div>  
 
@@ -47,8 +47,286 @@
           <div class="body" role="main">
             
   <section id="module-chipsec.hal.uefi_platform">
-<span id="uefi-platform-module"></span><h1>uefi_platform module<a class="headerlink" href="#module-chipsec.hal.uefi_platform" title="Permalink to this heading">¶</a></h1>
+<span id="chipsec-hal-uefi-platform-module"></span><h1>chipsec.hal.uefi_platform module<a class="headerlink" href="#module-chipsec.hal.uefi_platform" title="Link to this heading">¶</a></h1>
 <p>Platform specific UEFI functionality (parsing platform specific EFI NVRAM, capsules, etc.)</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.EFI_HDR_NVAR1">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_HDR_NVAR1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">StartId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TotalSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">State</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#EFI_HDR_NVAR1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.EFI_HDR_NVAR1" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_NVAR1" title="chipsec.hal.uefi_platform.EFI_HDR_NVAR1"><code class="xref py py-class docutils literal notranslate"><span class="pre">EFI_HDR_NVAR1</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.EFI_HDR_VSS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_HDR_VSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">StartId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">State</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NameSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DataSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#EFI_HDR_VSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">EFI_HDR_VSS</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_HDR_VSS_APPLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">StartId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">State</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NameSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DataSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#EFI_HDR_VSS_APPLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">EFI_HDR_VSS_APPLE</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_HDR_VSS_AUTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">StartId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">State</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MonotonicCount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TimeStamp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TimeStamp2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PubKeyIndex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NameSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DataSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#EFI_HDR_VSS_AUTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><code class="xref py py-class docutils literal notranslate"><span class="pre">EFI_HDR_VSS_AUTH</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.EFIvar_EVSA">
+<span class="sig-name descname"><span class="pre">EFIvar_EVSA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#EFIvar_EVSA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.EFIvar_EVSA" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FWType</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#FWType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_EVSA">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_EVSA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'evsa'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_EVSA" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_NVAR">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_NVAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nvar'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_NVAR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_UEFI">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_UEFI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'uefi'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_UEFI" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_UEFI_AUTH">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_UEFI_AUTH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'uefi_auth'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_UEFI_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_VSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vss'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS2">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_VSS2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vss2'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS2_AUTH">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_VSS2_AUTH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vss2_auth'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS2_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS_APPLE">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_VSS_APPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vss_apple'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS_APPLE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS_AUTH">
+<span class="sig-name descname"><span class="pre">EFI_FW_TYPE_VSS_AUTH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vss_auth'</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.FWType.EFI_FW_TYPE_VSS_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.IS_VARIABLE_STATE">
+<span class="sig-name descname"><span class="pre">IS_VARIABLE_STATE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_Mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#IS_VARIABLE_STATE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.IS_VARIABLE_STATE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.S3BootScriptType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S3BootScriptType</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#S3BootScriptType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.S3BootScriptType" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.S3BootScriptType.EFI_BOOT_SCRIPT_TYPE_DEFAULT">
+<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_TYPE_DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.S3BootScriptType.EFI_BOOT_SCRIPT_TYPE_DEFAULT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.S3BootScriptType.EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT">
+<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">170</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.S3BootScriptType.EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.UEFI_VARIABLE_HEADER">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UEFI_VARIABLE_HEADER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">StartId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">State</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NameSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DataSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VendorGuid0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VendorGuid1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VendorGuid2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VendorGuid3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#UEFI_VARIABLE_HEADER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.UEFI_VARIABLE_HEADER" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_platform.UEFI_VARIABLE_HEADER" title="chipsec.hal.uefi_platform.UEFI_VARIABLE_HEADER"><code class="xref py py-class docutils literal notranslate"><span class="pre">UEFI_VARIABLE_HEADER</span></code></a></p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.UEFI_VARIABLE_STORE_HEADER_SIZE">
+<span class="sig-name descname"><span class="pre">UEFI_VARIABLE_STORE_HEADER_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">28</span></em><a class="headerlink" href="#chipsec.hal.uefi_platform.UEFI_VARIABLE_STORE_HEADER_SIZE" title="Link to this definition">¶</a></dt>
+<dd><p>EFI_VARIABLE_HEADER_AUTH = “&lt;HBBI28sIIIHH8s”
+EFI_VARIABLE_HEADER_AUTH_SIZE = struct.calcsize(EFI_VARIABLE_HEADER_AUTH)</p>
+<p>EFI_VARIABLE_HEADER = “&lt;HBBIIIIHH8s”
+EFI_VARIABLE_HEADER_SIZE = struct.calcsize(EFI_VARIABLE_HEADER)</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VARIABLE_STORE_HEADER_VSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Signature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">State</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#VARIABLE_STORE_HEADER_VSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS" title="chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">VARIABLE_STORE_HEADER_VSS</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VARIABLE_STORE_HEADER_VSS2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Signature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">State</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#VARIABLE_STORE_HEADER_VSS2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS2" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS2" title="chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS2"><code class="xref py py-class docutils literal notranslate"><span class="pre">VARIABLE_STORE_HEADER_VSS2</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.create_s3bootscript_entry_buffer">
+<span class="sig-name descname"><span class="pre">create_s3bootscript_entry_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#create_s3bootscript_entry_buffer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.create_s3bootscript_entry_buffer" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.decode_s3bs_opcode">
+<span class="sig-name descname"><span class="pre">decode_s3bs_opcode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3bootscript_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#decode_s3bs_opcode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.decode_s3bs_opcode" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.decode_s3bs_opcode_def">
+<span class="sig-name descname"><span class="pre">decode_s3bs_opcode_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#decode_s3bs_opcode_def"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.decode_s3bs_opcode_def" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.decode_s3bs_opcode_edkcompat">
+<span class="sig-name descname"><span class="pre">decode_s3bs_opcode_edkcompat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#decode_s3bs_opcode_edkcompat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.decode_s3bs_opcode_edkcompat" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.encode_s3bootscript_entry">
+<span class="sig-name descname"><span class="pre">encode_s3bootscript_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#encode_s3bootscript_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.encode_s3bootscript_entry" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.encode_s3bs_opcode">
+<span class="sig-name descname"><span class="pre">encode_s3bs_opcode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3bootscript_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY" title="chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY"><span class="pre">S3BOOTSCRIPT_ENTRY</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#encode_s3bs_opcode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.encode_s3bs_opcode" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.encode_s3bs_opcode_def">
+<span class="sig-name descname"><span class="pre">encode_s3bs_opcode_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#encode_s3bs_opcode_def"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.encode_s3bs_opcode_def" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.encode_s3bs_opcode_edkcompat">
+<span class="sig-name descname"><span class="pre">encode_s3bs_opcode_edkcompat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY" title="chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY"><span class="pre">S3BOOTSCRIPT_ENTRY</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#encode_s3bs_opcode_edkcompat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.encode_s3bs_opcode_edkcompat" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_NVAR">
+<span class="sig-name descname"><span class="pre">getEFIvariables_NVAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_NVAR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_NVAR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_NVAR_simple">
+<span class="sig-name descname"><span class="pre">getEFIvariables_NVAR_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_NVAR_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_NVAR_simple" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_UEFI">
+<span class="sig-name descname"><span class="pre">getEFIvariables_UEFI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_UEFI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_UEFI" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_UEFI_AUTH">
+<span class="sig-name descname"><span class="pre">getEFIvariables_UEFI_AUTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_UEFI_AUTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_UEFI_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_VSS">
+<span class="sig-name descname"><span class="pre">getEFIvariables_VSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_VSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_VSS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_VSS2">
+<span class="sig-name descname"><span class="pre">getEFIvariables_VSS2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_VSS2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_VSS2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_VSS2_AUTH">
+<span class="sig-name descname"><span class="pre">getEFIvariables_VSS2_AUTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_VSS2_AUTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_VSS2_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_VSS_APPLE">
+<span class="sig-name descname"><span class="pre">getEFIvariables_VSS_APPLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_VSS_APPLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_VSS_APPLE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getEFIvariables_VSS_AUTH">
+<span class="sig-name descname"><span class="pre">getEFIvariables_VSS_AUTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS" title="chipsec.hal.uefi_platform.EFI_HDR_VSS"><span class="pre">EFI_HDR_VSS</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH"><span class="pre">EFI_HDR_VSS_AUTH</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE" title="chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE"><span class="pre">EFI_HDR_VSS_APPLE</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getEFIvariables_VSS_AUTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getEFIvariables_VSS_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_EFI">
+<span class="sig-name descname"><span class="pre">getNVstore_EFI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_EFI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_EFI" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_EFI_AUTH">
+<span class="sig-name descname"><span class="pre">getNVstore_EFI_AUTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_EFI_AUTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_EFI_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_EVSA">
+<span class="sig-name descname"><span class="pre">getNVstore_EVSA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_EVSA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_EVSA" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_NVAR">
+<span class="sig-name descname"><span class="pre">getNVstore_NVAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_NVAR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_NVAR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_NVAR_simple">
+<span class="sig-name descname"><span class="pre">getNVstore_NVAR_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_NVAR_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_NVAR_simple" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_VSS">
+<span class="sig-name descname"><span class="pre">getNVstore_VSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_VSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_VSS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_VSS2">
+<span class="sig-name descname"><span class="pre">getNVstore_VSS2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_VSS2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_VSS2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_VSS2_AUTH">
+<span class="sig-name descname"><span class="pre">getNVstore_VSS2_AUTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_VSS2_AUTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_VSS2_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_VSS_APPLE">
+<span class="sig-name descname"><span class="pre">getNVstore_VSS_APPLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_VSS_APPLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_VSS_APPLE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.getNVstore_VSS_AUTH">
+<span class="sig-name descname"><span class="pre">getNVstore_VSS_AUTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#getNVstore_VSS_AUTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.getNVstore_VSS_AUTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.id_s3bootscript_type">
+<span class="sig-name descname"><span class="pre">id_s3bootscript_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#id_s3bootscript_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.id_s3bootscript_type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.isCorrectVSStype">
+<span class="sig-name descname"><span class="pre">isCorrectVSStype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram_buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vss_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#isCorrectVSStype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.isCorrectVSStype" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.uefi_platform.parse_s3bootscript_entry">
+<span class="sig-name descname"><span class="pre">parse_s3bootscript_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3bootscript_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">off</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_platform.html#parse_s3bootscript_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_platform.parse_s3bootscript_entry" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -103,12 +381,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.hal.uefi_fv.html"
-                          title="previous chapter">uefi_fv module</a></p>
+                          title="previous chapter">chipsec.hal.uefi_fv module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.hal.uefi_search.html"
-                          title="next chapter">uefi_search module</a></p>
+                          title="next chapter">chipsec.hal.uefi_search module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -134,20 +412,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_search.html" title="uefi_search module"
+          <a href="chipsec.hal.uefi_search.html" title="chipsec.hal.uefi_search module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_fv.html" title="uefi_fv module"
+          <a href="chipsec.hal.uefi_fv.html" title="chipsec.hal.uefi_fv module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">uefi_platform module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_platform module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 26, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
