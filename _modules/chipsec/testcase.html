@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.testcase &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.testcase</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.testcase</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2018-2022, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">import</span> <span class="nn">xml.dom.minidom</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="ExitCode">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ExitCode">[docs]</a>
+<span class="k">class</span> <span class="nc">ExitCode</span><span class="p">:</span>
+    <span class="n">OK</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">WARNING</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">DEPRECATED</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">FAIL</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">ERROR</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">EXCEPTION</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">INFORMATION</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">NOTAPPLICABLE</span> <span class="o">=</span> <span class="mi">128</span>
+
+    <span class="n">help_epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">  Exit Code</span>
+<span class="s2">  ---------</span>
+<span class="s2">  CHIPSEC returns an integer exit code:</span>
+<span class="s2">  - Exit code is 0:       all modules ran successfully and passed</span>
+<span class="s2">  - Exit code is not 0:   each bit means the following:</span>
+<span class="s2">      - Bit 1: WARNING         at least one module had a warning</span>
+<span class="s2">      - Bit 2: DEPRECATED      at least one module uses deprecated API</span>
+<span class="s2">      - Bit 3: FAIL            at least one module failed</span>
+<span class="s2">      - Bit 4: ERROR           at least one module wasn&#39;t able to run</span>
+<span class="s2">      - Bit 5: EXCEPTION       at least one module threw an unexpected exception</span>
+<span class="s2">      - Bit 6: INFORMATION     at least one module contained information</span>
+<span class="s2">      - Bit 7: NOT APPLICABLE  at least one module was not applicable for the platform</span>
+
+<span class="s2">&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="TestCase">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.TestCase">[docs]</a>
+<span class="k">class</span> <span class="nc">TestCase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TestCase.get_fields">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.TestCase.get_fields">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="TestCase.start_module">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.TestCase.start_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">start_module</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Displays a banner for the module name provided.&quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">[*] Running module: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_heading</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="TestCase.end_module">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.TestCase.end_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">end_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">endTime</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ChipsecResults">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults">[docs]</a>
+<span class="k">class</span> <span class="nc">ChipsecResults</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exceptions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">using_return_codes</span> <span class="o">=</span> <span class="n">rc</span>
+
+<div class="viewcode-block" id="ChipsecResults.add_properties">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.add_properties">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">properties</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.add_testcase">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.add_testcase">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_testcase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">TestCase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.get_current">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.get_current">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_current</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">TestCase</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.add_exception">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.add_exception">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.get_return_code">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.get_return_code">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">TestCase</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">using_return_codes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_return_codeRC</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_return_codeL</span><span class="p">()</span></div>
+
+    
+    <span class="c1"># -------------------------------------------------------</span>
+    <span class="c1"># Legacy results</span>
+    <span class="c1"># -------------------------------------------------------</span>
+<div class="viewcode-block" id="ChipsecResults.order_summaryL">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.order_summaryL">[docs]</a>
+    <span class="k">def</span> <span class="nf">order_summaryL</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">TestCase</span><span class="p">]]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">passed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">failed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">information</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">notapplicable</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">executed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">:</span>
+            <span class="n">executed</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">get_fields</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Passed&#39;</span><span class="p">:</span>
+                <span class="n">passed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Failed&#39;</span><span class="p">:</span>
+                <span class="n">failed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Error&#39;</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Warning&#39;</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Information&#39;</span><span class="p">:</span>
+                <span class="n">information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NotApplicable&#39;</span><span class="p">:</span>
+                <span class="n">notapplicable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">executed</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;failed to run&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errors</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;passed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">passed</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;information&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">information</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;failed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">failed</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">warnings</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;not applicable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">notapplicable</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exceptions</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.get_return_codeL">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.get_return_codeL">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_return_codeL</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_summaryL</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;failed to run&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">ERROR</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;exceptions&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">EXCEPTION</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;failed&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">FAIL</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">WARNING</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;not applicable&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;information&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">INFORMATION</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">OK</span></div>
+
+    <span class="c1"># -------------------------------------------------------</span>
+        
+<div class="viewcode-block" id="ChipsecResults.order_summaryRC">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.order_summaryRC">[docs]</a>
+    <span class="k">def</span> <span class="nf">order_summaryRC</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">passed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">failed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">executed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">:</span>
+            <span class="n">executed</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">get_fields</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Passed&#39;</span><span class="p">:</span>
+                <span class="n">passed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Failed&#39;</span><span class="p">:</span>
+                <span class="n">failed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">executed</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;failed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">failed</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;passed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">passed</span>
+        <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exceptions</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.get_return_codeRC">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.get_return_codeRC">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_return_codeRC</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_summaryRC</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s1">&#39;failed&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">FAIL</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ExitCode</span><span class="o">.</span><span class="n">OK</span></div>
+
+
+
+<div class="viewcode-block" id="ChipsecResults.set_time">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.set_time">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pTime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the time&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pTime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">pTime</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span><span class="o">.</span><span class="n">endTime</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startTime</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.get_results">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.get_results">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">test</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">result</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.xml_summary">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.xml_summary">[docs]</a>
+    <span class="k">def</span> <span class="nf">xml_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_summary</span><span class="p">()</span>
+        <span class="n">xml_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s2">&quot;Summary&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">summary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;total&#39;</span><span class="p">:</span>
+                <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="n">value</span><span class="p">]</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">m_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">temp</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">value</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">m_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">temp</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">[</span><span class="n">value</span><span class="p">]:</span>
+                    <span class="n">n_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">m_element</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">)</span>
+                    <span class="n">n_element</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">mod</span>
+        <span class="k">return</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="s2">&quot;unicode&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.json_summary">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.json_summary">[docs]</a>
+    <span class="k">def</span> <span class="nf">json_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_summary</span><span class="p">()</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">js</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.json_full">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.json_full">[docs]</a>
+    <span class="k">def</span> <span class="nf">json_full</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">js</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.xml_full">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.xml_full">[docs]</a>
+    <span class="k">def</span> <span class="nf">xml_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">xml_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;testsuites&#39;</span><span class="p">)</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_summary</span><span class="p">()</span>
+        <span class="n">summary_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">summary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;total&#39;</span><span class="p">:</span>
+                <span class="n">summary_dict</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">summary</span><span class="p">[</span><span class="n">value</span><span class="p">]</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">summary_dict</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">value</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">summary_dict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">runtime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">summary_dict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">runtime</span><span class="si">:</span><span class="s1">5f</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">ts_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="s2">&quot;testsuite&quot;</span><span class="p">,</span> <span class="n">summary_dict</span><span class="p">)</span>
+        <span class="c1"># add properties</span>
+        <span class="n">pr_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">ts_element</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">)</span>
+        <span class="n">prop_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
+                <span class="n">prop_dict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="n">prop_dict</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+                <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">pr_element</span><span class="p">,</span> <span class="s2">&quot;property&quot;</span><span class="p">,</span> <span class="n">prop_dict</span><span class="p">)</span>
+        <span class="c1"># add test cases</span>
+        <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">:</span>
+            <span class="n">ttime</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">time</span> <span class="k">if</span> <span class="n">test</span><span class="o">.</span><span class="n">time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="n">tc_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">ts_element</span><span class="p">,</span> <span class="s2">&quot;testcase&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;classname&#39;</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">desc</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ttime</span><span class="si">:</span><span class="s1">5f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
+            <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">tc_element</span><span class="p">,</span> <span class="s2">&quot;pass&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">result</span><span class="p">})</span>
+            <span class="n">out_element</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">tc_element</span><span class="p">,</span> <span class="s2">&quot;system-out&quot;</span><span class="p">)</span>
+            <span class="n">out_element</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">output</span>
+        <span class="k">return</span> <span class="n">xml</span><span class="o">.</span><span class="n">dom</span><span class="o">.</span><span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">xml_element</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.markdown_full">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.markdown_full">[docs]</a>
+    <span class="k">def</span> <span class="nf">markdown_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">passed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">failed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">warning</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">information</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">notapplicable</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">deprecated</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Passed&#39;</span><span class="p">:</span> <span class="n">passed</span><span class="p">,</span>
+                       <span class="s1">&#39;Failed&#39;</span><span class="p">:</span> <span class="n">failed</span><span class="p">,</span>
+                       <span class="s1">&#39;Error&#39;</span><span class="p">:</span> <span class="n">error</span><span class="p">,</span>
+                       <span class="s1">&#39;Warning&#39;</span><span class="p">:</span> <span class="n">warning</span><span class="p">,</span>
+                       <span class="s1">&#39;Information&#39;</span><span class="p">:</span> <span class="n">information</span><span class="p">,</span>
+                       <span class="s1">&#39;NotApplicable&#39;</span><span class="p">:</span> <span class="n">notapplicable</span><span class="p">,</span>
+                       <span class="s1">&#39;Deprecated&#39;</span><span class="p">:</span> <span class="n">deprecated</span>
+                       <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_cases</span><span class="p">:</span>
+            <span class="c1"># Test case as header level 4</span>
+            <span class="n">out_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;#### </span><span class="si">{</span><span class="n">test</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;chipsec.modules.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="si">:</span><span class="s1">s</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">test</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+                <span class="c1"># Format output as code</span>
+                <span class="n">out_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">line</span><span class="si">:</span><span class="s1">s</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">destination</span><span class="p">[</span><span class="n">test</span><span class="o">.</span><span class="n">result</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out_string</span><span class="p">)</span>
+
+        <span class="n">ret_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">destination</span><span class="p">:</span>
+            <span class="c1"># Category as header level 1</span>
+            <span class="n">ret_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">s</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">destination</span><span class="p">[</span><span class="n">result</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="n">ret_string</span> <span class="o">+=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">destination</span><span class="p">[</span><span class="n">result</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">ret_string</span></div>
+
+    
+<div class="viewcode-block" id="ChipsecResults.print_summary">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.print_summary">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">using_return_codes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_summaryRC</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_summaryL</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.print_summaryL">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.print_summaryL">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_summaryL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_summaryL</span><span class="p">()</span>
+        <span class="n">filler</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">27</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">[CHIPSEC] </span><span class="si">{</span><span class="n">filler</span><span class="si">}</span><span class="s1">  SUMMARY  </span><span class="si">{</span><span class="n">filler</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">runtime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Time elapsed            </span><span class="si">{</span><span class="n">runtime</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">summary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;total&#39;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Modules </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">16</span><span class="si">}{</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">]</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;warnings&#39;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Modules with </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">11</span><span class="si">}{</span><span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">]:</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;exceptions&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Modules with </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">11</span><span class="si">}{</span><span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">]:</span>
+                        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Modules </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">16</span><span class="si">}{</span><span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;failed to run&#39;</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;passed&#39;</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;information&#39;</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_information</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;failed&#39;</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;not applicable&#39;</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_not_applicable</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[CHIPSEC] *****************************************************************&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ChipsecResults.print_summaryRC">
+<a class="viewcode-back" href="../../modules/chipsec.testcase.html#chipsec.testcase.ChipsecResults.print_summaryRC">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_summaryRC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_summaryRC</span><span class="p">()</span>
+        <span class="n">filler</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">27</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">[CHIPSEC] </span><span class="si">{</span><span class="n">filler</span><span class="si">}</span><span class="s1">  SUMMARY  </span><span class="si">{</span><span class="n">filler</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">runtime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Time elapsed            </span><span class="si">{</span><span class="n">runtime</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">summary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;total&#39;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Modules </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">16</span><span class="si">}{</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">]</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;exceptions&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Modules with </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">11</span><span class="si">}{</span><span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">]:</span>
+                        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Modules </span><span class="si">{</span><span class="n">result</span><span class="si">:</span><span class="s1">16</span><span class="si">}{</span><span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">])</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">[</span><span class="n">result</span><span class="p">]:</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">mod</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[CHIPSEC] *****************************************************************&#39;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.testcase</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

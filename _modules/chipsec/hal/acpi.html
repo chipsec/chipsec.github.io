@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.acpi &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.acpi</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.hal.acpi</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2010-2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">HAL component providing access to and decoding of ACPI tables</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1&#39;</span>
+
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">bytestostring</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">UnimplementedAPIError</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">read_file</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">acpi_tables</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.hal_base</span> <span class="kn">import</span> <span class="n">HALBase</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.uefi</span> <span class="kn">import</span> <span class="n">UEFI</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span><span class="p">,</span> <span class="n">print_buffer_bytes</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.acpi_tables</span> <span class="kn">import</span> <span class="n">ACPI_TABLE</span>
+
+<span class="c1"># ACPI Table Header Format</span>
+<span class="n">ACPI_TABLE_HEADER_FORMAT</span> <span class="o">=</span> <span class="s1">&#39;=4sIBB6s8sI4sI&#39;</span>
+<span class="n">ACPI_TABLE_HEADER_SIZE</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">ACPI_TABLE_HEADER_FORMAT</span><span class="p">)</span>  <span class="c1"># 36</span>
+<span class="k">assert</span> <span class="mi">36</span> <span class="o">==</span> <span class="n">ACPI_TABLE_HEADER_SIZE</span>
+
+
+<div class="viewcode-block" id="ACPI_TABLE_HEADER">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI_TABLE_HEADER">[docs]</a>
+<span class="k">class</span> <span class="nc">ACPI_TABLE_HEADER</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ACPI_TABLE_HEADER&#39;</span><span class="p">,</span> <span class="s1">&#39;Signature Length Revision Checksum OEMID OEMTableID OEMRevision CreatorID CreatorRevision&#39;</span><span class="p">)):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;  Table Header</span>
+<span class="s2">------------------------------------------------------------------</span>
+<span class="s2">  Signature        : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Signature</span><span class="si">}</span>
+<span class="s2">  Length           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Length</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">  Revision         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
+<span class="s2">  Checksum         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Checksum</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
+<span class="s2">  OEM ID           : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">OEMID</span><span class="si">}</span>
+<span class="s2">  OEM Table ID     : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">OEMTableID</span><span class="si">}</span>
+<span class="s2">  OEM Revision     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">OEMRevision</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">  Creator ID       : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CreatorID</span><span class="si">}</span>
+<span class="s2">  Creator Revision : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CreatorRevision</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">&quot;&quot;&quot;</span></div>
+
+
+
+<span class="n">ACPI_TABLE_SIG_SIZE</span> <span class="o">=</span> <span class="mh">0x4</span>
+
+<span class="n">ACPI_TABLE_SIG_ROOT</span> <span class="o">=</span> <span class="s1">&#39;ROOT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_RSDP</span> <span class="o">=</span> <span class="s1">&#39;RSDP&#39;</span>
+<span class="n">ACPI_TABLE_SIG_RSDT</span> <span class="o">=</span> <span class="s1">&#39;RSDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_XSDT</span> <span class="o">=</span> <span class="s1">&#39;XSDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_FACP</span> <span class="o">=</span> <span class="s1">&#39;FACP&#39;</span>
+<span class="n">ACPI_TABLE_SIG_FACS</span> <span class="o">=</span> <span class="s1">&#39;FACS&#39;</span>
+<span class="n">ACPI_TABLE_SIG_DSDT</span> <span class="o">=</span> <span class="s1">&#39;DSDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_SSDT</span> <span class="o">=</span> <span class="s1">&#39;SSDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_PSDT</span> <span class="o">=</span> <span class="s1">&#39;PSDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_APIC</span> <span class="o">=</span> <span class="s1">&#39;APIC&#39;</span>
+<span class="n">ACPI_TABLE_SIG_SBST</span> <span class="o">=</span> <span class="s1">&#39;SBST&#39;</span>
+<span class="n">ACPI_TABLE_SIG_ECDT</span> <span class="o">=</span> <span class="s1">&#39;ECDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_SRAT</span> <span class="o">=</span> <span class="s1">&#39;SRAT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_SLIC</span> <span class="o">=</span> <span class="s1">&#39;SLIC&#39;</span>
+<span class="n">ACPI_TABLE_SIG_SLIT</span> <span class="o">=</span> <span class="s1">&#39;SLIT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_BOOT</span> <span class="o">=</span> <span class="s1">&#39;BOOT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_CPEP</span> <span class="o">=</span> <span class="s1">&#39;CPEP&#39;</span>
+<span class="n">ACPI_TABLE_SIG_DBGP</span> <span class="o">=</span> <span class="s1">&#39;DBGP&#39;</span>
+<span class="n">ACPI_TABLE_SIG_ETDT</span> <span class="o">=</span> <span class="s1">&#39;ETDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_HPET</span> <span class="o">=</span> <span class="s1">&#39;HPET&#39;</span>
+<span class="n">ACPI_TABLE_SIG_MCFG</span> <span class="o">=</span> <span class="s1">&#39;MCFG&#39;</span>
+<span class="n">ACPI_TABLE_SIG_SPCR</span> <span class="o">=</span> <span class="s1">&#39;SPCR&#39;</span>
+<span class="n">ACPI_TABLE_SIG_SPMI</span> <span class="o">=</span> <span class="s1">&#39;SPMI&#39;</span>
+<span class="n">ACPI_TABLE_SIG_TCPA</span> <span class="o">=</span> <span class="s1">&#39;TCPA&#39;</span>
+<span class="n">ACPI_TABLE_SIG_WDAT</span> <span class="o">=</span> <span class="s1">&#39;WDAT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_WDRT</span> <span class="o">=</span> <span class="s1">&#39;WDRT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_WSPT</span> <span class="o">=</span> <span class="s1">&#39;WSPT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_WDDT</span> <span class="o">=</span> <span class="s1">&#39;WDDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_ASF</span> <span class="o">=</span> <span class="s1">&#39;ASF!&#39;</span>
+<span class="n">ACPI_TABLE_SIG_MSEG</span> <span class="o">=</span> <span class="s1">&#39;MSEG&#39;</span>
+<span class="n">ACPI_TABLE_SIG_DMAR</span> <span class="o">=</span> <span class="s1">&#39;DMAR&#39;</span>
+<span class="n">ACPI_TABLE_SIG_UEFI</span> <span class="o">=</span> <span class="s1">&#39;UEFI&#39;</span>
+<span class="n">ACPI_TABLE_SIG_FPDT</span> <span class="o">=</span> <span class="s1">&#39;FPDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_PCCT</span> <span class="o">=</span> <span class="s1">&#39;PCCT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_MSDM</span> <span class="o">=</span> <span class="s1">&#39;MSDM&#39;</span>
+<span class="n">ACPI_TABLE_SIG_BATB</span> <span class="o">=</span> <span class="s1">&#39;BATB&#39;</span>
+<span class="n">ACPI_TABLE_SIG_BGRT</span> <span class="o">=</span> <span class="s1">&#39;BGRT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_LPIT</span> <span class="o">=</span> <span class="s1">&#39;LPIT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_ASPT</span> <span class="o">=</span> <span class="s1">&#39;ASPT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_FIDT</span> <span class="o">=</span> <span class="s1">&#39;FIDT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_HEST</span> <span class="o">=</span> <span class="s1">&#39;HEST&#39;</span>
+<span class="n">ACPI_TABLE_SIG_BERT</span> <span class="o">=</span> <span class="s1">&#39;BERT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_ERST</span> <span class="o">=</span> <span class="s1">&#39;ERST&#39;</span>
+<span class="n">ACPI_TABLE_SIG_EINJ</span> <span class="o">=</span> <span class="s1">&#39;EINJ&#39;</span>
+<span class="n">ACPI_TABLE_SIG_TPM2</span> <span class="o">=</span> <span class="s1">&#39;TPM2&#39;</span>
+<span class="n">ACPI_TABLE_SIG_WSMT</span> <span class="o">=</span> <span class="s1">&#39;WSMT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_DBG2</span> <span class="o">=</span> <span class="s1">&#39;DBG2&#39;</span>
+<span class="n">ACPI_TABLE_SIG_NHLT</span> <span class="o">=</span> <span class="s1">&#39;NHLT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_MSCT</span> <span class="o">=</span> <span class="s1">&#39;MSCT&#39;</span>
+<span class="n">ACPI_TABLE_SIG_RASF</span> <span class="o">=</span> <span class="s1">&#39;RASF&#39;</span>
+<span class="n">ACPI_TABLE_SIG_OEM1</span> <span class="o">=</span> <span class="s1">&#39;OEM1&#39;</span>
+<span class="n">ACPI_TABLE_SIG_OEM2</span> <span class="o">=</span> <span class="s1">&#39;OEM2&#39;</span>
+<span class="n">ACPI_TABLE_SIG_OEM3</span> <span class="o">=</span> <span class="s1">&#39;OEM3&#39;</span>
+<span class="n">ACPI_TABLE_SIG_OEM4</span> <span class="o">=</span> <span class="s1">&#39;OEM4&#39;</span>
+<span class="n">ACPI_TABLE_SIG_NFIT</span> <span class="o">=</span> <span class="s1">&#39;NFIT&#39;</span>
+
+<span class="n">ACPI_TABLES</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">ACPI_TABLE_SIG_ROOT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_RSDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDT</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_XSDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">XSDT</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_FACP</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">FADT</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_FACS</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_DSDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_SSDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_PSDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_APIC</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">APIC</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_SBST</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_ECDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_SRAT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_SLIC</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_SLIT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_BOOT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_CPEP</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_DBGP</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_ETDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_HPET</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_MCFG</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_SPCR</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_TCPA</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_WDAT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_WDRT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_WSPT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_WDDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_ASF</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_MSEG</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_DMAR</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">DMAR</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_UEFI</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">UEFI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_FPDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_PCCT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_MSDM</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_BATB</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_BGRT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">BGRT</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_LPIT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_ASPT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_FIDT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_HEST</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">HEST</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_BERT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">BERT</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_ERST</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ERST</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_EINJ</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">EINJ</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_TPM2</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_WSMT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">WSMT</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_DBG2</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_NHLT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_MSCT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">MSCT</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_RASF</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">RASF</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_SPMI</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">SPMI</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_OEM1</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_OEM2</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_OEM3</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_OEM4</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_TABLE</span><span class="p">,</span>
+    <span class="n">ACPI_TABLE_SIG_NFIT</span><span class="p">:</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">NFIT</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># RSDP</span>
+<span class="c1">#</span>
+<span class="c1">########################################################################################################</span>
+
+<span class="n">RSDP_GUID_ACPI2_0</span> <span class="o">=</span> <span class="s1">&#39;8868E871-E4F1-11D3-BC22-0080C73C8881&#39;</span>
+<span class="n">RSDP_GUID_ACPI1_0</span> <span class="o">=</span> <span class="s1">&#39;EB9D2D31-2D88-11D3-9A16-0090273FC14D&#39;</span>
+<span class="n">ACPI_RSDP_SIG</span> <span class="o">=</span> <span class="s1">&#39;RSD PTR &#39;</span>
+
+<span class="c1">########################################################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># ACPI HAL Component</span>
+<span class="c1">#</span>
+<span class="c1">########################################################################################################</span>
+
+
+<div class="viewcode-block" id="ACPI">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI">[docs]</a>
+<span class="k">class</span> <span class="nc">ACPI</span><span class="p">(</span><span class="n">HALBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ACPI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uefi</span> <span class="o">=</span> <span class="n">UEFI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_ACPI_table_list</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ACPI.read_RSDP">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.read_RSDP">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_RSDP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rsdp_pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">:</span>
+        <span class="n">rsdp_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_RSDP_SIZE</span><span class="p">)</span>
+        <span class="n">rsdp</span> <span class="o">=</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">()</span>
+        <span class="n">rsdp</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">rsdp_buf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">Revision</span> <span class="o">&gt;=</span> <span class="mh">0x2</span><span class="p">:</span>
+            <span class="n">rsdp_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">ACPI_RSDP_EXT_SIZE</span><span class="p">)</span>
+            <span class="n">rsdp</span> <span class="o">=</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">()</span>
+            <span class="n">rsdp</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">rsdp_buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rsdp</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Check RSDP in Extended BIOS Data Area</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">_find_RSDP_in_EBDA</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rsdp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[acpi] searching RSDP in EBDA...&#39;</span><span class="p">)</span>
+        <span class="n">ebda_ptr_addr</span> <span class="o">=</span> <span class="mh">0x40E</span>
+        <span class="n">ebda_addr</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;H&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">ebda_ptr_addr</span><span class="p">,</span> <span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span>
+        <span class="k">if</span> <span class="n">ebda_addr</span> <span class="o">&gt;</span> <span class="mh">0x400</span> <span class="ow">and</span> <span class="n">ebda_addr</span> <span class="o">&lt;</span> <span class="mh">0xA0000</span><span class="p">:</span>
+            <span class="n">membuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">ebda_addr</span><span class="p">,</span> <span class="mh">0xA0000</span> <span class="o">-</span> <span class="n">ebda_addr</span><span class="p">)</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">membuf</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">ACPI_RSDP_SIG</span><span class="p">)</span>
+            <span class="k">if</span> <span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">pos</span><span class="p">:</span>
+                <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="n">ebda_addr</span> <span class="o">+</span> <span class="n">pos</span>
+                <span class="n">rsdp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_RSDP</span><span class="p">(</span><span class="n">rsdp_pa</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">is_RSDP_valid</span><span class="p">():</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[acpi] found RSDP in EBDA at: 0x</span><span class="si">{</span><span class="n">rsdp_pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Search RSDP in legacy BIOS E/F segments (0xE0000 - 0xFFFFF)</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">_find_RSDP_in_legacy_BIOS_segments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rsdp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">membuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="mh">0xE0000</span><span class="p">,</span> <span class="mh">0x20000</span><span class="p">)</span>
+        <span class="n">membuf</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">membuf</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">membuf</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">ACPI_RSDP_SIG</span><span class="p">)</span>
+        <span class="k">if</span> <span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">pos</span><span class="p">:</span>
+            <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="mh">0xE0000</span> <span class="o">+</span> <span class="n">pos</span>
+            <span class="n">rsdp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_RSDP</span><span class="p">(</span><span class="n">rsdp_pa</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">is_RSDP_valid</span><span class="p">():</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[acpi] Found RSDP in BIOS E/F segments: 0x</span><span class="si">{</span><span class="n">rsdp_pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Search for RSDP in the EFI memory (EFI Configuration Table)</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">_find_RSDP_in_EFI_config_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rsdp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[acpi] Searching RSDP pointers in EFI Configuration Table...&#39;</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">isFound</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">ect</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">find_EFI_Configuration_Table</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">isFound</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">RSDP_GUID_ACPI2_0</span> <span class="ow">in</span> <span class="n">ect</span><span class="o">.</span><span class="n">VendorTables</span><span class="p">:</span>
+                <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="n">ect</span><span class="o">.</span><span class="n">VendorTables</span><span class="p">[</span><span class="n">RSDP_GUID_ACPI2_0</span><span class="p">]</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[acpi] ACPI 2.0+ RSDP </span><span class="se">{{</span><span class="si">{</span><span class="n">RSDP_GUID_ACPI2_0</span><span class="si">}</span><span class="se">}}</span><span class="s1"> in EFI Config Table: 0x</span><span class="si">{</span><span class="n">rsdp_pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">RSDP_GUID_ACPI1_0</span> <span class="ow">in</span> <span class="n">ect</span><span class="o">.</span><span class="n">VendorTables</span><span class="p">:</span>
+                <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="n">ect</span><span class="o">.</span><span class="n">VendorTables</span><span class="p">[</span><span class="n">RSDP_GUID_ACPI1_0</span><span class="p">]</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[acpi] ACPI 1.0 RSDP {{</span><span class="si">{RSDP_GUID_ACPI1_0}</span><span class="s1">}} in EFI Config Table: 0x</span><span class="si">{rsdp_pa:016X}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rsdp_pa</span><span class="p">:</span>
+            <span class="n">rsdp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_RSDP</span><span class="p">(</span><span class="n">rsdp_pa</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">is_RSDP_valid</span><span class="p">():</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[acpi] Found RSDP in EFI Config Table: 0x</span><span class="si">{</span><span class="n">rsdp_pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Search for RSDP in all EFI memory</span>
+    <span class="c1">#</span>
+    <span class="k">def</span> <span class="nf">_find_RSDP_in_EFI</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rsdp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[acpi] Searching all EFI memory for RSDP (this may take a minute).&quot;</span><span class="p">)</span>
+        <span class="n">CHUNK_SZ</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>  <span class="c1"># 1MB</span>
+        <span class="p">(</span><span class="n">smram_base</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">get_SMRAM</span><span class="p">()</span>
+        <span class="n">pa</span> <span class="o">=</span> <span class="n">smram_base</span> <span class="o">-</span> <span class="n">CHUNK_SZ</span>
+        <span class="k">while</span> <span class="n">pa</span> <span class="o">&gt;</span> <span class="n">CHUNK_SZ</span><span class="p">:</span>
+            <span class="n">membuf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">CHUNK_SZ</span><span class="p">)</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">membuf</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">ACPI_RSDP_SIG</span><span class="p">)</span>
+            <span class="k">if</span> <span class="o">-</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">pos</span><span class="p">:</span>
+                <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="n">pa</span> <span class="o">+</span> <span class="n">pos</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[acpi] Found &#39;</span><span class="si">{</span><span class="n">ACPI_RSDP_SIG</span><span class="si">}</span><span class="s2">&#39; signature at 0x</span><span class="si">{</span><span class="n">rsdp_pa</span><span class="si">:</span><span class="s2">16X</span><span class="si">}</span><span class="s2">. Checking if valid RSDP.&quot;</span><span class="p">)</span>
+                <span class="n">rsdp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_RSDP</span><span class="p">(</span><span class="n">rsdp_pa</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">is_RSDP_valid</span><span class="p">():</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[acpi] Found RSDP in EFI memory: 0x</span><span class="si">{</span><span class="n">rsdp_pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">break</span>
+            <span class="n">pa</span> <span class="o">-=</span> <span class="n">CHUNK_SZ</span>
+        <span class="k">return</span> <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Searches for Root System Description Pointer (RSDP) in various locations for legacy/EFI systems</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.find_RSDP">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.find_RSDP">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_RSDP</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDP</span><span class="p">]]:</span>
+        <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_RSDP_in_EBDA</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">rsdp_pa</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_RSDP_in_legacy_BIOS_segments</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">rsdp_pa</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_RSDP_in_EFI_config_table</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">rsdp_pa</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rsdp</span><span class="p">,</span> <span class="n">rsdp_pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_RSDP_in_EFI</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">rsdp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rsdp</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">rsdp_pa</span><span class="p">,</span> <span class="n">rsdp</span><span class="p">)</span></div>
+
+
+    <span class="n">RsdtXsdt</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">acpi_tables</span><span class="o">.</span><span class="n">RSDT</span><span class="p">,</span> <span class="n">acpi_tables</span><span class="o">.</span><span class="n">XSDT</span><span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="c1"># Retrieves System Description Table (RSDT or XSDT) either from RSDP or using OS API</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.get_SDT">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_SDT">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_rsdp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RsdtXsdt</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ACPI_TABLE_HEADER</span><span class="p">]]:</span>
+        <span class="n">is_xsdt</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">sdt_pa</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">sdt_header</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">sdt_buf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">search_rsdp</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">rsdp</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_RSDP</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">rsdp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="mh">0x0</span> <span class="o">==</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">Revision</span><span class="p">:</span>
+                    <span class="n">sdt_pa</span> <span class="o">=</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">RsdtAddress</span>
+                    <span class="n">is_xsdt</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="mh">0x2</span> <span class="o">==</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">Revision</span><span class="p">:</span>
+                    <span class="n">sdt_pa</span> <span class="o">=</span> <span class="n">rsdp</span><span class="o">.</span><span class="n">XsdtAddress</span>
+                    <span class="n">is_xsdt</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">found_str</span> <span class="o">=</span> <span class="s1">&#39;XSDT&#39;</span> <span class="k">if</span> <span class="n">is_xsdt</span> <span class="k">else</span> <span class="s1">&#39;RSDT&#39;</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[acpi] Found </span><span class="si">{</span><span class="n">found_str</span><span class="si">}</span><span class="s1"> at PA: 0x</span><span class="si">{</span><span class="n">sdt_pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">sdt_header_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">sdt_pa</span><span class="p">,</span> <span class="n">ACPI_TABLE_HEADER_SIZE</span><span class="p">)</span>
+                <span class="n">sdt_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_table_header</span><span class="p">(</span><span class="n">sdt_header_buf</span><span class="p">)</span>
+                <span class="n">sdt_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">sdt_pa</span><span class="p">,</span> <span class="n">sdt_header</span><span class="o">.</span><span class="n">Length</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sdt_pa</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[acpi] Reading RSDT/XSDT using OS API...&quot;</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">sdt_buf</span><span class="p">,</span> <span class="n">is_xsdt</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_SDT</span><span class="p">()</span>
+            <span class="n">sdt_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_table_header</span><span class="p">(</span><span class="n">sdt_buf</span><span class="p">[:</span><span class="n">ACPI_TABLE_HEADER_SIZE</span><span class="p">])</span>
+
+        <span class="n">sdt_contents</span> <span class="o">=</span> <span class="n">sdt_buf</span><span class="p">[</span><span class="n">ACPI_TABLE_HEADER_SIZE</span><span class="p">:]</span>
+        <span class="n">sdt</span> <span class="o">=</span> <span class="n">ACPI_TABLES</span><span class="p">[</span><span class="n">ACPI_TABLE_SIG_XSDT</span> <span class="k">if</span> <span class="n">is_xsdt</span> <span class="k">else</span> <span class="n">ACPI_TABLE_SIG_RSDT</span><span class="p">]()</span>
+        <span class="n">sdt</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sdt_contents</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">is_xsdt</span><span class="p">,</span> <span class="n">sdt_pa</span><span class="p">,</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">sdt_header</span><span class="p">)</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Populates a list of ACPI tables available on the system</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.get_ACPI_table_list">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_ACPI_table_list">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ACPI_table_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># 1. Try to extract ACPI table(s) from physical memory</span>
+            <span class="c1">#    read_physical_mem can be implemented using both</span>
+            <span class="c1">#    CHIPSEC kernel module and OS native API</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[acpi] Trying to enumerate ACPI tables from physical memory...&quot;</span><span class="p">)</span>
+            <span class="c1"># find RSDT/XSDT table</span>
+            <span class="p">(</span><span class="n">is_xsdt</span><span class="p">,</span> <span class="n">sdt_pa</span><span class="p">,</span> <span class="n">sdt</span><span class="p">,</span> <span class="n">sdt_header</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SDT</span><span class="p">()</span>
+
+            <span class="c1"># cache RSDT/XSDT in the list of ACPI tables</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">sdt_pa</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">sdt_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">bytestostring</span><span class="p">(</span><span class="n">sdt_header</span><span class="o">.</span><span class="n">Signature</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sdt_pa</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sdt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_table_list_from_SDT</span><span class="p">(</span><span class="n">sdt</span><span class="p">,</span> <span class="n">is_xsdt</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_DSDT_from_FADT</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">UnimplementedAPIError</span><span class="p">:</span>
+            <span class="c1"># 2. If didn&#39;t work, try using get_ACPI_table if a helper implemented</span>
+            <span class="c1">#    reading ACPI tables via native API which some OS may provide</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[acpi] Trying to enumerate ACPI tables using get_ACPI_table...&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ACPI_TABLES</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">table</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Gets table list from entries in RSDT/XSDT</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.get_table_list_from_SDT">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_table_list_from_SDT">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_table_list_from_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sdt</span><span class="p">:</span> <span class="n">RsdtXsdt</span><span class="p">,</span> <span class="n">is_xsdt</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[acpi] Getting table list from entries in </span><span class="si">{</span><span class="s2">&quot;XSDT&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">is_xsdt</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s2">&quot;RSDT&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sdt</span><span class="o">.</span><span class="n">Entries</span><span class="p">:</span>
+            <span class="n">_sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ACPI_TABLE_SIG_SIZE</span><span class="p">)</span>
+            <span class="n">_sig</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">_sig</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_sig</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ACPI_TABLES</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown ACPI table signature: </span><span class="si">{</span><span class="n">_sig</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">_sig</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Gets DSDT from FADT</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.get_DSDT_from_FADT">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_DSDT_from_FADT">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_DSDT_from_FADT</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[acpi] Getting DSDT from FADT&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ACPI_TABLE_SIG_FACP</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">parsed_fadt_content</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parse_ACPI_table</span><span class="p">(</span><span class="s1">&#39;FACP&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="n">found_table</span> <span class="o">=</span> <span class="s1">&#39;XSDT&#39;</span> <span class="k">if</span> <span class="n">ACPI_TABLE_SIG_XSDT</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span> <span class="k">else</span> <span class="s1">&#39;RSDT&#39;</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot find FADT in </span><span class="si">{</span><span class="n">found_table</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">dsdt_address_to_use</span> <span class="o">=</span> <span class="n">parsed_fadt_content</span><span class="o">.</span><span class="n">get_DSDT_address_to_use</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">dsdt_address_to_use</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dsdt_address</span> <span class="o">=</span> <span class="n">parsed_fadt_content</span><span class="o">.</span><span class="n">dsdt</span>
+            <span class="n">x_dsdt_address</span> <span class="o">=</span> <span class="n">parsed_fadt_content</span><span class="o">.</span><span class="n">x_dsdt</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s1">&#39;Unable to determine the correct DSDT address&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  DSDT   address = 0x</span><span class="si">{</span><span class="n">dsdt_address</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="n">address_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x_dsdt_address</span><span class="si">:</span><span class="s1">16X</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">x_dsdt_address</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;Not found&#39;</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  X_DSDT address = 0x</span><span class="si">{</span><span class="n">address_str</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">ACPI_TABLE_SIG_DSDT</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsdt_address_to_use</span><span class="p">)</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Checks is ACPI table with &lt;name&gt; is available on the system</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.is_ACPI_table_present">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.is_ACPI_table_present">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_ACPI_table_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">)</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Prints a list of ACPI tables available on the system</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.print_ACPI_table_list">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.print_ACPI_table_list">[docs]</a>
+    <span class="k">def</span> <span class="nf">print_ACPI_table_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t get a list of ACPI tables&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[acpi] Found the following ACPI tables:&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tableName</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">table_values_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;0x</span><span class="si">{</span><span class="n">addr</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">tableName</span><span class="p">]])</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">tableName</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">table_values_str</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Retrieves contents of ACPI table from memory or from file</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.get_parse_ACPI_table">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_parse_ACPI_table">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_parse_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">isfile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;ParseTable&#39;</span><span class="p">]:</span>
+        <span class="n">acpi_tables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">isfile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_table</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">)</span> <span class="ow">in</span> <span class="n">acpi_tables</span> <span class="k">if</span> <span class="n">table_header_blob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ACPI.get_ACPI_table">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.get_ACPI_table">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">isfile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]:</span>
+        <span class="n">acpi_tables_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">isfile</span><span class="p">:</span>
+            <span class="n">acpi_tables_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">read_file</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># 1. Try to extract ACPI table(s) from physical memory</span>
+                <span class="c1">#    read_physical_mem can be implemented using both</span>
+                <span class="c1">#    CHIPSEC kernel module and OS native API</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[acpi] trying to extract ACPI table from physical memory...&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">table_address</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableList</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+                    <span class="n">t_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span><span class="n">table_address</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
+                    <span class="n">t_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">table_address</span><span class="p">,</span> <span class="n">t_size</span><span class="p">)</span>
+                    <span class="n">acpi_tables_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">UnimplementedAPIError</span><span class="p">:</span>
+                <span class="c1"># 2. If didn&#39;t work, try using get_ACPI_table if a helper implemented</span>
+                <span class="c1">#    reading ACPI tables via native API which some OS may provide</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[acpi] trying to extract ACPI table using get_ACPI_table...&quot;</span><span class="p">)</span>
+                <span class="n">t_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_ACPI_table</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">acpi_tables_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_data</span><span class="p">)</span>
+
+        <span class="n">acpi_tables</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">acpi_tables_data</span><span class="p">:</span>
+            <span class="n">acpi_tables</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data</span><span class="p">[:</span> <span class="n">ACPI_TABLE_HEADER_SIZE</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">ACPI_TABLE_HEADER_SIZE</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">acpi_tables</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Dumps contents of ACPI table</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="ACPI.dump_ACPI_table">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.acpi.html#chipsec.hal.acpi.ACPI.dump_ACPI_table">[docs]</a>
+    <span class="k">def</span> <span class="nf">dump_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">isfile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">acpi_tables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_parse_ACPI_table</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">isfile</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">acpi_table</span> <span class="ow">in</span> <span class="n">acpi_tables</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">table_header</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">)</span> <span class="o">=</span> <span class="n">acpi_table</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;==================================================================&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ACPI Table: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;==================================================================&quot;</span><span class="p">)</span>
+            <span class="c1"># print table header</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">table_header</span><span class="p">))</span>
+            <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">table_header_blob</span><span class="p">)</span>
+            <span class="c1"># print table contents</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">))</span>
+            <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">table_blob</span><span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --------------------------------------------------------------------</span>
+    <span class="c1"># Internal ACPI table parsing functions</span>
+    <span class="c1"># --------------------------------------------------------------------</span>
+
+    <span class="n">ParseTable</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ACPI_TABLE_HEADER</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ACPI_TABLE</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_parse_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParseTable</span><span class="p">:</span>
+        <span class="n">table_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_table_header</span><span class="p">(</span><span class="n">table_header_blob</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_table_contents</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">table_header</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">table_header_blob</span><span class="p">,</span> <span class="n">table_blob</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_table_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ACPI_TABLE_HEADER</span><span class="p">:</span>
+        <span class="n">acpi_table_hdr</span> <span class="o">=</span> <span class="n">ACPI_TABLE_HEADER</span><span class="p">(</span><span class="o">*</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span><span class="n">ACPI_TABLE_HEADER_FORMAT</span><span class="p">,</span> <span class="n">header</span><span class="p">))</span>
+        <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">acpi_table_hdr</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">acpi_table_hdr</span>
+
+    <span class="k">def</span> <span class="nf">_parse_table_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ACPI_TABLE</span><span class="p">]:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">ACPI_TABLES</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="n">signature</span><span class="p">):</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">signature</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;BERT&#39;</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">:</span>
+                <span class="n">BootRegionLen</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;L&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">BootRegionAddr</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;Q&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">12</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">bootRegion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">BootRegionAddr</span><span class="p">,</span> <span class="n">BootRegionLen</span><span class="p">)</span>
+                <span class="n">table</span> <span class="o">=</span> <span class="p">(</span><span class="n">ACPI_TABLES</span><span class="p">[</span><span class="n">signature</span><span class="p">])(</span><span class="n">bootRegion</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;NFIT&#39;</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">:</span>
+                <span class="n">table</span> <span class="o">=</span> <span class="p">(</span><span class="n">ACPI_TABLES</span><span class="p">[</span><span class="n">signature</span><span class="p">])(</span><span class="n">header</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">table</span> <span class="o">=</span> <span class="p">(</span><span class="n">ACPI_TABLES</span><span class="p">[</span><span class="n">signature</span><span class="p">])()</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">table</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.acpi</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.utilcmd.mem_cmd &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.mem_cmd</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.utilcmd.mem_cmd</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2010-2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The mem command provides direct access to read and write physical memory.</span>
+
+<span class="sd">&gt;&gt;&gt; chipsec_util mem &lt;op&gt; &lt;physical_address&gt; &lt;length&gt; [value|buffer_file]</span>
+<span class="sd">&gt;&gt;&gt; &lt;physical_address&gt; : 64-bit physical address</span>
+<span class="sd">&gt;&gt;&gt; &lt;op&gt;               : read|readval|write|writeval|allocate|pagedump|search</span>
+<span class="sd">&gt;&gt;&gt; &lt;length&gt;           : byte|word|dword or length of the buffer from &lt;buffer_file&gt;</span>
+<span class="sd">&gt;&gt;&gt; &lt;value&gt;            : byte, word or dword value to be written to memory at &lt;physical_address&gt;</span>
+<span class="sd">&gt;&gt;&gt; &lt;buffer_file&gt;      : file with the contents to be written to memory at &lt;physical_address&gt;</span>
+
+<span class="sd">Examples:</span>
+
+<span class="sd">&gt;&gt;&gt; chipsec_util mem &lt;op&gt;     &lt;physical_address&gt; &lt;length&gt; [value|file]</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem readval  0xFED40000         dword</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem read     0x41E              0x20     buffer.bin</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem writeval 0xA0000            dword    0x9090CCCC</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem write    0x100000000        0x1000   buffer.bin</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem write    0x100000000        0x10     000102030405060708090A0B0C0D0E0F</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem allocate                    0x1000</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem pagedump 0xFED00000         0x100000</span>
+<span class="sd">&gt;&gt;&gt; chipsec_util mem search   0xF0000            0x10000  _SM_</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.command</span> <span class="kn">import</span> <span class="n">BaseCommand</span><span class="p">,</span> <span class="n">toLoad</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">ALIGNED_4KB</span><span class="p">,</span> <span class="n">BOUNDARY_4KB</span><span class="p">,</span> <span class="n">bytestostring</span>
+<span class="kn">from</span> <span class="nn">chipsec_util</span> <span class="kn">import</span> <span class="n">get_option_width</span><span class="p">,</span> <span class="n">is_option_valid_width</span><span class="p">,</span> <span class="n">CMD_OPTS_WIDTH</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">read_file</span><span class="p">,</span> <span class="n">write_file</span><span class="p">,</span> <span class="n">get_main_dir</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">print_buffer_bytes</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
+
+<span class="c1"># Physical Memory</span>
+
+
+<div class="viewcode-block" id="MemCommand">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand">[docs]</a>
+<span class="k">class</span> <span class="nc">MemCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MemCommand.requirements">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.requirements">[docs]</a>
+    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">toLoad</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">toLoad</span><span class="o">.</span><span class="n">Driver</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.parse_arguments">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.parse_arguments">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util mem&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
+
+        <span class="n">parser_read</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">)</span>
+        <span class="n">parser_read</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;phys_address&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;64-bit physical address (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_read</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;buffer_length&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="mh">0x100</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Length of buffer (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_read</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;file_name&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Buffer file name&#39;</span><span class="p">)</span>
+        <span class="n">parser_read</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_read</span><span class="p">)</span>
+
+        <span class="n">parser_readval</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;readval&#39;</span><span class="p">)</span>
+        <span class="n">parser_readval</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;phys_address&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;64-bit physical address (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_readval</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Length to read (byte|word|dword)&#39;</span><span class="p">)</span>
+        <span class="n">parser_readval</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_readval</span><span class="p">)</span>
+
+        <span class="n">parser_write</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;write&#39;</span><span class="p">)</span>
+        <span class="n">parser_write</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;phys_address&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;64-bit physical address (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_write</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;buffer_length&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Length of buffer (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_write</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;buffer_data&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Buffer data or file name&#39;</span><span class="p">)</span>
+        <span class="n">parser_write</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_write</span><span class="p">)</span>
+
+        <span class="n">parser_writeval</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;writeval&#39;</span><span class="p">)</span>
+        <span class="n">parser_writeval</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;phys_address&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;64-bit physical address (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_writeval</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Length to write (byte|word|dword)&#39;</span><span class="p">)</span>
+        <span class="n">parser_writeval</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;write_data&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Data to write&#39;</span><span class="p">)</span>
+        <span class="n">parser_writeval</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_writeval</span><span class="p">)</span>
+
+        <span class="n">parser_allocate</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;allocate&#39;</span><span class="p">)</span>
+        <span class="n">parser_allocate</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;allocate_length&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Length to allocate (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_allocate</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_allocate</span><span class="p">)</span>
+
+        <span class="n">parser_pagedump</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;pagedump&#39;</span><span class="p">)</span>
+        <span class="n">parser_pagedump</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;start_address&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;64-bit physical address (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_pagedump</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">BOUNDARY_4KB</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Length to allocate (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_pagedump</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_pagedump</span><span class="p">)</span>
+
+        <span class="n">parser_search</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span>
+        <span class="n">parser_search</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;phys_address&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;64-bit physical address (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_search</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Length to search (hex)&#39;</span><span class="p">)</span>
+        <span class="n">parser_search</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Value to search for&#39;</span><span class="p">)</span>
+        <span class="n">parser_search</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_search</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MemCommand.dump_region_to_path">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.dump_region_to_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">dump_region_to_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pa_start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pa_end</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pa_start</span> <span class="o">&gt;=</span> <span class="n">pa_end</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">head_len</span> <span class="o">=</span> <span class="n">pa_start</span> <span class="o">&amp;</span> <span class="n">ALIGNED_4KB</span>
+        <span class="n">tail_len</span> <span class="o">=</span> <span class="n">pa_end</span> <span class="o">&amp;</span> <span class="n">ALIGNED_4KB</span>
+        <span class="n">pa</span> <span class="o">=</span> <span class="n">pa_start</span> <span class="o">-</span> <span class="n">head_len</span> <span class="o">+</span> <span class="n">ALIGNED_4KB</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;m</span><span class="si">{</span><span class="n">pa_start</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">.bin&#39;</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">pa_end</span> <span class="o">-</span> <span class="n">tail_len</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="c1"># read leading bytes to the next boundary</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">head_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">pa_start</span><span class="p">,</span> <span class="n">ALIGNED_4KB</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">head_len</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">ALIGNED_4KB</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">ALIGNED_4KB</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+            <span class="c1"># read trailing bytes</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">tail_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">tail_len</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.mem_allocate">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.mem_allocate">[docs]</a>
+    <span class="k">def</span> <span class="nf">mem_allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">alloc_physical_mem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allocate_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Allocated </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">allocate_length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> bytes of physical memory: VA = 0x</span><span class="si">{</span><span class="n">va</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">, PA = 0x</span><span class="si">{</span><span class="n">pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.mem_search">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.mem_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">mem_search</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">offset</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Search buffer from memory: PA = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">, len = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">, target address= 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">..&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Search buffer from memory: PA = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">, len = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">, can not find the target in the searched range..&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.mem_pagedump">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.mem_pagedump">[docs]</a>
+    <span class="k">def</span> <span class="nf">mem_pagedump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_address</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dump_region_to_path</span><span class="p">(</span><span class="n">get_main_dir</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_address</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.mem_read">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.mem_read">[docs]</a>
+    <span class="k">def</span> <span class="nf">mem_read</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Reading buffer from memory: PA = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">, len = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">..&#39;</span><span class="p">)</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_length</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">:</span>
+            <span class="n">write_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Written 0x</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> bytes to </span><span class="se">\&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.mem_readval">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.mem_readval">[docs]</a>
+    <span class="k">def</span> <span class="nf">mem_readval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mh">0x4</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="mh">0x0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">width</span> <span class="o">=</span> <span class="n">get_option_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_option_valid_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Bad length given </span><span class="se">\&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x4</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Must specify &lt;length&gt; argument in </span><span class="se">\&#39;</span><span class="s1">mem readval</span><span class="se">\&#39;</span><span class="s1"> as one of </span><span class="si">{</span><span class="n">CMD_OPTS_WIDTH</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Reading </span><span class="si">{</span><span class="n">width</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">-byte value from PA 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">..&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="mh">0x1</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_byte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mh">0x2</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_word</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mh">0x4</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Value = 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.mem_write">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.mem_write">[docs]</a>
+    <span class="k">def</span> <span class="nf">mem_write</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_data</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_data</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Incorrect &lt;value&gt; specified: </span><span class="se">\&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_data</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Read 0x</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> hex bytes from command-line: </span><span class="se">\&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_data</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">buffer</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Read 0x</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> bytes from file </span><span class="se">\&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_data</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_length</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of bytes read (0x</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">) is less than the specified &lt;length&gt; (0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] writing buffer to memory: PA = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">, len = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">..&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_length</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MemCommand.mem_writeval">
+<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.mem_cmd.html#chipsec.utilcmd.mem_cmd.MemCommand.mem_writeval">[docs]</a>
+    <span class="k">def</span> <span class="nf">mem_writeval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">get_option_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_option_valid_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Must specify &lt;length&gt; argument in </span><span class="se">\&#39;</span><span class="s1">mem writeval</span><span class="se">\&#39;</span><span class="s1"> as one of </span><span class="si">{</span><span class="n">CMD_OPTS_WIDTH</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x4</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Must specify &lt;length&gt; argument in </span><span class="se">\&#39;</span><span class="s1">mem writeval</span><span class="se">\&#39;</span><span class="s1"> as one of </span><span class="si">{</span><span class="n">CMD_OPTS_WIDTH</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[CHIPSEC] Writing </span><span class="si">{</span><span class="n">width</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">-byte value 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> to PA 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">..&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="mh">0x1</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem_byte</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mh">0x2</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem_word</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mh">0x4</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem_dword</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phys_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">)</span></div>
+</div>
+
+
+<span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mem&#39;</span><span class="p">:</span> <span class="n">MemCommand</span><span class="p">}</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.mem_cmd</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

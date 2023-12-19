@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.common.smrr &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.smrr</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.modules.common.smrr</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2010-2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">CPU SMM Cache Poisoning / System Management Range Registers check</span>
+
+<span class="sd">This module checks to see that SMRRs are enabled and configured.</span>
+
+<span class="sd">Reference:</span>
+<span class="sd">    Researchers demonstrated a way to use CPU cache to effectively change values in SMRAM in</span>
+<span class="sd">    `Attacking SMM Memory via Intel CPU Cache Poisoning &lt;http://www.invisiblethingslab.com/resources/misc09/smm_cache_fun.pdf&gt;`_</span>
+<span class="sd">    and `Getting into the SMRAM: SMM Reloaded &lt;http://cansecwest.com/csw09/csw09-duflot.pdf&gt;`_ .</span>
+<span class="sd">    If ring 0 software can make SMRAM cacheable and then populate cache lines at SMBASE with exploit code,</span>
+<span class="sd">    then when an SMI is triggered, the CPU could execute the exploit code from cache.</span>
+<span class="sd">    System Management Mode Range Registers (SMRRs) force non-cachable behavior and block access to SMRAM when the CPU is not in SMM.</span>
+<span class="sd">    These registers need to be enabled/configured by the BIOS.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    ``chipsec_main -m common.smrr [-a modify]``</span>
+
+<span class="sd">    - ``-a modify``: Attempt to modify memory at SMRR base</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m common.smrr</span>
+<span class="sd">    &gt;&gt;&gt; chipsec_main.py -m common.smrr -a modify</span>
+
+<span class="sd">Registers used:</span>
+<span class="sd">    - IA32_SMRR_PHYSBASE.PhysBase</span>
+<span class="sd">    - IA32_SMRR_PHYSBASE.Type</span>
+<span class="sd">    - IA32_SMRR_PHYSMASK.PhysMask</span>
+<span class="sd">    - IA32_SMRR_PHYSMASK.Valid</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span><span class="p">,</span> <span class="n">MTAG_BIOS</span><span class="p">,</span> <span class="n">MTAG_SMM</span><span class="p">,</span> <span class="n">OPT_MODIFY</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.msr</span> <span class="kn">import</span> <span class="n">MemType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_BIOS</span><span class="p">,</span> <span class="n">MTAG_SMM</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="smrr">
+<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smrr.html#chipsec.modules.common.smrr.smrr">[docs]</a>
+<span class="k">class</span> <span class="nc">smrr</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="p">(</span><span class="mh">0xdf11080</span><span class="p">,</span> <span class="s1">&#39;https://chipsec.github.io/modules/chipsec.modules.common.smrr.html&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="smrr.is_supported">
+<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smrr.html#chipsec.modules.common.smrr.smrr.is_supported">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">mtrr_exist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;MTRRCAP&#39;</span><span class="p">)</span>
+        <span class="n">pbase_exist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">)</span>
+        <span class="n">pmask_exist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mtrr_exist</span> <span class="ow">and</span> <span class="n">pbase_exist</span> <span class="ow">and</span> <span class="n">pmask_exist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_information</span><span class="p">(</span><span class="s1">&#39;Required registers are not defined for this platform.  Skipping module.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">NOT_APPLICABLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># Check that SMRR are supported by CPU in IA32_MTRRCAP_MSR[SMRR]</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="smrr.check_SMRR">
+<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smrr.html#chipsec.modules.common.smrr.smrr.check_SMRR">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_SMRR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_modify</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">check_SMRR_supported</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;OK. SMRR range protection is supported&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_not_applicable</span><span class="p">(</span><span class="s2">&quot;CPU does not support SMRR range protection of SMRAM&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">NOT_APPLICABLE</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># SMRR are supported</span>
+        <span class="c1">#</span>
+        <span class="n">smrr_ok</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># 2. Check SMRR_BASE is programmed correctly (on CPU0)</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Checking SMRR range base programming..&quot;</span><span class="p">)</span>
+        <span class="n">msr_smrrbase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">,</span> <span class="n">msr_smrrbase</span><span class="p">)</span>
+        <span class="n">smrrbase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">,</span> <span class="n">msr_smrrbase</span><span class="p">,</span> <span class="s1">&#39;PhysBase&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">smrrtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">,</span> <span class="n">msr_smrrbase</span><span class="p">,</span> <span class="s1">&#39;Type&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*] SMRR range base: 0x</span><span class="si">{</span><span class="n">smrrbase</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">smrrtype</span> <span class="ow">in</span> <span class="n">MemType</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*] SMRR range memory type is </span><span class="si">{</span><span class="n">MemType</span><span class="p">[</span><span class="n">smrrtype</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">smrr_ok</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SMRR range memory type 0x</span><span class="si">{</span><span class="n">smrrtype</span><span class="si">:</span><span class="s2">X</span><span class="si">}</span><span class="s2"> is invalid&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">smrrbase</span><span class="p">:</span>
+            <span class="n">smrr_ok</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;SMRR range base is not programmed&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">smrr_ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;OK so far. SMRR range base is programmed&quot;</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># 3. Check SMRR_MASK is programmed and SMRR are enabled (on CPU0)</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Checking SMRR range mask programming..&quot;</span><span class="p">)</span>
+        <span class="n">msr_smrrmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span><span class="p">,</span> <span class="n">msr_smrrmask</span><span class="p">)</span>
+        <span class="n">smrrmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span><span class="p">,</span> <span class="n">msr_smrrmask</span><span class="p">,</span> <span class="s1">&#39;PhysMask&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">smrrvalid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span><span class="p">,</span> <span class="n">msr_smrrmask</span><span class="p">,</span> <span class="s1">&#39;Valid&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*] SMRR range mask: 0x</span><span class="si">{</span><span class="n">smrrmask</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">smrrvalid</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">smrrmask</span><span class="p">)):</span>
+            <span class="n">smrr_ok</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;SMRR range is not enabled&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">smrr_ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;OK so far. SMRR range is enabled&quot;</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># 4. Verify that SMRR_BASE/MASK MSRs have the same values on all logical CPUs</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Verifying that SMRR range base &amp; mask are the same on all logical CPUs..&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
+            <span class="n">msr_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="n">msr_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[CPU</span><span class="si">{</span><span class="n">tid</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">] SMRR_PHYSBASE = </span><span class="si">{</span><span class="n">msr_base</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">, SMRR_PHYSMASK = </span><span class="si">{</span><span class="n">msr_mask</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">msr_base</span> <span class="o">!=</span> <span class="n">msr_smrrbase</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">msr_mask</span> <span class="o">!=</span> <span class="n">msr_smrrmask</span><span class="p">):</span>
+                <span class="n">smrr_ok</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;SMRR range base/mask do not match on all logical CPUs&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">smrr_ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;OK so far. SMRR range base/mask match on all logical CPUs&quot;</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># 5. Reading from &amp; writing to SMRR_BASE physical address</span>
+        <span class="c1"># writes should be dropped, reads should return all F&#39;s</span>
+        <span class="c1">#</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*] Trying to read memory at SMRR base 0x</span><span class="si">{</span><span class="n">smrrbase</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">..&quot;</span><span class="p">)</span>
+
+        <span class="n">ok</span> <span class="o">=</span> <span class="mh">0xFFFFFFFF</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span><span class="n">smrrbase</span><span class="p">)</span>
+        <span class="n">smrr_ok</span> <span class="o">=</span> <span class="n">smrr_ok</span> <span class="ow">and</span> <span class="n">ok</span>
+        <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s2">&quot;SMRR reads are blocked in non-SMM mode&quot;</span><span class="p">)</span>  <span class="c1"># return all F&#39;s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;SMRR reads are not blocked in non-SMM mode&quot;</span><span class="p">)</span>  <span class="c1"># all F&#39;s are not returned</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">do_modify</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*] Trying to modify memory at SMRR base 0x</span><span class="si">{</span><span class="n">smrrbase</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">..&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">write_physical_mem_dword</span><span class="p">(</span><span class="n">smrrbase</span><span class="p">,</span> <span class="mh">0x90909090</span><span class="p">)</span>
+            <span class="n">ok</span> <span class="o">=</span> <span class="mh">0x90909090</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span><span class="n">smrrbase</span><span class="p">)</span>
+            <span class="n">smrr_ok</span> <span class="o">=</span> <span class="n">smrr_ok</span> <span class="ow">and</span> <span class="n">ok</span>
+            <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s2">&quot;SMRR writes are blocked in non-SMM mode&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="s2">&quot;SMRR writes are not blocked in non-SMM mode&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">smrr_ok</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">CONFIGURATION</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;SMRR protection against cache attack is not configured properly&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s2">&quot;SMRR protection against cache attack is properly configured&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
+
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># run( module_argv )</span>
+    <span class="c1"># Required function: run here all tests from this module</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="smrr.run">
+<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smrr.html#chipsec.modules.common.smrr.smrr.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;CPU SMM Cache Poisoning / System Management Range Registers&quot;</span><span class="p">)</span>
+        <span class="n">do_modify</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">module_argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">module_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">OPT_MODIFY</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_SMRR</span><span class="p">(</span><span class="n">do_modify</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.smrr</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

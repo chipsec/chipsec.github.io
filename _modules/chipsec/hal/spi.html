@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.spi &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spi</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for chipsec.hal.spi</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CHIPSEC: Platform Security Assessment Framework</span>
+<span class="c1"># Copyright (c) 2010-2021, Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU General Public License</span>
+<span class="c1"># as published by the Free Software Foundation; Version 2.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># Contact information:</span>
+<span class="c1"># chipsec@intel.com</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Access to SPI Flash parts</span>
+
+<span class="sd">usage:</span>
+<span class="sd">    &gt;&gt;&gt; read_spi( spi_fla, length )</span>
+<span class="sd">    &gt;&gt;&gt; write_spi( spi_fla, buf )</span>
+<span class="sd">    &gt;&gt;&gt; erase_spi_block( spi_fla )</span>
+<span class="sd">    &gt;&gt;&gt; get_SPI_JEDEC_ID()</span>
+<span class="sd">    &gt;&gt;&gt; get_SPI_JEDEC_ID_decoded()</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    !! IMPORTANT:</span>
+<span class="sd">    Size of the data chunk used in SPI read cycle (in bytes)</span>
+<span class="sd">    default = maximum 64 bytes (remainder is read in 4 byte chunks)</span>
+
+<span class="sd">    If you want to change logic to read SPI Flash in 4 byte chunks:</span>
+<span class="sd">    SPI_READ_WRITE_MAX_DBC = 4</span>
+
+<span class="sd">    @TBD: SPI write cycles operate on 4 byte chunks (not optimized yet)</span>
+
+<span class="sd">    Approximate performance (on 2-core SMT Intel Core i5-4300U (Haswell) CPU 1.9GHz):</span>
+<span class="sd">    SPI read: ~7 sec per 1MB (with DBC=64)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">chipsec.defines</span> <span class="kn">import</span> <span class="n">ALIGNED_4KB</span><span class="p">,</span> <span class="n">BIT0</span><span class="p">,</span> <span class="n">BIT1</span><span class="p">,</span> <span class="n">BIT2</span><span class="p">,</span> <span class="n">BIT5</span>
+<span class="kn">from</span> <span class="nn">chipsec.file</span> <span class="kn">import</span> <span class="n">write_file</span><span class="p">,</span> <span class="n">read_file</span>
+<span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">print_buffer_bytes</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">hal_base</span><span class="p">,</span> <span class="n">mmio</span>
+<span class="kn">from</span> <span class="nn">chipsec.hal.spi_jedec_ids</span> <span class="kn">import</span> <span class="n">JEDEC_ID</span>
+<span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">SpiRuntimeError</span><span class="p">,</span> <span class="n">UnimplementedAPIError</span>
+
+<span class="n">SPI_READ_WRITE_MAX_DBC</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">SPI_READ_WRITE_DEF_DBC</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">SFDP_HEADER</span> <span class="o">=</span> <span class="mh">0x50444653</span>
+
+<span class="n">SPI_MAX_PR_COUNT</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">SPI_FLA_SHIFT</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">SPI_FLA_PAGE_MASK</span> <span class="o">=</span> <span class="n">ALIGNED_4KB</span>
+
+<span class="n">SPI_MMIO_BASE_LENGTH</span> <span class="o">=</span> <span class="mh">0x200</span>
+<span class="n">PCH_RCBA_SPI_HSFSTS_SCIP</span> <span class="o">=</span> <span class="n">BIT5</span>                          <span class="c1"># SPI cycle in progress</span>
+<span class="n">PCH_RCBA_SPI_HSFSTS_AEL</span> <span class="o">=</span> <span class="n">BIT2</span>                          <span class="c1"># Access Error Log</span>
+<span class="n">PCH_RCBA_SPI_HSFSTS_FCERR</span> <span class="o">=</span> <span class="n">BIT1</span>                          <span class="c1"># Flash Cycle Error</span>
+<span class="n">PCH_RCBA_SPI_HSFSTS_FDONE</span> <span class="o">=</span> <span class="n">BIT0</span>                          <span class="c1"># Flash Cycle Done</span>
+
+<span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_READ</span> <span class="o">=</span> <span class="mi">0</span>                             <span class="c1"># Flash Cycle Read</span>
+<span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_WRITE</span> <span class="o">=</span> <span class="mi">2</span>                             <span class="c1"># Flash Cycle Write</span>
+<span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_ERASE</span> <span class="o">=</span> <span class="mi">3</span>                             <span class="c1"># Flash Cycle Block Erase</span>
+<span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_SFDP</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_JEDEC</span> <span class="o">=</span> <span class="mi">6</span>                             <span class="c1"># Flash Cycle Read JEDEC ID</span>
+<span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_FGO</span> <span class="o">=</span> <span class="n">BIT0</span>                          <span class="c1"># Flash Cycle GO</span>
+
+<span class="n">PCH_RCBA_SPI_FADDR_MASK</span> <span class="o">=</span> <span class="mh">0x07FFFFFF</span>                      <span class="c1"># SPI Flash Address Mask [0:26]</span>
+
+<span class="n">PCH_RCBA_SPI_FREGx_LIMIT_MASK</span> <span class="o">=</span> <span class="mh">0x7FFF0000</span>                    <span class="c1"># Size</span>
+<span class="n">PCH_RCBA_SPI_FREGx_BASE_MASK</span> <span class="o">=</span> <span class="mh">0x00007FFF</span>                    <span class="c1"># Base</span>
+
+<span class="n">PCH_RCBA_SPI_OPTYPE_RDNOADDR</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">PCH_RCBA_SPI_OPTYPE_WRNOADDR</span> <span class="o">=</span> <span class="mh">0x01</span>
+<span class="n">PCH_RCBA_SPI_OPTYPE_RDADDR</span> <span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">PCH_RCBA_SPI_OPTYPE_WRADDR</span> <span class="o">=</span> <span class="mh">0x03</span>
+
+<span class="n">PCH_RCBA_SPI_FDOC_FDSS_FSDM</span> <span class="o">=</span> <span class="mh">0x0000</span>                        <span class="c1"># Flash Signature and Descriptor Map</span>
+<span class="n">PCH_RCBA_SPI_FDOC_FDSS_COMP</span> <span class="o">=</span> <span class="mh">0x1000</span>                        <span class="c1"># Component</span>
+<span class="n">PCH_RCBA_SPI_FDOC_FDSS_REGN</span> <span class="o">=</span> <span class="mh">0x2000</span>                        <span class="c1"># Region</span>
+<span class="n">PCH_RCBA_SPI_FDOC_FDSS_MSTR</span> <span class="o">=</span> <span class="mh">0x3000</span>                        <span class="c1"># Master</span>
+<span class="n">PCH_RCBA_SPI_FDOC_FDSI_MASK</span> <span class="o">=</span> <span class="mh">0x0FFC</span>                        <span class="c1"># Flash Descriptor Section Index</span>
+
+<span class="c1"># agregated SPI Flash commands</span>
+<span class="n">HSFCTL_READ_CYCLE</span> <span class="o">=</span> <span class="p">((</span><span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_READ</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_FGO</span><span class="p">)</span>
+<span class="n">HSFCTL_WRITE_CYCLE</span> <span class="o">=</span> <span class="p">((</span><span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_WRITE</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_FGO</span><span class="p">)</span>
+<span class="n">HSFCTL_ERASE_CYCLE</span> <span class="o">=</span> <span class="p">((</span><span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_ERASE</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_FGO</span><span class="p">)</span>
+<span class="n">HSFCTL_JEDEC_CYCLE</span> <span class="o">=</span> <span class="p">((</span><span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_JEDEC</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_FGO</span><span class="p">)</span>
+<span class="n">HSFCTL_SFDP_CYCLE</span> <span class="o">=</span> <span class="p">((</span><span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_SFDP</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">PCH_RCBA_SPI_HSFCTL_FCYCLE_FGO</span><span class="p">)</span>
+
+<span class="c1"># !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span>
+<span class="c1"># FGO bit cleared (for safety ;)</span>
+<span class="c1"># !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span>
+<span class="c1">#HSFCTL_WRITE_CYCLE = ( (PCH_RCBA_SPI_HSFCTL_FCYCLE_WRITE&lt;&lt;1) )</span>
+<span class="c1">#HSFCTL_ERASE_CYCLE = ( (PCH_RCBA_SPI_HSFCTL_FCYCLE_ERASE&lt;&lt;1) )</span>
+
+<span class="n">HSFSTS_CLEAR</span> <span class="o">=</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_HSFSTS_AEL</span> <span class="o">|</span> <span class="n">PCH_RCBA_SPI_HSFSTS_FCERR</span> <span class="o">|</span> <span class="n">PCH_RCBA_SPI_HSFSTS_FDONE</span><span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Hardware Sequencing Flash Status (HSFSTS)</span>
+<span class="c1">#</span>
+<span class="n">SPI_HSFSTS_OFFSET</span> <span class="o">=</span> <span class="mh">0x04</span>
+<span class="c1"># HSFSTS bit masks</span>
+<span class="n">SPI_HSFSTS_FLOCKDN_MASK</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">SPI_HSFSTS_FDOPSS_MASK</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">13</span><span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Flash Regions</span>
+<span class="c1">#</span>
+
+<span class="n">SPI_REGION_NUMBER_IN_FD</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="n">FLASH_DESCRIPTOR</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">BIOS</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">ME</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">GBE</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">PLATFORM_DATA</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">FREG5</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">FREG6</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">FREG7</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">EMBEDDED_CONTROLLER</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">FREG9</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">FREG10</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">FREG11</span> <span class="o">=</span> <span class="mi">11</span>
+
+<span class="n">SPI_REGION</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">FLASH_DESCRIPTOR</span><span class="p">:</span> <span class="s1">&#39;FREG0_FLASHD&#39;</span><span class="p">,</span>
+    <span class="n">BIOS</span><span class="p">:</span> <span class="s1">&#39;FREG1_BIOS&#39;</span><span class="p">,</span>
+    <span class="n">ME</span><span class="p">:</span> <span class="s1">&#39;FREG2_ME&#39;</span><span class="p">,</span>
+    <span class="n">GBE</span><span class="p">:</span> <span class="s1">&#39;FREG3_GBE&#39;</span><span class="p">,</span>
+    <span class="n">PLATFORM_DATA</span><span class="p">:</span> <span class="s1">&#39;FREG4_PD&#39;</span><span class="p">,</span>
+    <span class="n">FREG5</span><span class="p">:</span> <span class="s1">&#39;FREG5&#39;</span><span class="p">,</span>
+    <span class="n">FREG6</span><span class="p">:</span> <span class="s1">&#39;FREG6&#39;</span><span class="p">,</span>
+    <span class="n">FREG7</span><span class="p">:</span> <span class="s1">&#39;FREG7&#39;</span><span class="p">,</span>
+    <span class="n">EMBEDDED_CONTROLLER</span><span class="p">:</span> <span class="s1">&#39;FREG8_EC&#39;</span><span class="p">,</span>
+    <span class="n">FREG9</span><span class="p">:</span> <span class="s1">&#39;FREG9&#39;</span><span class="p">,</span>
+    <span class="n">FREG10</span><span class="p">:</span> <span class="s1">&#39;FREG10&#39;</span><span class="p">,</span>
+    <span class="n">FREG11</span><span class="p">:</span> <span class="s1">&#39;FREG11&#39;</span>
+<span class="p">}</span>
+
+<span class="n">SPI_REGION_NAMES</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">FLASH_DESCRIPTOR</span><span class="p">:</span> <span class="s1">&#39;Flash Descriptor&#39;</span><span class="p">,</span>
+    <span class="n">BIOS</span><span class="p">:</span> <span class="s1">&#39;BIOS&#39;</span><span class="p">,</span>
+    <span class="n">ME</span><span class="p">:</span> <span class="s1">&#39;Intel ME&#39;</span><span class="p">,</span>
+    <span class="n">GBE</span><span class="p">:</span> <span class="s1">&#39;GBe&#39;</span><span class="p">,</span>
+    <span class="n">PLATFORM_DATA</span><span class="p">:</span> <span class="s1">&#39;Platform Data&#39;</span><span class="p">,</span>
+    <span class="n">FREG5</span><span class="p">:</span> <span class="s1">&#39;Flash Region 5&#39;</span><span class="p">,</span>
+    <span class="n">FREG6</span><span class="p">:</span> <span class="s1">&#39;Flash Region 6&#39;</span><span class="p">,</span>
+    <span class="n">FREG7</span><span class="p">:</span> <span class="s1">&#39;Flash Region 7&#39;</span><span class="p">,</span>
+    <span class="n">EMBEDDED_CONTROLLER</span><span class="p">:</span> <span class="s1">&#39;Embedded Controller&#39;</span><span class="p">,</span>
+    <span class="n">FREG9</span><span class="p">:</span> <span class="s1">&#39;Flash Region 9&#39;</span><span class="p">,</span>
+    <span class="n">FREG10</span><span class="p">:</span> <span class="s1">&#39;Flash Region 10&#39;</span><span class="p">,</span>
+    <span class="n">FREG11</span><span class="p">:</span> <span class="s1">&#39;Flash Region 11&#39;</span>
+<span class="p">}</span>
+
+<span class="c1">#</span>
+<span class="c1"># Flash Descriptor Master Defines</span>
+<span class="c1">#</span>
+
+<span class="n">MASTER_HOST_CPU_BIOS</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">MASTER_ME</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">MASTER_GBE</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">MASTER_EC</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">SPI_MASTER_NAMES</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">MASTER_HOST_CPU_BIOS</span><span class="p">:</span> <span class="s1">&#39;CPU&#39;</span><span class="p">,</span>
+    <span class="n">MASTER_ME</span><span class="p">:</span> <span class="s1">&#39;ME&#39;</span><span class="p">,</span>
+    <span class="n">MASTER_GBE</span><span class="p">:</span> <span class="s1">&#39;GBe&#39;</span><span class="p">,</span>
+    <span class="n">MASTER_EC</span><span class="p">:</span> <span class="s1">&#39;EC&#39;</span>
+<span class="p">}</span>
+
+<span class="c1"># @TODO: DEPRECATED</span>
+
+
+<div class="viewcode-block" id="get_SPI_region">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.get_SPI_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_SPI_region</span><span class="p">(</span><span class="n">flreg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">range_base</span> <span class="o">=</span> <span class="p">(</span><span class="n">flreg</span> <span class="o">&amp;</span> <span class="n">PCH_RCBA_SPI_FREGx_BASE_MASK</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">SPI_FLA_SHIFT</span>
+    <span class="n">range_limit</span> <span class="o">=</span> <span class="p">((</span><span class="n">flreg</span> <span class="o">&amp;</span> <span class="n">PCH_RCBA_SPI_FREGx_LIMIT_MASK</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">range_limit</span> <span class="o">|=</span> <span class="n">SPI_FLA_PAGE_MASK</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">range_base</span><span class="p">,</span> <span class="n">range_limit</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SPI">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI">[docs]</a>
+<span class="k">class</span> <span class="nc">SPI</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SPI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span> <span class="o">=</span> <span class="n">mmio</span><span class="o">.</span><span class="n">MMIO</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rcba_spi_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SPI_MMIO_base</span><span class="p">()</span>
+        <span class="c1"># We try to map SPIBAR in the process memory, this will increase the</span>
+        <span class="c1"># speed of MMIO access later on.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rcba_spi_base</span><span class="p">,</span> <span class="n">SPI_MMIO_BASE_LENGTH</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">UnimplementedAPIError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Reading definitions of SPI flash controller registers</span>
+        <span class="c1"># which are required to send SPI cycles once for performance reasons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hsfs_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;HSFS&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hsfc_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;HSFC&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faddr_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FADDR&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata0_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA0&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata1_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA1&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata2_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA2&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata3_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA3&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata4_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA4&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata5_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA5&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata6_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA6&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata7_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA7&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata8_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA8&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata9_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA9&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata10_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA10&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata11_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA11&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata12_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA12&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata13_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA13&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata14_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA14&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdata15_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;FDATA15&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bios_ptinx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;BIOS_PTINX&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bios_ptdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="s2">&quot;BIOS_PTDATA&quot;</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[spi] Reading SPI flash controller registers definitions:&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;      HSFS   offset = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfs_off</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;      HSFC   offset = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfc_off</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;      FADDR  offset = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">faddr_off</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;      FDATA0 offset = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata0_off</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SPI.get_SPI_MMIO_base">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.get_SPI_MMIO_base">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SPI_MMIO_base</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">spi_base</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">is_MMIO_BAR_defined</span><span class="p">(</span><span class="s1">&#39;SPIBAR&#39;</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">spi_base</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">get_MMIO_BAR_base_address</span><span class="p">(</span><span class="s1">&#39;SPIBAR&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[spi] get_SPI_MMIO_base(): SPIBAR not defined. Returning spi_base = 0.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] SPI MMIO base: 0x</span><span class="si">{</span><span class="n">spi_base</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1"> (assuming below 4GB)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spi_base</span></div>
+
+
+<div class="viewcode-block" id="SPI.spi_reg_read">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.spi_reg_read">[docs]</a>
+    <span class="k">def</span> <span class="nf">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">read_MMIO_reg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rcba_spi_base</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.spi_reg_write">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.spi_reg_write">[docs]</a>
+    <span class="k">def</span> <span class="nf">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rcba_spi_base</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.get_SPI_region">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.get_SPI_region">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SPI_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spi_region_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">freg_name</span> <span class="o">=</span> <span class="n">SPI_REGION</span><span class="p">[</span><span class="n">spi_region_id</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="n">freg_name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">freg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="n">freg_name</span><span class="p">)</span>
+        <span class="c1"># Region Base corresponds to FLA bits 24:12</span>
+        <span class="n">range_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="n">freg_name</span><span class="p">,</span> <span class="n">freg</span><span class="p">,</span> <span class="s1">&#39;RB&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">SPI_FLA_SHIFT</span>
+        <span class="c1"># Region Limit corresponds to FLA bits 24:12</span>
+        <span class="n">range_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="n">freg_name</span><span class="p">,</span> <span class="n">freg</span><span class="p">,</span> <span class="s1">&#39;RL&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">SPI_FLA_SHIFT</span>
+        <span class="c1"># FLA bits 11:0 are assumed to be FFFh for the limit comparison</span>
+        <span class="n">range_limit</span> <span class="o">|=</span> <span class="n">SPI_FLA_PAGE_MASK</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">range_base</span><span class="p">,</span> <span class="n">range_limit</span><span class="p">,</span> <span class="n">freg</span><span class="p">)</span></div>
+
+
+    <span class="n">SpiRegions</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
+
+    <span class="c1"># all_regions = True : return all SPI regions</span>
+    <span class="c1"># all_regions = False: return only available SPI regions (limit &gt;= base)</span>
+<div class="viewcode-block" id="SPI.get_SPI_regions">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.get_SPI_regions">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SPI_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_regions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpiRegions</span><span class="p">:</span>
+        <span class="n">spi_regions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SPI_REGION</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">range_base</span><span class="p">,</span> <span class="n">range_limit</span><span class="p">,</span> <span class="n">freg</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SPI_region</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">range_base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">all_regions</span> <span class="ow">or</span> <span class="p">(</span><span class="n">range_limit</span> <span class="o">&gt;=</span> <span class="n">range_base</span><span class="p">):</span>
+                <span class="n">range_size</span> <span class="o">=</span> <span class="n">range_limit</span> <span class="o">-</span> <span class="n">range_base</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">spi_regions</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">range_base</span><span class="p">,</span> <span class="n">range_limit</span><span class="p">,</span> <span class="n">range_size</span><span class="p">,</span> <span class="n">SPI_REGION_NAMES</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="n">freg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spi_regions</span></div>
+
+
+<div class="viewcode-block" id="SPI.get_SPI_Protected_Range">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.get_SPI_Protected_Range">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SPI_Protected_Range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pr_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">pr_num</span> <span class="o">&gt;</span> <span class="n">SPI_MAX_PR_COUNT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">pr_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;PR</span><span class="si">{</span><span class="n">pr_num</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">pr_j_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_def</span><span class="p">(</span><span class="n">pr_name</span><span class="p">)[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+        <span class="n">pr_j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="n">pr_name</span><span class="p">)</span>
+
+        <span class="c1"># Protected Range Base corresponds to FLA bits 24:12</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="n">pr_name</span><span class="p">,</span> <span class="n">pr_j</span><span class="p">,</span> <span class="s1">&#39;PRB&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">SPI_FLA_SHIFT</span>
+        <span class="c1"># Protected Range Limit corresponds to FLA bits 24:12</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="n">pr_name</span><span class="p">,</span> <span class="n">pr_j</span><span class="p">,</span> <span class="s1">&#39;PRL&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">SPI_FLA_SHIFT</span>
+
+        <span class="n">wpe</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="n">pr_name</span><span class="p">,</span> <span class="n">pr_j</span><span class="p">,</span> <span class="s1">&#39;WPE&#39;</span><span class="p">))</span>
+        <span class="n">rpe</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="n">pr_name</span><span class="p">,</span> <span class="n">pr_j</span><span class="p">,</span> <span class="s1">&#39;RPE&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Check if this is a valid PRx config</span>
+        <span class="k">if</span> <span class="n">wpe</span> <span class="ow">or</span> <span class="n">rpe</span><span class="p">:</span>
+            <span class="c1"># FLA bits 11:0 are assumed to be FFFh for the limit comparison</span>
+            <span class="n">limit</span> <span class="o">|=</span> <span class="n">SPI_FLA_PAGE_MASK</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">wpe</span><span class="p">,</span> <span class="n">rpe</span><span class="p">,</span> <span class="n">pr_j_reg</span><span class="p">,</span> <span class="n">pr_j</span><span class="p">)</span></div>
+
+
+    <span class="c1">##############################################################################################################</span>
+    <span class="c1"># SPI configuration</span>
+    <span class="c1">##############################################################################################################</span>
+
+<div class="viewcode-block" id="SPI.display_SPI_Flash_Descriptor">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_SPI_Flash_Descriptor">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_SPI_Flash_Descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;============================================================&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;SPI Flash Descriptor&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Flash Signature and Descriptor Map:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s1">&#39;FDOC&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_FDOC_FDSS_FSDM</span> <span class="o">|</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="n">fdod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;FDOD&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fdod</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Components:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s1">&#39;FDOC&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_FDOC_FDSS_COMP</span> <span class="o">|</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="n">fdod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;FDOD&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fdod</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Regions:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s1">&#39;FDOC&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_FDOC_FDSS_REGN</span> <span class="o">|</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="n">fdod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;FDOD&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fdod</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Masters:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register</span><span class="p">(</span><span class="s1">&#39;FDOC&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_FDOC_FDSS_MSTR</span> <span class="o">|</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="n">fdod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;FDOD&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fdod</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.display_SPI_opcode_info">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_SPI_opcode_info">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_SPI_opcode_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;============================================================&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;SPI Opcode Info&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="n">preop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;PREOP&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;PREOP : 0x</span><span class="si">{</span><span class="n">preop</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">optype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;OPTYPE&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;OPTYPE: 0x</span><span class="si">{</span><span class="n">optype</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">opmenu_lo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;OPMENU_LO&#39;</span><span class="p">)</span>
+        <span class="n">opmenu_hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;OPMENU_HI&#39;</span><span class="p">)</span>
+        <span class="n">opmenu</span> <span class="o">=</span> <span class="p">((</span><span class="n">opmenu_hi</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">|</span> <span class="n">opmenu_lo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;OPMENU: 0x</span><span class="si">{</span><span class="n">opmenu</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">preop0</span> <span class="o">=</span> <span class="n">preop</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+        <span class="n">preop1</span> <span class="o">=</span> <span class="p">(</span><span class="n">preop</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Prefix Opcode 0 = 0x</span><span class="si">{</span><span class="n">preop0</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Prefix Opcode 1 = 0x</span><span class="si">{</span><span class="n">preop1</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Opcode # | Opcode | Optype | Description&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+            <span class="n">optype_j</span> <span class="o">=</span> <span class="p">((</span><span class="n">optype</span> <span class="o">&gt;&gt;</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x3</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_OPTYPE_RDNOADDR</span> <span class="o">==</span> <span class="n">optype_j</span><span class="p">):</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;SPI read cycle without address&#39;</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_OPTYPE_WRNOADDR</span> <span class="o">==</span> <span class="n">optype_j</span><span class="p">):</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;SPI write cycle without address&#39;</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_OPTYPE_RDADDR</span> <span class="o">==</span> <span class="n">optype_j</span><span class="p">):</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;SPI read cycle with address&#39;</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">PCH_RCBA_SPI_OPTYPE_WRADDR</span> <span class="o">==</span> <span class="n">optype_j</span><span class="p">):</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;SPI write cycle with address&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Opcode</span><span class="si">{</span><span class="n">j</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">  | 0x</span><span class="si">{</span><span class="p">(</span><span class="n">opmenu</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">   | </span><span class="si">{</span><span class="n">optype_j</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">      | </span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.display_SPI_Flash_Regions">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_SPI_Flash_Regions">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_SPI_Flash_Regions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Flash Region             | FREGx Reg | Base     | Limit     &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="n">regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SPI_regions</span><span class="p">()</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">region</span><span class="p">)</span> <span class="ow">in</span> <span class="n">regions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freg</span> <span class="o">=</span> <span class="n">region</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">region_id</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s1">22</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">freg</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">  | </span><span class="si">{</span><span class="n">base</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">limit</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.display_BIOS_region">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_BIOS_region">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_BIOS_region</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">bfpreg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;BFPR&#39;</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;BFPR&#39;</span><span class="p">,</span> <span class="n">bfpreg</span><span class="p">,</span> <span class="s1">&#39;PRB&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">SPI_FLA_SHIFT</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;BFPR&#39;</span><span class="p">,</span> <span class="n">bfpreg</span><span class="p">,</span> <span class="s1">&#39;PRL&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">SPI_FLA_SHIFT</span>
+        <span class="n">limit</span> <span class="o">|=</span> <span class="n">SPI_FLA_PAGE_MASK</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;BIOS Flash Primary Region&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;BFPREG = </span><span class="si">{</span><span class="n">bfpreg</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Base  : </span><span class="si">{</span><span class="n">base</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Limit : </span><span class="si">{</span><span class="n">limit</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.display_SPI_Ranges_Access_Permissions">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_SPI_Ranges_Access_Permissions">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_SPI_Ranges_Access_Permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;SPI Flash Region Access Permissions&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="n">fracc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;FRAP&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="s1">&#39;FRAP&#39;</span><span class="p">,</span> <span class="n">fracc</span><span class="p">)</span>
+        <span class="n">brra</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;FRAP&#39;</span><span class="p">,</span> <span class="n">fracc</span><span class="p">,</span> <span class="s1">&#39;BRRA&#39;</span><span class="p">)</span>
+        <span class="n">brwa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;FRAP&#39;</span><span class="p">,</span> <span class="n">fracc</span><span class="p">,</span> <span class="s1">&#39;BRWA&#39;</span><span class="p">)</span>
+        <span class="n">bmrag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;FRAP&#39;</span><span class="p">,</span> <span class="n">fracc</span><span class="p">,</span> <span class="s1">&#39;BMRAG&#39;</span><span class="p">)</span>
+        <span class="n">bmwag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;FRAP&#39;</span><span class="p">,</span> <span class="n">fracc</span><span class="p">,</span> <span class="s1">&#39;BMWAG&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;BIOS Region Write Access Grant (</span><span class="si">{</span><span class="n">bmwag</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">):&#39;</span><span class="p">)</span>
+        <span class="n">regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SPI_regions</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">SPI_REGION</span><span class="p">[</span><span class="n">region_id</span><span class="p">]</span><span class="si">:</span><span class="s1">12</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="mi">0</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">bmwag</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">region_id</span><span class="p">)</span><span class="si">:</span><span class="s1">1d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;BIOS Region Read Access Grant (</span><span class="si">{</span><span class="n">bmrag</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">):&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">SPI_REGION</span><span class="p">[</span><span class="n">region_id</span><span class="p">]</span><span class="si">:</span><span class="s1">12</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="mi">0</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">bmrag</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">region_id</span><span class="p">)</span><span class="si">:</span><span class="s1">1d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;BIOS Region Write Access (</span><span class="si">{</span><span class="n">brwa</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">):&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">SPI_REGION</span><span class="p">[</span><span class="n">region_id</span><span class="p">]</span><span class="si">:</span><span class="s1">12</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="mi">0</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">brwa</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">region_id</span><span class="p">)</span><span class="si">:</span><span class="s1">1d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;BIOS Region Read Access (</span><span class="si">{</span><span class="n">brra</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">):&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">SPI_REGION</span><span class="p">[</span><span class="n">region_id</span><span class="p">]</span><span class="si">:</span><span class="s1">12</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="mi">0</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">brra</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">region_id</span><span class="p">)</span><span class="si">:</span><span class="s1">1d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.display_SPI_Protected_Ranges">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_SPI_Protected_Ranges">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_SPI_Protected_Ranges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;SPI Protected Ranges&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;PRx (offset) | Value    | Base     | Limit    | WP? | RP?&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">wpe</span><span class="p">,</span> <span class="n">rpe</span><span class="p">,</span> <span class="n">pr_reg_off</span><span class="p">,</span> <span class="n">pr_reg_value</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SPI_Protected_Range</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;PR</span><span class="si">{</span><span class="n">j</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">pr_reg_off</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">)     | </span><span class="si">{</span><span class="n">pr_reg_value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">base</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">limit</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">wpe</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">   | </span><span class="si">{</span><span class="n">rpe</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.display_SPI_map">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_SPI_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_SPI_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;============================================================&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;SPI Flash Map&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_BIOS_region</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_SPI_Flash_Regions</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_SPI_Flash_Descriptor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_SPI_opcode_info</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;============================================================&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;SPI Flash Protection&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_SPI_Ranges_Access_Permissions</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;BIOS Region Write Protection&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------------&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_BIOS_write_protection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_SPI_Protected_Ranges</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+    <span class="c1">##############################################################################################################</span>
+    <span class="c1"># BIOS Write Protection</span>
+    <span class="c1">##############################################################################################################</span>
+
+<div class="viewcode-block" id="SPI.display_BIOS_write_protection">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.display_BIOS_write_protection">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_BIOS_write_protection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;BC&#39;</span><span class="p">):</span>
+            <span class="n">reg_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;BC&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="s1">&#39;BC&#39;</span><span class="p">,</span> <span class="n">reg_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;Could not locate the definition of &#39;BIOS Control&#39; register..&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.disable_BIOS_write_protection">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.disable_BIOS_write_protection">[docs]</a>
+    <span class="k">def</span> <span class="nf">disable_BIOS_write_protection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_BIOS_write_protection</span><span class="p">()</span>
+        <span class="n">ble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;BiosLockEnable&#39;</span><span class="p">)</span>
+        <span class="n">bioswe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;BiosWriteEnable&#39;</span><span class="p">)</span>
+        <span class="n">smmbwp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;SmmBiosWriteProtection&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">smmbwp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[spi] SMM BIOS write protection (SmmBiosWriteProtection) is enabled&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bioswe</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[spi] BIOS write protection (BiosWriteEnable) is not enabled&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">ble</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[spi] BIOS write protection is enabled but not locked. Disabling..&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># bioswe == 0 and ble == 1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s2">&quot;[spi] BIOS write protection is enabled. Attempting to disable..&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Set BiosWriteEnable control bit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">set_control</span><span class="p">(</span><span class="s1">&#39;BiosWriteEnable&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># read BiosWriteEnable back to check if BIOS writes are enabled</span>
+        <span class="n">bioswe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;BiosWriteEnable&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_BIOS_write_protection</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="n">protection</span> <span class="o">=</span> <span class="s1">&#39;disabled&#39;</span> <span class="k">if</span> <span class="n">bioswe</span> <span class="k">else</span> <span class="s1">&#39;still enabled&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;BIOS write protection is </span><span class="si">{</span><span class="n">protection</span><span class="si">}</span><span class="s1"> (BiosWriteEnable = </span><span class="si">{</span><span class="n">bioswe</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">bioswe</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+    <span class="c1">##############################################################################################################</span>
+    <span class="c1"># SPI Controller access functions</span>
+    <span class="c1">##############################################################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_wait_SPI_flash_cycle_done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[spi] Wait for SPI cycle ready/done...&#39;</span><span class="p">)</span>
+        <span class="n">hsfsts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cycle_done</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+            <span class="c1"># time.sleep(0.001)</span>
+            <span class="n">hsfsts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfs_off</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1">#cycle_done = (hsfsts &amp; Cfg.Cfg.PCH_RCBA_SPI_HSFSTS_FDONE) and (0 == (hsfsts &amp; Cfg.PCH_RCBA_SPI_HSFSTS_SCIP))</span>
+            <span class="n">cycle_done</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">hsfsts</span> <span class="o">&amp;</span> <span class="n">PCH_RCBA_SPI_HSFSTS_SCIP</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cycle_done</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cycle_done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[spi] SPI cycle still in progress. Waiting 0.1 sec...&#39;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="n">hsfsts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfs_off</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">cycle_done</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">hsfsts</span> <span class="o">&amp;</span> <span class="n">PCH_RCBA_SPI_HSFSTS_SCIP</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cycle_done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[spi] Clear FDONE/FCERR/AEL bits...&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfs_off</span><span class="p">,</span> <span class="n">HSFSTS_CLEAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">hsfsts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfs_off</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">cycle_done</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">((</span><span class="n">hsfsts</span> <span class="o">&amp;</span> <span class="n">PCH_RCBA_SPI_HSFSTS_AEL</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">hsfsts</span> <span class="o">&amp;</span> <span class="n">PCH_RCBA_SPI_HSFSTS_FCERR</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] HSFS: 0x</span><span class="si">{</span><span class="n">hsfsts</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cycle_done</span>
+
+    <span class="k">def</span> <span class="nf">_send_spi_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hsfctl_spi_cycle_cmd</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dbc</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">spi_fla</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] &gt; Send SPI cycle 0x</span><span class="si">{</span><span class="n">hsfctl_spi_cycle_cmd</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> to address 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># No need to check for SPI cycle DONE status before each cycle</span>
+        <span class="c1"># DONE status is checked once before entire SPI operation</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faddr_off</span><span class="p">,</span> <span class="p">(</span><span class="n">spi_fla</span> <span class="o">&amp;</span> <span class="n">PCH_RCBA_SPI_FADDR_MASK</span><span class="p">))</span>
+        <span class="c1"># Other options ;)</span>
+        <span class="c1">#chipsec.chipset.write_register( self.cs, &quot;FADDR&quot;, (spi_fla &amp; Cfg.PCH_RCBA_SPI_FADDR_MASK) )</span>
+        <span class="c1">#write_MMIO_reg( self.cs, spi_base, self.faddr_off, (spi_fla &amp; Cfg.PCH_RCBA_SPI_FADDR_MASK) )</span>
+        <span class="c1">#self.cs.mem.write_physical_mem_dword( spi_base + self.faddr_off, (spi_fla &amp; Cfg.PCH_RCBA_SPI_FADDR_MASK) )</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="n">_faddr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faddr_off</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] FADDR: 0x</span><span class="si">{</span><span class="n">_faddr</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] SPI cycle GO (DBC &lt;- 0x</span><span class="si">{</span><span class="n">dbc</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">, HSFC &lt;- 0x</span><span class="si">{</span><span class="n">hsfctl_spi_cycle_cmd</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">HSFCTL_ERASE_CYCLE</span> <span class="o">!=</span> <span class="n">hsfctl_spi_cycle_cmd</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfc_off</span> <span class="o">+</span> <span class="mh">0x1</span><span class="p">,</span> <span class="n">dbc</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfc_off</span><span class="p">,</span> <span class="n">hsfctl_spi_cycle_cmd</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#self.spi_reg_write( self.hsfc_off, ((dbc&lt;&lt;8)|hsfctl_spi_cycle_cmd), 2 )</span>
+
+        <span class="c1"># Read HSFC back (logging only)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="n">_hsfc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hsfc_off</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] HSFC: 0x</span><span class="si">{</span><span class="n">_hsfc</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">cycle_done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_SPI_flash_cycle_done</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cycle_done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="s2">&quot;SPI cycle not done&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[spi] &lt; SPI cycle done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cycle_done</span>
+
+<div class="viewcode-block" id="SPI.check_hardware_sequencing">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.check_hardware_sequencing">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_hardware_sequencing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Test if the flash decriptor is valid (and hardware sequencing enabled)</span>
+        <span class="n">fdv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;HSFS&#39;</span><span class="p">,</span> <span class="s1">&#39;FDV&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fdv</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;HSFS.FDV is 0, hardware sequencing is disabled&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SpiRuntimeError</span><span class="p">(</span><span class="s2">&quot;Chipset does not support hardware sequencing&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># SPI Flash operations</span>
+    <span class="c1">#</span>
+
+<div class="viewcode-block" id="SPI.read_spi_to_file">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.read_spi_to_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_spi_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spi_fla</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data_byte_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_spi</span><span class="p">(</span><span class="n">spi_fla</span><span class="p">,</span> <span class="n">data_byte_count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">buf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">write_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">buf</span></div>
+
+
+<div class="viewcode-block" id="SPI.write_spi_from_file">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.write_spi_from_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_spi_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spi_fla</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_spi</span><span class="p">(</span><span class="n">spi_fla</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span></div>
+
+        <span class="c1"># return self.write_spi( spi_fla, struct.unpack(&#39;B&#39;*len(buf), buf) )</span>
+
+<div class="viewcode-block" id="SPI.read_spi">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.read_spi">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_spi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spi_fla</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data_byte_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_hardware_sequencing</span><span class="p">()</span>
+
+        <span class="n">buf</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+        <span class="n">dbc</span> <span class="o">=</span> <span class="n">SPI_READ_WRITE_DEF_DBC</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">data_byte_count</span> <span class="o">&gt;=</span> <span class="n">SPI_READ_WRITE_MAX_DBC</span><span class="p">):</span>
+            <span class="n">dbc</span> <span class="o">=</span> <span class="n">SPI_READ_WRITE_MAX_DBC</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="n">data_byte_count</span> <span class="o">//</span> <span class="n">dbc</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">data_byte_count</span> <span class="o">%</span> <span class="n">dbc</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">UTIL_TRACE</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] Reading 0x</span><span class="si">{</span><span class="n">data_byte_count</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> bytes from SPI at FLA = 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> (in </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> 0x</span><span class="si">{</span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">-byte chunks + 0x</span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">-byte remainder)&#39;</span><span class="p">)</span>
+
+        <span class="n">cycle_done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_SPI_flash_cycle_done</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cycle_done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI cycle not ready&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] Reading chunk </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> of 0x</span><span class="si">{</span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> bytes from 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_spi_cycle</span><span class="p">(</span><span class="n">HSFCTL_READ_CYCLE</span><span class="p">,</span> <span class="n">dbc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">spi_fla</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dbc</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI flash read failed&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">fdata_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dbc</span> <span class="o">//</span> <span class="mi">4</span><span class="p">):</span>
+                    <span class="n">dword_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata0_off</span> <span class="o">+</span> <span class="n">fdata_idx</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] FDATA00 + 0x</span><span class="si">{</span><span class="n">fdata_idx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">: 0x</span><span class="si">{</span><span class="n">dword_value</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">buf</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">r</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] Reading remaining 0x</span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> bytes from 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_spi_cycle</span><span class="p">(</span><span class="n">HSFCTL_READ_CYCLE</span><span class="p">,</span> <span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">spi_fla</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">dbc</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI flash read failed&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="mi">4</span>
+                <span class="n">n_dwords</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span>
+                <span class="k">for</span> <span class="n">fdata_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_dwords</span><span class="p">):</span>
+                    <span class="n">dword_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata0_off</span> <span class="o">+</span> <span class="n">fdata_idx</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] FDATA00 + 0x</span><span class="si">{</span><span class="n">fdata_idx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">: 0x</span><span class="si">{</span><span class="n">dword_value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">fdata_idx</span> <span class="o">==</span> <span class="p">(</span><span class="n">n_dwords</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">r</span> <span class="o">%</span> <span class="mi">4</span><span class="p">):</span>
+                        <span class="n">t</span> <span class="o">=</span> <span class="n">r</span> <span class="o">%</span> <span class="mi">4</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+                        <span class="n">buf</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">dword_value</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">j</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="s1">&#39;[spi] Buffer read from SPI:&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">buf</span></div>
+
+
+<div class="viewcode-block" id="SPI.write_spi">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.write_spi">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_spi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spi_fla</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_hardware_sequencing</span><span class="p">()</span>
+
+        <span class="n">write_ok</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">data_byte_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+        <span class="n">dbc</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">data_byte_count</span> <span class="o">//</span> <span class="n">dbc</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">data_byte_count</span> <span class="o">%</span> <span class="n">dbc</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">UTIL_TRACE</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] Writing 0x</span><span class="si">{</span><span class="n">data_byte_count</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> bytes to SPI at FLA = 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> (in </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> 0x</span><span class="si">{</span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">-byte chunks + 0x</span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">-byte remainder)&#39;</span><span class="p">)</span>
+
+        <span class="n">cycle_done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_SPI_flash_cycle_done</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cycle_done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI cycle not ready&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">UTIL_TRACE</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] Writing chunk </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1"> of 0x</span><span class="si">{</span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> bytes to 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">dword_value</span> <span class="o">=</span> <span class="p">((</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dbc</span> <span class="o">+</span> <span class="mi">3</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dbc</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dbc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">dbc</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] in FDATA00 = 0x</span><span class="si">{</span><span class="n">dword_value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata0_off</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_spi_cycle</span><span class="p">(</span><span class="n">HSFCTL_WRITE_CYCLE</span><span class="p">,</span> <span class="n">dbc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">spi_fla</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">dbc</span><span class="p">):</span>
+                <span class="n">write_ok</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI flash write cycle failed&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">r</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">UTIL_TRACE</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] Writing remaining 0x</span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1"> bytes to FLA = 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dbc</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">dword_value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+                <span class="n">dword_value</span> <span class="o">|=</span> <span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">n</span> <span class="o">*</span> <span class="n">dbc</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">j</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] in FDATA00 = 0x</span><span class="si">{</span><span class="n">dword_value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata0_off</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_spi_cycle</span><span class="p">(</span><span class="n">HSFCTL_WRITE_CYCLE</span><span class="p">,</span> <span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">spi_fla</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">dbc</span><span class="p">):</span>
+                <span class="n">write_ok</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI flash write cycle failed&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">write_ok</span></div>
+
+
+<div class="viewcode-block" id="SPI.erase_spi_block">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.erase_spi_block">[docs]</a>
+    <span class="k">def</span> <span class="nf">erase_spi_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spi_fla</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_hardware_sequencing</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">UTIL_TRACE</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[spi] Erasing SPI Flash block @ 0x</span><span class="si">{</span><span class="n">spi_fla</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">cycle_done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_SPI_flash_cycle_done</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cycle_done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI cycle not ready&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">cycle_done</span>
+
+        <span class="n">erase_ok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_spi_cycle</span><span class="p">(</span><span class="n">HSFCTL_ERASE_CYCLE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">spi_fla</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">erase_ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;SPI Flash erase cycle failed&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">erase_ok</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># SPI SFDP operations</span>
+    <span class="c1">#</span>
+<div class="viewcode-block" id="SPI.ptmesg">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.ptmesg">[docs]</a>
+    <span class="k">def</span> <span class="nf">ptmesg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bios_ptinx</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bios_ptinx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bios_ptdata</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.get_SPI_SFDP">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.get_SPI_SFDP">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SPI_SFDP</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Scanning for Flash device </span><span class="si">{</span><span class="n">component</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mh">0x0000</span> <span class="o">|</span> <span class="p">(</span><span class="n">component</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span><span class="p">)</span>
+            <span class="n">sfdp_signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ptmesg</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sfdp_signature</span> <span class="o">==</span> <span class="n">SFDP_HEADER</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  * Found valid SFDP header for Flash device </span><span class="si">{</span><span class="n">component</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  * Didn&#39;t find a valid SFDP header for Flash device </span><span class="si">{</span><span class="n">component</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="c1"># Increment offset to read second dword of SFDP header structure</span>
+            <span class="n">sfdp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ptmesg</span><span class="p">(</span><span class="n">offset</span> <span class="o">+</span> <span class="mh">0x4</span><span class="p">)</span>
+            <span class="n">sfdp_minor_version</span> <span class="o">=</span> <span class="n">sfdp_data</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+            <span class="n">sfdp_major_version</span> <span class="o">=</span> <span class="p">(</span><span class="n">sfdp_data</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    SFDP version number: </span><span class="si">{</span><span class="n">sfdp_major_version</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">sfdp_minor_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">num_of_param_headers</span> <span class="o">=</span> <span class="p">((</span><span class="n">sfdp_data</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    Number of parameter headers: </span><span class="si">{</span><span class="n">num_of_param_headers</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># Set offset to read 1st Parameter Table in the SFDP header structure</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">|</span> <span class="mh">0x1000</span>
+            <span class="n">parameter_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ptmesg</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+            <span class="n">param1_minor_version</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameter_1</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+            <span class="n">param1_major_version</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameter_1</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+            <span class="n">param1_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameter_1</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;  * Parameter Header 1 (JEDEC)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    ** Parameter version number: </span><span class="si">{</span><span class="n">param1_major_version</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">param1_minor_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    ** Parameter length in double words: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">param1_length</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">num_of_param_headers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span><span class="s1">&#39;HSFS&#39;</span><span class="p">,</span> <span class="s1">&#39;FCYCLE&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_hardware_sequencing</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata12_off</span><span class="p">,</span> <span class="mh">0x00000000</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata13_off</span><span class="p">,</span> <span class="mh">0x00000000</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata14_off</span><span class="p">,</span> <span class="mh">0x00000000</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata15_off</span><span class="p">,</span> <span class="mh">0x00000000</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_spi_cycle</span><span class="p">(</span><span class="n">HSFCTL_SFDP_CYCLE</span><span class="p">,</span> <span class="mh">0x3F</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s1">&#39;SPI SFDP signature cycle failed&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">pTable_offset_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">pTable_length</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># Calculate which fdata_offset registers to read, based on number of parameter headers present</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_of_param_headers</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  * Parameter Header:</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">data_reg_1</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;self.fdata</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">))</span><span class="si">}</span><span class="s1">_off&#39;</span>
+                    <span class="n">data_reg_2</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;self.fdata</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s1">_off&#39;</span>
+                    <span class="n">data_dword_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">data_reg_1</span><span class="p">))</span>
+                    <span class="n">data_dword_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">data_reg_2</span><span class="p">))</span>
+                    <span class="n">id_manuf</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_dword_2</span> <span class="o">&amp;</span> <span class="mh">0xFF000000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span> <span class="o">|</span> <span class="p">(</span><span class="n">data_dword_1</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
+                    <span class="n">param_minor_version</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_dword_1</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+                    <span class="n">param_major_version</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_dword_1</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+                    <span class="n">param_length</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_dword_1</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+                    <span class="n">param_table_pointer</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_dword_2</span> <span class="o">&amp;</span> <span class="mh">0x00FFFFFF</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    ** Parameter version number:</span><span class="si">{</span><span class="n">param_major_version</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">param_minor_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    ** Parameter length in double words: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">param_length</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    ** Parameter ID: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">id_manuf</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    ** Parameter Table Pointer(byte address): </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">param_table_pointer</span><span class="p">)</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
+                    <span class="n">pTable_offset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_table_pointer</span><span class="p">)</span>
+                    <span class="n">pTable_length</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_length</span><span class="p">)</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mh">0x0000</span> <span class="o">|</span> <span class="p">(</span><span class="n">component</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span><span class="p">)</span>
+            <span class="c1"># Set offset to read 1st Parameter table ( JEDEC Basic Flash Parameter Table) content and Parse it</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">|</span> <span class="mh">0x2000</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;                                &quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;  * 1&#39;st Parameter Table Content &quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">param1_length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">sfdp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ptmesg</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+                <span class="n">offset</span> <span class="o">+=</span> <span class="mi">4</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;DWORD</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">sfdp_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+
+    <span class="c1">#</span>
+    <span class="c1"># SPI JEDEC ID operations</span>
+    <span class="c1">#</span>
+
+<div class="viewcode-block" id="SPI.get_SPI_JEDEC_ID">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.get_SPI_JEDEC_ID">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SPI_JEDEC_ID</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">register_has_field</span><span class="p">(</span><span class="s1">&#39;HSFS&#39;</span><span class="p">,</span> <span class="s1">&#39;FCYCLE&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_hardware_sequencing</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_spi_cycle</span><span class="p">(</span><span class="n">HSFCTL_JEDEC_CYCLE</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s1">&#39;SPI JEDEC ID cycle failed&#39;</span><span class="p">)</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fdata0_off</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="p">((</span><span class="nb">id</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nb">id</span> <span class="o">&amp;</span> <span class="mh">0xFF00</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="nb">id</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPI.get_SPI_JEDEC_ID_decoded">
+<a class="viewcode-back" href="../../../modules/chipsec.hal.spi.html#chipsec.hal.spi.SPI.get_SPI_JEDEC_ID_decoded">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_SPI_JEDEC_ID_decoded</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+
+        <span class="n">jedec_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SPI_JEDEC_ID</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">jedec_id</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">manu</span> <span class="o">=</span> <span class="n">JEDEC_ID</span><span class="o">.</span><span class="n">MANUFACTURER</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">jedec_id</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">)</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">JEDEC_ID</span><span class="o">.</span><span class="n">DEVICE</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">jedec_id</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">jedec_id</span><span class="p">,</span> <span class="n">manu</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/chipsec_logo_transparent.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CHIPSEC  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spi</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Dec 18, 2023.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>
