@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>chipsec.modules.tools.vmm.hv.hypercallfuzz module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <title>hypercallfuzz module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.modules.tools.vmm.hv.synth_dev module" href="chipsec.modules.tools.vmm.hv.synth_dev.html" />
-    <link rel="prev" title="chipsec.modules.tools.vmm.hv.hypercall module" href="chipsec.modules.tools.vmm.hv.hypercall.html" /> 
+    <link rel="next" title="synth_dev module" href="chipsec.modules.tools.vmm.hv.synth_dev.html" />
+    <link rel="prev" title="hypercall module" href="chipsec.modules.tools.vmm.hv.hypercall.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,18 +29,18 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.hv.synth_dev.html" title="chipsec.modules.tools.vmm.hv.synth_dev module"
+          <a href="chipsec.modules.tools.vmm.hv.synth_dev.html" title="synth_dev module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.hv.hypercall.html" title="chipsec.modules.tools.vmm.hv.hypercall module"
+          <a href="chipsec.modules.tools.vmm.hv.hypercall.html" title="hypercall module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >chipsec.modules.tools package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" >chipsec.modules.tools.vmm package</a> &#187;</li>
-          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.vmm.hv.html" accesskey="U">chipsec.modules.tools.vmm.hv package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.hv.hypercallfuzz module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" >vmm package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.vmm.hv.html" accesskey="U">hv package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hypercallfuzz module</a></li> 
       </ul>
     </div>  
 
@@ -50,7 +50,7 @@
           <div class="body" role="main">
             
   <section id="module-chipsec.modules.tools.vmm.hv.hypercallfuzz">
-<span id="chipsec-modules-tools-vmm-hv-hypercallfuzz-module"></span><h1>chipsec.modules.tools.vmm.hv.hypercallfuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.hv.hypercallfuzz" title="Link to this heading">¶</a></h1>
+<span id="hypercallfuzz-module"></span><h1>hypercallfuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.hv.hypercallfuzz" title="Permalink to this heading">¶</a></h1>
 <p>Hyper-V hypercall fuzzer</p>
 <dl>
 <dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.hv.hypercall</span> <span class="pre">-a</span> <span class="pre">&lt;mode&gt;[,&lt;vector&gt;,&lt;iterations&gt;]</span> <span class="pre">-l</span> <span class="pre">log.txt</span></code></p>
@@ -73,27 +73,6 @@
 </dd>
 </dl>
 <p>Note: the fuzzer is incompatible with native VMBus driver (<code class="docutils literal notranslate"><span class="pre">vmbus.sys</span></code>). To use it, remove <code class="docutils literal notranslate"><span class="pre">vmbus.sys</span></code></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.hv.hypercallfuzz.HypercallFuzz">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HypercallFuzz</span></span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/hv/hypercallfuzz.html#HypercallFuzz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.hv.hypercallfuzz.HypercallFuzz" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.hv.hypercallfuzz.HypercallFuzz.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_argv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/hv/hypercallfuzz.html#HypercallFuzz.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.hv.hypercallfuzz.HypercallFuzz.run" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.hv.hypercallfuzz.HypercallFuzz.usage">
-<span class="sig-name descname"><span class="pre">usage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/modules/tools/vmm/hv/hypercallfuzz.html#HypercallFuzz.usage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.tools.vmm.hv.hypercallfuzz.HypercallFuzz.usage" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.modules.tools.vmm.hv.hypercallfuzz.getrandbits">
-<span class="sig-name descname"><span class="pre">getrandbits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">x.</span>&#160; <span class="pre">Generates</span> <span class="pre">an</span> <span class="pre">int</span> <span class="pre">with</span> <span class="pre">k</span> <span class="pre">random</span> <span class="pre">bits.</span></span></span><a class="headerlink" href="#chipsec.modules.tools.vmm.hv.hypercallfuzz.getrandbits" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </section>
 
 
@@ -148,12 +127,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.modules.tools.vmm.hv.hypercall.html"
-                          title="previous chapter">chipsec.modules.tools.vmm.hv.hypercall module</a></p>
+                          title="previous chapter">hypercall module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.modules.tools.vmm.hv.synth_dev.html"
-                          title="next chapter">chipsec.modules.tools.vmm.hv.synth_dev module</a></p>
+                          title="next chapter">synth_dev module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -179,23 +158,23 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.hv.synth_dev.html" title="chipsec.modules.tools.vmm.hv.synth_dev module"
+          <a href="chipsec.modules.tools.vmm.hv.synth_dev.html" title="synth_dev module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.tools.vmm.hv.hypercall.html" title="chipsec.modules.tools.vmm.hv.hypercall module"
+          <a href="chipsec.modules.tools.vmm.hv.hypercall.html" title="hypercall module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >chipsec.modules.tools package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" >chipsec.modules.tools.vmm package</a> &#187;</li>
-          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.vmm.hv.html" >chipsec.modules.tools.vmm.hv package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.modules.tools.vmm.hv.hypercallfuzz module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.tools.html" >tools package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.tools.vmm.html" >vmm package</a> &#187;</li>
+          <li class="nav-item nav-item-5"><a href="chipsec.modules.tools.vmm.hv.html" >hv package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hypercallfuzz module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Jan 04, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>
