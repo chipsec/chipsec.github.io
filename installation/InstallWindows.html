@@ -209,6 +209,108 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
 <code class="docutils literal notranslate"><span class="pre">sc</span> <span class="pre">delete</span> <span class="pre">chipsec</span></code></p>
 </div></blockquote>
 </section>
+<section id="windows-pci-filter-driver">
+<h2>Windows PCI Filter Driver<a class="headerlink" href="#windows-pci-filter-driver" title="Link to this heading">¶</a></h2>
+<p><strong>Filter driver background</strong></p>
+<p>Since July 31, 2020 Microsoft has released Windows 2020-KB4568831 (OS Build 19041.423) Preview. Microsoft recommends to not access the PCI configuration space using the legacy API, as it might result in the Windows BSOD (Blue Screen of Death). The BSOD trigger condition is “Windows version &gt;= (OS Build 19041.423) &amp;&amp; Secure Devices (SDEV) ACPI table &amp;&amp; VBS enabled”. Therefore, CHIPSEC now includes a PCI filter driver which supplements the original CHIPSEC Windows Driver to access the PCI configuration space. A system requires the PCI Filter Driver if the conditions above are met.</p>
+<p>Windows devices that receive the 2020-KB4568831 (OS Build 19041.423) Preview or later updates restrict how processes
+can access peripheral component interconnect (PCI) device configuration space if a Secure Devices (SDEV) ACPI table is present
+and Virtualization-based Security (VBS) is running. Processes that have to access PCI device configuration space must use
+officially supported mechanisms.The SDEV table defines secure hardware devices in ACPI. VBS is enabled on a system if security
+features that use virtualization are enabled. Some examples of these features are Hypervisor Code Integrity or Windows Defender
+Credential Guard. The new restrictions are designed to prevent malicious processes from modifying the configuration space of
+secure devices. Device drivers or other system processes must not try to manipulate the configuration space of any PCI devices,
+except by using the Microsoft-provided bus interfaces or IRP. If a process tries to access PCI configuration space in an unsupported
+manner (such as by parsing MCFG table and mapping configuration space to virtual memory), Windows denies access to the process and
+generates a Stop error. For more detail please refer below link: <a class="reference external" href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/performance/stop-error-lenovo-thinkpad-kb4568831-uefi">https://learn.microsoft.com/en-us/troubleshoot/windows-client/performance/stop-error-lenovo-thinkpad-kb4568831-uefi</a></p>
+<p><strong>Filter Driver and Main Helper Driver Architecture</strong></p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/driver_architecture.png"><img alt="CHIPSEC Main &amp; Filter Drvier Architecture" src="../_images/driver_architecture.png" style="width: 1100px; height: 1000px;" /></a>
+<figcaption>
+<p><span class="caption-text">CHIPSEC Main &amp; Filter Drvier Architecture</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="install-pci-filter-driver">
+<h2>Install PCI Filter Driver<a class="headerlink" href="#install-pci-filter-driver" title="Link to this heading">¶</a></h2>
+<p><strong>Locate the Filter Driver Files: chipsec/helper/windows/windows_amd64/</strong></p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/driver_files.png"><img alt="Check The Filter Drvier Files" src="../_images/driver_files.png" style="width: 920px; height: 340px;" /></a>
+</figure>
+<p><strong>Update The PCI Device Driver From Device Manager</strong></p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/update_driver.png"><img alt="Update The PCI Device Driver" src="../_images/update_driver.png" style="width: 920px; height: 630px;" /></a>
+</figure>
+<p><strong>Browse The PCI Filter Driver</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/browse_driver.png"><img alt="Browse The PCI Filter Driver" src="../_images/browse_driver.png" style="width: 920px; height: 630px;" /></a>
+</figure>
+</div></blockquote>
+<p><strong>Manually Select The PCI Bus Filter Driver</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/pickup_driver.png"><img alt="Pickup The PCI Filter Driver" src="../_images/pickup_driver.png" style="width: 920px; height: 630px;" /></a>
+</figure>
+</div></blockquote>
+<p><strong>Install The Filter Driver From Disk</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/install_driver_from_disk.png"><img alt="Install The Filter Driver From Disk" src="../_images/install_driver_from_disk.png" style="width: 920px; height: 650px;" /></a>
+</figure>
+</div></blockquote>
+<p><strong>Installing The Filter Driver</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/installing_driver.png"><img alt="Installing The Filter Driver" src="../_images/installing_driver.png" style="width: 920px; height: 650px;" /></a>
+</figure>
+</div></blockquote>
+<p><strong>Finish The Filter Driver Installing</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/installing_finished.png"><img alt="Finish The Filter Driver Installing" src="../_images/installing_finished.png" style="width: 920px; height: 650px;" /></a>
+</figure>
+</div></blockquote>
+<p><strong>Restart Computer</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/restart.png"><img alt="Restart Computer" src="../_images/restart.png" style="width: 920px; height: 420px;" /></a>
+</figure>
+</div></blockquote>
+<p><strong>Check The Installed Device Driver From Device Manager</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/check_installed_driver.png"><img alt="Check The Installed Device Driver" src="../_images/check_installed_driver.png" style="width: 920px; height: 650px;" /></a>
+</figure>
+</div></blockquote>
+<p><strong>Check The Driver Device Info</strong></p>
+<blockquote>
+<div><figure class="align-default">
+<a class="reference internal image-reference" href="../_images/driver_dev_info.png"><img alt="Check The Driver Device Info" src="../_images/driver_dev_info.png" style="width: 700px; height: 700px;" /></a>
+</figure>
+</div></blockquote>
+</section>
+<section id="filter-driver-access-pci-config-space-test">
+<h2>Filter Driver Access PCI Config Space Test<a class="headerlink" href="#filter-driver-access-pci-config-space-test" title="Link to this heading">¶</a></h2>
+<p><strong>Dump PCI Config Test</strong></p>
+<blockquote>
+<div><figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="../_images/pci_dump_test.png"><img alt="Dump PCI Config" src="../_images/pci_dump_test.png" style="width: 950px; height: 900px;" /></a>
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">chipsec_util.py</span> <span class="pre">pci</span> <span class="pre">dump</span> <span class="pre">0</span> <span class="pre">0</span> <span class="pre">0</span></code></span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</div></blockquote>
+<dl>
+<dt><strong>PCI Enumeration Test</strong></dt><dd><figure class="align-default" id="id3">
+<a class="reference internal image-reference" href="../_images/pci_enum_test.png"><img alt="PCI Enumeration Test" src="../_images/pci_enum_test.png" style="width: 850px; height: 700px;" /></a>
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">chipsec_util.py</span> <span class="pre">pci</span> <span class="pre">enumerate</span></code></span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</dd>
+</dl>
+</section>
 </section>
 
 
@@ -304,7 +406,7 @@ The .vcxproj file points to the latest SDK, if this is incompatible with the WDK
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
+      Last updated on Jan 25, 2024.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
