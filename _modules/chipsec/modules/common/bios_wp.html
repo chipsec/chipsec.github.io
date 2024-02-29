@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.modules.common.bios_wp &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -104,18 +106,14 @@
 <span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_BIOS</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="bios_wp">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp">[docs]</a>
-<span class="k">class</span> <span class="nc">bios_wp</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<div class="viewcode-block" id="bios_wp"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp">[docs]</a><span class="k">class</span> <span class="nc">bios_wp</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spi</span> <span class="o">=</span> <span class="n">SPI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="p">(</span><span class="mh">0xd1e21a2</span><span class="p">,</span> <span class="s1">&#39;https://chipsec.github.io/modules/chipsec.modules.common.bios_wp.html&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="bios_wp.is_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.is_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="bios_wp.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">ble_exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span><span class="s1">&#39;BiosLockEnable&#39;</span><span class="p">)</span>
         <span class="n">bioswe_exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span><span class="s1">&#39;BiosWriteEnable&#39;</span><span class="p">)</span>
         <span class="n">smmbwp_exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_control_defined</span><span class="p">(</span><span class="s1">&#39;SmmBiosWriteProtection&#39;</span><span class="p">)</span>
@@ -127,10 +125,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="bios_wp.check_BIOS_write_protection">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.check_BIOS_write_protection">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_BIOS_write_protection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="bios_wp.check_BIOS_write_protection"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.check_BIOS_write_protection">[docs]</a>    <span class="k">def</span> <span class="nf">check_BIOS_write_protection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">ble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;BiosLockEnable&#39;</span><span class="p">,</span> <span class="n">with_print</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">bioswe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;BiosWriteEnable&#39;</span><span class="p">)</span>
         <span class="n">smmbwp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_control</span><span class="p">(</span><span class="s1">&#39;SmmBiosWriteProtection&#39;</span><span class="p">)</span>
@@ -148,10 +143,7 @@
 
         <span class="k">return</span> <span class="n">write_protected</span> <span class="o">==</span> <span class="mi">1</span></div>
 
-
-<div class="viewcode-block" id="bios_wp.check_SPI_protected_ranges">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.check_SPI_protected_ranges">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_SPI_protected_ranges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="bios_wp.check_SPI_protected_ranges"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.check_SPI_protected_ranges">[docs]</a>    <span class="k">def</span> <span class="nf">check_SPI_protected_ranges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="p">(</span><span class="n">bios_base</span><span class="p">,</span> <span class="n">bios_limit</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">get_SPI_region</span><span class="p">(</span><span class="n">BIOS</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[*] BIOS Region: Base = 0x</span><span class="si">{</span><span class="n">bios_base</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">, Limit = 0x</span><span class="si">{</span><span class="n">bios_limit</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">display_SPI_Protected_Ranges</span><span class="p">()</span>
@@ -204,10 +196,7 @@
 
         <span class="k">return</span> <span class="n">pr_cover_bios</span></div>
 
-
-<div class="viewcode-block" id="bios_wp.run">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="bios_wp.run"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_wp.html#chipsec.modules.common.bios_wp.bios_wp.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;BIOS Region Write Protection&quot;</span><span class="p">)</span>
         <span class="n">wp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_BIOS_write_protection</span><span class="p">()</span>
         <span class="n">spr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_SPI_protected_ranges</span><span class="p">()</span>
@@ -231,9 +220,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">POTENTIALLY_VULNERABLE</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span><span class="p">)</span></div>
-</div>
-
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span><span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -293,7 +280,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -313,8 +300,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

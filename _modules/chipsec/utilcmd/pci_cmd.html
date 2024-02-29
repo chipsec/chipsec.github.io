@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.utilcmd.pci_cmd &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -93,19 +95,12 @@
 <span class="c1"># PCIe Devices and Configuration Registers</span>
 
 
-<div class="viewcode-block" id="PCICommand">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand">[docs]</a>
-<span class="k">class</span> <span class="nc">PCICommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+<div class="viewcode-block" id="PCICommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand">[docs]</a><span class="k">class</span> <span class="nc">PCICommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
 
-<div class="viewcode-block" id="PCICommand.requirements">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.requirements">[docs]</a>
-    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">toLoad</span><span class="p">:</span>
+<div class="viewcode-block" id="PCICommand.requirements"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.requirements">[docs]</a>    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">toLoad</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">toLoad</span><span class="o">.</span><span class="n">Driver</span></div>
 
-
-<div class="viewcode-block" id="PCICommand.parse_arguments">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.parse_arguments">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="PCICommand.parse_arguments"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.parse_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util pci&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
         <span class="n">parser_enumerate</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;enumerate&#39;</span><span class="p">)</span>
@@ -149,17 +144,11 @@
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="PCICommand.pci_enumerate">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_enumerate">[docs]</a>
-    <span class="k">def</span> <span class="nf">pci_enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PCICommand.pci_enumerate"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_enumerate">[docs]</a>    <span class="k">def</span> <span class="nf">pci_enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] Enumerating available PCIe devices...&quot;</span><span class="p">)</span>
         <span class="n">print_pci_devices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">enumerate_devices</span><span class="p">())</span></div>
 
-
-<div class="viewcode-block" id="PCICommand.pci_dump">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_dump">[docs]</a>
-    <span class="k">def</span> <span class="nf">pci_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PCICommand.pci_dump"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_dump">[docs]</a>    <span class="k">def</span> <span class="nf">pci_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">devices</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="mh">0x0000</span><span class="p">,</span> <span class="mh">0x0000</span><span class="p">,</span> <span class="mh">0x0000</span><span class="p">)]</span>
@@ -174,10 +163,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] Dumping configuration of available PCI devices...&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">print_pci_config_all</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="PCICommand.pci_xrom">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_xrom">[docs]</a>
-    <span class="k">def</span> <span class="nf">pci_xrom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PCICommand.pci_xrom"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_xrom">[docs]</a>    <span class="k">def</span> <span class="nf">pci_xrom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">devices</span> <span class="o">=</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="mh">0x0000</span><span class="p">,</span> <span class="mh">0x0000</span><span class="p">,</span> <span class="mh">0x000</span><span class="p">)]</span>
@@ -202,10 +188,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">_xroms</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">print_pci_XROMs</span><span class="p">(</span><span class="n">_xroms</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="PCICommand.pci_read">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_read">[docs]</a>
-    <span class="k">def</span> <span class="nf">pci_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PCICommand.pci_read"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_read">[docs]</a>    <span class="k">def</span> <span class="nf">pci_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">width</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">width</span> <span class="o">=</span> <span class="n">get_option_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_option_valid_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -221,10 +204,7 @@
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] PCI </span><span class="si">{:02X}</span><span class="s2">:</span><span class="si">{:02X}</span><span class="s2">.</span><span class="si">{:02X}</span><span class="s2"> + 0x</span><span class="si">{:02X}</span><span class="s2">: 0x</span><span class="si">{:X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">pci_value</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="PCICommand.pci_write">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_write">[docs]</a>
-    <span class="k">def</span> <span class="nf">pci_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PCICommand.pci_write"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_write">[docs]</a>    <span class="k">def</span> <span class="nf">pci_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">width</span> <span class="o">=</span> <span class="n">get_option_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_option_valid_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">width</span><span class="p">:</span>
@@ -238,10 +218,7 @@
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] Write 0x</span><span class="si">{:X}</span><span class="s2"> to PCI </span><span class="si">{:02X}</span><span class="s2">:</span><span class="si">{:02X}</span><span class="s2">.</span><span class="si">{:02X}</span><span class="s2"> + 0x</span><span class="si">{:02X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="PCICommand.pci_cmd">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_cmd">[docs]</a>
-    <span class="k">def</span> <span class="nf">pci_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PCICommand.pci_cmd"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.pci_cmd.html#chipsec.utilcmd.pci_cmd.PCICommand.pci_cmd">[docs]</a>    <span class="k">def</span> <span class="nf">pci_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;BDF     | VID:DID   | CMD  | CLS | Sub CLS&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;------------------------------------------&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">vid</span><span class="p">,</span> <span class="n">did</span><span class="p">,</span> <span class="n">rid</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">enumerate_devices</span><span class="p">():</span>
@@ -254,9 +231,7 @@
             <span class="n">cmd_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">pci</span><span class="o">.</span><span class="n">read_word</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">PCI_HDR_CMD_OFF</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">cmd_reg</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd_mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:02X}</span><span class="s1">:</span><span class="si">{:02X}</span><span class="s1">.</span><span class="si">{:X}</span><span class="s1"> | </span><span class="si">{:04X}</span><span class="s1">:</span><span class="si">{:04X}</span><span class="s1"> | </span><span class="si">{:04X}</span><span class="s1"> | </span><span class="si">{:02X}</span><span class="s1">  | </span><span class="si">{:02X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">vid</span><span class="p">,</span> <span class="n">did</span><span class="p">,</span> <span class="n">cmd_reg</span><span class="p">,</span> <span class="n">dev_cls</span><span class="p">,</span> <span class="n">dev_sub_cls</span><span class="p">))</span></div>
-</div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:02X}</span><span class="s1">:</span><span class="si">{:02X}</span><span class="s1">.</span><span class="si">{:X}</span><span class="s1"> | </span><span class="si">{:04X}</span><span class="s1">:</span><span class="si">{:04X}</span><span class="s1"> | </span><span class="si">{:04X}</span><span class="s1"> | </span><span class="si">{:02X}</span><span class="s1">  | </span><span class="si">{:02X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">vid</span><span class="p">,</span> <span class="n">did</span><span class="p">,</span> <span class="n">cmd_reg</span><span class="p">,</span> <span class="n">dev_cls</span><span class="p">,</span> <span class="n">dev_sub_cls</span><span class="p">))</span></div></div>
 
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pci&#39;</span><span class="p">:</span> <span class="n">PCICommand</span><span class="p">}</span>
@@ -319,7 +294,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -339,8 +314,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

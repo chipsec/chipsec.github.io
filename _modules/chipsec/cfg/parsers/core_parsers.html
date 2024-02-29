@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.cfg.parsers.core_parsers &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -109,24 +111,14 @@
     <span class="k">return</span> <span class="n">node_data</span>
 
 
-<div class="viewcode-block" id="PlatformInfo">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo">[docs]</a>
-<span class="k">class</span> <span class="nc">PlatformInfo</span><span class="p">(</span><span class="n">BaseConfigParser</span><span class="p">):</span>
-<div class="viewcode-block" id="PlatformInfo.get_metadata">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo.get_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PlatformInfo"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo">[docs]</a><span class="k">class</span> <span class="nc">PlatformInfo</span><span class="p">(</span><span class="n">BaseConfigParser</span><span class="p">):</span>
+<div class="viewcode-block" id="PlatformInfo.get_metadata"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo.get_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_info</span><span class="p">}</span></div>
 
-
-<div class="viewcode-block" id="PlatformInfo.get_stage">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo.get_stage">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PlatformInfo.get_stage"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo.get_stage">[docs]</a>    <span class="k">def</span> <span class="nf">get_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Stage</span><span class="o">.</span><span class="n">GET_INFO</span></div>
 
-
-<div class="viewcode-block" id="PlatformInfo.handle_info">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo.handle_info">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="PlatformInfo.handle_info"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.PlatformInfo.handle_info">[docs]</a>    <span class="k">def</span> <span class="nf">handle_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="n">platform</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">req_pch</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">family</span> <span class="o">=</span> <span class="kc">None</span>
@@ -162,17 +154,11 @@
                     <span class="n">sku_info</span><span class="p">[</span><span class="s1">&#39;vid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vid_int</span>
                 <span class="n">sku_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sku_info</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">info_data</span><span class="p">(</span><span class="n">family</span><span class="p">,</span> <span class="n">proc_code</span><span class="p">,</span> <span class="n">pch_code</span><span class="p">,</span> <span class="n">detect_vals</span><span class="p">,</span> <span class="n">req_pch</span><span class="p">,</span> <span class="n">stage_data</span><span class="o">.</span><span class="n">vid_str</span><span class="p">,</span> <span class="n">sku_data</span><span class="p">)</span></div>
-</div>
+        <span class="k">return</span> <span class="n">info_data</span><span class="p">(</span><span class="n">family</span><span class="p">,</span> <span class="n">proc_code</span><span class="p">,</span> <span class="n">pch_code</span><span class="p">,</span> <span class="n">detect_vals</span><span class="p">,</span> <span class="n">req_pch</span><span class="p">,</span> <span class="n">stage_data</span><span class="o">.</span><span class="n">vid_str</span><span class="p">,</span> <span class="n">sku_data</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="CoreConfig">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig">[docs]</a>
-<span class="k">class</span> <span class="nc">CoreConfig</span><span class="p">(</span><span class="n">BaseConfigParser</span><span class="p">):</span>
-<div class="viewcode-block" id="CoreConfig.get_metadata">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.get_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig">[docs]</a><span class="k">class</span> <span class="nc">CoreConfig</span><span class="p">(</span><span class="n">BaseConfigParser</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.get_metadata"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.get_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;pci&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_pci</span><span class="p">,</span>
                 <span class="s1">&#39;mmio&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_mmio</span><span class="p">,</span>
                 <span class="s1">&#39;io&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_io</span><span class="p">,</span>
@@ -182,12 +168,8 @@
                 <span class="s1">&#39;controls&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_controls</span><span class="p">,</span>
                 <span class="s1">&#39;locks&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_locks</span><span class="p">}</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.get_stage">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.get_stage">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.get_stage"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.get_stage">[docs]</a>    <span class="k">def</span> <span class="nf">get_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Stage</span><span class="o">.</span><span class="n">DEVICE_CFG</span></div>
-
 
     <span class="k">def</span> <span class="nf">_process_pci_dev</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vid_str</span><span class="p">,</span> <span class="n">dev_name</span><span class="p">,</span> <span class="n">dev_attr</span><span class="p">):</span>
         <span class="n">device_added</span> <span class="o">=</span> <span class="kc">False</span>
@@ -221,9 +203,7 @@
             <span class="k">if</span> <span class="s1">&#39;did&#39;</span> <span class="ow">in</span> <span class="n">dev_attr</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">CONFIG_PCI</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;did&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dev_attr</span><span class="p">[</span><span class="s1">&#39;did&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-<div class="viewcode-block" id="CoreConfig.handle_pci">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_pci">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_pci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_pci"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_pci">[docs]</a>    <span class="k">def</span> <span class="nf">handle_pci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="n">ret_val</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">dev</span> <span class="ow">in</span> <span class="n">et_node</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">&#39;device&#39;</span><span class="p">):</span>
@@ -236,46 +216,25 @@
 
         <span class="k">return</span> <span class="n">ret_val</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.handle_controls">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_controls">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_controls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_controls"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_controls">[docs]</a>    <span class="k">def</span> <span class="nf">handle_controls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_entry_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">CONTROLS</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="s1">&#39;control&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.handle_io">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_io">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_io"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_io">[docs]</a>    <span class="k">def</span> <span class="nf">handle_io</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_entry_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">IO_BARS</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.handle_ima">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_ima">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_ima</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_ima"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_ima">[docs]</a>    <span class="k">def</span> <span class="nf">handle_ima</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_entry_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">IMA_REGISTERS</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="s1">&#39;indirect&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.handle_locks">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_locks">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_locks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_locks"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_locks">[docs]</a>    <span class="k">def</span> <span class="nf">handle_locks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_entry_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">LOCKS</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="s1">&#39;lock&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.handle_memory">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_memory">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_memory"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_memory">[docs]</a>    <span class="k">def</span> <span class="nf">handle_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_entry_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">MEMORY_RANGES</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.handle_mmio">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_mmio">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_mmio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_mmio"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_mmio">[docs]</a>    <span class="k">def</span> <span class="nf">handle_mmio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_entry_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">MMIO_BARS</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CoreConfig.handle_registers">
-<a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_registers">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_registers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
+<div class="viewcode-block" id="CoreConfig.handle_registers"><a class="viewcode-back" href="../../../../modules/chipsec.cfg.parsers.core_parsers.html#chipsec.cfg.parsers.core_parsers.CoreConfig.handle_registers">[docs]</a>    <span class="k">def</span> <span class="nf">handle_registers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">):</span>
         <span class="n">ret_val</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">dest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">REGISTERS</span>
         <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">et_node</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">&#39;register&#39;</span><span class="p">):</span>
@@ -325,7 +284,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    + </span><span class="si">{</span><span class="n">reg_name</span><span class="si">:</span><span class="s1">16</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">reg_attr</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret_val</span></div>
 
-
     <span class="k">def</span> <span class="nf">_add_entry_simple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">stage_data</span><span class="p">,</span> <span class="n">et_node</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
         <span class="n">ret_val</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">et_node</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="n">node_name</span><span class="p">):</span>
@@ -343,7 +301,6 @@
             <span class="n">dest</span><span class="p">[</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">attrs</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    + </span><span class="si">{</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">16</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">attrs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret_val</span></div>
-
 
 
 <span class="n">parsers</span> <span class="o">=</span> <span class="p">[</span><span class="n">PlatformInfo</span><span class="p">,</span> <span class="n">CoreConfig</span><span class="p">]</span>
@@ -406,7 +363,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -426,8 +383,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

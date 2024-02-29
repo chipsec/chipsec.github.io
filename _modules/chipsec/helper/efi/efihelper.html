@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.helper.efi.efihelper &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -85,9 +87,7 @@
 <span class="n">_tools</span> <span class="o">=</span> <span class="p">{</span>
 <span class="p">}</span>
 
-<div class="viewcode-block" id="EfiHelper">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper">[docs]</a>
-<span class="k">class</span> <span class="nc">EfiHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
+<div class="viewcode-block" id="EfiHelper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper">[docs]</a><span class="k">class</span> <span class="nc">EfiHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EfiHelper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -115,36 +115,24 @@
 <span class="c1"># Driver/service management functions</span>
 <span class="c1">###############################################################################################</span>
 
-<div class="viewcode-block" id="EfiHelper.create">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.create">[docs]</a>
-    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.create"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] UEFI Helper created&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.start">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.start">[docs]</a>
-    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.start"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># The driver is part of the modified version of edk2.</span>
         <span class="c1"># It is always considered as loaded.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">driver_loaded</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] UEFI Helper started/loaded&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.stop">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.stop">[docs]</a>
-    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.stop"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] UEFI Helper stopped/unloaded&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.delete">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.delete">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.delete"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] UEFI Helper deleted&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
-
 
 
 <span class="c1">###############################################################################################</span>
@@ -155,22 +143,14 @@
     <span class="c1"># Physical memory access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.split_address">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.split_address">[docs]</a>
-    <span class="k">def</span> <span class="nf">split_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.split_address"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.split_address">[docs]</a>    <span class="k">def</span> <span class="nf">split_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">pa</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span><span class="p">,</span> <span class="p">(</span><span class="n">pa</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.read_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.read_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">pa_lo</span><span class="p">,</span> <span class="n">pa_hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_address</span><span class="p">(</span><span class="n">phys_address</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">edk2</span><span class="o">.</span><span class="n">readmem</span><span class="p">(</span><span class="n">pa_lo</span><span class="p">,</span> <span class="n">pa_hi</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.write_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.write_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">pa_lo</span><span class="p">,</span> <span class="n">pa_hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_address</span><span class="p">(</span><span class="n">phys_address</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">==</span> <span class="nb">bytearray</span><span class="p">:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
@@ -181,44 +161,29 @@
             <span class="n">res</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">writemem</span><span class="p">(</span><span class="n">pa_lo</span><span class="p">,</span> <span class="n">pa_hi</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.alloc_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.alloc_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.alloc_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.alloc_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">va</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">allocphysmem</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">max_pa</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">va</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.va2pa">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.va2pa">[docs]</a>
-    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.va2pa"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.va2pa">[docs]</a>    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">pa</span> <span class="o">=</span> <span class="n">va</span>  <span class="c1"># UEFI shell has identity mapping</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[helper] VA (0X</span><span class="si">{</span><span class="n">va</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">) -&gt; PA (0X</span><span class="si">{</span><span class="n">pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.pa2va">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.pa2va">[docs]</a>
-    <span class="k">def</span> <span class="nf">pa2va</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.pa2va"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.pa2va">[docs]</a>    <span class="k">def</span> <span class="nf">pa2va</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">va</span> <span class="o">=</span> <span class="n">pa</span>  <span class="c1"># UEFI Shell has identity mapping</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[helper] PA (0X</span><span class="si">{</span><span class="n">pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">) -&gt; VA (0X</span><span class="si">{</span><span class="n">va</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">va</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># Memory-mapped I/O (MMIO) access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.map_io_space">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.map_io_space">[docs]</a>
-    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.map_io_space"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.map_io_space">[docs]</a>    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pa2va</span><span class="p">(</span><span class="n">physical_address</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.read_mmio_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_mmio_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.read_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">phys_address_lo</span> <span class="o">=</span> <span class="n">phys_address</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
         <span class="n">phys_address_hi</span> <span class="o">=</span> <span class="p">(</span><span class="n">phys_address</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">readmem</span><span class="p">(</span><span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
@@ -234,10 +199,7 @@
             <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.write_mmio_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_mmio_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.write_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">phys_address_lo</span> <span class="o">=</span> <span class="n">phys_address</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
         <span class="n">phys_address_hi</span> <span class="o">=</span> <span class="p">(</span><span class="n">phys_address</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
@@ -247,14 +209,11 @@
             <span class="n">ret</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">writemem</span><span class="p">(</span><span class="n">phys_address_lo</span><span class="p">,</span> <span class="n">phys_address_hi</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># PCIe configuration access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.read_pci_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_pci_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.read_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">size</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">edk2</span><span class="o">.</span><span class="n">readpci</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="mi">2</span> <span class="o">==</span> <span class="n">size</span><span class="p">):</span>
@@ -262,20 +221,14 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">edk2</span><span class="o">.</span><span class="n">readpci</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.write_pci_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_pci_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.write_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">edk2</span><span class="o">.</span><span class="n">writepci</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># CPU I/O port access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.read_io_port">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_io_port">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.read_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">size</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">edk2</span><span class="o">.</span><span class="n">readio</span><span class="p">(</span><span class="n">io_port</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="mi">2</span> <span class="o">==</span> <span class="n">size</span><span class="p">):</span>
@@ -283,104 +236,65 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">edk2</span><span class="o">.</span><span class="n">readio</span><span class="p">(</span><span class="n">io_port</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.write_io_port">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_io_port">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.write_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">edk2</span><span class="o">.</span><span class="n">writeio</span><span class="p">(</span><span class="n">io_port</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># SMI events</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.send_sw_smi">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.send_sw_smi">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.send_sw_smi"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.send_sw_smi">[docs]</a>    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">edk2</span><span class="o">.</span><span class="n">swsmi</span><span class="p">(</span><span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># CPU related API</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.read_msr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_msr">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.read_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_msr">[docs]</a>    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">rdmsr</span><span class="p">(</span><span class="n">msr_addr</span><span class="p">)</span>
         <span class="n">eax</span> <span class="o">=</span> <span class="n">eax</span> <span class="o">%</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span>
         <span class="n">edx</span> <span class="o">=</span> <span class="n">edx</span> <span class="o">%</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.write_msr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_msr">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">edx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.write_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_msr">[docs]</a>    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">edx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">edk2</span><span class="o">.</span><span class="n">wrmsr</span><span class="p">(</span><span class="n">msr_addr</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.read_cr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.read_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.read_cr">[docs]</a>    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;read_cr&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.write_cr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.write_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.write_cr">[docs]</a>    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;write_cr&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.load_ucode_update">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.load_ucode_update">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ucode_update_buf</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.load_ucode_update"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.load_ucode_update">[docs]</a>    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ucode_update_buf</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;load_ucode_update&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.get_threads_count">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_threads_count">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_threads_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.get_threads_count"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_threads_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_threads_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">1</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.cpuid">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.cpuid">[docs]</a>
-    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.cpuid"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.cpuid">[docs]</a>    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="p">(</span><span class="n">reax</span><span class="p">,</span> <span class="n">rebx</span><span class="p">,</span> <span class="n">recx</span><span class="p">,</span> <span class="n">redx</span><span class="p">)</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">reax</span><span class="p">,</span> <span class="n">rebx</span><span class="p">,</span> <span class="n">recx</span><span class="p">,</span> <span class="n">redx</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.get_descriptor_table">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_descriptor_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span><span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.get_descriptor_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_descriptor_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span><span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_descriptor_table&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># File system</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.get_tool_info">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_tool_info">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_tool_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.get_tool_info"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_tool_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_tool_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="n">tool_name</span> <span class="o">=</span> <span class="n">_tools</span><span class="p">[</span><span class="n">tool_type</span><span class="p">]</span> <span class="k">if</span> <span class="n">tool_type</span> <span class="ow">in</span> <span class="n">_tools</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
         <span class="n">tool_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_tools_path</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">os_system</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">tool_path</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># EFI Variable API</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.EFI_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.EFI_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.EFI_supported"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.EFI_supported">[docs]</a>    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.get_EFI_variable_full">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_EFI_variable_full">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_EFI_variable_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.get_EFI_variable_full"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_EFI_variable_full">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
 
         <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span>
         <span class="p">(</span><span class="n">Status</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">,</span> <span class="n">newdata</span><span class="p">,</span> <span class="n">DataSize</span><span class="p">)</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">GetVariable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
@@ -391,17 +305,11 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="n">Status</span><span class="p">,</span> <span class="n">newdata</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.get_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.get_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
         <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_EFI_variable_full</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.set_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.set_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.set_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.set_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="n">buffer_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">buffer_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
@@ -409,21 +317,17 @@
             <span class="n">attrs</span> <span class="o">=</span> <span class="mh">0x07</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">:</span>
                 <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_important</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Setting attributes to: </span><span class="si">{</span><span class="n">attrs</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">attrs</span> <span class="o">=</span>  <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="p">(</span><span class="n">Status</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">)</span> <span class="o">=</span> <span class="n">edk2</span><span class="o">.</span><span class="n">SetVariable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guidstr</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">attrs</span><span class="p">),</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Status</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.delete_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.delete_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.delete_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.delete_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.list_EFI_variables">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.list_EFI_variables">[docs]</a>
-    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]]]:</span>
+<div class="viewcode-block" id="EfiHelper.list_EFI_variables"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.list_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]]]:</span>
 
         <span class="n">off</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">buf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
@@ -481,81 +385,46 @@
 
         <span class="k">return</span> <span class="n">variables</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># ACPI tables access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.get_ACPI_SDT">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_ACPI_SDT">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+<div class="viewcode-block" id="EfiHelper.get_ACPI_SDT"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_ACPI_SDT">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_ACPI_SDT&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># IOSF Message Bus access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="EfiHelper.msgbus_send_read_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.msgbus_send_read_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.msgbus_send_read_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.msgbus_send_read_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;msgbus_send_read_message&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.msgbus_send_write_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.msgbus_send_write_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mdr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.msgbus_send_write_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.msgbus_send_write_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mdr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;msgbus_send_write_message&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.msgbus_send_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.msgbus_send_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mdr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.msgbus_send_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.msgbus_send_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mdr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;msgbus_send_message&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.set_affinity">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.set_affinity">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EfiHelper.set_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.set_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;set_affinity&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.free_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.free_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">):</span>
+<div class="viewcode-block" id="EfiHelper.free_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.free_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;free_phys_mem&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.get_ACPI_table">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_ACPI_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
+<div class="viewcode-block" id="EfiHelper.get_ACPI_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_ACPI_table&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.get_affinity">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_affinity">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EfiHelper.get_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.get_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_affinity&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EfiHelper.hypercall">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.hypercall">[docs]</a>
-    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="p">):</span>
+<div class="viewcode-block" id="EfiHelper.hypercall"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;hypercall&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="EfiHelper.retpoline_enabled"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.retpoline_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
 
-<div class="viewcode-block" id="EfiHelper.retpoline_enabled">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.EfiHelper.retpoline_enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
-</div>
-
-
-<div class="viewcode-block" id="get_helper">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.get_helper">[docs]</a>
-<span class="k">def</span> <span class="nf">get_helper</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">EfiHelper</span><span class="p">:</span>
+<div class="viewcode-block" id="get_helper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.efi.efihelper.html#chipsec.helper.efi.efihelper.get_helper">[docs]</a><span class="k">def</span> <span class="nf">get_helper</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">EfiHelper</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">EfiHelper</span><span class="p">()</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -615,7 +484,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -635,8 +504,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

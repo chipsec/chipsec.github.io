@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.helper.linuxnative.linuxnativehelper &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -77,10 +79,8 @@
 <span class="kn">from</span> <span class="nn">chipsec.logger</span> <span class="kn">import</span> <span class="n">logger</span>
 
 
-<div class="viewcode-block" id="MemoryMapping">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.MemoryMapping">[docs]</a>
-<span class="k">class</span> <span class="nc">MemoryMapping</span><span class="p">(</span><span class="n">mmap</span><span class="o">.</span><span class="n">mmap</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Memory mapping based on Python&#39;s mmap.</span>
+<div class="viewcode-block" id="MemoryMapping"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.MemoryMapping">[docs]</a><span class="k">class</span> <span class="nc">MemoryMapping</span><span class="p">(</span><span class="n">mmap</span><span class="o">.</span><span class="n">mmap</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Memory mapping based on Python&#39;s mmap.</span>
 <span class="sd">    This subclass keeps tracks of the start and end of the mapping.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -90,10 +90,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="LinuxNativeHelper">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper">[docs]</a>
-<span class="k">class</span> <span class="nc">LinuxNativeHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper">[docs]</a><span class="k">class</span> <span class="nc">LinuxNativeHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
 
     <span class="n">DEV_MEM</span> <span class="o">=</span> <span class="s2">&quot;/dev/mem&quot;</span>
     <span class="n">DEV_PORT</span> <span class="o">=</span> <span class="s2">&quot;/dev/port&quot;</span>
@@ -119,47 +116,30 @@
 <span class="c1">###############################################################################################</span>
 <span class="c1"># Driver/service management functions</span>
 <span class="c1">###############################################################################################</span>
-<div class="viewcode-block" id="LinuxNativeHelper.create">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.create">[docs]</a>
-    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.create"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;[helper] Linux Helper created&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.start">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.start">[docs]</a>
-    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.start"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;[helper] Linux Helper started/loaded&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.stop">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.stop">[docs]</a>
-    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.stop"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;[helper] Linux Helper stopped/unloaded&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.delete">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.delete">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.delete"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;[helper] Linux Helper deleted&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.init">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.init">[docs]</a>
-    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.init"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">x64</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="k">else</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pack</span> <span class="o">=</span> <span class="s1">&#39;Q&#39;</span> <span class="k">if</span> <span class="n">x64</span> <span class="k">else</span> <span class="s1">&#39;I&#39;</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.devmem_available">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.devmem_available">[docs]</a>
-    <span class="k">def</span> <span class="nf">devmem_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if /dev/mem is usable.</span>
+<div class="viewcode-block" id="LinuxNativeHelper.devmem_available"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.devmem_available">[docs]</a>    <span class="k">def</span> <span class="nf">devmem_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check if /dev/mem is usable.</span>
 <span class="sd">           In case the driver is not loaded, we might be able to perform the</span>
 <span class="sd">           requested operation via /dev/mem. Returns True if /dev/mem is</span>
 <span class="sd">           accessible.</span>
@@ -176,11 +156,8 @@
                                 <span class="s2">&quot;Are you running this command as root?</span><span class="se">\n</span><span class="s2">&quot;</span>
                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.devport_available">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.devport_available">[docs]</a>
-    <span class="k">def</span> <span class="nf">devport_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if /dev/port is usable.</span>
+<div class="viewcode-block" id="LinuxNativeHelper.devport_available"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.devport_available">[docs]</a>    <span class="k">def</span> <span class="nf">devport_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check if /dev/port is usable.</span>
 <span class="sd">           In case the driver is not loaded, we might be able to perform the</span>
 <span class="sd">           requested operation via /dev/port. Returns True if /dev/port is</span>
 <span class="sd">           accessible.</span>
@@ -197,11 +174,8 @@
                                 <span class="s2">&quot;Are you running this command as root?</span><span class="se">\n</span><span class="s2">&quot;</span>
                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.devmsr_available">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.devmsr_available">[docs]</a>
-    <span class="k">def</span> <span class="nf">devmsr_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if /dev/cpu/CPUNUM/msr is usable.</span>
+<div class="viewcode-block" id="LinuxNativeHelper.devmsr_available"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.devmsr_available">[docs]</a>    <span class="k">def</span> <span class="nf">devmsr_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check if /dev/cpu/CPUNUM/msr is usable.</span>
 <span class="sd">           In case the driver is not loaded, we might be able to perform the</span>
 <span class="sd">           requested operation via /dev/cpu/CPUNUM/msr. This requires loading</span>
 <span class="sd">           the (more standard) msr driver. Returns True if /dev/cpu/CPUNUM/msr</span>
@@ -228,22 +202,16 @@
                                 <span class="s2">&quot;Do you have the msr kernel module installed?</span><span class="se">\n</span><span class="s2">&quot;</span>
                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.close">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.close">[docs]</a>
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.close"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev_mem</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_mem</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dev_mem</span> <span class="o">=</span> <span class="kc">None</span></div>
-
 
 <span class="c1">###############################################################################################</span>
 <span class="c1"># Actual API functions to access HW resources</span>
 <span class="c1">###############################################################################################</span>
 
-<div class="viewcode-block" id="LinuxNativeHelper.read_pci_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_pci_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.read_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">device_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">domain</span><span class="si">:</span><span class="s2">04x</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">bus</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">device</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">device_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/sys/bus/pci/devices/</span><span class="si">{</span><span class="n">device_name</span><span class="si">}</span><span class="s2">/config&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">device_path</span><span class="p">):</span>
@@ -269,10 +237,7 @@
         <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">OsHelperError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to open </span><span class="si">{</span><span class="n">device_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.write_pci_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_pci_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.write_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">device_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{domain:04x}</span><span class="s2">:</span><span class="si">{bus:02x}</span><span class="s2">:</span><span class="si">{device:02x}</span><span class="s2">.</span><span class="si">{function}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                       <span class="n">domain</span><span class="o">=</span><span class="n">domain</span><span class="p">,</span> <span class="n">bus</span><span class="o">=</span><span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">)</span>
         <span class="n">device_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/sys/bus/pci/devices/</span><span class="si">{</span><span class="n">device_name</span><span class="si">}</span><span class="s2">/config&quot;</span>
@@ -289,11 +254,8 @@
 
         <span class="k">return</span> <span class="mi">0</span></div>
 
-
     <span class="c1"># @TODO fix memory mapping and bar_size</span>
-<div class="viewcode-block" id="LinuxNativeHelper.read_mmio_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_mmio_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.read_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devmem_available</span><span class="p">():</span>
             <span class="n">region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_mapping</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
@@ -317,11 +279,8 @@
             <span class="k">return</span> <span class="n">defines</span><span class="o">.</span><span class="n">unpack1</span><span class="p">(</span><span class="n">region_mv</span><span class="p">[</span><span class="n">offset_in_region</span><span class="p">:</span><span class="n">offset_in_region</span> <span class="o">+</span> <span class="n">size</span><span class="p">],</span> <span class="n">size</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">0</span></div>
 
-
     <span class="c1"># @TODO fix memory mapping and bar_size</span>
-<div class="viewcode-block" id="LinuxNativeHelper.write_mmio_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_mmio_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.write_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devmem_available</span><span class="p">():</span>
             <span class="n">reg</span> <span class="o">=</span> <span class="n">defines</span><span class="o">.</span><span class="n">pack1</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
             <span class="n">region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_mapping</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
@@ -347,11 +306,8 @@
             <span class="c1"># Write unaligned value</span>
             <span class="n">region_mv</span><span class="p">[</span><span class="n">offset_in_region</span><span class="p">:</span><span class="n">offset_in_region</span> <span class="o">+</span> <span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">reg</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.memory_mapping">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.memory_mapping">[docs]</a>
-    <span class="k">def</span> <span class="nf">memory_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MemoryMapping</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the mmap region that fully encompasses this area.</span>
+<div class="viewcode-block" id="LinuxNativeHelper.memory_mapping"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.memory_mapping">[docs]</a>    <span class="k">def</span> <span class="nf">memory_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MemoryMapping</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the mmap region that fully encompasses this area.</span>
 <span class="sd">        Returns None if no region matches.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mappings</span><span class="p">:</span>
@@ -359,11 +315,8 @@
                 <span class="k">return</span> <span class="n">region</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.map_io_space">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.map_io_space">[docs]</a>
-    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Map to memory a specific region.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LinuxNativeHelper.map_io_space"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.map_io_space">[docs]</a>    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Map to memory a specific region.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devmem_available</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_mapping</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[helper] Mapping 0x</span><span class="si">{</span><span class="n">base</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span><span class="s2"> to memory&quot;</span><span class="p">)</span>
             <span class="n">length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">resource</span><span class="o">.</span><span class="n">getpagesize</span><span class="p">())</span>
@@ -373,19 +326,13 @@
                                     <span class="n">offset</span><span class="o">=</span><span class="n">page_aligned_base</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.read_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.read_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devmem_available</span><span class="p">():</span>
             <span class="n">os</span><span class="o">.</span><span class="n">lseek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_mem</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_SET</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_mem</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
         <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.write_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">newval</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.write_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">newval</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">newval</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devmem_available</span><span class="p">():</span>
@@ -396,28 +343,16 @@
             <span class="k">return</span> <span class="n">written</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.alloc_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.alloc_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.alloc_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.alloc_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.free_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.free_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.free_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.free_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.va2pa">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.va2pa">[docs]</a>
-    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.va2pa"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.va2pa">[docs]</a>    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.read_io_port">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_io_port">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.read_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devport_available</span><span class="p">():</span>
             <span class="n">os</span><span class="o">.</span><span class="n">lseek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_port</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_SET</span><span class="p">)</span>
 
@@ -432,10 +367,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid size&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.write_io_port">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_io_port">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.write_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devport_available</span><span class="p">():</span>
             <span class="n">os</span><span class="o">.</span><span class="n">lseek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_port</span><span class="p">,</span> <span class="n">io_port</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_SET</span><span class="p">)</span>
             <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">size</span><span class="p">:</span>
@@ -453,22 +385,13 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.read_cr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.read_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_cr">[docs]</a>    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.write_cr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.write_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_cr">[docs]</a>    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.read_msr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_msr">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.read_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.read_msr">[docs]</a>    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devmsr_available</span><span class="p">():</span>
             <span class="n">os</span><span class="o">.</span><span class="n">lseek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_msr</span><span class="p">[</span><span class="n">thread_id</span><span class="p">],</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_SET</span><span class="p">)</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_msr</span><span class="p">[</span><span class="n">thread_id</span><span class="p">],</span> <span class="mi">8</span><span class="p">)</span>
@@ -476,10 +399,7 @@
             <span class="k">return</span> <span class="p">(</span><span class="n">unbuf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unbuf</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.write_msr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_msr">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">edx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.write_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.write_msr">[docs]</a>    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">edx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">devmsr_available</span><span class="p">():</span>
             <span class="n">os</span><span class="o">.</span><span class="n">lseek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_msr</span><span class="p">[</span><span class="n">thread_id</span><span class="p">],</span> <span class="n">msr_addr</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_SET</span><span class="p">)</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;2I&quot;</span><span class="p">,</span> <span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span>
@@ -489,164 +409,99 @@
             <span class="k">return</span> <span class="n">written</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.load_ucode_update">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.load_ucode_update">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">ucode_update_buf</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.load_ucode_update"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.load_ucode_update">[docs]</a>    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">ucode_update_buf</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.get_descriptor_table">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_descriptor_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.get_descriptor_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_descriptor_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.EFI_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.EFI_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.EFI_supported"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.EFI_supported">[docs]</a>    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.get_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.get_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.set_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.set_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.set_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.set_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.delete_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.delete_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.delete_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.delete_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.list_EFI_variables">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.list_EFI_variables">[docs]</a>
-    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.list_EFI_variables"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.list_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.get_ACPI_SDT">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_ACPI_SDT">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.get_ACPI_SDT"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_ACPI_SDT">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.get_ACPI_table">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_ACPI_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.get_ACPI_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.cpuid">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.cpuid">[docs]</a>
-    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.cpuid"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.cpuid">[docs]</a>    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">_cpuid</span> <span class="o">=</span> <span class="n">CPUID</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">_cpuid</span><span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.msgbus_send_read_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.msgbus_send_read_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.msgbus_send_read_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.msgbus_send_read_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.msgbus_send_write_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.msgbus_send_write_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.msgbus_send_write_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.msgbus_send_write_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.msgbus_send_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.msgbus_send_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.msgbus_send_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.msgbus_send_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># Affinity functions</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="LinuxNativeHelper.get_affinity">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_affinity">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.get_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">affinity</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">affinity</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.set_affinity">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.set_affinity">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.set_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.set_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">sched_setaffinity</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">(),</span> <span class="p">{</span><span class="n">thread_id</span><span class="p">})</span>
             <span class="k">return</span> <span class="n">thread_id</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Logical CPU count</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="LinuxNativeHelper.get_threads_count">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_threads_count">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_threads_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.get_threads_count"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_threads_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_threads_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">multiprocessing</span>
         <span class="k">return</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># Send SW SMI</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="LinuxNativeHelper.send_sw_smi">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.send_sw_smi">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.send_sw_smi"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.send_sw_smi">[docs]</a>    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># Hypercall</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="LinuxNativeHelper.hypercall">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.hypercall">[docs]</a>
-    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rdx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r8</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r9</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r10</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r11</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rax</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rbx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rdi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rsi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.hypercall"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rdx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r8</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r9</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r10</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r11</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rax</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rbx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rdi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rsi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># Speculation control</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="LinuxNativeHelper.retpoline_enabled">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.retpoline_enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LinuxNativeHelper.retpoline_enabled"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.retpoline_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;retpoline_enabled&quot;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="LinuxNativeHelper.get_bios_version">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_bios_version">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_bios_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="LinuxNativeHelper.get_bios_version"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.LinuxNativeHelper.get_bios_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_bios_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;/sys/class/dmi/id/bios_version&quot;</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">outfile</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;Unable to read bios version&#39;</span></div>
-</div>
+            <span class="k">return</span> <span class="s1">&#39;Unable to read bios version&#39;</span></div></div>
 
 
-
-<div class="viewcode-block" id="get_helper">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.get_helper">[docs]</a>
-<span class="k">def</span> <span class="nf">get_helper</span><span class="p">():</span>
+<div class="viewcode-block" id="get_helper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.linuxnativehelper.html#chipsec.helper.linuxnative.linuxnativehelper.get_helper">[docs]</a><span class="k">def</span> <span class="nf">get_helper</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">LinuxNativeHelper</span><span class="p">()</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -706,7 +561,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -726,8 +581,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

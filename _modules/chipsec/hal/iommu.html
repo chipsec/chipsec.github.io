@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.iommu &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -75,17 +77,13 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="IOMMU">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU">[docs]</a>
-<span class="k">class</span> <span class="nc">IOMMU</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="IOMMU"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU">[docs]</a><span class="k">class</span> <span class="nc">IOMMU</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IOMMU</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span> <span class="o">=</span> <span class="n">mmio</span><span class="o">.</span><span class="n">MMIO</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IOMMU.get_IOMMU_Base_Address">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.get_IOMMU_Base_Address">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_IOMMU_Base_Address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="IOMMU.get_IOMMU_Base_Address"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.get_IOMMU_Base_Address">[docs]</a>    <span class="k">def</span> <span class="nf">get_IOMMU_Base_Address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">iommu_engine</span> <span class="ow">in</span> <span class="n">IOMMU_ENGINES</span><span class="p">:</span>
             <span class="n">vtd_base_name</span> <span class="o">=</span> <span class="n">IOMMU_ENGINES</span><span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -97,33 +95,21 @@
             <span class="k">raise</span> <span class="n">IOMMUError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IOMMUError: IOMMU BAR </span><span class="si">{</span><span class="n">vtd_base_name</span><span class="si">}</span><span class="s1"> is not defined in the config&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">base</span></div>
 
-
-<div class="viewcode-block" id="IOMMU.is_IOMMU_Engine_Enabled">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.is_IOMMU_Engine_Enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_IOMMU_Engine_Enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IOMMU.is_IOMMU_Engine_Enabled"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.is_IOMMU_Engine_Enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_IOMMU_Engine_Enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">iommu_engine</span> <span class="ow">in</span> <span class="n">IOMMU_ENGINES</span><span class="p">:</span>
             <span class="n">vtd_base_name</span> <span class="o">=</span> <span class="n">IOMMU_ENGINES</span><span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">IOMMUError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IOMMUError: unknown IOMMU engine 0x</span><span class="si">{</span><span class="n">iommu_engine</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">is_MMIO_BAR_defined</span><span class="p">(</span><span class="n">vtd_base_name</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">is_MMIO_BAR_enabled</span><span class="p">(</span><span class="n">vtd_base_name</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="IOMMU.is_IOMMU_Translation_Enabled">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.is_IOMMU_Translation_Enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_IOMMU_Translation_Enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IOMMU.is_IOMMU_Translation_Enabled"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.is_IOMMU_Translation_Enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_IOMMU_Translation_Enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">tes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">IOMMU_ENGINES</span><span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span><span class="si">}</span><span class="s1">_GSTS&#39;</span><span class="p">,</span> <span class="s1">&#39;TES&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">tes</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="IOMMU.set_IOMMU_Translation">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.set_IOMMU_Translation">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_IOMMU_Translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">te</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IOMMU.set_IOMMU_Translation"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.set_IOMMU_Translation">[docs]</a>    <span class="k">def</span> <span class="nf">set_IOMMU_Translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">te</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">write_register_field</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">IOMMU_ENGINES</span><span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span><span class="si">}</span><span class="s1">_GCMD&#39;</span><span class="p">,</span> <span class="s1">&#39;TE&#39;</span><span class="p">,</span> <span class="n">te</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="IOMMU.dump_IOMMU_configuration">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.dump_IOMMU_configuration">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_IOMMU_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="IOMMU.dump_IOMMU_configuration"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.dump_IOMMU_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">dump_IOMMU_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;==================================================================&quot;</span><span class="p">)</span>
         <span class="n">vtd</span> <span class="o">=</span> <span class="n">IOMMU_ENGINES</span><span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[iommu] </span><span class="si">{</span><span class="n">iommu_engine</span><span class="si">}</span><span class="s1"> IOMMU Engine Configuration&#39;</span><span class="p">)</span>
@@ -169,10 +155,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vtd</span><span class="si">}</span><span class="s1">_ECAP&#39;</span><span class="p">,</span> <span class="n">ecap_reg</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="IOMMU.dump_IOMMU_page_tables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.dump_IOMMU_page_tables">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_IOMMU_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="IOMMU.dump_IOMMU_page_tables"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.dump_IOMMU_page_tables">[docs]</a>    <span class="k">def</span> <span class="nf">dump_IOMMU_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">vtd</span> <span class="o">=</span> <span class="n">IOMMU_ENGINES</span><span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="n">vtd</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[iommu] </span><span class="si">{</span><span class="n">vtd</span><span class="si">}</span><span class="s1"> value is zero&#39;</span><span class="p">)</span>
@@ -202,10 +185,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s2">&quot;Cannot access VT-d registers&quot;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="IOMMU.dump_IOMMU_status">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.dump_IOMMU_status">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_IOMMU_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="IOMMU.dump_IOMMU_status"><a class="viewcode-back" href="../../../modules/chipsec.hal.iommu.html#chipsec.hal.iommu.IOMMU.dump_IOMMU_status">[docs]</a>    <span class="k">def</span> <span class="nf">dump_IOMMU_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iommu_engine</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">vtd</span> <span class="o">=</span> <span class="n">IOMMU_ENGINES</span><span class="p">[</span><span class="n">iommu_engine</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;==================================================================&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[iommu] </span><span class="si">{</span><span class="n">iommu_engine</span><span class="si">}</span><span class="s1"> IOMMU Engine Status:&#39;</span><span class="p">)</span>
@@ -223,9 +203,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vtd</span><span class="si">}</span><span class="s1">_FRCDH&#39;</span><span class="p">,</span> <span class="n">frcdh_reg</span><span class="p">)</span>
         <span class="n">ics_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vtd</span><span class="si">}</span><span class="s1">_ICS&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">vtd</span><span class="si">}</span><span class="s1">_ICS&#39;</span><span class="p">,</span> <span class="n">ics_reg</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-</div>
-
+        <span class="k">return</span> <span class="kc">None</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -285,7 +263,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -305,8 +283,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

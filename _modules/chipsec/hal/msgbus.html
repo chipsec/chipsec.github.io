@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.msgbus &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -83,9 +85,7 @@
 <span class="c1"># IOSF Message bus message opcodes</span>
 <span class="c1"># Reference: http://lxr.free-electrons.com/source/arch/x86/include/asm/iosf_mbi.h</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="MessageBusOpcode">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MessageBusOpcode">[docs]</a>
-<span class="k">class</span> <span class="nc">MessageBusOpcode</span><span class="p">:</span>
+<div class="viewcode-block" id="MessageBusOpcode"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MessageBusOpcode">[docs]</a><span class="k">class</span> <span class="nc">MessageBusOpcode</span><span class="p">:</span>
     <span class="n">MB_OPCODE_MMIO_READ</span> <span class="o">=</span> <span class="mh">0x00</span>
     <span class="n">MB_OPCODE_MMIO_WRITE</span> <span class="o">=</span> <span class="mh">0x01</span>
     <span class="n">MB_OPCODE_IO_READ</span> <span class="o">=</span> <span class="mh">0x02</span>
@@ -99,7 +99,6 @@
     <span class="n">MB_OPCODE_ESRAM_READ</span> <span class="o">=</span> <span class="mh">0x12</span>
     <span class="n">MB_OPCODE_ESRAM_WRITE</span> <span class="o">=</span> <span class="mh">0x13</span></div>
 
-
 <span class="c1">#</span>
 <span class="c1"># IOSF Message bus unit ports</span>
 <span class="c1"># Reference: http://lxr.free-electrons.com/source/arch/x86/include/asm/iosf_mbi.h</span>
@@ -107,9 +106,7 @@
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="MessageBusPort_Atom">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MessageBusPort_Atom">[docs]</a>
-<span class="k">class</span> <span class="nc">MessageBusPort_Atom</span><span class="p">:</span>
+<div class="viewcode-block" id="MessageBusPort_Atom"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MessageBusPort_Atom">[docs]</a><span class="k">class</span> <span class="nc">MessageBusPort_Atom</span><span class="p">:</span>
     <span class="n">UNIT_AUNIT</span> <span class="o">=</span> <span class="mh">0x00</span>
     <span class="n">UNIT_SMC</span> <span class="o">=</span> <span class="mh">0x01</span>
     <span class="n">UNIT_CPU</span> <span class="o">=</span> <span class="mh">0x02</span>
@@ -122,10 +119,7 @@
     <span class="n">UNIT_PCIE</span> <span class="o">=</span> <span class="mh">0xA6</span></div>
 
 
-
-<div class="viewcode-block" id="MessageBusPort_Quark">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MessageBusPort_Quark">[docs]</a>
-<span class="k">class</span> <span class="nc">MessageBusPort_Quark</span><span class="p">:</span>
+<div class="viewcode-block" id="MessageBusPort_Quark"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MessageBusPort_Quark">[docs]</a><span class="k">class</span> <span class="nc">MessageBusPort_Quark</span><span class="p">:</span>
     <span class="n">UNIT_HBA</span> <span class="o">=</span> <span class="mh">0x00</span>
     <span class="n">UNIT_HB</span> <span class="o">=</span> <span class="mh">0x03</span>
     <span class="n">UNIT_RMU</span> <span class="o">=</span> <span class="mh">0x04</span>
@@ -133,10 +127,7 @@
     <span class="n">UNIT_SOC</span> <span class="o">=</span> <span class="mh">0x31</span></div>
 
 
-
-<div class="viewcode-block" id="MsgBus">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus">[docs]</a>
-<span class="k">class</span> <span class="nc">MsgBus</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="MsgBus"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus">[docs]</a><span class="k">class</span> <span class="nc">MsgBus</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MsgBus</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
@@ -180,9 +171,7 @@
     <span class="c1">#</span>
     <span class="c1"># Issues read message on the message bus</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="MsgBus.msgbus_read_message">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_read_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="MsgBus.msgbus_read_message"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_read_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">mcr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MCR</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">opcode</span><span class="p">)</span>
         <span class="n">mcrx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MCRX</span><span class="p">(</span><span class="n">register</span><span class="p">)</span>
 
@@ -195,13 +184,10 @@
 
         <span class="k">return</span> <span class="n">mdr_out</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Issues write message on the message bus</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="MsgBus.msgbus_write_message">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_write_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="MsgBus.msgbus_write_message"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_write_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mcr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MCR</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">opcode</span><span class="p">)</span>
         <span class="n">mcrx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MCRX</span><span class="p">(</span><span class="n">register</span><span class="p">)</span>
         <span class="n">mdr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MDR</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -211,13 +197,10 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">msgbus_send_write_message</span><span class="p">(</span><span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Issues generic message on the message bus</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="MsgBus.msgbus_send_message">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_send_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="MsgBus.msgbus_send_message"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_send_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">mcr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MCR</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">opcode</span><span class="p">)</span>
         <span class="n">mcrx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MCRX</span><span class="p">(</span><span class="n">register</span><span class="p">)</span>
         <span class="n">mdr</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">__MB_MESSAGE_MDR</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -233,26 +216,17 @@
 
         <span class="k">return</span> <span class="n">mdr_out</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Message bus register read/write</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="MsgBus.msgbus_reg_read">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_reg_read">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="MsgBus.msgbus_reg_read"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_reg_read">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msgbus_read_message</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">MessageBusOpcode</span><span class="o">.</span><span class="n">MB_OPCODE_REG_READ</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="MsgBus.msgbus_reg_write">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_reg_write">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="MsgBus.msgbus_reg_write"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.msgbus_reg_write">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msgbus_write_message</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">MessageBusOpcode</span><span class="o">.</span><span class="n">MB_OPCODE_REG_WRITE</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="MsgBus.mm_msgbus_reg_read">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_read">[docs]</a>
-    <span class="k">def</span> <span class="nf">mm_msgbus_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="MsgBus.mm_msgbus_reg_read"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_read">[docs]</a>    <span class="k">def</span> <span class="nf">mm_msgbus_reg_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">was_hidden</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;P2SBC&#39;</span><span class="p">):</span>
             <span class="n">was_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__hide_p2sb</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -262,10 +236,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__hide_p2sb</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">reg_val</span></div>
 
-
-<div class="viewcode-block" id="MsgBus.mm_msgbus_reg_write">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_write">[docs]</a>
-    <span class="k">def</span> <span class="nf">mm_msgbus_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="MsgBus.mm_msgbus_reg_write"><a class="viewcode-back" href="../../../modules/chipsec.hal.msgbus.html#chipsec.hal.msgbus.MsgBus.mm_msgbus_reg_write">[docs]</a>    <span class="k">def</span> <span class="nf">mm_msgbus_reg_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">register</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">was_hidden</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;P2SBC&#39;</span><span class="p">):</span>
             <span class="n">was_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__hide_p2sb</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -273,9 +244,7 @@
         <span class="n">reg_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mmio</span><span class="o">.</span><span class="n">write_MMIO_reg_dword</span><span class="p">(</span><span class="n">mmio_addr</span><span class="p">,</span> <span class="p">((</span><span class="n">port</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">register</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;P2SBC&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">was_hidden</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__hide_p2sb</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">reg_val</span></div>
-</div>
-
+        <span class="k">return</span> <span class="n">reg_val</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -335,7 +304,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -355,8 +324,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.spi_uefi &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -111,9 +113,7 @@
 <span class="n">WRITE_ALL_HASHES</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="decompress_section_data">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.decompress_section_data">[docs]</a>
-<span class="k">def</span> <span class="nf">decompress_section_data</span><span class="p">(</span><span class="n">section_dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sec_fs_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">compressed_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">compression_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="decompress_section_data"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.decompress_section_data">[docs]</a><span class="k">def</span> <span class="nf">decompress_section_data</span><span class="p">(</span><span class="n">section_dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sec_fs_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">compressed_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">compression_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">uefi_uc</span> <span class="o">=</span> <span class="n">UEFICompression</span><span class="p">()</span>
     <span class="n">uncompressed_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">section_dir_path</span><span class="p">,</span> <span class="n">sec_fs_name</span><span class="p">)</span>
     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[uefi] Decompressing EFI binary (type = 0x</span><span class="si">{</span><span class="n">compression_type</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">       </span><span class="si">{</span><span class="n">uncompressed_name</span><span class="si">}</span><span class="s1"> -&gt;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -121,20 +121,14 @@
     <span class="k">return</span> <span class="n">uncompressed_image</span></div>
 
 
-
-<div class="viewcode-block" id="compress_image">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.compress_image">[docs]</a>
-<span class="k">def</span> <span class="nf">compress_image</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">compression_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="compress_image"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.compress_image">[docs]</a><span class="k">def</span> <span class="nf">compress_image</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">compression_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">uefi_uc</span> <span class="o">=</span> <span class="n">UEFICompression</span><span class="p">()</span>
     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[uefi] Compressing EFI binary (type = 0x</span><span class="si">{</span><span class="n">compression_type</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">compressed_image</span> <span class="o">=</span> <span class="n">uefi_uc</span><span class="o">.</span><span class="n">compress_EFI_binary</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">compression_type</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">compressed_image</span></div>
 
 
-
-<div class="viewcode-block" id="modify_uefi_region">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.modify_uefi_region">[docs]</a>
-<span class="k">def</span> <span class="nf">modify_uefi_region</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">uefi_file</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="modify_uefi_region"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.modify_uefi_region">[docs]</a><span class="k">def</span> <span class="nf">modify_uefi_region</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">uefi_file</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">FvEndOffset</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Default</span>
     <span class="n">fv</span> <span class="o">=</span> <span class="n">NextFwVolume</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">while</span> <span class="n">fv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -191,10 +185,7 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-
-<div class="viewcode-block" id="build_efi_modules_tree">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_modules_tree">[docs]</a>
-<span class="k">def</span> <span class="nf">build_efi_modules_tree</span><span class="p">(</span><span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">Size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EFI_SECTION</span><span class="p">]:</span>
+<div class="viewcode-block" id="build_efi_modules_tree"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_modules_tree">[docs]</a><span class="k">def</span> <span class="nf">build_efi_modules_tree</span><span class="p">(</span><span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">Size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EFI_SECTION</span><span class="p">]:</span>
     <span class="n">sections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EFI_SECTION</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">secn</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -296,16 +287,13 @@
     <span class="k">return</span> <span class="n">sections</span></div>
 
 
-
 <span class="c1">#</span>
 <span class="c1"># build_efi_file_tree - extract EFI FV file from EFI image and build an object tree</span>
 <span class="c1">#</span>
 <span class="c1"># Input arguements:</span>
 <span class="c1"># fv_image - fv_image containing files</span>
 <span class="c1"># fwtype - platform specific firmware type used to detect NVRAM format (VSS, EVSA, NVAR...)</span>
-<div class="viewcode-block" id="build_efi_file_tree">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_file_tree">[docs]</a>
-<span class="k">def</span> <span class="nf">build_efi_file_tree</span><span class="p">(</span><span class="n">fv_img</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EFI_FILE</span><span class="p">]:</span>
+<div class="viewcode-block" id="build_efi_file_tree"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_file_tree">[docs]</a><span class="k">def</span> <span class="nf">build_efi_file_tree</span><span class="p">(</span><span class="n">fv_img</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EFI_FILE</span><span class="p">]:</span>
     <span class="n">fv_size</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">,</span> <span class="n">Attributes</span> <span class="o">=</span> <span class="n">GetFvHeader</span><span class="p">(</span><span class="n">fv_img</span><span class="p">)</span>
     <span class="n">polarity</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">Attributes</span> <span class="o">&amp;</span> <span class="n">EFI_FVB2_ERASE_POLARITY</span><span class="p">)</span>
     <span class="n">fwbin</span> <span class="o">=</span> <span class="n">NextFwFile</span><span class="p">(</span><span class="n">fv_img</span><span class="p">,</span> <span class="n">fv_size</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">,</span> <span class="n">polarity</span><span class="p">)</span>
@@ -351,7 +339,6 @@
     <span class="k">return</span> <span class="n">fv</span></div>
 
 
-
 <span class="c1">#</span>
 <span class="c1"># build_efi_tree - extract EFI modules (FV, files, sections) from EFI image and build an object tree</span>
 <span class="c1">#</span>
@@ -359,9 +346,7 @@
 <span class="c1">#   data           - an image containing UEFI firmware volumes</span>
 <span class="c1">#   fwtype         - platform specific firmware type used to detect NVRAM format (VSS, EVSA, NVAR...)</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="build_efi_tree">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_tree">[docs]</a>
-<span class="k">def</span> <span class="nf">build_efi_tree</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">]:</span>
+<div class="viewcode-block" id="build_efi_tree"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_tree">[docs]</a><span class="k">def</span> <span class="nf">build_efi_tree</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">]:</span>
     <span class="n">fvolumes</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">fv</span> <span class="o">=</span> <span class="n">NextFwVolume</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">while</span> <span class="n">fv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -387,14 +372,11 @@
     <span class="k">return</span> <span class="n">fvolumes</span></div>
 
 
-
 <span class="c1">#</span>
 <span class="c1"># Attempt to find efi modules using calls to build_efi_tree, build_efi_file_tree,</span>
 <span class="c1"># and build_efi_modules_tree in succession.  Return once one of the calls is successful</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="efi_data_search">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.efi_data_search">[docs]</a>
-<span class="k">def</span> <span class="nf">efi_data_search</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<div class="viewcode-block" id="efi_data_search"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.efi_data_search">[docs]</a><span class="k">def</span> <span class="nf">efi_data_search</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
     <span class="n">efi_tree</span> <span class="o">=</span> <span class="n">build_efi_tree</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">efi_tree</span><span class="p">:</span>
         <span class="n">efi_tree</span> <span class="o">=</span> <span class="n">build_efi_file_tree</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">)</span>
@@ -403,15 +385,12 @@
     <span class="k">return</span> <span class="n">efi_tree</span></div>
 
 
-
 <span class="c1">#</span>
 <span class="c1"># update_efi_tree propagates EFI file&#39;s GUID down to all sections and</span>
 <span class="c1"># UI_string from the corresponding section, if found, up to the EFI file at the same time</span>
 <span class="c1"># File GUID and UI string are then used when searching for EFI files and executable sections</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="update_efi_tree">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.update_efi_tree">[docs]</a>
-<span class="k">def</span> <span class="nf">update_efi_tree</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span> <span class="n">parent_guid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="update_efi_tree"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.update_efi_tree">[docs]</a><span class="k">def</span> <span class="nf">update_efi_tree</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span> <span class="n">parent_guid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">ui_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">==</span> <span class="n">EFI_FILE</span><span class="p">:</span>
@@ -436,19 +415,13 @@
     <span class="k">return</span> <span class="n">ui_string</span></div>
 
 
-
-<div class="viewcode-block" id="build_efi_model">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_model">[docs]</a>
-<span class="k">def</span> <span class="nf">build_efi_model</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">]:</span>
+<div class="viewcode-block" id="build_efi_model"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.build_efi_model">[docs]</a><span class="k">def</span> <span class="nf">build_efi_model</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">]:</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">build_efi_tree</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">)</span>
     <span class="n">update_efi_tree</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-
-<div class="viewcode-block" id="FILENAME">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.FILENAME">[docs]</a>
-<span class="k">def</span> <span class="nf">FILENAME</span><span class="p">(</span><span class="n">mod</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EFI_FILE</span><span class="p">,</span> <span class="n">EFI_SECTION</span><span class="p">],</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span> <span class="n">modn</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="FILENAME"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.FILENAME">[docs]</a><span class="k">def</span> <span class="nf">FILENAME</span><span class="p">(</span><span class="n">mod</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EFI_FILE</span><span class="p">,</span> <span class="n">EFI_SECTION</span><span class="p">],</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span> <span class="n">modn</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">modn</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">mod</span><span class="o">.</span><span class="n">Guid</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span> <span class="o">==</span> <span class="n">EFI_FILE</span><span class="p">:</span>
         <span class="n">type_s</span> <span class="o">=</span> <span class="n">FILE_TYPE_NAMES</span><span class="p">[</span><span class="n">mod</span><span class="o">.</span><span class="n">Type</span><span class="p">]</span> <span class="k">if</span> <span class="n">mod</span><span class="o">.</span><span class="n">Type</span> <span class="ow">in</span> <span class="n">FILE_TYPE_NAMES</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;UNKNOWN_</span><span class="si">{</span><span class="n">mod</span><span class="o">.</span><span class="n">Type</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -466,10 +439,7 @@
     <span class="k">return</span> <span class="n">fname</span></div>
 
 
-
-<div class="viewcode-block" id="dump_efi_module">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.dump_efi_module">[docs]</a>
-<span class="k">def</span> <span class="nf">dump_efi_module</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span> <span class="n">modn</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="dump_efi_module"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.dump_efi_module">[docs]</a><span class="k">def</span> <span class="nf">dump_efi_module</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span> <span class="n">modn</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">FILENAME</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">modn</span><span class="p">)</span>
     <span class="n">mod_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
     <span class="n">write_file</span><span class="p">(</span><span class="n">mod_path</span><span class="p">,</span> <span class="n">mod</span><span class="o">.</span><span class="n">Image</span><span class="p">[</span><span class="n">mod</span><span class="o">.</span><span class="n">HeaderSize</span><span class="p">:]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span> <span class="o">==</span> <span class="n">EFI_SECTION</span> <span class="k">else</span> <span class="n">mod</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span>
@@ -483,20 +453,14 @@
     <span class="k">return</span> <span class="n">mod_path</span></div>
 
 
-
-<div class="viewcode-block" id="EFIModuleType">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.EFIModuleType">[docs]</a>
-<span class="k">class</span> <span class="nc">EFIModuleType</span><span class="p">:</span>
+<div class="viewcode-block" id="EFIModuleType"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.EFIModuleType">[docs]</a><span class="k">class</span> <span class="nc">EFIModuleType</span><span class="p">:</span>
     <span class="n">SECTION_EXE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">SECTION</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">FV</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">FILE</span> <span class="o">=</span> <span class="mi">4</span></div>
 
 
-
-<div class="viewcode-block" id="search_efi_tree">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.search_efi_tree">[docs]</a>
-<span class="k">def</span> <span class="nf">search_efi_tree</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span>
+<div class="viewcode-block" id="search_efi_tree"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.search_efi_tree">[docs]</a><span class="k">def</span> <span class="nf">search_efi_tree</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span>
                     <span class="n">search_callback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
                     <span class="n">match_module_types</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">EFIModuleType</span><span class="o">.</span><span class="n">SECTION_EXE</span><span class="p">,</span>
                     <span class="n">findall</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
@@ -524,10 +488,7 @@
     <span class="k">return</span> <span class="n">matching_modules</span></div>
 
 
-
-<div class="viewcode-block" id="save_efi_tree">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.save_efi_tree">[docs]</a>
-<span class="k">def</span> <span class="nf">save_efi_tree</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span>
+<div class="viewcode-block" id="save_efi_tree"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.save_efi_tree">[docs]</a><span class="k">def</span> <span class="nf">save_efi_tree</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span>
                   <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">save_modules</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                   <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -544,7 +505,7 @@
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
 
         <span class="c1"># extract all non-function non-None members of EFI_MODULE objects</span>
-        <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)]</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
             <span class="n">md</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
         <span class="n">md</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
@@ -589,23 +550,14 @@
     <span class="k">return</span> <span class="n">modules_arr</span></div>
 
 
-
-<div class="viewcode-block" id="UUIDEncoder">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.UUIDEncoder">[docs]</a>
-<span class="k">class</span> <span class="nc">UUIDEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
-<div class="viewcode-block" id="UUIDEncoder.default">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.UUIDEncoder.default">[docs]</a>
-    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<div class="viewcode-block" id="UUIDEncoder"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.UUIDEncoder">[docs]</a><span class="k">class</span> <span class="nc">UUIDEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
+<div class="viewcode-block" id="UUIDEncoder.default"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.UUIDEncoder.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">UUID</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div>
-</div>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="parse_uefi_region_from_file">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.parse_uefi_region_from_file">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_uefi_region_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outpath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filetype</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="parse_uefi_region_from_file"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.parse_uefi_region_from_file">[docs]</a><span class="k">def</span> <span class="nf">parse_uefi_region_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outpath</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filetype</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># Create an output folder to dump EFI module tree</span>
     <span class="k">if</span> <span class="n">outpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">outpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">.dir&#39;</span>
@@ -626,10 +578,7 @@
     <span class="n">write_file</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">.UEFI.json&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tree_json</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">),</span> <span class="bp">cls</span><span class="o">=</span><span class="n">UUIDEncoder</span><span class="p">))</span></div>
 
 
-
-<div class="viewcode-block" id="decode_uefi_region">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.decode_uefi_region">[docs]</a>
-<span class="k">def</span> <span class="nf">decode_uefi_region</span><span class="p">(</span><span class="n">pth</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filetype</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="decode_uefi_region"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.decode_uefi_region">[docs]</a><span class="k">def</span> <span class="nf">decode_uefi_region</span><span class="p">(</span><span class="n">pth</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filetype</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
     <span class="n">bios_pth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pth</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">.dir&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">bios_pth</span><span class="p">):</span>
@@ -661,10 +610,7 @@
     <span class="n">parse_EFI_variables</span><span class="p">(</span><span class="n">nvram_fname</span><span class="p">,</span> <span class="n">region_data</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fwtype</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="save_efi_tree_filetype">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.save_efi_tree_filetype">[docs]</a>
-<span class="k">def</span> <span class="nf">save_efi_tree_filetype</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span>
+<div class="viewcode-block" id="save_efi_tree_filetype"><a class="viewcode-back" href="../../../modules/chipsec.hal.spi_uefi.html#chipsec.hal.spi_uefi.save_efi_tree_filetype">[docs]</a><span class="k">def</span> <span class="nf">save_efi_tree_filetype</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">],</span>
                            <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;EFI_MODULE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                            <span class="n">lvl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -681,7 +627,7 @@
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
 
         <span class="c1"># extract all non-function non-None members of EFI_MODULE objects</span>
-        <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)]</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
             <span class="n">md</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
         <span class="n">md</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
@@ -710,7 +656,6 @@
         <span class="n">modn</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">return</span> <span class="n">modules_arr</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -770,7 +715,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -790,8 +735,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

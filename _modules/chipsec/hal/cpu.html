@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.cpu &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -79,42 +81,29 @@
 <span class="c1">#</span>
 <span class="c1">########################################################################################################</span>
 
-<div class="viewcode-block" id="CPU">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU">[docs]</a>
-<span class="k">class</span> <span class="nc">CPU</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="CPU"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU">[docs]</a><span class="k">class</span> <span class="nc">CPU</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CPU</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">helper</span>
 
-<div class="viewcode-block" id="CPU.read_cr">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.read_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.read_cr"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.read_cr">[docs]</a>    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_cr</span><span class="p">(</span><span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[cpu</span><span class="si">{</span><span class="n">cpu_thread_id</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">] read CR</span><span class="si">{</span><span class="n">cr_number</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">: value = 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="CPU.write_cr">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.write_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.write_cr"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.write_cr">[docs]</a>    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[cpu</span><span class="si">{</span><span class="n">cpu_thread_id</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">] write CR</span><span class="si">{</span><span class="n">cr_number</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">: value = 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_cr</span><span class="p">(</span><span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">status</span></div>
 
-
-<div class="viewcode-block" id="CPU.cpuid">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.cpuid">[docs]</a>
-    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="CPU.cpuid"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.cpuid">[docs]</a>    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[cpu] CPUID in : EAX=0x</span><span class="si">{</span><span class="n">eax</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">, ECX=0x</span><span class="si">{</span><span class="n">ecx</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[cpu] CPUID out: EAX=0x</span><span class="si">{</span><span class="n">eax</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">, EBX=0x</span><span class="si">{</span><span class="n">ebx</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">, ECX=0x</span><span class="si">{</span><span class="n">ecx</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">, EDX=0x</span><span class="si">{</span><span class="n">edx</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span></div>
 
-
     <span class="c1"># Using cpuid check if running under vmm control</span>
-<div class="viewcode-block" id="CPU.check_vmm">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.check_vmm">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_vmm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.check_vmm"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.check_vmm">[docs]</a>    <span class="k">def</span> <span class="nf">check_vmm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># check Hypervisor Present</span>
         <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="mh">0x01</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">ecx</span> <span class="o">&amp;</span> <span class="mh">0x80000000</span><span class="p">):</span>
@@ -133,44 +122,29 @@
                 <span class="k">return</span> <span class="n">VMM_KVM</span>
         <span class="k">return</span> <span class="n">VMM_NONE</span></div>
 
-
     <span class="c1"># Using CPUID we can determine if Hyper-Threading is enabled in the CPU</span>
-<div class="viewcode-block" id="CPU.is_HT_active">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.is_HT_active">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_HT_active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.is_HT_active"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.is_HT_active">[docs]</a>    <span class="k">def</span> <span class="nf">is_HT_active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logical_processor_per_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_logical_processor_per_core</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">logical_processor_per_core</span> <span class="o">&gt;</span> <span class="mi">1</span></div>
 
-
     <span class="c1"># Using the CPUID we determine the number of logical processors per core</span>
-<div class="viewcode-block" id="CPU.get_number_logical_processor_per_core">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_logical_processor_per_core">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_logical_processor_per_core</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.get_number_logical_processor_per_core"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_logical_processor_per_core">[docs]</a>    <span class="k">def</span> <span class="nf">get_number_logical_processor_per_core</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ebx</span></div>
 
-
     <span class="c1"># Using CPUID we can determine the number of logical processors per package</span>
-<div class="viewcode-block" id="CPU.get_number_logical_processor_per_package">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_logical_processor_per_package">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_logical_processor_per_package</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.get_number_logical_processor_per_package"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_logical_processor_per_package">[docs]</a>    <span class="k">def</span> <span class="nf">get_number_logical_processor_per_package</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">ebx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="mh">0x0b</span><span class="p">,</span> <span class="mh">0x1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ebx</span></div>
 
-
     <span class="c1"># Using CPUID we can determine the number of physical processors per package</span>
-<div class="viewcode-block" id="CPU.get_number_physical_processor_per_package">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_physical_processor_per_package">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_physical_processor_per_package</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.get_number_physical_processor_per_package"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_physical_processor_per_package">[docs]</a>    <span class="k">def</span> <span class="nf">get_number_physical_processor_per_package</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">logical_processor_per_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_logical_processor_per_core</span><span class="p">()</span>
         <span class="n">logical_processor_per_package</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_logical_processor_per_package</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">logical_processor_per_package</span> <span class="o">//</span> <span class="n">logical_processor_per_core</span><span class="p">)</span></div>
 
-
     <span class="c1"># determine number of logical processors in the core</span>
-<div class="viewcode-block" id="CPU.get_number_threads_from_APIC_table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_threads_from_APIC_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_threads_from_APIC_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.get_number_threads_from_APIC_table"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_threads_from_APIC_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_number_threads_from_APIC_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">_acpi</span> <span class="o">=</span> <span class="n">acpi</span><span class="o">.</span><span class="n">ACPI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="n">dACPIID</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">apic</span> <span class="ow">in</span> <span class="n">_acpi</span><span class="o">.</span><span class="n">get_parse_ACPI_table</span><span class="p">(</span><span class="n">acpi</span><span class="o">.</span><span class="n">ACPI_TABLE_SIG_APIC</span><span class="p">):</span>  <span class="c1"># (table_header, APIC_object, table_header_blob, table_blob)</span>
@@ -182,17 +156,15 @@
                             <span class="n">dACPIID</span><span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">APICID</span><span class="p">]</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">ACPIProcID</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">dACPIID</span><span class="p">)</span></div>
 
-
     <span class="c1"># determine the cpu threads location within a package/core</span>
-<div class="viewcode-block" id="CPU.get_cpu_topology">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_cpu_topology">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_cpu_topology</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]:</span>
+<div class="viewcode-block" id="CPU.get_cpu_topology"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_cpu_topology">[docs]</a>    <span class="k">def</span> <span class="nf">get_cpu_topology</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]:</span>
         <span class="n">num_threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_threads_count</span><span class="p">()</span>
         <span class="n">packages</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">cores</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_threads</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Setting affinity to: </span><span class="si">{</span><span class="n">thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">set_affinity</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Setting affinity to: </span><span class="si">{</span><span class="n">thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">set_affinity</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
             <span class="n">eax</span> <span class="o">=</span> <span class="mh">0xb</span>   <span class="c1"># cpuid leaf 0B contains x2apic info</span>
             <span class="n">ecx</span> <span class="o">=</span> <span class="mi">1</span>     <span class="c1"># ecx 1 will get us pkg_id in edx after shifting right by _eax</span>
             <span class="p">(</span><span class="n">_eax</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_edx</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span>
@@ -212,46 +184,34 @@
         <span class="n">topology</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;packages&#39;</span><span class="p">:</span> <span class="n">packages</span><span class="p">,</span> <span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="n">cores</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">topology</span></div>
 
-
     <span class="c1"># determine number of physical sockets using the CPUID and APIC ACPI table</span>
-<div class="viewcode-block" id="CPU.get_number_sockets_from_APIC_table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_sockets_from_APIC_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_number_sockets_from_APIC_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.get_number_sockets_from_APIC_table"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_number_sockets_from_APIC_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_number_sockets_from_APIC_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">number_threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_threads_from_APIC_table</span><span class="p">()</span>
         <span class="n">logical_processor_per_package</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_logical_processor_per_package</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">number_threads</span> <span class="o">//</span> <span class="n">logical_processor_per_package</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Return SMRR MSR physical base and mask</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="CPU.get_SMRR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_SMRR">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_SMRR</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="CPU.get_SMRR"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_SMRR">[docs]</a>    <span class="k">def</span> <span class="nf">get_SMRR</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">smrambase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSBASE&#39;</span><span class="p">,</span> <span class="s1">&#39;PhysBase&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">smrrmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;IA32_SMRR_PHYSMASK&#39;</span><span class="p">,</span> <span class="s1">&#39;PhysMask&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">smrambase</span><span class="p">,</span> <span class="n">smrrmask</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Return SMRAM region base, limit and size as defined by SMRR</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="CPU.get_SMRR_SMRAM">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_SMRR_SMRAM">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_SMRR_SMRAM</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="CPU.get_SMRR_SMRAM"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_SMRR_SMRAM">[docs]</a>    <span class="k">def</span> <span class="nf">get_SMRR_SMRAM</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="p">(</span><span class="n">smram_base</span><span class="p">,</span> <span class="n">smrrmask</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_SMRR</span><span class="p">()</span>
         <span class="n">smram_base</span> <span class="o">&amp;=</span> <span class="n">smrrmask</span>
         <span class="n">smram_size</span> <span class="o">=</span> <span class="p">((</span><span class="o">~</span><span class="n">smrrmask</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">smram_limit</span> <span class="o">=</span> <span class="n">smram_base</span> <span class="o">+</span> <span class="n">smram_size</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">smram_base</span><span class="p">,</span> <span class="n">smram_limit</span><span class="p">,</span> <span class="n">smram_size</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Returns TSEG base, limit and size</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="CPU.get_TSEG">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_TSEG">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_TSEG</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="CPU.get_TSEG"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_TSEG">[docs]</a>    <span class="k">def</span> <span class="nf">get_TSEG</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_server</span><span class="p">():</span>
             <span class="c1"># tseg register has base and limit</span>
             <span class="n">tseg_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;TSEG_BASE&#39;</span><span class="p">,</span> <span class="s1">&#39;base&#39;</span><span class="p">,</span> <span class="n">preserve_field_position</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -266,13 +226,10 @@
         <span class="n">tseg_size</span> <span class="o">=</span> <span class="n">tseg_limit</span> <span class="o">-</span> <span class="n">tseg_base</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">tseg_base</span><span class="p">,</span> <span class="n">tseg_limit</span><span class="p">,</span> <span class="n">tseg_size</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Returns SMRAM base from either SMRR MSR or TSEG PCIe config register</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="CPU.get_SMRAM">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_SMRAM">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_SMRAM</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="CPU.get_SMRAM"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.get_SMRAM">[docs]</a>    <span class="k">def</span> <span class="nf">get_SMRAM</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">smram_base</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">smram_limit</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">smram_size</span> <span class="o">=</span> <span class="mi">0</span>
@@ -291,26 +248,20 @@
                 <span class="n">smram_limit</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">smram_base</span><span class="p">,</span> <span class="n">smram_limit</span><span class="p">,</span> <span class="n">smram_size</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Check that SMRR is supported by CPU in IA32_MTRRCAP_MSR[SMRR]</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="CPU.check_SMRR_supported">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.check_SMRR_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_SMRR_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.check_SMRR_supported"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.check_SMRR_supported">[docs]</a>    <span class="k">def</span> <span class="nf">check_SMRR_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">mtrrcap_msr_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;MTRRCAP&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">print_register</span><span class="p">(</span><span class="s1">&#39;MTRRCAP&#39;</span><span class="p">,</span> <span class="n">mtrrcap_msr_reg</span><span class="p">)</span>
         <span class="n">smrr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_register_field</span><span class="p">(</span><span class="s1">&#39;MTRRCAP&#39;</span><span class="p">,</span> <span class="n">mtrrcap_msr_reg</span><span class="p">,</span> <span class="s1">&#39;SMRR&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">smrr</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Dump CPU page tables at specified physical base of paging-directory hierarchy (CR3)</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="CPU.dump_page_tables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.dump_page_tables">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cr3</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pt_fname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.dump_page_tables"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.dump_page_tables">[docs]</a>    <span class="k">def</span> <span class="nf">dump_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cr3</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pt_fname</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_orig_logname</span> <span class="o">=</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">LOG_FILE_NAME</span>
         <span class="n">hpt</span> <span class="o">=</span> <span class="n">paging</span><span class="o">.</span><span class="n">c_ia32e_page_tables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[cpu] dumping paging hierarchy at physical base (CR3) = 0x</span><span class="si">{</span><span class="n">cr3</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
@@ -322,16 +273,11 @@
         <span class="k">if</span> <span class="n">hpt</span><span class="o">.</span><span class="n">failure</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s1">&#39;could not dump page tables&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CPU.dump_page_tables_all">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.dump_page_tables_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_page_tables_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="CPU.dump_page_tables_all"><a class="viewcode-back" href="../../../modules/chipsec.hal.cpu.html#chipsec.hal.cpu.CPU.dump_page_tables_all">[docs]</a>    <span class="k">def</span> <span class="nf">dump_page_tables_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
             <span class="n">cr3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_cr</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[cpu</span><span class="si">{</span><span class="n">tid</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">] found paging hierarchy base (CR3): 0x</span><span class="si">{</span><span class="n">cr3</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dump_page_tables</span><span class="p">(</span><span class="n">cr3</span><span class="p">)</span></div>
-</div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">dump_page_tables</span><span class="p">(</span><span class="n">cr3</span><span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -391,7 +337,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -411,8 +357,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

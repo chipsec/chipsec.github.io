@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.helper.dal.dalhelper &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -78,9 +80,7 @@
 <span class="kn">from</span> <span class="nn">chipsec.exceptions</span> <span class="kn">import</span> <span class="n">DALHelperError</span><span class="p">,</span> <span class="n">UnimplementedAPIError</span>
 
 
-<div class="viewcode-block" id="DALHelper">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper">[docs]</a>
-<span class="k">class</span> <span class="nc">DALHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper">[docs]</a><span class="k">class</span> <span class="nc">DALHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DALHelper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">itpii</span><span class="o">.</span><span class="n">baseaccess</span><span class="p">()</span>
@@ -111,16 +111,11 @@
 <span class="c1"># Driver/service management functions</span>
 <span class="c1">###############################################################################################</span>
 
-<div class="viewcode-block" id="DALHelper.create">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.create">[docs]</a>
-    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.create"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] DAL Helper created&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.start">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.start">[docs]</a>
-    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">driver_exhists</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.start"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_driver</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">driver_exhists</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">driver_loaded</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()]</span><span class="o">.</span><span class="n">cv</span><span class="o">.</span><span class="n">isrunning</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">halt</span><span class="p">()</span>
@@ -128,50 +123,34 @@
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] DAL Helper started/loaded&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.stop">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.stop">[docs]</a>
-    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.stop"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_system_halted</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">go</span><span class="p">()</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] DAL Helper stopped/unloaded&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.delete">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.delete">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.delete"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[helper] DAL Helper deleted&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
-
 
 
 <span class="c1">###############################################################################################</span>
 <span class="c1"># Functions to get information about the remote target</span>
 <span class="c1">###############################################################################################</span>
 
-<div class="viewcode-block" id="DALHelper.target_machine">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.target_machine">[docs]</a>
-    <span class="k">def</span> <span class="nf">target_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.target_machine"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.target_machine">[docs]</a>    <span class="k">def</span> <span class="nf">target_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">devicelist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">devicetype</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">devicelist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stepping</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.dal_version">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.dal_version">[docs]</a>
-    <span class="k">def</span> <span class="nf">dal_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.dal_version"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.dal_version">[docs]</a>    <span class="k">def</span> <span class="nf">dal_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">cv</span><span class="o">.</span><span class="n">version</span></div>
 
-
     <span class="c1"># return first enabled thread</span>
-<div class="viewcode-block" id="DALHelper.find_thread">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.find_thread">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.find_thread"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.find_thread">[docs]</a>    <span class="k">def</span> <span class="nf">find_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">en_thread</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">)):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">en_thread</span><span class="p">]</span><span class="o">.</span><span class="n">isenabled</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">en_thread</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[WARNING] No enabled threads found.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">0</span></div>
-
 
 <span class="c1">###############################################################################################</span>
 <span class="c1"># Actual API functions to access HW resources</span>
@@ -181,9 +160,7 @@
     <span class="c1"># PCIe configuration access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="DALHelper.pci_addr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.pci_addr">[docs]</a>
-    <span class="k">def</span> <span class="nf">pci_addr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.pci_addr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.pci_addr">[docs]</a>    <span class="k">def</span> <span class="nf">pci_addr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">bus</span> <span class="o">&gt;=</span> <span class="mi">256</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">device</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">function</span> <span class="o">&gt;=</span> <span class="mi">8</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="mi">256</span><span class="p">):</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="s1">&#39;[WARNING] PCI access out of range. Use mmio functions to access PCIEXBAR.&#39;</span><span class="p">)</span>
         <span class="n">config_addr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()]</span><span class="o">.</span><span class="n">dport</span><span class="p">(</span><span class="mh">0xCF8</span><span class="p">)</span>
@@ -195,10 +172,7 @@
         <span class="n">config_addr</span> <span class="o">|=</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">config_addr</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.read_pci_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_pci_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.read_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">ie_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">dport</span><span class="p">(</span><span class="mh">0xCF8</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pci_addr</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">))</span>
         <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">dport</span><span class="p">(</span><span class="mh">0xCFC</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="p">((</span><span class="n">address</span> <span class="o">%</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
@@ -208,24 +182,18 @@
             <span class="n">value</span> <span class="o">&amp;=</span> <span class="mh">0xFFFF</span>
         <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">ToUInt32</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.write_pci_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_pci_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.write_pci_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_pci_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_pci_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">ie_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">dport</span><span class="p">(</span><span class="mh">0xCF8</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pci_addr</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">address</span><span class="p">))</span>
         <span class="n">old_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">dport</span><span class="p">(</span><span class="mh">0xCFC</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">dport</span><span class="p">(</span><span class="mh">0xCFC</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">old_value</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Physical memory access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="DALHelper.read_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bytewise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.read_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">read_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bytewise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">bytewise</span><span class="p">:</span>
             <span class="n">width</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
@@ -241,10 +209,7 @@
             <span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_buf</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.write_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">bytewise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.write_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">write_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">bytewise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">bytewise</span><span class="p">:</span>
             <span class="n">width</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
@@ -259,32 +224,20 @@
             <span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="mi">1</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.va2pa">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.va2pa">[docs]</a>
-    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.va2pa"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.va2pa">[docs]</a>    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;va2pa&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.alloc_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.alloc_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.alloc_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.alloc_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">alloc_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;alloc_phys_mem&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.free_phys_mem">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.free_phys_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.free_phys_mem"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.free_phys_mem">[docs]</a>    <span class="k">def</span> <span class="nf">free_phys_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;free_phys_mem&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># CPU I/O port access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="DALHelper.read_io_port">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_io_port">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.read_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">read_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()]</span><span class="o">.</span><span class="n">port</span><span class="p">(</span><span class="n">io_port</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -295,10 +248,7 @@
             <span class="k">raise</span> <span class="n">DALHelperError</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="s1">&#39;is not a valid IO port size.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">ToUInt32</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.write_io_port">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_io_port">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.write_io_port"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_io_port">[docs]</a>    <span class="k">def</span> <span class="nf">write_io_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()]</span><span class="o">.</span><span class="n">port</span><span class="p">(</span><span class="n">io_port</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -309,14 +259,11 @@
             <span class="k">raise</span> <span class="n">DALHelperError</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="s1">&#39;is not a valid IO port size.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># CPU related API</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="DALHelper.read_msr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_msr">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="DALHelper.read_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_msr">[docs]</a>    <span class="k">def</span> <span class="nf">read_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">thread</span><span class="p">]</span><span class="o">.</span><span class="n">isenabled</span><span class="p">:</span>
             <span class="n">en_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[WARNING] Selected thread [</span><span class="si">{</span><span class="n">thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">] was disabled, using [</span><span class="si">{</span><span class="n">en_thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">].&#39;</span><span class="p">)</span>
@@ -326,10 +273,7 @@
         <span class="n">eax</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">ToUInt64</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mh">0xffffffff</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">edx</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.write_msr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_msr">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">edx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.write_msr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_msr">[docs]</a>    <span class="k">def</span> <span class="nf">write_msr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">msr_addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">edx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">thread</span><span class="p">]</span><span class="o">.</span><span class="n">isenabled</span><span class="p">:</span>
             <span class="n">en_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[WARNING] Selected thread [</span><span class="si">{</span><span class="n">thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">] was disabled, using [</span><span class="si">{</span><span class="n">en_thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">].&#39;</span><span class="p">)</span>
@@ -338,10 +282,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">thread</span><span class="p">]</span><span class="o">.</span><span class="n">msr</span><span class="p">(</span><span class="n">msr_addr</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.read_cr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.read_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_cr">[docs]</a>    <span class="k">def</span> <span class="nf">read_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">cpu_thread_id</span><span class="p">]</span><span class="o">.</span><span class="n">isenabled</span><span class="p">:</span>
             <span class="n">en_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[WARNING] Selected thread [</span><span class="si">{</span><span class="n">cpu_thread_id</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">] was disabled, using [</span><span class="si">{</span><span class="n">en_thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">].&#39;</span><span class="p">)</span>
@@ -361,10 +302,7 @@
             <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">val</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.write_cr">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_cr">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.write_cr"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_cr">[docs]</a>    <span class="k">def</span> <span class="nf">write_cr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cr_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">cpu_thread_id</span><span class="p">]</span><span class="o">.</span><span class="n">isenabled</span><span class="p">:</span>
             <span class="n">en_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[WARNING] Selected thread [</span><span class="si">{</span><span class="n">cpu_thread_id</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">] was disabled, using [</span><span class="si">{</span><span class="n">en_thread</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">].&#39;</span><span class="p">)</span>
@@ -384,24 +322,15 @@
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.load_ucode_update">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.load_ucode_update">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">core_id</span><span class="p">,</span> <span class="n">ucode_update_buf</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.load_ucode_update"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.load_ucode_update">[docs]</a>    <span class="k">def</span> <span class="nf">load_ucode_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">core_id</span><span class="p">,</span> <span class="n">ucode_update_buf</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;load_ucode_update&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.get_threads_count">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_threads_count">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_threads_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.get_threads_count"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_threads_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_threads_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">no_threads</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[helper] Threads discovered : 0x</span><span class="si">{</span><span class="n">no_threads</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">no_threads</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">no_threads</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.cpuid">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.cpuid">[docs]</a>
-    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="DALHelper.cpuid"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.cpuid">[docs]</a>    <span class="k">def</span> <span class="nf">cpuid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eax</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ecx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">ie_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_thread</span><span class="p">()</span>
         <span class="n">reax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">cpuid_eax</span><span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span>
         <span class="n">rebx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">cpuid_ebx</span><span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span>
@@ -409,66 +338,39 @@
         <span class="n">redx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">threads</span><span class="p">[</span><span class="n">ie_thread</span><span class="p">]</span><span class="o">.</span><span class="n">cpuid_edx</span><span class="p">(</span><span class="n">eax</span><span class="p">,</span> <span class="n">ecx</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">reax</span><span class="p">,</span> <span class="n">rebx</span><span class="p">,</span> <span class="n">recx</span><span class="p">,</span> <span class="n">redx</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.get_descriptor_table">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_descriptor_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.get_descriptor_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_descriptor_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_descriptor_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">desc_table_code</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_descriptor_table&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.retpoline_enabled">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.retpoline_enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.retpoline_enabled"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.retpoline_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">retpoline_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># EFI Variable API</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="DALHelper.EFI_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.EFI_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.EFI_supported"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.EFI_supported">[docs]</a>    <span class="k">def</span> <span class="nf">EFI_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.delete_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.delete_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.delete_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.delete_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;delete_EFI_variable&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.list_EFI_variables">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.list_EFI_variables">[docs]</a>
-    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.list_EFI_variables"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.list_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;list_EFI_variables&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.get_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.get_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_EFI_variable&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.set_EFI_variable">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.set_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.set_EFI_variable"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.set_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;set_EFI_variable&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># Memory-mapped I/O (MMIO) access</span>
     <span class="c1">#</span>
 
-<div class="viewcode-block" id="DALHelper.map_io_space">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.map_io_space">[docs]</a>
-    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.map_io_space"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.map_io_space">[docs]</a>    <span class="k">def</span> <span class="nf">map_io_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cache_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">physical_address</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.read_mmio_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_mmio_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.read_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.read_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;=Q&#39;</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">[:</span><span class="n">size</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
@@ -482,10 +384,7 @@
             <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.write_mmio_reg">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_mmio_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="DALHelper.write_mmio_reg"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.write_mmio_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_mmio_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phys_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
             <span class="n">buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;=Q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
@@ -498,88 +397,53 @@
             <span class="n">buf</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Interrupts</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="DALHelper.send_sw_smi">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.send_sw_smi">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.send_sw_smi"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.send_sw_smi">[docs]</a>    <span class="k">def</span> <span class="nf">send_sw_smi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpu_thread_id</span><span class="p">,</span> <span class="n">SMI_code_data</span><span class="p">,</span> <span class="n">_rax</span><span class="p">,</span> <span class="n">_rbx</span><span class="p">,</span> <span class="n">_rcx</span><span class="p">,</span> <span class="n">_rdx</span><span class="p">,</span> <span class="n">_rsi</span><span class="p">,</span> <span class="n">_rdi</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;send_sw_smi&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.set_affinity">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.set_affinity">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.set_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.set_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">set_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;set_affinity&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.get_affinity">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_affinity">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.get_affinity"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_affinity">[docs]</a>    <span class="k">def</span> <span class="nf">get_affinity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_affinity&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># ACPI tables access</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="DALHelper.get_ACPI_SDT">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_ACPI_SDT">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.get_ACPI_SDT"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_ACPI_SDT">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_SDT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_ACPI_SDT&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.get_ACPI_table">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_ACPI_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.get_ACPI_table"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_ACPI_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_ACPI_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;get_ACPI_table&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># IOSF Message Bus access</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="DALHelper.msgbus_send_read_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.msgbus_send_read_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.msgbus_send_read_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.msgbus_send_read_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_read_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;msgbus_send_read_message&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.msgbus_send_write_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.msgbus_send_write_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.msgbus_send_write_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.msgbus_send_write_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_write_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;msgbus_send_write_message&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="DALHelper.msgbus_send_message">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.msgbus_send_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
+<div class="viewcode-block" id="DALHelper.msgbus_send_message"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.msgbus_send_message">[docs]</a>    <span class="k">def</span> <span class="nf">msgbus_send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mcr</span><span class="p">,</span> <span class="n">mcrx</span><span class="p">,</span> <span class="n">mdr</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;msgbus_send_message&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># File system</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="DALHelper.get_tool_info">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_tool_info">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_tool_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="DALHelper.get_tool_info"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.get_tool_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_tool_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="DALHelper.hypercall">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.hypercall">[docs]</a>
-    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;hypercall&#39;</span><span class="p">)</span></div>
-</div>
+<div class="viewcode-block" id="DALHelper.hypercall"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.DALHelper.hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rcx</span><span class="p">,</span> <span class="n">rdx</span><span class="p">,</span> <span class="n">r8</span><span class="p">,</span> <span class="n">r9</span><span class="p">,</span> <span class="n">r10</span><span class="p">,</span> <span class="n">r11</span><span class="p">,</span> <span class="n">rax</span><span class="p">,</span> <span class="n">rbx</span><span class="p">,</span> <span class="n">rdi</span><span class="p">,</span> <span class="n">rsi</span><span class="p">,</span> <span class="n">xmm_buffer</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">UnimplementedAPIError</span><span class="p">(</span><span class="s1">&#39;hypercall&#39;</span><span class="p">)</span></div></div>
 
 
 
-
-<div class="viewcode-block" id="get_helper">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.get_helper">[docs]</a>
-<span class="k">def</span> <span class="nf">get_helper</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">DALHelper</span><span class="p">:</span>
+<div class="viewcode-block" id="get_helper"><a class="viewcode-back" href="../../../../modules/chipsec.helper.dal.dalhelper.html#chipsec.helper.dal.dalhelper.get_helper">[docs]</a><span class="k">def</span> <span class="nf">get_helper</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">DALHelper</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">DALHelper</span><span class="p">()</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
@@ -648,7 +512,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -668,8 +532,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.uefi &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -87,9 +89,7 @@
 <span class="c1">#</span>
 <span class="c1">########################################################################################################</span>
 
-<div class="viewcode-block" id="parse_script">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.parse_script">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_script</span><span class="p">(</span><span class="n">script</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;S3BOOTSCRIPT_ENTRY&#39;</span><span class="p">]:</span>
+<div class="viewcode-block" id="parse_script"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.parse_script">[docs]</a><span class="k">def</span> <span class="nf">parse_script</span><span class="p">(</span><span class="n">script</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;S3BOOTSCRIPT_ENTRY&#39;</span><span class="p">]:</span>
     <span class="n">off</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">entry_type</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">s3_boot_script_entries</span> <span class="o">=</span> <span class="p">[]</span>
@@ -117,7 +117,6 @@
         <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">script</span><span class="p">[:</span> <span class="n">off</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">s3_boot_script_entries</span></div>
-
 
 
 <span class="c1">########################################################################################################</span>
@@ -177,9 +176,7 @@
 <span class="n">AUTHENTICATED_VARIABLES</span> <span class="o">=</span> <span class="p">(</span><span class="n">EFI_VAR_NAME_AuthVarKeyDatabase</span><span class="p">,</span> <span class="n">EFI_VAR_NAME_certdb</span><span class="p">)</span> <span class="o">+</span> <span class="n">SECURE_BOOT_KEY_VARIABLES</span>
 
 
-<div class="viewcode-block" id="get_auth_attr_string">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.get_auth_attr_string">[docs]</a>
-<span class="k">def</span> <span class="nf">get_auth_attr_string</span><span class="p">(</span><span class="n">attr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="get_auth_attr_string"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.get_auth_attr_string">[docs]</a><span class="k">def</span> <span class="nf">get_auth_attr_string</span><span class="p">(</span><span class="n">attr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">attr_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
     <span class="k">if</span> <span class="n">IS_VARIABLE_ATTRIBUTE</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS</span><span class="p">):</span>
         <span class="n">attr_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">attr_str</span><span class="si">}</span><span class="s1">AWS+&#39;</span>
@@ -190,10 +187,7 @@
     <span class="k">return</span> <span class="n">attr_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="get_attr_string">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.get_attr_string">[docs]</a>
-<span class="k">def</span> <span class="nf">get_attr_string</span><span class="p">(</span><span class="n">attr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="get_attr_string"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.get_attr_string">[docs]</a><span class="k">def</span> <span class="nf">get_attr_string</span><span class="p">(</span><span class="n">attr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">attr_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
     <span class="k">if</span> <span class="n">IS_VARIABLE_ATTRIBUTE</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">EFI_VARIABLE_NON_VOLATILE</span><span class="p">):</span>
         <span class="n">attr_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">attr_str</span><span class="si">}</span><span class="s1">NV+&#39;</span>
@@ -211,10 +205,7 @@
         <span class="n">attr_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">attr_str</span><span class="si">}</span><span class="s1">AW+&#39;</span>
     <span class="k">return</span> <span class="n">attr_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="print_efi_variable">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.print_efi_variable">[docs]</a>
-<span class="k">def</span> <span class="nf">print_efi_variable</span><span class="p">(</span><span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">var_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">var_header</span><span class="p">:</span> <span class="s1">&#39;EfiTableType&#39;</span><span class="p">,</span> <span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">var_guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var_attrib</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="print_efi_variable"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.print_efi_variable">[docs]</a><span class="k">def</span> <span class="nf">print_efi_variable</span><span class="p">(</span><span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">var_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">var_header</span><span class="p">:</span> <span class="s1">&#39;EfiTableType&#39;</span><span class="p">,</span> <span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">var_guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var_attrib</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">--------------------------------&#39;</span><span class="p">)</span>
     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;EFI Variable (offset = 0x</span><span class="si">{</span><span class="n">offset</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">):&#39;</span><span class="p">)</span>
     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;--------------------------------&#39;</span><span class="p">)</span>
@@ -263,10 +254,7 @@
             <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">var_buf</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="print_sorted_EFI_variables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.print_sorted_EFI_variables">[docs]</a>
-<span class="k">def</span> <span class="nf">print_sorted_EFI_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="print_sorted_EFI_variables"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.print_sorted_EFI_variables">[docs]</a><span class="k">def</span> <span class="nf">print_sorted_EFI_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">sorted_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="n">rec</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">EfiTableType</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">sorted_names</span><span class="p">:</span>
@@ -275,10 +263,7 @@
             <span class="n">print_efi_variable</span><span class="p">(</span><span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">rec</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">rec</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">rec</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span></div>
 
 
-
-<div class="viewcode-block" id="decode_EFI_variables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.decode_EFI_variables">[docs]</a>
-<span class="k">def</span> <span class="nf">decode_EFI_variables</span><span class="p">(</span><span class="n">efi_vars</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]],</span> <span class="n">nvram_pth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="decode_EFI_variables"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.decode_EFI_variables">[docs]</a><span class="k">def</span> <span class="nf">decode_EFI_variables</span><span class="p">(</span><span class="n">efi_vars</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]],</span> <span class="n">nvram_pth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># print decoded and sorted EFI variables into a log file</span>
     <span class="n">print_sorted_EFI_variables</span><span class="p">(</span><span class="n">efi_vars</span><span class="p">)</span>
     <span class="c1"># write each EFI variable into its own binary file</span>
@@ -300,10 +285,7 @@
             <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span></div>
 
 
-
-<div class="viewcode-block" id="identify_EFI_NVRAM">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.identify_EFI_NVRAM">[docs]</a>
-<span class="k">def</span> <span class="nf">identify_EFI_NVRAM</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="identify_EFI_NVRAM"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.identify_EFI_NVRAM">[docs]</a><span class="k">def</span> <span class="nf">identify_EFI_NVRAM</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">buffer</span>
     <span class="k">for</span> <span class="n">fw_type</span> <span class="ow">in</span> <span class="n">uefi_platform</span><span class="o">.</span><span class="n">fw_types</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">uefi_platform</span><span class="o">.</span><span class="n">EFI_VAR_DICT</span><span class="p">[</span><span class="n">fw_type</span><span class="p">][</span><span class="s1">&#39;func_getnvstore&#39;</span><span class="p">]:</span>
@@ -313,10 +295,7 @@
     <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="parse_EFI_variables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.parse_EFI_variables">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_EFI_variables</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rom</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">authvars</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">_fw_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="parse_EFI_variables"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.parse_EFI_variables">[docs]</a><span class="k">def</span> <span class="nf">parse_EFI_variables</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rom</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">authvars</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">_fw_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">_fw_type</span> <span class="ow">in</span> <span class="n">uefi_platform</span><span class="o">.</span><span class="n">fw_types</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">_fw_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[uefi] Using FW type (NVRAM format): </span><span class="si">{</span><span class="n">_fw_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -341,10 +320,7 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-
-<div class="viewcode-block" id="find_EFI_variable_store">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.find_EFI_variable_store">[docs]</a>
-<span class="k">def</span> <span class="nf">find_EFI_variable_store</span><span class="p">(</span><span class="n">rom_buffer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">_FWType</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="find_EFI_variable_store"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.find_EFI_variable_store">[docs]</a><span class="k">def</span> <span class="nf">find_EFI_variable_store</span><span class="p">(</span><span class="n">rom_buffer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">_FWType</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">rom_buffer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s1">&#39;rom_buffer is None&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
@@ -379,7 +355,6 @@
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">nvram_header</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nvram_buf</span></div>
 
-
 <span class="c1">########################################################################################################</span>
 <span class="c1">#</span>
 <span class="c1"># UEFI HAL Component</span>
@@ -387,9 +362,7 @@
 <span class="c1">########################################################################################################</span>
 
 
-<div class="viewcode-block" id="UEFI">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI">[docs]</a>
-<span class="k">class</span> <span class="nc">UEFI</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="UEFI"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI">[docs]</a><span class="k">class</span> <span class="nc">UEFI</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UEFI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">helper</span>
@@ -409,26 +382,18 @@
     <span class="c1"># Default current platform type is EFI_FW_TYPE_UEFI</span>
     <span class="c1">######################################################################</span>
 
-<div class="viewcode-block" id="UEFI.set_FWType">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.set_FWType">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_FWType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">efi_nvram_format</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.set_FWType"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.set_FWType">[docs]</a>    <span class="k">def</span> <span class="nf">set_FWType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">efi_nvram_format</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">efi_nvram_format</span> <span class="ow">in</span> <span class="n">uefi_platform</span><span class="o">.</span><span class="n">fw_types</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_FWType</span> <span class="o">=</span> <span class="n">efi_nvram_format</span></div>
-
 
     <span class="c1">######################################################################</span>
     <span class="c1"># EFI NVRAM Parsing Functions</span>
     <span class="c1">######################################################################</span>
 
-<div class="viewcode-block" id="UEFI.dump_EFI_variables_from_SPI">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.dump_EFI_variables_from_SPI">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_EFI_variables_from_SPI</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.dump_EFI_variables_from_SPI"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.dump_EFI_variables_from_SPI">[docs]</a>    <span class="k">def</span> <span class="nf">dump_EFI_variables_from_SPI</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_EFI_variables_from_SPI</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0x800000</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.read_EFI_variables_from_SPI">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.read_EFI_variables_from_SPI">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_EFI_variables_from_SPI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">BIOS_region_base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">BIOS_region_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.read_EFI_variables_from_SPI"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.read_EFI_variables_from_SPI">[docs]</a>    <span class="k">def</span> <span class="nf">read_EFI_variables_from_SPI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">BIOS_region_base</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">BIOS_region_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">rom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">spi</span><span class="o">.</span><span class="n">read_spi</span><span class="p">(</span><span class="n">BIOS_region_base</span><span class="p">,</span> <span class="n">BIOS_region_size</span><span class="p">)</span>
         <span class="n">efi_var_store</span> <span class="o">=</span> <span class="n">find_EFI_variable_store</span><span class="p">(</span><span class="n">rom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FWType</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">efi_var_store</span><span class="p">:</span>
@@ -436,10 +401,7 @@
             <span class="k">return</span> <span class="n">efi_vars</span>
         <span class="k">return</span> <span class="n">efi_var_store</span></div>
 
-
-<div class="viewcode-block" id="UEFI.read_EFI_variables_from_file">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.read_EFI_variables_from_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_EFI_variables_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.read_EFI_variables_from_file"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.read_EFI_variables_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_EFI_variables_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">rom</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">efi_var_store</span> <span class="o">=</span> <span class="n">find_EFI_variable_store</span><span class="p">(</span><span class="n">rom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FWType</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">efi_var_store</span><span class="p">:</span>
@@ -447,12 +409,9 @@
             <span class="k">return</span> <span class="n">efi_vars</span>
         <span class="k">return</span> <span class="n">efi_var_store</span></div>
 
-
     <span class="c1"># @TODO: Do not use, will be removed</span>
 
-<div class="viewcode-block" id="UEFI.read_EFI_variables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.read_EFI_variables">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">efi_var_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">authvars</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]]:</span>
+<div class="viewcode-block" id="UEFI.read_EFI_variables"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.read_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">read_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">efi_var_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">authvars</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;EfiVariableType&#39;</span><span class="p">]]:</span>
         <span class="k">if</span> <span class="n">efi_var_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s1">&#39;efi_var_store is None&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">{}</span>
@@ -460,7 +419,6 @@
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">UTIL_TRACE</span><span class="p">:</span>
             <span class="n">print_sorted_EFI_variables</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">variables</span></div>
-
 
     <span class="c1">######################################################################</span>
     <span class="c1"># S3 Resume Boot-Script Parsing Functions</span>
@@ -472,9 +430,7 @@
     <span class="c1">#   found               - status is the script is found</span>
     <span class="c1">#   AcpiBootScriptTable - physical address of the S3 resume boot script, 0 if (not found)</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="UEFI.find_s3_bootscript">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_s3_bootscript">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_s3_bootscript</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<div class="viewcode-block" id="UEFI.find_s3_bootscript"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_s3_bootscript">[docs]</a>    <span class="k">def</span> <span class="nf">find_s3_bootscript</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">BootScript_addresses</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -521,16 +477,13 @@
                 <span class="c1"># break</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">BootScript_addresses</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Upper level function to find and parse S3 resume boot script</span>
     <span class="c1"># Returns:</span>
     <span class="c1">#   bootscript_pa  - physical address of the S3 resume boot script</span>
     <span class="c1">#   script_entries - a list of parse S3 resume boot script operations</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="UEFI.get_s3_bootscript">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.get_s3_bootscript">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_s3_bootscript</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;S3BOOTSCRIPT_ENTRY&#39;</span><span class="p">]]]]:</span>
+<div class="viewcode-block" id="UEFI.get_s3_bootscript"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.get_s3_bootscript">[docs]</a>    <span class="k">def</span> <span class="nf">get_s3_bootscript</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;S3BOOTSCRIPT_ENTRY&#39;</span><span class="p">]]]]:</span>
         <span class="n">parsed_scripts</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">script_entries</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1">#</span>
@@ -555,20 +508,14 @@
             <span class="n">parsed_scripts</span><span class="p">[</span><span class="n">bootscript_pa</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_entries</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">bootscript_PAs</span><span class="p">,</span> <span class="n">parsed_scripts</span><span class="p">)</span></div>
 
-
     <span class="c1">######################################################################</span>
     <span class="c1"># Runtime Variable API Functions</span>
     <span class="c1">######################################################################</span>
 
-<div class="viewcode-block" id="UEFI.list_EFI_variables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.list_EFI_variables">[docs]</a>
-    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+<div class="viewcode-block" id="UEFI.list_EFI_variables"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.list_EFI_variables">[docs]</a>    <span class="k">def</span> <span class="nf">list_EFI_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">list_EFI_variables</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="UEFI.get_EFI_variable">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.get_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="UEFI.get_EFI_variable"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.get_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
         <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_EFI_variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">var</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
@@ -578,31 +525,21 @@
                 <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">var</span></div>
 
-
-<div class="viewcode-block" id="UEFI.set_EFI_variable">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.set_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">datasize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="UEFI.set_EFI_variable"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.set_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">set_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">datasize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">atts_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;(attributes = </span><span class="si">{</span><span class="n">attrs</span><span class="si">}</span><span class="s1">)&#39;</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[uefi] Writing EFI variable </span><span class="si">{</span><span class="n">guid</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">atts_str</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">datasize</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.set_EFI_variable_from_file">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.set_EFI_variable_from_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_EFI_variable_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">datasize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="UEFI.set_EFI_variable_from_file"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.set_EFI_variable_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">set_EFI_variable_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">datasize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="s1">&#39;File with EFI variable is not specified&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_EFI_variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">datasize</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.delete_EFI_variable">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.delete_EFI_variable">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="UEFI.delete_EFI_variable"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.delete_EFI_variable">[docs]</a>    <span class="k">def</span> <span class="nf">delete_EFI_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">guid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[uefi] Deleting EFI variable </span><span class="si">{</span><span class="n">guid</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">delete_EFI_variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">)</span></div>
-
 
     <span class="c1">######################################################################</span>
     <span class="c1"># UEFI System Tables</span>
@@ -610,9 +547,7 @@
 
     <span class="n">EfiTable</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_TABLE_HEADER</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;EFI_SYSTEM_TABLE&#39;</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">]</span>
 
-<div class="viewcode-block" id="UEFI.find_EFI_Table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_Table">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_EFI_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_sig</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.find_EFI_Table"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_Table">[docs]</a>    <span class="k">def</span> <span class="nf">find_EFI_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_sig</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
         <span class="p">(</span><span class="n">smram_base</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">get_SMRAM</span><span class="p">()</span>
         <span class="n">CHUNK_SZ</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>  <span class="c1"># 1MB</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[uefi] Searching memory for EFI table with signature &#39;</span><span class="si">{</span><span class="n">table_sig</span><span class="si">}</span><span class="s2">&#39;...&quot;</span><span class="p">)</span>
@@ -674,38 +609,23 @@
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[uefi] Could not find EFI table with signature &#39;</span><span class="si">{</span><span class="n">table_sig</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">isFound</span><span class="p">,</span> <span class="n">table_pa</span><span class="p">,</span> <span class="n">table_header</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">table_buf</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.find_EFI_System_Table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_System_Table">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_EFI_System_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.find_EFI_System_Table"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_System_Table">[docs]</a>    <span class="k">def</span> <span class="nf">find_EFI_System_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_EFI_Table</span><span class="p">(</span><span class="n">EFI_SYSTEM_TABLE_SIGNATURE</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.find_EFI_RuntimeServices_Table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_RuntimeServices_Table">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_EFI_RuntimeServices_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.find_EFI_RuntimeServices_Table"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_RuntimeServices_Table">[docs]</a>    <span class="k">def</span> <span class="nf">find_EFI_RuntimeServices_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_EFI_Table</span><span class="p">(</span><span class="n">EFI_RUNTIME_SERVICES_SIGNATURE</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.find_EFI_BootServices_Table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_BootServices_Table">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_EFI_BootServices_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.find_EFI_BootServices_Table"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_BootServices_Table">[docs]</a>    <span class="k">def</span> <span class="nf">find_EFI_BootServices_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_EFI_Table</span><span class="p">(</span><span class="n">EFI_BOOT_SERVICES_SIGNATURE</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.find_EFI_DXEServices_Table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_DXEServices_Table">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_EFI_DXEServices_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.find_EFI_DXEServices_Table"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_DXEServices_Table">[docs]</a>    <span class="k">def</span> <span class="nf">find_EFI_DXEServices_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EfiTable</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_EFI_Table</span><span class="p">(</span><span class="n">EFI_DXE_SERVICES_TABLE_SIGNATURE</span><span class="p">)</span></div>
-
     <span class="c1"># def find_EFI_PEI_Table( self ):</span>
     <span class="c1">#    return self.find_EFI_Table( EFI_FRAMEWORK_PEI_SERVICES_TABLE_SIGNATURE )</span>
     <span class="c1"># def find_EFI_SMM_System_Table( self ):</span>
     <span class="c1">#    return self.find_EFI_Table( EFI_SMM_SYSTEM_TABLE_SIGNATURE )</span>
 
-<div class="viewcode-block" id="UEFI.find_EFI_Configuration_Table">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_Configuration_Table">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_EFI_Configuration_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_CONFIGURATION_TABLE</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="UEFI.find_EFI_Configuration_Table"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.find_EFI_Configuration_Table">[docs]</a>    <span class="k">def</span> <span class="nf">find_EFI_Configuration_Table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_CONFIGURATION_TABLE</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">]:</span>
         <span class="n">ect_pa</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">ect</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ect_buf</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
@@ -744,10 +664,7 @@
                 <span class="n">ect</span><span class="o">.</span><span class="n">VendorTables</span><span class="p">[</span><span class="n">vt</span><span class="o">.</span><span class="n">VendorGuid</span><span class="p">()]</span> <span class="o">=</span> <span class="n">vt</span><span class="o">.</span><span class="n">VendorTable</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">ect_pa</span><span class="p">,</span> <span class="n">ect</span><span class="p">,</span> <span class="n">ect_buf</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="UEFI.dump_EFI_tables">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.dump_EFI_tables">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_EFI_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="UEFI.dump_EFI_tables"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi.html#chipsec.hal.uefi.UEFI.dump_EFI_tables">[docs]</a>    <span class="k">def</span> <span class="nf">dump_EFI_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">pa</span><span class="p">,</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">table_buf</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_EFI_System_Table</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[uefi] EFI System Table:&#39;</span><span class="p">)</span>
@@ -781,9 +698,7 @@
             <span class="k">if</span> <span class="n">table_buf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">table_buf</span><span class="p">)</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">hdr</span><span class="p">))</span>
-            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">))</span></div>
-</div>
-
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">table</span><span class="p">))</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -843,7 +758,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -863,8 +778,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

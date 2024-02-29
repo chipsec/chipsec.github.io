@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.cmos &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -85,44 +87,28 @@
 <span class="n">CMOS_DATA_PORT_HIGH</span> <span class="o">=</span> <span class="mh">0x73</span>
 
 
-<div class="viewcode-block" id="CMOS">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS">[docs]</a>
-<span class="k">class</span> <span class="nc">CMOS</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="CMOS"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS">[docs]</a><span class="k">class</span> <span class="nc">CMOS</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CMOS</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CMOS.read_cmos_high">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.read_cmos_high">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_cmos_high</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CMOS.read_cmos_high"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.read_cmos_high">[docs]</a>    <span class="k">def</span> <span class="nf">read_cmos_high</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_HIGH</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_port_byte</span><span class="p">(</span><span class="n">CMOS_DATA_PORT_HIGH</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CMOS.write_cmos_high">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.write_cmos_high">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_cmos_high</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="CMOS.write_cmos_high"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.write_cmos_high">[docs]</a>    <span class="k">def</span> <span class="nf">write_cmos_high</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_HIGH</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_DATA_PORT_HIGH</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CMOS.read_cmos_low">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.read_cmos_low">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_cmos_low</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="CMOS.read_cmos_low"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.read_cmos_low">[docs]</a>    <span class="k">def</span> <span class="nf">read_cmos_low</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_LOW</span><span class="p">,</span> <span class="mh">0x80</span> <span class="o">|</span> <span class="n">offset</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_port_byte</span><span class="p">(</span><span class="n">CMOS_DATA_PORT_LOW</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CMOS.write_cmos_low">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.write_cmos_low">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_cmos_low</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="CMOS.write_cmos_low"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.write_cmos_low">[docs]</a>    <span class="k">def</span> <span class="nf">write_cmos_low</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_LOW</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_DATA_PORT_LOW</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CMOS.dump_low">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.dump_low">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_low</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="CMOS.dump_low"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.dump_low">[docs]</a>    <span class="k">def</span> <span class="nf">dump_low</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">cmos_buf</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0xFF</span><span class="p">]</span> <span class="o">*</span> <span class="mh">0x80</span>
         <span class="n">orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_LOW</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">off</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0x80</span><span class="p">):</span>
@@ -130,10 +116,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_LOW</span><span class="p">,</span> <span class="n">orig</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cmos_buf</span></div>
 
-
-<div class="viewcode-block" id="CMOS.dump_high">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.dump_high">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_high</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="CMOS.dump_high"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.dump_high">[docs]</a>    <span class="k">def</span> <span class="nf">dump_high</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">cmos_buf</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0xFF</span><span class="p">]</span> <span class="o">*</span> <span class="mh">0x80</span>
         <span class="n">orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_HIGH</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">off</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0x80</span><span class="p">):</span>
@@ -141,16 +124,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">CMOS_ADDR_PORT_HIGH</span><span class="p">,</span> <span class="n">orig</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cmos_buf</span></div>
 
-
-<div class="viewcode-block" id="CMOS.dump">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.dump">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="CMOS.dump"><a class="viewcode-back" href="../../../modules/chipsec.hal.cmos.html#chipsec.hal.cmos.CMOS.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Low CMOS memory contents:&quot;</span><span class="p">)</span>
         <span class="n">chipsec</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">pretty_print_hex_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dump_low</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">High CMOS memory contents:&quot;</span><span class="p">)</span>
-        <span class="n">chipsec</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">pretty_print_hex_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dump_high</span><span class="p">())</span></div>
-</div>
-
+        <span class="n">chipsec</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">pretty_print_hex_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dump_high</span><span class="p">())</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -210,7 +188,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -230,8 +208,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.uefi_search &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -141,9 +143,7 @@
 <span class="n">MATCH_CPUID</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="check_rules">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_search.html#chipsec.hal.uefi_search.check_rules">[docs]</a>
-<span class="k">def</span> <span class="nf">check_rules</span><span class="p">(</span><span class="n">efi</span><span class="p">:</span> <span class="n">EFI_SECTION</span><span class="p">,</span> <span class="n">rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">entry_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_log</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">bLog</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cpuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="check_rules"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_search.html#chipsec.hal.uefi_search.check_rules">[docs]</a><span class="k">def</span> <span class="nf">check_rules</span><span class="p">(</span><span class="n">efi</span><span class="p">:</span> <span class="n">EFI_SECTION</span><span class="p">,</span> <span class="n">rules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">entry_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">_log</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">bLog</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cpuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">bfound</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">what</span> <span class="o">=</span> <span class="kc">None</span>
@@ -160,7 +160,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;guid&#39;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
             <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_GUID</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
-                <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">UUID</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">]))</span>
+                <span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;guid&#39;</span><span class="p">])</span>
         <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;regexp&#39;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;regexp&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
             <span class="n">match_mask</span> <span class="o">|=</span> <span class="n">MATCH_REGEXP</span>
         <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;md5&#39;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s1">&#39;md5&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -234,10 +234,7 @@
     <span class="k">return</span> <span class="n">bfound</span></div>
 
 
-
-<div class="viewcode-block" id="check_match_criteria">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_search.html#chipsec.hal.uefi_search.check_match_criteria">[docs]</a>
-<span class="k">def</span> <span class="nf">check_match_criteria</span><span class="p">(</span><span class="n">efi</span><span class="p">:</span> <span class="n">EFI_SECTION</span><span class="p">,</span> <span class="n">criteria</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]],</span> <span class="n">_log</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cpuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="check_match_criteria"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_search.html#chipsec.hal.uefi_search.check_match_criteria">[docs]</a><span class="k">def</span> <span class="nf">check_match_criteria</span><span class="p">(</span><span class="n">efi</span><span class="p">:</span> <span class="n">EFI_SECTION</span><span class="p">,</span> <span class="n">criteria</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]],</span> <span class="n">_log</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cpuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">bfound</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">_log</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_log</span> <span class="o">=</span> <span class="n">logger</span><span class="p">()</span>
@@ -263,7 +260,6 @@
             <span class="n">bfound</span> <span class="o">=</span> <span class="n">bfound</span> <span class="ow">or</span> <span class="n">bmatch</span>
 
     <span class="k">return</span> <span class="n">bfound</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -323,7 +319,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -343,8 +339,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

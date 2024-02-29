@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.tpm12_commands &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -134,10 +136,8 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="pcrread">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.pcrread">[docs]</a>
-<span class="k">def</span> <span class="nf">pcrread</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="pcrread"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.pcrread">[docs]</a><span class="k">def</span> <span class="nf">pcrread</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The TPM_PCRRead operation provides non-cryptographic reporting  of the contents of a named PCR</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Size</span> <span class="o">=</span> <span class="mh">0x0E000000</span>
@@ -152,11 +152,8 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="nvread">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.nvread">[docs]</a>
-<span class="k">def</span> <span class="nf">nvread</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="nvread"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.nvread">[docs]</a><span class="k">def</span> <span class="nf">nvread</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read a value from the NV store</span>
 <span class="sd">    Index, Offset, Size</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -166,11 +163,8 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="startup">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.startup">[docs]</a>
-<span class="k">def</span> <span class="nf">startup</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="startup"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.startup">[docs]</a><span class="k">def</span> <span class="nf">startup</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Execute a tpm_startup command. TPM_Startup is always preceded by TPM_Init, which is the physical indication (a system wide reset) that TPM initialization is necessary</span>
 <span class="sd">    Type of Startup to be used:</span>
 <span class="sd">    1: TPM_ST_CLEAR</span>
@@ -189,11 +183,8 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="continueselftest">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.continueselftest">[docs]</a>
-<span class="k">def</span> <span class="nf">continueselftest</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="continueselftest"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.continueselftest">[docs]</a><span class="k">def</span> <span class="nf">continueselftest</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TPM_ContinueSelfTest informs the TPM that it should complete self-test of all TPM functions. The TPM may return success immediately and then perform the self-test, or it may perform the self-test and then return success or failure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Size</span> <span class="o">=</span> <span class="mh">0x0A000000</span>
@@ -202,11 +193,8 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getcap">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.getcap">[docs]</a>
-<span class="k">def</span> <span class="nf">getcap</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="getcap"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.getcap">[docs]</a><span class="k">def</span> <span class="nf">getcap</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns current information regarding the TPM</span>
 <span class="sd">    CapArea    - Capabilities Area</span>
 <span class="sd">    SubCapSize - Size of SubCapabilities</span>
@@ -218,15 +206,11 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="forceclear">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.forceclear">[docs]</a>
-<span class="k">def</span> <span class="nf">forceclear</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="forceclear"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm12_commands.html#chipsec.hal.tpm12_commands.forceclear">[docs]</a><span class="k">def</span> <span class="nf">forceclear</span><span class="p">(</span><span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
     <span class="n">Size</span> <span class="o">=</span> <span class="mh">0x0A000000</span>
     <span class="n">command</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">COMMAND_FORMAT</span><span class="p">,</span> <span class="n">TPM_TAG_RQU_COMMAND</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">TPM_ORD_FORCECLEAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">Size</span> <span class="o">&gt;&gt;</span> <span class="mh">0x18</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -286,7 +270,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -306,8 +290,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

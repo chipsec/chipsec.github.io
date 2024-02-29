@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.modules.common.debugenabled &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -86,9 +88,7 @@
 <span class="n">_MODULE_NAME</span> <span class="o">=</span> <span class="s1">&#39;debugenabled&#39;</span>
 
 
-<div class="viewcode-block" id="debugenabled">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled">[docs]</a>
-<span class="k">class</span> <span class="nc">debugenabled</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<div class="viewcode-block" id="debugenabled"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled">[docs]</a><span class="k">class</span> <span class="nc">debugenabled</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -97,9 +97,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">is_debug_set</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_lock_set</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="debugenabled.is_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.is_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="debugenabled.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># Use CPUID Function 1 to determine if the IA32_DEBUG_INTERFACE MSR is supported.</span>
         <span class="c1"># See IA32 SDM CPUID Instruction for details.  (SDBG ECX bit 11)</span>
         <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">ecx</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">cpu</span><span class="o">.</span><span class="n">cpuid</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -110,10 +108,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">supported</span></div>
 
-
-<div class="viewcode-block" id="debugenabled.check_dci">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.check_dci">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_dci</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="debugenabled.check_dci"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.check_dci">[docs]</a>    <span class="k">def</span> <span class="nf">check_dci</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">TestFail</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[*] Checking DCI register status&#39;</span><span class="p">)</span>
@@ -129,10 +124,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s1">&#39;DCI Debug is disabled&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">TestFail</span></div>
 
-
-<div class="viewcode-block" id="debugenabled.check_cpu_debug_enable">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.check_cpu_debug_enable">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_cpu_debug_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="debugenabled.check_cpu_debug_enable"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.check_cpu_debug_enable">[docs]</a>    <span class="k">def</span> <span class="nf">check_cpu_debug_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;[*] Checking IA32_DEBUG_INTERFACE MSR status&#39;</span><span class="p">)</span>
         <span class="n">TestFail</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
@@ -165,10 +157,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_good</span><span class="p">(</span><span class="s1">&#39;CPU debug interface state is correct.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">TestFail</span></div>
 
-
-<div class="viewcode-block" id="debugenabled.run">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="debugenabled.run"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.debugenabled.html#chipsec.modules.common.debugenabled.debugenabled.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s1">&#39;Debug features test&#39;</span><span class="p">)</span>
 
         <span class="n">cpu_debug_test_fail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_cpu_debug_enable</span><span class="p">()</span>
@@ -196,9 +185,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">&#39;All checks have successfully passed&#39;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div>
-</div>
-
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -258,7 +245,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -278,8 +265,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -1,23 +1,24 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>variables module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.modules.common.secureboot.variables module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
-    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     
-    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="uefi package" href="chipsec.modules.common.uefi.html" />
-    <link rel="prev" title="secureboot package" href="chipsec.modules.common.secureboot.html" /> 
+    <link rel="next" title="chipsec.modules.common.uefi package" href="chipsec.modules.common.uefi.html" />
+    <link rel="prev" title="chipsec.modules.common.secureboot package" href="chipsec.modules.common.secureboot.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,17 +30,17 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.common.uefi.html" title="uefi package"
+          <a href="chipsec.modules.common.uefi.html" title="chipsec.modules.common.uefi package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.common.secureboot.html" title="secureboot package"
+          <a href="chipsec.modules.common.secureboot.html" title="chipsec.modules.common.secureboot package"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" >common package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.common.secureboot.html" accesskey="U">secureboot package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">variables module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" >chipsec.modules.common package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.common.secureboot.html" accesskey="U">chipsec.modules.common.secureboot package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.secureboot.variables module</a></li> 
       </ul>
     </div>  
 
@@ -48,8 +49,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.modules.common.secureboot.variables">
-<span id="variables-module"></span><h1>variables module<a class="headerlink" href="#module-chipsec.modules.common.secureboot.variables" title="Link to this heading">¶</a></h1>
+  <div class="section" id="module-chipsec.modules.common.secureboot.variables">
+<span id="chipsec-modules-common-secureboot-variables-module"></span><h1>chipsec.modules.common.secureboot.variables module<a class="headerlink" href="#module-chipsec.modules.common.secureboot.variables" title="Permalink to this headline">¶</a></h1>
 <p>Verify that all Secure Boot key UEFI variables are authenticated (BS+RT+AT)
 and protected from unauthorized modification.</p>
 <dl>
@@ -76,7 +77,37 @@ and protected from unauthorized modification.</p>
 <li><p>Module is not supported in all environments.</p></li>
 </ul>
 </div>
-</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.modules.common.secureboot.variables.variables">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">variables</span></span><a class="reference internal" href="../_modules/chipsec/modules/common/secureboot/variables.html#variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.common.secureboot.variables.variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.module_common.BaseModule</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.common.secureboot.variables.variables.can_modify">
+<span class="sig-name descname"><span class="pre">can_modify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/modules/common/secureboot/variables.html#variables.can_modify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.common.secureboot.variables.variables.can_modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.common.secureboot.variables.variables.check_secureboot_variable_attributes">
+<span class="sig-name descname"><span class="pre">check_secureboot_variable_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">do_modify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/modules/common/secureboot/variables.html#variables.check_secureboot_variable_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.common.secureboot.variables.variables.check_secureboot_variable_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.common.secureboot.variables.variables.is_supported">
+<span class="sig-name descname"><span class="pre">is_supported</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/modules/common/secureboot/variables.html#variables.is_supported"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.common.secureboot.variables.variables.is_supported" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method should be overwritten by the module returning True or False
+depending whether or not this module is supported in the currently running
+platform.
+To access the currently running platform use</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.modules.common.secureboot.variables.variables.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_argv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/modules/common/secureboot/variables.html#variables.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.modules.common.secureboot.variables.variables.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 
 
             <div class="clearer"></div>
@@ -130,12 +161,12 @@ and protected from unauthorized modification.</p>
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.modules.common.secureboot.html"
-                          title="previous chapter">secureboot package</a></p>
+                          title="previous chapter">chipsec.modules.common.secureboot package</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.modules.common.uefi.html"
-                          title="next chapter">uefi package</a></p>
+                          title="next chapter">chipsec.modules.common.uefi package</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -146,7 +177,7 @@ and protected from unauthorized modification.</p>
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -161,22 +192,22 @@ and protected from unauthorized modification.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.common.uefi.html" title="uefi package"
+          <a href="chipsec.modules.common.uefi.html" title="chipsec.modules.common.uefi package"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.modules.common.secureboot.html" title="secureboot package"
+          <a href="chipsec.modules.common.secureboot.html" title="chipsec.modules.common.secureboot package"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Vulnerabilities-and-CHIPSEC-Modules.html" >CHIPSEC Modules</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >modules package</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" >common package</a> &#187;</li>
-          <li class="nav-item nav-item-4"><a href="chipsec.modules.common.secureboot.html" >secureboot package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">variables module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.modules.html" >chipsec.modules package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="chipsec.modules.common.html" >chipsec.modules.common package</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="chipsec.modules.common.secureboot.html" >chipsec.modules.common.secureboot package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.modules.common.secureboot.variables module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 25, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

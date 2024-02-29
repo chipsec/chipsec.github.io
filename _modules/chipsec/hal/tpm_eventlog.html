@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.tpm_eventlog &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -72,10 +74,8 @@
 
 <span class="n">EventType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;EventType&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;TcgPcrEvent&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TcgPcrEvent">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.TcgPcrEvent">[docs]</a>
-<span class="k">class</span> <span class="nc">TcgPcrEvent</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An Event (TPM 1.2 format) as recorded in the SML.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TcgPcrEvent"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.TcgPcrEvent">[docs]</a><span class="k">class</span> <span class="nc">TcgPcrEvent</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;An Event (TPM 1.2 format) as recorded in the SML.&quot;&quot;&quot;</span>
 
     <span class="n">_header_fmt</span> <span class="o">=</span> <span class="s2">&quot;II20sI&quot;</span>
     <span class="n">_header_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">_header_fmt</span><span class="p">)</span>
@@ -90,11 +90,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">event_size</span> <span class="o">=</span> <span class="n">event_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">event</span>
 
-<div class="viewcode-block" id="TcgPcrEvent.parse">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.TcgPcrEvent.parse">[docs]</a>
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TcgPcrEvent.parse"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.TcgPcrEvent.parse">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">EventType</span><span class="p">],</span> <span class="n">log</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EventType</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Try to read an event from the log.</span>
+        <span class="sd">&quot;&quot;&quot;Try to read an event from the log.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            log (file-like): Log where the event is stored.</span>
@@ -118,7 +116,6 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">kls</span><span class="p">(</span><span class="n">pcr_index</span><span class="p">,</span> <span class="n">event_type</span><span class="p">,</span> <span class="n">digest</span><span class="p">,</span> <span class="n">event_size</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
 
-
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_type_name</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_type_name</span>
@@ -127,10 +124,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;PCR: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pcr_index</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="se">\t</span><span class="s1">type: </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">EVENT_TYPE_MAX_LENGTH</span><span class="p">)</span><span class="si">}</span><span class="se">\t</span><span class="s1">size: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">event_size</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="se">\t</span><span class="s1">digest: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">digest</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="SCRTMVersion">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.SCRTMVersion">[docs]</a>
-<span class="k">class</span> <span class="nc">SCRTMVersion</span><span class="p">(</span><span class="n">TcgPcrEvent</span><span class="p">):</span>
+<div class="viewcode-block" id="SCRTMVersion"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.SCRTMVersion">[docs]</a><span class="k">class</span> <span class="nc">SCRTMVersion</span><span class="p">(</span><span class="n">TcgPcrEvent</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SCRTMVersion</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">event_type_name</span> <span class="o">=</span> <span class="s2">&quot;EV_S_CRTM_VERSION&quot;</span>
@@ -146,10 +140,7 @@
         <span class="k">return</span> <span class="n">_str</span></div>
 
 
-
-<div class="viewcode-block" id="EFIFirmwareBlob">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.EFIFirmwareBlob">[docs]</a>
-<span class="k">class</span> <span class="nc">EFIFirmwareBlob</span><span class="p">(</span><span class="n">TcgPcrEvent</span><span class="p">):</span>
+<div class="viewcode-block" id="EFIFirmwareBlob"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.EFIFirmwareBlob">[docs]</a><span class="k">class</span> <span class="nc">EFIFirmwareBlob</span><span class="p">(</span><span class="n">TcgPcrEvent</span><span class="p">):</span>
     <span class="c1"># Although [4] 9.2.5 mentions UNIT64 for the length, [1] 7.7 uses</span>
     <span class="c1"># a UINTN. Use a native unsigned long to cover the most general case.</span>
     <span class="n">_event_fmt</span> <span class="o">=</span> <span class="s2">&quot;@QL&quot;</span>
@@ -165,7 +156,6 @@
         <span class="n">_blob</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EFIFirmwareBlob</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
         <span class="n">_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_blob</span><span class="si">}</span><span class="se">\n\t</span><span class="s1">+ base: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="se">\t</span><span class="s1">length: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">:</span><span class="s1">x</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">_str</span></div>
-
 
 
 <span class="n">SML_EVENT_TYPE</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -208,10 +198,8 @@
                              <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)])</span>
 
 
-<div class="viewcode-block" id="PcrLogParser">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.PcrLogParser">[docs]</a>
-<span class="k">class</span> <span class="nc">PcrLogParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator over the events of a log.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PcrLogParser"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.PcrLogParser">[docs]</a><span class="k">class</span> <span class="nc">PcrLogParser</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Iterator over the events of a log.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">log</span>
@@ -225,21 +213,14 @@
             <span class="k">raise</span> <span class="ne">StopIteration</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">event</span>
 
-<div class="viewcode-block" id="PcrLogParser.next">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.PcrLogParser.next">[docs]</a>
-    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TcgPcrEvent</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span></div>
-</div>
+<div class="viewcode-block" id="PcrLogParser.next"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.PcrLogParser.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TcgPcrEvent</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span></div></div>
 
 
-
-<div class="viewcode-block" id="parse">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.parse">[docs]</a>
-<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">log</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple wrapper around PcrLogParser.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm_eventlog.html#chipsec.hal.tpm_eventlog.parse">[docs]</a><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">log</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Simple wrapper around PcrLogParser.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">PcrLogParser</span><span class="p">(</span><span class="n">log</span><span class="p">):</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">event</span><span class="p">))</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -299,7 +280,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -319,8 +300,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

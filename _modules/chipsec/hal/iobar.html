@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.iobar &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -76,9 +78,7 @@
 <span class="n">DEFAULT_IO_BAR_SIZE</span> <span class="o">=</span> <span class="mh">0x100</span>
 
 
-<div class="viewcode-block" id="IOBAR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR">[docs]</a>
-<span class="k">class</span> <span class="nc">IOBAR</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="IOBAR"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR">[docs]</a><span class="k">class</span> <span class="nc">IOBAR</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IOBAR</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
@@ -87,9 +87,7 @@
     <span class="c1"># Check if I/O BAR with bar_name has been defined in XML config</span>
     <span class="c1"># Use this function to fall-back to hardcoded config in case XML config is not available</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="IOBAR.is_IO_BAR_defined">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.is_IO_BAR_defined">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_IO_BAR_defined</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IOBAR.is_IO_BAR_defined"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.is_IO_BAR_defined">[docs]</a>    <span class="k">def</span> <span class="nf">is_IO_BAR_defined</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">IO_BARS</span><span class="p">[</span><span class="n">bar_name</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -97,13 +95,10 @@
                 <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">bar_name</span><span class="si">}</span><span class="s2">&#39; I/O BAR definition not found in XML config&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Get base address of I/O range by IO BAR name</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="IOBAR.get_IO_BAR_base_address">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.get_IO_BAR_base_address">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_IO_BAR_base_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="IOBAR.get_IO_BAR_base_address"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.get_IO_BAR_base_address">[docs]</a>    <span class="k">def</span> <span class="nf">get_IO_BAR_base_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">IO_BARS</span><span class="p">[</span><span class="n">bar_name</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">bar</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">bar</span> <span class="o">==</span> <span class="p">{}:</span>
             <span class="k">raise</span> <span class="n">IOBARNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IOBARNotFound: </span><span class="si">{</span><span class="n">bar_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -151,13 +146,10 @@
             <span class="k">raise</span> <span class="n">CSReadError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;IOBAR (</span><span class="si">{</span><span class="n">bar_name</span><span class="si">}</span><span class="s1">) base address is 0&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">base</span><span class="p">,</span> <span class="n">size</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Read I/O register from I/O range defined by I/O BAR name</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="IOBAR.read_IO_BAR_reg">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.read_IO_BAR_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_IO_BAR_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="IOBAR.read_IO_BAR_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.read_IO_BAR_reg">[docs]</a>    <span class="k">def</span> <span class="nf">read_IO_BAR_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[iobar] read </span><span class="si">{</span><span class="n">bar_name</span><span class="si">}</span><span class="s1"> + 0x</span><span class="si">{</span><span class="n">offset</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_IO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
@@ -167,13 +159,10 @@
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">_read_port</span><span class="p">(</span><span class="n">io_port</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Write I/O register from I/O range defined by I/O BAR name</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="IOBAR.write_IO_BAR_reg">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.write_IO_BAR_reg">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_IO_BAR_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="IOBAR.write_IO_BAR_reg"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.write_IO_BAR_reg">[docs]</a>    <span class="k">def</span> <span class="nf">write_IO_BAR_reg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">(</span><span class="n">bar_base</span><span class="p">,</span> <span class="n">bar_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_IO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[iobar] write </span><span class="si">{</span><span class="n">bar_name</span><span class="si">}</span><span class="s1"> + 0x</span><span class="si">{</span><span class="n">offset</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">): 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -182,13 +171,10 @@
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;offset 0x</span><span class="si">{</span><span class="n">offset</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> is outside </span><span class="si">{</span><span class="n">bar_name</span><span class="si">}</span><span class="s1"> size (0x</span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">_write_port</span><span class="p">(</span><span class="n">io_port</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Check if I/O range is enabled by BAR name</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="IOBAR.is_IO_BAR_enabled">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.is_IO_BAR_enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_IO_BAR_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IOBAR.is_IO_BAR_enabled"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.is_IO_BAR_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_IO_BAR_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">IO_BARS</span><span class="p">[</span><span class="n">bar_name</span><span class="p">]</span>
         <span class="n">is_enabled</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="s1">&#39;register&#39;</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
@@ -198,10 +184,7 @@
                 <span class="n">is_enabled</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="n">bar_reg</span><span class="p">,</span> <span class="n">bar_en_field</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">is_enabled</span></div>
 
-
-<div class="viewcode-block" id="IOBAR.list_IO_BARs">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.list_IO_BARs">[docs]</a>
-    <span class="k">def</span> <span class="nf">list_IO_BARs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="IOBAR.list_IO_BARs"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.list_IO_BARs">[docs]</a>    <span class="k">def</span> <span class="nf">list_IO_BARs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;--------------------------------------------------------------------------------&#39;</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39; I/O Range    | BAR Register   | Base             | Size     | En? | Description&#39;</span><span class="p">)</span>
@@ -221,19 +204,16 @@
             <span class="k">if</span> <span class="s1">&#39;register&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">:</span>
                 <span class="n">_s</span> <span class="o">=</span> <span class="n">_bar</span><span class="p">[</span><span class="s1">&#39;register&#39;</span><span class="p">]</span>
                 <span class="k">if</span> <span class="s1">&#39;offset&#39;</span> <span class="ow">in</span> <span class="n">_bar</span><span class="p">:</span>
-                    <span class="n">_s</span> <span class="o">+=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39; + 0x</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">],</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">_s</span> <span class="o">+=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39; + 0x</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">_s</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;bus&quot;</span><span class="p">],</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;dev&quot;</span><span class="p">],</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;fun&quot;</span><span class="p">],</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">01X</span><span class="si">}</span><span class="s1"> + </span><span class="si">{</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">_s</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;bus&quot;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;dev&quot;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;fun&quot;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span><span class="si">:</span><span class="s1">01X</span><span class="si">}</span><span class="s1"> + </span><span class="si">{</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
 
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">_bar_name</span><span class="si">:</span><span class="s1">12</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">_s</span><span class="si">:</span><span class="s1">14</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">_base</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">_size</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">_en</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">   | </span><span class="si">{</span><span class="n">_bar</span><span class="p">[</span><span class="s2">&quot;desc&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
-
 
     <span class="c1">#</span>
     <span class="c1"># Read I/O range by I/O BAR name</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="IOBAR.read_IO_BAR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.read_IO_BAR">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_IO_BAR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="IOBAR.read_IO_BAR"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.read_IO_BAR">[docs]</a>    <span class="k">def</span> <span class="nf">read_IO_BAR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="p">(</span><span class="n">range_base</span><span class="p">,</span> <span class="n">range_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_IO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">range_size</span> <span class="o">//</span> <span class="n">size</span>
         <span class="n">io_ports</span> <span class="o">=</span> <span class="p">[]</span>
@@ -241,22 +221,17 @@
             <span class="n">io_ports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">_read_port</span><span class="p">(</span><span class="n">range_base</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">io_ports</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># Dump I/O range by I/O BAR name</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="IOBAR.dump_IO_BAR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.dump_IO_BAR">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_IO_BAR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="IOBAR.dump_IO_BAR"><a class="viewcode-back" href="../../../modules/chipsec.hal.iobar.html#chipsec.hal.iobar.IOBAR.dump_IO_BAR">[docs]</a>    <span class="k">def</span> <span class="nf">dump_IO_BAR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bar_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="p">(</span><span class="n">range_base</span><span class="p">,</span> <span class="n">range_size</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_IO_BAR_base_address</span><span class="p">(</span><span class="n">bar_name</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">range_size</span> <span class="o">//</span> <span class="n">size</span>
-        <span class="n">fmt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0</span><span class="si">{</span><span class="n">size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">X&#39;</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0</span><span class="si">{</span><span class="n">size</span> <span class="o">*</span> <span class="mi">2</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">X&#39;</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[iobar] I/O BAR </span><span class="si">{</span><span class="n">bar_name</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="n">reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">_read_port</span><span class="p">(</span><span class="n">range_base</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
-            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="si">:</span><span class="s1">+04X</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">reg</span><span class="si">:{</span><span class="n">fmt</span><span class="si">}}</span><span class="s1">&#39;</span><span class="p">)</span></div>
-</div>
-
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">size</span> <span class="o">*</span> <span class="n">i</span><span class="si">:</span><span class="s1">+04X</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">reg</span><span class="si">:{</span><span class="n">fmt</span><span class="si">}}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -316,7 +291,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -336,8 +311,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

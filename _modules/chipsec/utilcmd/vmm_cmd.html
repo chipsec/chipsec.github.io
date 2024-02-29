@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.utilcmd.vmm_cmd &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -80,19 +82,12 @@
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
 
 
-<div class="viewcode-block" id="VMMCommand">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand">[docs]</a>
-<span class="k">class</span> <span class="nc">VMMCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+<div class="viewcode-block" id="VMMCommand"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand">[docs]</a><span class="k">class</span> <span class="nc">VMMCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
 
-<div class="viewcode-block" id="VMMCommand.requirements">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.requirements">[docs]</a>
-    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">toLoad</span><span class="p">:</span>
+<div class="viewcode-block" id="VMMCommand.requirements"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.requirements">[docs]</a>    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">toLoad</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">toLoad</span><span class="o">.</span><span class="n">Driver</span></div>
 
-
-<div class="viewcode-block" id="VMMCommand.parse_arguments">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.parse_arguments">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="VMMCommand.parse_arguments"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.parse_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;chipsec_util vmm&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">()</span>
 
@@ -123,10 +118,7 @@
 
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="VMMCommand.vmm_virtio">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_virtio">[docs]</a>
-    <span class="k">def</span> <span class="nf">vmm_virtio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VMMCommand.vmm_virtio"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_virtio">[docs]</a>    <span class="k">def</span> <span class="nf">vmm_virtio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bdf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^([0-9a-f]{1,2}):([0-1]?[0-9a-f]</span><span class="si">{1}</span><span class="s2">)\.([0-7]</span><span class="si">{1}</span><span class="s2">)$&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bdf</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
@@ -153,10 +145,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] No VirtIO devices found&quot;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="VMMCommand.vmm_hypercall">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_hypercall">[docs]</a>
-    <span class="k">def</span> <span class="nf">vmm_hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VMMCommand.vmm_hypercall"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_hypercall">[docs]</a>    <span class="k">def</span> <span class="nf">vmm_hypercall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] &gt; hypercall&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC]   RAX: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">))</span>
@@ -174,10 +163,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] &lt; RAX: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rax</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="VMMCommand.vmm_pt">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_pt">[docs]</a>
-    <span class="k">def</span> <span class="nf">vmm_pt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VMMCommand.vmm_pt"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.vmm_pt">[docs]</a>    <span class="k">def</span> <span class="nf">vmm_pt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eptp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">pt_fname</span> <span class="o">=</span> <span class="s1">&#39;ept_</span><span class="si">{:08X}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eptp</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[CHIPSEC] EPT physical base: 0x</span><span class="si">{:016X}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eptp</span><span class="p">))</span>
@@ -188,10 +174,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_error</span><span class="p">(</span><span class="n">VMMCommand</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
             <span class="k">return</span></div>
 
-
-<div class="viewcode-block" id="VMMCommand.run">
-<a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="VMMCommand.run"><a class="viewcode-back" href="../../../modules/chipsec.utilcmd.vmm_cmd.html#chipsec.utilcmd.vmm_cmd.VMMCommand.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vmm</span> <span class="o">=</span> <span class="n">VMM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">VMMRuntimeError</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
@@ -200,9 +183,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span></div>
-</div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">()</span></div></div>
 
 
 <span class="n">commands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmm&#39;</span><span class="p">:</span> <span class="n">VMMCommand</span><span class="p">}</span>
@@ -265,7 +246,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -285,8 +266,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

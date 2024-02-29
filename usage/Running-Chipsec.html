@@ -1,19 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Running CHIPSEC &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
-    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     
-    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Architecture Overview" href="../development/Architecture-Overview.html" />
@@ -44,8 +45,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="running-chipsec">
-<span id="id1"></span><h1>Running CHIPSEC<a class="headerlink" href="#running-chipsec" title="Link to this heading">¶</a></h1>
+  <div class="section" id="running-chipsec">
+<span id="id1"></span><h1>Running CHIPSEC<a class="headerlink" href="#running-chipsec" title="Permalink to this headline">¶</a></h1>
 <p>CHIPSEC should be launched as Administrator/root.</p>
 <p>CHIPSEC will automatically attempt to create and start its service, including load its kernel-mode driver. If CHIPSEC service is already running then it will attempt to connect to the existing service.</p>
 <p>Use –no-driver command-line option to skip loading the kernel module. This option will only work for certain commands or modules.</p>
@@ -64,17 +65,17 @@
 </div></blockquote>
 </li>
 </ul>
-<section id="running-in-shell">
-<h2>Running in Shell<a class="headerlink" href="#running-in-shell" title="Link to this heading">¶</a></h2>
+<div class="section" id="running-in-shell">
+<h2>Running in Shell<a class="headerlink" href="#running-in-shell" title="Permalink to this headline">¶</a></h2>
 <p><strong>Basic usage</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_util.py</span></code></p>
 <p><strong>For help, run</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span> <span class="pre">--help</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">chipsec_util.py</span> <span class="pre">--help</span></code></p>
-</section>
-<section id="using-as-a-python-package">
-<h2>Using as a Python Package<a class="headerlink" href="#using-as-a-python-package" title="Link to this heading">¶</a></h2>
+</div>
+<div class="section" id="using-as-a-python-package">
+<h2>Using as a Python Package<a class="headerlink" href="#using-as-a-python-package" title="Permalink to this headline">¶</a></h2>
 <p>Install CHIPSEC manually or from PyPI. You can then use CHIPSEC from your Python project or from the Python shell:</p>
 <p>To install and run CHIPSEC as a package:</p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code></p>
@@ -93,9 +94,9 @@
 <p>To use CHIPSEC <em>in place</em> without installing it:</p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">-i</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sudo</span> <span class="pre">python</span> <span class="pre">chipsec_main.py</span></code></p>
-</section>
-<section id="chipsec-main-options">
-<h2>chipsec_main options<a class="headerlink" href="#chipsec-main-options" title="Link to this heading">¶</a></h2>
+</div>
+<div class="section" id="chipsec-main-options">
+<h2>chipsec_main options<a class="headerlink" href="#chipsec-main-options" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 
 <span class="n">Options</span><span class="p">:</span>
@@ -129,9 +130,9 @@
   <span class="o">-</span><span class="n">nl</span>                                 <span class="n">Chipsec</span> <span class="n">won</span><span class="s1">&#39;t save logs automatically</span>
 </pre></div>
 </div>
-</section>
-<section id="chipsec-util-options">
-<h2>chipsec_util options<a class="headerlink" href="#chipsec-util-options" title="Link to this heading">¶</a></h2>
+</div>
+<div class="section" id="chipsec-util-options">
+<h2>chipsec_util options<a class="headerlink" href="#chipsec-util-options" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">chipsec_util</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span><span class="p">]</span>
 
 <span class="n">Options</span><span class="p">:</span>
@@ -153,8 +154,8 @@
   <span class="n">args</span>                         <span class="n">Additional</span> <span class="n">arguments</span> <span class="k">for</span> <span class="n">specific</span> <span class="n">command</span><span class="o">.</span> <span class="n">All</span> <span class="n">numeric</span> <span class="n">values</span> <span class="n">are</span> <span class="ow">in</span> <span class="nb">hex</span><span class="o">.</span> <span class="o">&lt;</span><span class="n">width</span><span class="o">&gt;</span> <span class="ow">is</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">1</span> <span class="o">-</span> <span class="n">byte</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">word</span><span class="p">,</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">dword</span><span class="p">}</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
             <div class="clearer"></div>
@@ -224,7 +225,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -249,8 +250,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 25, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>
