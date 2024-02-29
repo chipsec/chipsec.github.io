@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.uefi_common &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -104,29 +106,21 @@
 <span class="n">UEFI23_1_AUTHENTICATED_VARIABLE_ATTRIBUTES</span> <span class="o">=</span> <span class="p">(</span><span class="n">EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS</span> <span class="o">|</span> <span class="n">EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS</span> <span class="o">|</span> <span class="n">EFI_VARIABLE_ENHANCED_AUTHENTICATED_ACCESS</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="IS_VARIABLE_ATTRIBUTE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.IS_VARIABLE_ATTRIBUTE">[docs]</a>
-<span class="k">def</span> <span class="nf">IS_VARIABLE_ATTRIBUTE</span><span class="p">(</span><span class="n">_c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_Mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IS_VARIABLE_ATTRIBUTE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.IS_VARIABLE_ATTRIBUTE">[docs]</a><span class="k">def</span> <span class="nf">IS_VARIABLE_ATTRIBUTE</span><span class="p">(</span><span class="n">_c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_Mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">((</span><span class="n">_c</span> <span class="o">&amp;</span> <span class="n">_Mask</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="IS_EFI_VARIABLE_AUTHENTICATED">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.IS_EFI_VARIABLE_AUTHENTICATED">[docs]</a>
-<span class="k">def</span> <span class="nf">IS_EFI_VARIABLE_AUTHENTICATED</span><span class="p">(</span><span class="n">attr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IS_EFI_VARIABLE_AUTHENTICATED"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.IS_EFI_VARIABLE_AUTHENTICATED">[docs]</a><span class="k">def</span> <span class="nf">IS_EFI_VARIABLE_AUTHENTICATED</span><span class="p">(</span><span class="n">attr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">IS_VARIABLE_ATTRIBUTE</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS</span><span class="p">)</span> <span class="ow">or</span> 
             <span class="n">IS_VARIABLE_ATTRIBUTE</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS</span><span class="p">)</span> <span class="ow">or</span>
             <span class="n">IS_VARIABLE_ATTRIBUTE</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">EFI_VARIABLE_ENHANCED_AUTHENTICATED_ACCESS</span><span class="p">))</span></div>
-
 
 
 <span class="n">MAX_VARIABLE_SIZE</span> <span class="o">=</span> <span class="mi">1024</span>
 <span class="n">MAX_NVRAM_SIZE</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
 
 
-<div class="viewcode-block" id="get_nvar_name">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.get_nvar_name">[docs]</a>
-<span class="k">def</span> <span class="nf">get_nvar_name</span><span class="p">(</span><span class="n">nvram</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">name_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">isAscii</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<div class="viewcode-block" id="get_nvar_name"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.get_nvar_name">[docs]</a><span class="k">def</span> <span class="nf">get_nvar_name</span><span class="p">(</span><span class="n">nvram</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">name_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">isAscii</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">isAscii</span><span class="p">:</span>
         <span class="n">nend</span> <span class="o">=</span> <span class="n">nvram</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name_offset</span><span class="p">)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">nvram</span><span class="p">[</span><span class="n">name_offset</span><span class="p">:</span><span class="n">nend</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;latin1&#39;</span><span class="p">)</span>
@@ -137,7 +131,6 @@
         <span class="n">name</span> <span class="o">=</span> <span class="n">nvram</span><span class="p">[</span><span class="n">name_offset</span><span class="p">:</span><span class="n">nend</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-16le&#39;</span><span class="p">)</span>
         <span class="n">name_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name_size</span><span class="p">)</span></div>
-
 
 
 <span class="n">VARIABLE_SIGNATURE_VSS</span> <span class="o">=</span> <span class="n">VARIABLE_DATA_SIGNATURE</span>
@@ -161,9 +154,7 @@
 <span class="c1"># define ENCODE_ERROR(StatusCode)     ((RETURN_STATUS)(MAX_BIT | (StatusCode)))</span>
 <span class="c1"># define ENCODE_WARNING(a)            (a)</span>
 
-<div class="viewcode-block" id="StatusCode">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.StatusCode">[docs]</a>
-<span class="k">class</span> <span class="nc">StatusCode</span><span class="p">:</span>
+<div class="viewcode-block" id="StatusCode"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.StatusCode">[docs]</a><span class="k">class</span> <span class="nc">StatusCode</span><span class="p">:</span>
     <span class="n">EFI_SUCCESS</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">EFI_LOAD_ERROR</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">EFI_INVALID_PARAMETER</span> <span class="o">=</span> <span class="mi">2</span>
@@ -197,7 +188,7 @@
     <span class="n">EFI_INVALID_LANGUAGE</span> <span class="o">=</span> <span class="mi">32</span>
     <span class="n">EFI_COMPROMISED_DATA</span> <span class="o">=</span> <span class="mi">33</span>
     <span class="n">EFI_HTTP_ERROR</span> <span class="o">=</span> <span class="mi">35</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  EFI_WARN_UNKNOWN_GLYPH    = 1</span>
 <span class="sd">  EFI_WARN_DELETE_FAILURE   = 2</span>
 <span class="sd">  EFI_WARN_WRITE_FAILURE    = 3</span>
@@ -205,7 +196,6 @@
 <span class="sd">  EFI_WARN_STALE_DATA       = 5</span>
 <span class="sd">  EFI_WARN_FILE_SYSTEM      = 6</span>
 <span class="sd">  &#39;&#39;&#39;</span></div>
-
 
 
 <span class="n">EFI_STATUS_DICT</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -247,10 +237,8 @@
 <span class="n">EFI_MAX_BIT</span> <span class="o">=</span> <span class="mh">0x8000000000000000</span>
 
 
-<div class="viewcode-block" id="EFI_ERROR_STR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_ERROR_STR">[docs]</a>
-<span class="k">def</span> <span class="nf">EFI_ERROR_STR</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EFI_ERROR_STR"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_ERROR_STR">[docs]</a><span class="k">def</span> <span class="nf">EFI_ERROR_STR</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Translates an EFI_STATUS value into its corresponding textual representation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">error</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">EFI_MAX_BIT</span>
@@ -260,42 +248,29 @@
         <span class="k">return</span> <span class="s2">&quot;UNKNOWN&quot;</span></div>
 
 
-
 <span class="n">EFI_GUID_FMT</span> <span class="o">=</span> <span class="s2">&quot;16s&quot;</span>
 <span class="n">EFI_GUID_SIZE</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_GUID_FMT</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="EFI_GUID_STR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_GUID_STR">[docs]</a>
-<span class="k">def</span> <span class="nf">EFI_GUID_STR</span><span class="p">(</span><span class="n">guid</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="EFI_GUID_STR"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_GUID_STR">[docs]</a><span class="k">def</span> <span class="nf">EFI_GUID_STR</span><span class="p">(</span><span class="n">guid</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">guid_str</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">bytes_le</span><span class="o">=</span><span class="n">guid</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">guid_str</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="align">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.align">[docs]</a>
-<span class="k">def</span> <span class="nf">align</span><span class="p">(</span><span class="n">of</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="align"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.align">[docs]</a><span class="k">def</span> <span class="nf">align</span><span class="p">(</span><span class="n">of</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">of</span> <span class="o">=</span> <span class="p">(((</span><span class="n">of</span> <span class="o">+</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">size</span><span class="p">)</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">of</span></div>
 
 
-
-<div class="viewcode-block" id="bit_set">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.bit_set">[docs]</a>
-<span class="k">def</span> <span class="nf">bit_set</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="bit_set"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.bit_set">[docs]</a><span class="k">def</span> <span class="nf">bit_set</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">polarity</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="o">~</span><span class="n">value</span>
     <span class="k">return</span> <span class="p">((</span><span class="n">value</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="n">mask</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="get_3b_size">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.get_3b_size">[docs]</a>
-<span class="k">def</span> <span class="nf">get_3b_size</span><span class="p">(</span><span class="n">s_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="get_3b_size"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.get_3b_size">[docs]</a><span class="k">def</span> <span class="nf">get_3b_size</span><span class="p">(</span><span class="n">s_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">s_str</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">s_data</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">s_str</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">s_str</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">s_str</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -308,102 +283,60 @@
 <span class="n">SIGNATURE_LIST_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">SIGNATURE_LIST</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse_sha256">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha256">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_sha256</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_sha256"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha256">[docs]</a><span class="k">def</span> <span class="nf">parse_sha256</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_rsa2048">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_rsa2048">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_rsa2048</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_rsa2048"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_rsa2048">[docs]</a><span class="k">def</span> <span class="nf">parse_rsa2048</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_rsa2048_sha256">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_rsa2048_sha256">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_rsa2048_sha256</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_rsa2048_sha256"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_rsa2048_sha256">[docs]</a><span class="k">def</span> <span class="nf">parse_rsa2048_sha256</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_sha1">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha1">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_sha1</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_sha1"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha1">[docs]</a><span class="k">def</span> <span class="nf">parse_sha1</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_rsa2048_sha1">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_rsa2048_sha1">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_rsa2048_sha1</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_rsa2048_sha1"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_rsa2048_sha1">[docs]</a><span class="k">def</span> <span class="nf">parse_rsa2048_sha1</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_x509">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_x509</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_x509"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509">[docs]</a><span class="k">def</span> <span class="nf">parse_x509</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_sha224">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha224">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_sha224</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_sha224"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha224">[docs]</a><span class="k">def</span> <span class="nf">parse_sha224</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_sha384">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha384">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_sha384</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_sha384"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha384">[docs]</a><span class="k">def</span> <span class="nf">parse_sha384</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_sha512">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha512">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_sha512</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_sha512"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sha512">[docs]</a><span class="k">def</span> <span class="nf">parse_sha512</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_x509_sha256">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509_sha256">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_x509_sha256</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_x509_sha256"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509_sha256">[docs]</a><span class="k">def</span> <span class="nf">parse_x509_sha256</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_x509_sha384">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509_sha384">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_x509_sha384</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_x509_sha384"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509_sha384">[docs]</a><span class="k">def</span> <span class="nf">parse_x509_sha384</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_x509_sha512">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509_sha512">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_x509_sha512</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_x509_sha512"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_x509_sha512">[docs]</a><span class="k">def</span> <span class="nf">parse_x509_sha512</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_external">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_external">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_external</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_external"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_external">[docs]</a><span class="k">def</span> <span class="nf">parse_external</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="parse_pkcs7">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_pkcs7">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_pkcs7</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_pkcs7"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_pkcs7">[docs]</a><span class="k">def</span> <span class="nf">parse_pkcs7</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="k">return</span></div>
-
 
 
 <span class="n">sig_types</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
@@ -424,9 +357,7 @@
     <span class="p">}</span>
 
 
-<div class="viewcode-block" id="parse_sb_db">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sb_db">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_sb_db</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">decode_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="parse_sb_db"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_sb_db">[docs]</a><span class="k">def</span> <span class="nf">parse_sb_db</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">decode_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
     <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">dof</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">nsig</span> <span class="o">=</span> <span class="mi">0</span>
@@ -486,7 +417,6 @@
     <span class="k">return</span> <span class="n">entries</span></div>
 
 
-
 <span class="c1">#</span>
 <span class="c1">#  &quot;certdb&quot; variable stores the signer&#39;s certificates for non PK/KEK/DB/DBX</span>
 <span class="c1"># variables with EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS|EFI_VARIABLE_NON_VOLATILE set.</span>
@@ -523,9 +453,7 @@
 <span class="n">AUTH_CERT_DB_DATA_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">AUTH_CERT_DB_DATA</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse_auth_var">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_auth_var">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_auth_var</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">decode_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="parse_auth_var"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_auth_var">[docs]</a><span class="k">def</span> <span class="nf">parse_auth_var</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">decode_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
     <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">dof</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">nsig</span> <span class="o">=</span> <span class="mi">0</span>
@@ -550,7 +478,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">var_name</span> <span class="o">=</span> <span class="n">codecs</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">db</span><span class="p">[</span><span class="n">tof</span><span class="p">:</span><span class="n">tof</span> <span class="o">+</span> <span class="n">name_size</span><span class="p">],</span> <span class="s1">&#39;utf-16&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to decode </span><span class="si">{</span><span class="n">db</span><span class="p">[</span><span class="n">tof</span><span class="p">:</span><span class="n">tof</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name_size</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to decode </span><span class="si">{</span><span class="n">db</span><span class="p">[</span><span class="n">tof</span><span class="p">:</span><span class="n">tof</span> <span class="o">+</span> <span class="n">name_size</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">var_name</span> <span class="o">=</span> <span class="s2">&quot;chipsec.exceptions!&quot;</span>
         <span class="n">tof</span> <span class="o">+=</span> <span class="n">name_size</span>
         <span class="n">sig_data</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="n">tof</span><span class="p">:</span><span class="n">tof</span> <span class="o">+</span> <span class="n">cert_data_size</span><span class="p">]</span>
@@ -564,13 +492,10 @@
     <span class="k">return</span> <span class="n">entries</span></div>
 
 
-
 <span class="n">ESAL_SIG_SIZE</span> <span class="o">=</span> <span class="mi">256</span>
 
 
-<div class="viewcode-block" id="parse_esal_var">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_esal_var">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_esal_var</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">decode_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="parse_esal_var"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_esal_var">[docs]</a><span class="k">def</span> <span class="nf">parse_esal_var</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">decode_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
     <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">dof</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">nsig</span> <span class="o">=</span> <span class="mi">0</span>
@@ -593,15 +518,12 @@
     <span class="k">return</span> <span class="n">entries</span></div>
 
 
-
 <span class="n">SECURE_BOOT_SIG_VAR</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">AUTH_SIG_VAR</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">ESAL_SIG_VAR</span> <span class="o">=</span> <span class="mi">3</span>
 
 
-<div class="viewcode-block" id="parse_efivar_file">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_efivar_file">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_efivar_file</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">var_type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SECURE_BOOT_SIG_VAR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="parse_efivar_file"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.parse_efivar_file">[docs]</a><span class="k">def</span> <span class="nf">parse_efivar_file</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">var_type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SECURE_BOOT_SIG_VAR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processing certs in file: </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">var</span><span class="p">:</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
@@ -616,7 +538,6 @@
         <span class="n">parse_esal_var</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">var_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported variable type requested: </span><span class="si">{</span><span class="n">var_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
-
 
 
 <span class="c1">########################################################################################################</span>
@@ -640,9 +561,7 @@
 <span class="c1"># // EFI Boot Script Opcode definitions</span>
 <span class="c1"># //*******************************************</span>
 
-<div class="viewcode-block" id="S3BootScriptOpcode">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptOpcode">[docs]</a>
-<span class="k">class</span> <span class="nc">S3BootScriptOpcode</span><span class="p">:</span>
+<div class="viewcode-block" id="S3BootScriptOpcode"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptOpcode">[docs]</a><span class="k">class</span> <span class="nc">S3BootScriptOpcode</span><span class="p">:</span>
     <span class="n">EFI_BOOT_SCRIPT_IO_WRITE_OPCODE</span> <span class="o">=</span> <span class="mh">0x00</span>
     <span class="n">EFI_BOOT_SCRIPT_IO_READ_WRITE_OPCODE</span> <span class="o">=</span> <span class="mh">0x01</span>
     <span class="n">EFI_BOOT_SCRIPT_MEM_WRITE_OPCODE</span> <span class="o">=</span> <span class="mh">0x02</span>
@@ -655,10 +574,7 @@
     <span class="n">EFI_BOOT_SCRIPT_TERMINATE_OPCODE</span> <span class="o">=</span> <span class="mh">0xFF</span></div>
 
 
-
-<div class="viewcode-block" id="S3BootScriptOpcode_MDE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE">[docs]</a>
-<span class="k">class</span> <span class="nc">S3BootScriptOpcode_MDE</span> <span class="p">(</span><span class="n">S3BootScriptOpcode</span><span class="p">):</span>
+<div class="viewcode-block" id="S3BootScriptOpcode_MDE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE">[docs]</a><span class="k">class</span> <span class="nc">S3BootScriptOpcode_MDE</span> <span class="p">(</span><span class="n">S3BootScriptOpcode</span><span class="p">):</span>
     <span class="n">EFI_BOOT_SCRIPT_DISPATCH_2_OPCODE</span> <span class="o">=</span> <span class="mh">0x09</span>
     <span class="n">EFI_BOOT_SCRIPT_INFORMATION_OPCODE</span> <span class="o">=</span> <span class="mh">0x0A</span>
     <span class="n">EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE</span> <span class="o">=</span> <span class="mh">0x0B</span>
@@ -668,21 +584,17 @@
     <span class="n">EFI_BOOT_SCRIPT_PCI_CONFIG_POLL_OPCODE</span> <span class="o">=</span> <span class="mh">0x0F</span>
     <span class="n">EFI_BOOT_SCRIPT_PCI_CONFIG2_POLL_OPCODE</span> <span class="o">=</span> <span class="mh">0x10</span></div>
 
-
 <span class="c1">#</span>
 <span class="c1"># EdkCompatibilityPkg\Foundation\Framework\Include\EfiBootScript.h</span>
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="S3BootScriptOpcode_EdkCompat">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat">[docs]</a>
-<span class="k">class</span> <span class="nc">S3BootScriptOpcode_EdkCompat</span> <span class="p">(</span><span class="n">S3BootScriptOpcode</span><span class="p">):</span>
+<div class="viewcode-block" id="S3BootScriptOpcode_EdkCompat"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat">[docs]</a><span class="k">class</span> <span class="nc">S3BootScriptOpcode_EdkCompat</span> <span class="p">(</span><span class="n">S3BootScriptOpcode</span><span class="p">):</span>
     <span class="n">EFI_BOOT_SCRIPT_MEM_POLL_OPCODE</span> <span class="o">=</span> <span class="mh">0x09</span>
     <span class="n">EFI_BOOT_SCRIPT_INFORMATION_OPCODE</span> <span class="o">=</span> <span class="mh">0x0A</span>
     <span class="n">EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE</span> <span class="o">=</span> <span class="mh">0x0B</span>
     <span class="n">EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE</span> <span class="o">=</span> <span class="mh">0x0C</span>
     <span class="n">EFI_BOOT_SCRIPT_TABLE_OPCODE</span> <span class="o">=</span> <span class="mh">0xAA</span></div>
-
 
 
 <span class="c1">#</span>
@@ -730,14 +642,11 @@
 <span class="c1"># EfiBootScriptWidthMaximum</span>
 <span class="c1"># } EFI_BOOT_SCRIPT_WIDTH;</span>
 
-<div class="viewcode-block" id="S3BootScriptWidth">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptWidth">[docs]</a>
-<span class="k">class</span> <span class="nc">S3BootScriptWidth</span><span class="p">:</span>
+<div class="viewcode-block" id="S3BootScriptWidth"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptWidth">[docs]</a><span class="k">class</span> <span class="nc">S3BootScriptWidth</span><span class="p">:</span>
     <span class="n">EFI_BOOT_SCRIPT_WIDTH_UINT8</span> <span class="o">=</span> <span class="mh">0x00</span>
     <span class="n">EFI_BOOT_SCRIPT_WIDTH_UINT16</span> <span class="o">=</span> <span class="mh">0x01</span>
     <span class="n">EFI_BOOT_SCRIPT_WIDTH_UINT32</span> <span class="o">=</span> <span class="mh">0x02</span>
     <span class="n">EFI_BOOT_SCRIPT_WIDTH_UINT64</span> <span class="o">=</span> <span class="mh">0x03</span></div>
-
 
 
 <span class="n">script_width_sizes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -791,9 +700,7 @@
 <span class="c1"># } EFI_SMBUS_OPERATION;</span>
 
 
-<div class="viewcode-block" id="S3BootScriptSmbusOperation">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptSmbusOperation">[docs]</a>
-<span class="k">class</span> <span class="nc">S3BootScriptSmbusOperation</span><span class="p">:</span>
+<div class="viewcode-block" id="S3BootScriptSmbusOperation"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BootScriptSmbusOperation">[docs]</a><span class="k">class</span> <span class="nc">S3BootScriptSmbusOperation</span><span class="p">:</span>
     <span class="n">QUICK_READ</span> <span class="o">=</span> <span class="mh">0x00</span>
     <span class="n">QUICK_WRITE</span> <span class="o">=</span> <span class="mh">0x01</span>
     <span class="n">RECEIVE_BYTE</span> <span class="o">=</span> <span class="mh">0x02</span>
@@ -808,10 +715,7 @@
     <span class="n">BWBR_PROCESS_CALL</span> <span class="o">=</span> <span class="mh">0x0B</span></div>
 
 
-
-<div class="viewcode-block" id="op_io_pci_mem">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_io_pci_mem">[docs]</a>
-<span class="k">class</span> <span class="nc">op_io_pci_mem</span><span class="p">:</span>
+<div class="viewcode-block" id="op_io_pci_mem"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_io_pci_mem">[docs]</a><span class="k">class</span> <span class="nc">op_io_pci_mem</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">unknown</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> 
                  <span class="n">buffer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span>
@@ -845,18 +749,15 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">str_r</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;  Count  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fmt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0x</span><span class="se">{{</span><span class="s1">:0</span><span class="si">{</span><span class="n">script_width_sizes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">X</span><span class="se">}}</span><span class="s1">&#39;</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0x</span><span class="se">{{</span><span class="s1">:0</span><span class="si">{</span><span class="n">script_width_sizes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">X</span><span class="se">}}</span><span class="s1">&#39;</span>
             <span class="n">values_str</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">])</span>
             <span class="n">str_r</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;  Values : </span><span class="si">{</span><span class="n">values_str</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">str_r</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;  Buffer (size = 0x</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">):</span><span class="se">\n</span><span class="si">{</span><span class="n">dump_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">str_r</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;  Buffer (size = 0x</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">):</span><span class="se">\n</span><span class="si">{</span><span class="n">dump_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">str_r</span></div>
 
 
-
-<div class="viewcode-block" id="op_smbus_execute">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_smbus_execute">[docs]</a>
-<span class="k">class</span> <span class="nc">op_smbus_execute</span><span class="p">:</span>
+<div class="viewcode-block" id="op_smbus_execute"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_smbus_execute">[docs]</a><span class="k">class</span> <span class="nc">op_smbus_execute</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">peccheck</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -874,7 +775,6 @@
         <span class="n">str_r</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;  PEC Check        : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">peccheck</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">str_r</span></div>
 
-
 <span class="c1"># typedef struct {</span>
 <span class="c1">#  UINT16  OpCode;</span>
 <span class="c1">#  UINT8   Length;</span>
@@ -882,9 +782,7 @@
 <span class="c1"># } EFI_BOOT_SCRIPT_STALL;</span>
 
 
-<div class="viewcode-block" id="op_stall">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_stall">[docs]</a>
-<span class="k">class</span> <span class="nc">op_stall</span><span class="p">:</span>
+<div class="viewcode-block" id="op_stall"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_stall">[docs]</a><span class="k">class</span> <span class="nc">op_stall</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -896,7 +794,6 @@
         <span class="n">str_r</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;  Duration: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"> (us)</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">str_r</span></div>
 
-
 <span class="c1"># typedef struct {</span>
 <span class="c1">#  UINT16                OpCode;</span>
 <span class="c1">#  UINT8                 Length;</span>
@@ -904,9 +801,7 @@
 <span class="c1"># } EFI_BOOT_SCRIPT_DISPATCH;</span>
 
 
-<div class="viewcode-block" id="op_dispatch">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_dispatch">[docs]</a>
-<span class="k">class</span> <span class="nc">op_dispatch</span><span class="p">:</span>
+<div class="viewcode-block" id="op_dispatch"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_dispatch">[docs]</a><span class="k">class</span> <span class="nc">op_dispatch</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">entrypoint</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -921,7 +816,6 @@
             <span class="n">str_r</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;  Context    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">str_r</span></div>
 
-
 <span class="c1"># typedef struct {</span>
 <span class="c1">#  UINT16  OpCode;</span>
 <span class="c1">#  UINT8   Length;</span>
@@ -932,9 +826,7 @@
 <span class="c1"># } EFI_BOOT_SCRIPT_MEM_POLL;</span>
 
 
-<div class="viewcode-block" id="op_mem_poll">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_mem_poll">[docs]</a>
-<span class="k">class</span> <span class="nc">op_mem_poll</span><span class="p">:</span>
+<div class="viewcode-block" id="op_mem_poll"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_mem_poll">[docs]</a><span class="k">class</span> <span class="nc">op_mem_poll</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">looptimes</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -953,10 +845,7 @@
         <span class="k">return</span> <span class="n">str_r</span></div>
 
 
-
-<div class="viewcode-block" id="op_terminate">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_terminate">[docs]</a>
-<span class="k">class</span> <span class="nc">op_terminate</span><span class="p">:</span>
+<div class="viewcode-block" id="op_terminate"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_terminate">[docs]</a><span class="k">class</span> <span class="nc">op_terminate</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -966,10 +855,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;  Opcode     : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> (0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="op_unknown">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_unknown">[docs]</a>
-<span class="k">class</span> <span class="nc">op_unknown</span><span class="p">:</span>
+<div class="viewcode-block" id="op_unknown"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.op_unknown">[docs]</a><span class="k">class</span> <span class="nc">op_unknown</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opcode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">opcode</span> <span class="o">=</span> <span class="n">opcode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -978,10 +864,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;  Opcode     : unknown (0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">opcode</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="S3BOOTSCRIPT_ENTRY">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY">[docs]</a>
-<span class="k">class</span> <span class="nc">S3BOOTSCRIPT_ENTRY</span><span class="p">:</span>
+<div class="viewcode-block" id="S3BOOTSCRIPT_ENTRY"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY">[docs]</a><span class="k">class</span> <span class="nc">S3BOOTSCRIPT_ENTRY</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">script_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">offset_in_script</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">script_type</span> <span class="o">=</span> <span class="n">script_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
@@ -995,11 +878,10 @@
         <span class="n">entry_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">] &#39;</span><span class="p">)</span>
         <span class="n">entry_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Entry at offset 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_in_script</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1"> (len = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">, header len = 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">header_length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">):&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="n">entry_str</span> <span class="o">=</span> <span class="n">entry_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Data:</span><span class="se">\n</span><span class="si">{</span><span class="n">dump_buffer_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">entry_str</span> <span class="o">=</span> <span class="n">entry_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Data:</span><span class="se">\n</span><span class="si">{</span><span class="n">dump_buffer_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoded_opcode</span><span class="p">:</span>
             <span class="n">entry_str</span> <span class="o">=</span> <span class="n">entry_str</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;Decoded:</span><span class="se">\n</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoded_opcode</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">entry_str</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -1021,19 +903,16 @@
 <span class="n">EFI_TABLE_HEADER_SIZE</span> <span class="o">=</span> <span class="mh">0x18</span>
 
 
-<div class="viewcode-block" id="EFI_TABLE_HEADER">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_TABLE_HEADER">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_TABLE_HEADER</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_TABLE_HEADER&#39;</span><span class="p">,</span> <span class="s1">&#39;Signature Revision HeaderSize CRC32 Reserved&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_TABLE_HEADER"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_TABLE_HEADER">[docs]</a><span class="k">class</span> <span class="nc">EFI_TABLE_HEADER</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_TABLE_HEADER&#39;</span><span class="p">,</span> <span class="s1">&#39;Signature Revision HeaderSize CRC32 Reserved&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Header:</span>
-<span class="s2">  Signature     : </span><span class="si">{</span><span class="n">bytestostring</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Signature</span><span class="p">)</span><span class="si">}</span>
-<span class="s2">  Revision      : </span><span class="si">{</span><span class="n">EFI_SYSTEM_TABLE_REVISION</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">)</span><span class="si">}</span>
-<span class="s2">  HeaderSize    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">HeaderSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">  CRC32         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CRC32</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">  Signature     : </span><span class="si">{</span><span class="n">bytestostring</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Signature</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  Revision      : </span><span class="si">{</span><span class="n">EFI_SYSTEM_TABLE_REVISION</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Revision</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  HeaderSize    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">HeaderSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CRC32         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CRC32</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">  Reserved      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -1072,37 +951,31 @@
     <span class="p">]</span>
 
 
-<div class="viewcode-block" id="EFI_SYSTEM_TABLE_REVISION">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_SYSTEM_TABLE_REVISION">[docs]</a>
-<span class="k">def</span> <span class="nf">EFI_SYSTEM_TABLE_REVISION</span><span class="p">(</span><span class="n">revision</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">revision</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">16</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">revision</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFFFF</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span></div>
-
+<div class="viewcode-block" id="EFI_SYSTEM_TABLE_REVISION"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_SYSTEM_TABLE_REVISION">[docs]</a><span class="k">def</span> <span class="nf">EFI_SYSTEM_TABLE_REVISION</span><span class="p">(</span><span class="n">revision</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">revision</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">revision</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
 <span class="n">EFI_SYSTEM_TABLE_FMT</span> <span class="o">=</span> <span class="s1">&#39;=12Q&#39;</span>
 
 
-<div class="viewcode-block" id="EFI_SYSTEM_TABLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_SYSTEM_TABLE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_SYSTEM_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_SYSTEM_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;FirmwareVendor FirmwareRevision ConsoleInHandle ConIn ConsoleOutHandle ConOut StandardErrorHandle StdErr RuntimeServices BootServices NumberOfTableEntries ConfigurationTable&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_SYSTEM_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_SYSTEM_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_SYSTEM_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_SYSTEM_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;FirmwareVendor FirmwareRevision ConsoleInHandle ConIn ConsoleOutHandle ConOut StandardErrorHandle StdErr RuntimeServices BootServices NumberOfTableEntries ConfigurationTable&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;EFI System Table:</span>
-<span class="s2">  FirmwareVendor      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FirmwareVendor</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  FirmwareRevision    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FirmwareRevision</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ConsoleInHandle     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConsoleInHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ConIn               : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConIn</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ConsoleOutHandle    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConsoleOutHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ConOut              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConOut</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  StandardErrorHandle : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StandardErrorHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  StdErr              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StdErr</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  RuntimeServices     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RuntimeServices</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  BootServices        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BootServices</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  NumberOfTableEntries: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NumberOfTableEntries</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ConfigurationTable  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConfigurationTable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
+<span class="s2">  FirmwareVendor      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FirmwareVendor</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  FirmwareRevision    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FirmwareRevision</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ConsoleInHandle     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConsoleInHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ConIn               : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConIn</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ConsoleOutHandle    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConsoleOutHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ConOut              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConOut</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  StandardErrorHandle : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StandardErrorHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  StdErr              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StdErr</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  RuntimeServices     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RuntimeServices</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  BootServices        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BootServices</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  NumberOfTableEntries: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NumberOfTableEntries</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ConfigurationTable  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConfigurationTable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -1117,29 +990,26 @@
 <span class="n">EFI_RUNTIME_SERVICES_TABLE_FMT</span> <span class="o">=</span> <span class="s1">&#39;=14Q&#39;</span>
 
 
-<div class="viewcode-block" id="EFI_RUNTIME_SERVICES_TABLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_RUNTIME_SERVICES_TABLE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_RUNTIME_SERVICES_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_RUNTIME_SERVICES_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;GetTime SetTime GetWakeupTime SetWakeupTime SetVirtualAddressMap ConvertPointer GetVariable GetNextVariableName SetVariable GetNextHighMonotonicCount ResetSystem UpdateCapsule QueryCapsuleCapabilities QueryVariableInfo&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_RUNTIME_SERVICES_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_RUNTIME_SERVICES_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_RUNTIME_SERVICES_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_RUNTIME_SERVICES_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;GetTime SetTime GetWakeupTime SetWakeupTime SetVirtualAddressMap ConvertPointer GetVariable GetNextVariableName SetVariable GetNextHighMonotonicCount ResetSystem UpdateCapsule QueryCapsuleCapabilities QueryVariableInfo&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Runtime Services:</span>
-<span class="s2">  GetTime                  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetTime                  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetWakeupTime            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetWakeupTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetWakeupTime            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetWakeupTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetVirtualAddressMap     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetVirtualAddressMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ConvertPointer           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConvertPointer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetVariable              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetVariable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetNextVariableName      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetNextVariableName</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetVariable              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetVariable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetNextHighMonotonicCount: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetNextHighMonotonicCount</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ResetSystem              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ResetSystem</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  UpdateCapsule            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UpdateCapsule</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  QueryCapsuleCapabilities : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">QueryCapsuleCapabilities</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  QueryVariableInfo        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">QueryVariableInfo</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
+<span class="s2">  GetTime                  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetTime                  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetWakeupTime            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetWakeupTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetWakeupTime            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetWakeupTime</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetVirtualAddressMap     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetVirtualAddressMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ConvertPointer           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConvertPointer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetVariable              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetVariable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetNextVariableName      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetNextVariableName</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetVariable              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetVariable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetNextHighMonotonicCount: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetNextHighMonotonicCount</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ResetSystem              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ResetSystem</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  UpdateCapsule            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UpdateCapsule</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  QueryCapsuleCapabilities : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">QueryCapsuleCapabilities</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  QueryVariableInfo        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">QueryVariableInfo</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -1154,59 +1024,56 @@
 <span class="n">EFI_BOOT_SERVICES_TABLE_FMT</span> <span class="o">=</span> <span class="s1">&#39;=44Q&#39;</span>
 
 
-<div class="viewcode-block" id="EFI_BOOT_SERVICES_TABLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_BOOT_SERVICES_TABLE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_BOOT_SERVICES_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_BOOT_SERVICES_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;RaiseTPL RestoreTPL AllocatePages FreePages GetMemoryMap AllocatePool FreePool CreateEvent SetTimer WaitForEvent SignalEvent CloseEvent CheckEvent InstallProtocolInterface ReinstallProtocolInterface UninstallProtocolInterface HandleProtocol Reserved RegisterProtocolNotify LocateHandle LocateDevicePath InstallConfigurationTable LoadImage StartImage Exit UnloadImage ExitBootServices GetNextMonotonicCount Stall SetWatchdogTimer ConnectController DisconnectController OpenProtocol CloseProtocol OpenProtocolInformation ProtocolsPerHandle LocateHandleBuffer LocateProtocol InstallMultipleProtocolInterfaces UninstallMultipleProtocolInterfaces CalculateCrc32 CopyMem SetMem CreateEventEx&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_BOOT_SERVICES_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_BOOT_SERVICES_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_BOOT_SERVICES_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_BOOT_SERVICES_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;RaiseTPL RestoreTPL AllocatePages FreePages GetMemoryMap AllocatePool FreePool CreateEvent SetTimer WaitForEvent SignalEvent CloseEvent CheckEvent InstallProtocolInterface ReinstallProtocolInterface UninstallProtocolInterface HandleProtocol Reserved RegisterProtocolNotify LocateHandle LocateDevicePath InstallConfigurationTable LoadImage StartImage Exit UnloadImage ExitBootServices GetNextMonotonicCount Stall SetWatchdogTimer ConnectController DisconnectController OpenProtocol CloseProtocol OpenProtocolInformation ProtocolsPerHandle LocateHandleBuffer LocateProtocol InstallMultipleProtocolInterfaces UninstallMultipleProtocolInterfaces CalculateCrc32 CopyMem SetMem CreateEventEx&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Boot Services:</span>
-<span class="s2">  RaiseTPL                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RaiseTPL</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  RestoreTPL                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RestoreTPL</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  AllocatePages                      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocatePages</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  FreePages                          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreePages</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetMemoryMap                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetMemoryMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  AllocatePool                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocatePool</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  FreePool                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreePool</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  CreateEvent                        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CreateEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetTimer                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetTimer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  WaitForEvent                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">WaitForEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SignalEvent                        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SignalEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  CloseEvent                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CloseEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  CheckEvent                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CheckEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  InstallProtocolInterface           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">InstallProtocolInterface</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ReinstallProtocolInterface         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ReinstallProtocolInterface</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  UninstallProtocolInterface         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UninstallProtocolInterface</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  HandleProtocol                     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">HandleProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  Reserved                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  RegisterProtocolNotify             : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RegisterProtocolNotify</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  LocateHandle                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  LocateDevicePath                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateDevicePath</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  InstallConfigurationTable          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">InstallConfigurationTable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  LoadImage                          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LoadImage</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  StartImage                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartImage</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  Exit                               : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Exit</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  UnloadImage                        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UnloadImage</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ExitBootServices                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ExitBootServices</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetNextMonotonicCount              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetNextMonotonicCount</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  Stall                              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Stall</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetWatchdogTimer                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetWatchdogTimer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ConnectController                  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConnectController</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  DisconnectController               : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DisconnectController</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  OpenProtocol                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">OpenProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  CloseProtocol                      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CloseProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  OpenProtocolInformation            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">OpenProtocolInformation</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ProtocolsPerHandle                 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ProtocolsPerHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  LocateHandleBuffer                 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateHandleBuffer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  LocateProtocol                     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  InstallMultipleProtocolInterfaces  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">InstallMultipleProtocolInterfaces</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  UninstallMultipleProtocolInterfaces: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UninstallMultipleProtocolInterfaces</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  CalculateCrc32                     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CalculateCrc32</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  CopyMem                            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CopyMem</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetMem                             : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetMem</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  CreateEventEx                      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CreateEventEx</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
+<span class="s2">  RaiseTPL                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RaiseTPL</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  RestoreTPL                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RestoreTPL</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  AllocatePages                      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocatePages</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  FreePages                          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreePages</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetMemoryMap                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetMemoryMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  AllocatePool                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocatePool</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  FreePool                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreePool</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CreateEvent                        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CreateEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetTimer                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetTimer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  WaitForEvent                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">WaitForEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SignalEvent                        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SignalEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CloseEvent                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CloseEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CheckEvent                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CheckEvent</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  InstallProtocolInterface           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">InstallProtocolInterface</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ReinstallProtocolInterface         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ReinstallProtocolInterface</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  UninstallProtocolInterface         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UninstallProtocolInterface</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  HandleProtocol                     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">HandleProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  Reserved                           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  RegisterProtocolNotify             : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RegisterProtocolNotify</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  LocateHandle                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  LocateDevicePath                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateDevicePath</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  InstallConfigurationTable          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">InstallConfigurationTable</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  LoadImage                          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LoadImage</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  StartImage                         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartImage</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  Exit                               : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Exit</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  UnloadImage                        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UnloadImage</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ExitBootServices                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ExitBootServices</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetNextMonotonicCount              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetNextMonotonicCount</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  Stall                              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Stall</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetWatchdogTimer                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetWatchdogTimer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ConnectController                  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ConnectController</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  DisconnectController               : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DisconnectController</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  OpenProtocol                       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">OpenProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CloseProtocol                      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CloseProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  OpenProtocolInformation            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">OpenProtocolInformation</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ProtocolsPerHandle                 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ProtocolsPerHandle</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  LocateHandleBuffer                 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateHandleBuffer</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  LocateProtocol                     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">LocateProtocol</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  InstallMultipleProtocolInterfaces  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">InstallMultipleProtocolInterfaces</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  UninstallMultipleProtocolInterfaces: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UninstallMultipleProtocolInterfaces</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CalculateCrc32                     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CalculateCrc32</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CopyMem                            : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CopyMem</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetMem                             : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetMem</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  CreateEventEx                      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">CreateEventEx</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -1220,29 +1087,20 @@
 <span class="n">EFI_VENDOR_TABLE_SIZE</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_VENDOR_TABLE_FORMAT</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="EFI_VENDOR_TABLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_VENDOR_TABLE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_VENDOR_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_VENDOR_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;VendorGuidData VendorTable&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_VENDOR_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_VENDOR_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_VENDOR_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_VENDOR_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;VendorGuidData VendorTable&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
-<div class="viewcode-block" id="EFI_VENDOR_TABLE.VendorGuid">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_VENDOR_TABLE.VendorGuid">[docs]</a>
-    <span class="k">def</span> <span class="nf">VendorGuid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuidData</span><span class="p">)</span></div>
-</div>
+<div class="viewcode-block" id="EFI_VENDOR_TABLE.VendorGuid"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_VENDOR_TABLE.VendorGuid">[docs]</a>    <span class="k">def</span> <span class="nf">VendorGuid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuidData</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="EFI_CONFIGURATION_TABLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_CONFIGURATION_TABLE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_CONFIGURATION_TABLE</span><span class="p">:</span>
+<div class="viewcode-block" id="EFI_CONFIGURATION_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_CONFIGURATION_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_CONFIGURATION_TABLE</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">VendorTables</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">vendor_table_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="si">{</span><span class="n">vt</span><span class="si">}</span><span class="se">}}</span><span class="s1"> : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorTables</span><span class="p">[</span><span class="n">vt</span><span class="p">]</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">vt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">VendorTables</span><span class="p">])</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Vendor Tables:</span><span class="se">\n</span><span class="si">{</span><span class="n">vendor_table_str</span><span class="si">}</span><span class="s1">&#39;</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -1256,32 +1114,29 @@
 <span class="n">EFI_DXE_SERVICES_TABLE_FMT</span> <span class="o">=</span> <span class="s1">&#39;=17Q&#39;</span>
 
 
-<div class="viewcode-block" id="EFI_DXE_SERVICES_TABLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_DXE_SERVICES_TABLE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_DXE_SERVICES_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_DXE_SERVICES_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;AddMemorySpace AllocateMemorySpace FreeMemorySpace RemoveMemorySpace GetMemorySpaceDescriptor SetMemorySpaceAttributes GetMemorySpaceMap AddIoSpace AllocateIoSpace FreeIoSpace RemoveIoSpace GetIoSpaceDescriptor GetIoSpaceMap Dispatch Schedule Trust ProcessFirmwareVolume&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_DXE_SERVICES_TABLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_common.html#chipsec.hal.uefi_common.EFI_DXE_SERVICES_TABLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_DXE_SERVICES_TABLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_DXE_SERVICES_TABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;AddMemorySpace AllocateMemorySpace FreeMemorySpace RemoveMemorySpace GetMemorySpaceDescriptor SetMemorySpaceAttributes GetMemorySpaceMap AddIoSpace AllocateIoSpace FreeIoSpace RemoveIoSpace GetIoSpaceDescriptor GetIoSpaceMap Dispatch Schedule Trust ProcessFirmwareVolume&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;DXE Services:</span>
-<span class="s2">  AddMemorySpace          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AddMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  AllocateMemorySpace     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocateMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  FreeMemorySpace         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreeMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  RemoveMemorySpace       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RemoveMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetMemorySpaceDescriptor: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetMemorySpaceDescriptor</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  SetMemorySpaceAttributes: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetMemorySpaceAttributes</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetMemorySpaceMap       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetMemorySpaceMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  AddIoSpace              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AddIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  AllocateIoSpace         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocateIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  FreeIoSpace             : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreeIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  RemoveIoSpace           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RemoveIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetIoSpaceDescriptor    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetIoSpaceDescriptor</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  GetIoSpaceMap           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetIoSpaceMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  Dispatch                : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Dispatch</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  Schedule                : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Schedule</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  Trust                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Trust</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">  ProcessFirmwareVolume   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ProcessFirmwareVolume</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
+<span class="s2">  AddMemorySpace          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AddMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  AllocateMemorySpace     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocateMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  FreeMemorySpace         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreeMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  RemoveMemorySpace       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RemoveMemorySpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetMemorySpaceDescriptor: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetMemorySpaceDescriptor</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  SetMemorySpaceAttributes: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SetMemorySpaceAttributes</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetMemorySpaceMap       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetMemorySpaceMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  AddIoSpace              : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AddIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  AllocateIoSpace         : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">AllocateIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  FreeIoSpace             : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FreeIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  RemoveIoSpace           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">RemoveIoSpace</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetIoSpaceDescriptor    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetIoSpaceDescriptor</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  GetIoSpaceMap           : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">GetIoSpaceMap</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  Dispatch                : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Dispatch</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  Schedule                : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Schedule</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  Trust                   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Trust</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">  ProcessFirmwareVolume   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ProcessFirmwareVolume</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="c1"># #################################################################################################</span>
@@ -1368,7 +1223,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1388,8 +1243,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.helper.linuxnative.legacy_pci &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -101,9 +103,7 @@
 <span class="p">))</span>
 
 
-<div class="viewcode-block" id="Ports">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports">[docs]</a>
-<span class="k">class</span> <span class="nc">Ports</span><span class="p">:</span>
+<div class="viewcode-block" id="Ports"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports">[docs]</a><span class="k">class</span> <span class="nc">Ports</span><span class="p">:</span>
     <span class="c1"># Use a unique Ports instance, to avoid allocating memory mappings every time it is used</span>
     <span class="n">instance</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -124,52 +124,33 @@
         <span class="n">out_fp</span> <span class="o">=</span> <span class="n">c_void_p</span><span class="o">.</span><span class="n">from_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outl_addr</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outl_ptr</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_func_type</span><span class="p">(</span><span class="n">addressof</span><span class="p">(</span><span class="n">out_fp</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Ports.get_instance">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports.get_instance">[docs]</a>
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Ports.get_instance"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports.get_instance">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Ports&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance</span></div>
 
-
-<div class="viewcode-block" id="Ports.inl">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports.inl">[docs]</a>
-    <span class="k">def</span> <span class="nf">inl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="Ports.inl"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports.inl">[docs]</a>    <span class="k">def</span> <span class="nf">inl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inl_ptr</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span></div>
 
-
-<div class="viewcode-block" id="Ports.outl">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports.outl">[docs]</a>
-    <span class="k">def</span> <span class="nf">outl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">outl_ptr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></div>
-</div>
+<div class="viewcode-block" id="Ports.outl"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.Ports.outl">[docs]</a>    <span class="k">def</span> <span class="nf">outl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outl_ptr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="LegacyPci">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.LegacyPci">[docs]</a>
-<span class="k">class</span> <span class="nc">LegacyPci</span><span class="p">:</span>
-<div class="viewcode-block" id="LegacyPci.read_pci_config">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.LegacyPci.read_pci_config">[docs]</a>
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LegacyPci"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.LegacyPci">[docs]</a><span class="k">class</span> <span class="nc">LegacyPci</span><span class="p">:</span>
+<div class="viewcode-block" id="LegacyPci.read_pci_config"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.LegacyPci.read_pci_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_pci_config</span><span class="p">(</span><span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dev</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">ports</span> <span class="o">=</span> <span class="n">Ports</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span>
         <span class="n">ports</span><span class="o">.</span><span class="n">outl</span><span class="p">(</span><span class="mh">0x80000000</span> <span class="o">|</span> <span class="p">(</span><span class="n">bus</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">dev</span> <span class="o">&lt;&lt;</span> <span class="mi">11</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">func</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">offset</span><span class="p">,</span> <span class="mh">0xcf8</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">ports</span><span class="o">.</span><span class="n">inl</span><span class="p">(</span><span class="mh">0xcfc</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span></div>
 
-
-<div class="viewcode-block" id="LegacyPci.write_pci_config">
-<a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.LegacyPci.write_pci_config">[docs]</a>
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LegacyPci.write_pci_config"><a class="viewcode-back" href="../../../../modules/chipsec.helper.linuxnative.legacy_pci.html#chipsec.helper.linuxnative.legacy_pci.LegacyPci.write_pci_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">write_pci_config</span><span class="p">(</span><span class="n">bus</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dev</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ports</span> <span class="o">=</span> <span class="n">Ports</span><span class="o">.</span><span class="n">get_instance</span><span class="p">()</span>
         <span class="n">ports</span><span class="o">.</span><span class="n">outl</span><span class="p">(</span><span class="mh">0x80000000</span> <span class="o">|</span> <span class="p">(</span><span class="n">bus</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">dev</span> <span class="o">&lt;&lt;</span> <span class="mi">11</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">func</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="n">offset</span><span class="p">,</span> <span class="mh">0xcf8</span><span class="p">)</span>
-        <span class="n">ports</span><span class="o">.</span><span class="n">outl</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mh">0xcfc</span><span class="p">)</span></div>
-</div>
-
+        <span class="n">ports</span><span class="o">.</span><span class="n">outl</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mh">0xcfc</span><span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -229,7 +210,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -249,8 +230,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

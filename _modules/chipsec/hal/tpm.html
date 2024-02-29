@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.tpm &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -214,18 +216,16 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="TPM_RESPONSE_HEADER">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM_RESPONSE_HEADER">[docs]</a>
-<span class="k">class</span> <span class="nc">TPM_RESPONSE_HEADER</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;TPM_RESPONSE_HEADER&#39;</span><span class="p">,</span> <span class="s1">&#39;ResponseTag DataSize ReturnCode&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="TPM_RESPONSE_HEADER"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM_RESPONSE_HEADER">[docs]</a><span class="k">class</span> <span class="nc">TPM_RESPONSE_HEADER</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;TPM_RESPONSE_HEADER&#39;</span><span class="p">,</span> <span class="s1">&#39;ResponseTag DataSize ReturnCode&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;----------------------------------------------------------------</span>
 <span class="s2">                     TPM response header</span>
 <span class="s2">----------------------------------------------------------------</span>
-<span class="s2">   Response TAG: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ResponseTag</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span>
-<span class="s2">   Data Size   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span>
-<span class="s2">   Return Code : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ReturnCode</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span>
+<span class="s2">   Response TAG: 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ResponseTag</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">   Data Size   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">   Return Code : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ReturnCode</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span>
         <span class="n">_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -236,19 +236,14 @@
         <span class="k">return</span> <span class="n">_str</span></div>
 
 
-
-<div class="viewcode-block" id="TPM">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM">[docs]</a>
-<span class="k">class</span> <span class="nc">TPM</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="TPM"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM">[docs]</a><span class="k">class</span> <span class="nc">TPM</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TPM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">helper</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TPM_BASE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">MEMORY_RANGES</span><span class="p">[</span><span class="s2">&quot;TPM&quot;</span><span class="p">][</span><span class="s2">&quot;address&quot;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="TPM.command">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.command">[docs]</a>
-    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TPM.command"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.command">[docs]</a>    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandName</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">command_argv</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Send command to the TPM and receive data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -286,9 +281,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_mmio_reg</span><span class="p">(</span><span class="n">access_address</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">BEENSEIZED</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_mmio_reg</span><span class="p">(</span><span class="n">access_address</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ACTIVELOCALITY</span><span class="p">)</span></div>
 
-
     <span class="k">def</span> <span class="nf">_send_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Locality</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a command to the TPM using the locality specified&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Send a command to the TPM using the locality specified&quot;&quot;&quot;</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="n">datafifo_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TPM_BASE</span> <span class="o">|</span> <span class="n">Locality</span> <span class="o">|</span> <span class="n">TPM_DATAFIFO</span>
@@ -317,7 +311,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_mmio_reg</span><span class="p">(</span><span class="n">sts_address</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">TPMGO</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_read_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Locality</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">TPM_RESPONSE_HEADER</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read the TPM&#39;s response using the specified locality&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Read the TPM&#39;s response using the specified locality&quot;&quot;&quot;</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">header</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
         <span class="n">header_blob</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
@@ -366,66 +360,43 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">header_blob</span><span class="p">,</span> <span class="n">data_blob</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TPM.dump_access">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_access">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;View the contents of the register used to gain ownership of the TPM&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TPM.dump_access"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_access">[docs]</a>    <span class="k">def</span> <span class="nf">dump_access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;View the contents of the register used to gain ownership of the TPM&quot;&quot;&quot;</span>
         <span class="n">register</span> <span class="o">=</span> <span class="s1">&#39;TPM_ACCESS&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_register</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">locality</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TPM.dump_status">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_status">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;View general status details&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TPM.dump_status"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_status">[docs]</a>    <span class="k">def</span> <span class="nf">dump_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;View general status details&quot;&quot;&quot;</span>
         <span class="n">register</span> <span class="o">=</span> <span class="s1">&#39;TPM_STS&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_register</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">locality</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TPM.dump_didvid">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_didvid">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_didvid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;TPM&#39;s Vendor and Device ID&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TPM.dump_didvid"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_didvid">[docs]</a>    <span class="k">def</span> <span class="nf">dump_didvid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;TPM&#39;s Vendor and Device ID&quot;&quot;&quot;</span>
         <span class="n">register</span> <span class="o">=</span> <span class="s1">&#39;TPM_DID_VID&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_register</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">locality</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TPM.dump_rid">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_rid">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_rid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;TPM&#39;s Revision ID&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TPM.dump_rid"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_rid">[docs]</a>    <span class="k">def</span> <span class="nf">dump_rid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;TPM&#39;s Revision ID&quot;&quot;&quot;</span>
         <span class="n">register</span> <span class="o">=</span> <span class="s1">&#39;TPM_RID&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_register</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">locality</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TPM.dump_intcap">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_intcap">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_intcap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides information of which interrupts that particular TPM supports&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TPM.dump_intcap"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_intcap">[docs]</a>    <span class="k">def</span> <span class="nf">dump_intcap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Provides information of which interrupts that particular TPM supports&quot;&quot;&quot;</span>
         <span class="n">register</span> <span class="o">=</span> <span class="s1">&#39;TPM_INTF_CAPABILITY&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_register</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">locality</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TPM.dump_intenable">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_intenable">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_intenable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;View the contents of the register used to enable specific interrupts&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TPM.dump_intenable"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_intenable">[docs]</a>    <span class="k">def</span> <span class="nf">dump_intenable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;View the contents of the register used to enable specific interrupts&quot;&quot;&quot;</span>
         <span class="n">register</span> <span class="o">=</span> <span class="s1">&#39;TPM_INT_ENABLE&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_register</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">locality</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TPM.log_register_header">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.log_register_header">[docs]</a>
-    <span class="k">def</span> <span class="nf">log_register_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">register_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TPM.log_register_header"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.log_register_header">[docs]</a>    <span class="k">def</span> <span class="nf">log_register_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">register_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_spaces</span> <span class="o">=</span> <span class="mi">32</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">register_name</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># ceiling division</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">64</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">num_spaces</span><span class="si">}{</span><span class="n">register_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">locality</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">num_spaces</span><span class="si">}{</span><span class="n">register_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">locality</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">64</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TPM.dump_register">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_register">[docs]</a>
-    <span class="k">def</span> <span class="nf">dump_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">register_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TPM.dump_register"><a class="viewcode-back" href="../../../modules/chipsec.hal.tpm.html#chipsec.hal.tpm.TPM.dump_register">[docs]</a>    <span class="k">def</span> <span class="nf">dump_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">register_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">locality</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">REGISTERS</span><span class="p">[</span><span class="n">register_name</span><span class="p">][</span><span class="s1">&#39;address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">Cfg</span><span class="o">.</span><span class="n">REGISTERS</span><span class="p">[</span><span class="n">register_name</span><span class="p">][</span><span class="s1">&#39;address&#39;</span><span class="p">]</span> <span class="o">^</span> <span class="n">LOCALITY</span><span class="p">[</span><span class="n">locality</span><span class="p">]</span>
         <span class="n">register</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_dict</span><span class="p">(</span><span class="n">register_name</span><span class="p">)</span>
 
@@ -436,9 +407,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_field_len</span><span class="p">:</span>
                 <span class="n">max_field_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">register</span><span class="p">[</span><span class="s1">&#39;FIELDS&#39;</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="si">{</span><span class="n">field</span><span class="si">}{</span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">max_field_len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="p">))</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">register</span><span class="p">[</span><span class="s2">&quot;FIELDS&quot;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
-</div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="si">{</span><span class="n">field</span><span class="si">}{</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_field_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="p">))</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">register</span><span class="p">[</span><span class="s2">&quot;FIELDS&quot;</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -498,7 +467,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -518,8 +487,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

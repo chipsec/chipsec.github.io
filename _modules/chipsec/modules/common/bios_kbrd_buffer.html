@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.modules.common.bios_kbrd_buffer &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -78,25 +80,18 @@
 
 <span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_BIOS</span><span class="p">]</span>
 
-<span class="n">COMMON_FILL_PTRN</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">0x1E</span><span class="p">))</span><span class="si">:</span><span class="s1">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">)])</span>
+<span class="n">COMMON_FILL_PTRN</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mh">0x1E</span><span class="p">))</span><span class="si">:</span><span class="s1">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">)])</span>
 
 
-<div class="viewcode-block" id="bios_kbrd_buffer">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer">[docs]</a>
-<span class="k">class</span> <span class="nc">bios_kbrd_buffer</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<div class="viewcode-block" id="bios_kbrd_buffer"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer">[docs]</a><span class="k">class</span> <span class="nc">bios_kbrd_buffer</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="p">(</span><span class="mh">0x5ebf705</span><span class="p">,</span> <span class="s1">&#39;https://chipsec.github.io/modules/chipsec.modules.common.bios_kbrd_buffer.html&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="bios_kbrd_buffer.is_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer.is_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="bios_kbrd_buffer.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="bios_kbrd_buffer.check_BIOS_keyboard_buffer">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer.check_BIOS_keyboard_buffer">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_BIOS_keyboard_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="bios_kbrd_buffer.check_BIOS_keyboard_buffer"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer.check_BIOS_keyboard_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">check_BIOS_keyboard_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">kbrd_buf_head</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span><span class="mh">0x41A</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x000000FF</span>
         <span class="n">kbrd_buf_tail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">read_physical_mem_dword</span><span class="p">(</span><span class="mh">0x41C</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x000000FF</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*] Keyboard buffer head pointer = 0x</span><span class="si">{</span><span class="n">kbrd_buf_head</span><span class="si">:</span><span class="s2">X</span><span class="si">}</span><span class="s2"> (at 0x41A), tail pointer = 0x</span><span class="si">{</span><span class="n">kbrd_buf_tail</span><span class="si">:</span><span class="s2">X</span><span class="si">}</span><span class="s2"> (at 0x41C)&quot;</span><span class="p">)</span>
@@ -119,7 +114,7 @@
 
         <span class="k">if</span> <span class="p">(</span><span class="mh">0x1E</span> <span class="o">&lt;</span> <span class="n">kbrd_buf_tail</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">kbrd_buf_tail</span> <span class="o">&lt;=</span> <span class="mh">0x1E</span> <span class="o">+</span> <span class="mi">32</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_bad</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Keyboard buffer tail points inside the buffer (= 0x</span><span class="si">{</span><span class="n">kbrd_buf_tail</span><span class="si">:</span><span class="s2">X</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    It may potentially expose lengths of pre-boot passwords. Was your password </span><span class="si">{</span><span class="p">(</span><span class="n">kbrd_buf_tail</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mh">0x1E</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> characters long?&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    It may potentially expose lengths of pre-boot passwords. Was your password </span><span class="si">{</span><span class="p">(</span><span class="n">kbrd_buf_tail</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">-</span> <span class="mh">0x1E</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> characters long?&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Checking contents of the keyboard buffer..</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -137,19 +132,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">setStatusBit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span><span class="p">)</span></div>
 
-
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># run( module_argv )</span>
     <span class="c1"># Required function: run here all tests from this module</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="bios_kbrd_buffer.run">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="bios_kbrd_buffer.run"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.bios_kbrd_buffer.html#chipsec.modules.common.bios_kbrd_buffer.bios_kbrd_buffer.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;Pre-boot Passwords in the BIOS Keyboard Buffer&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_BIOS_keyboard_buffer</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div>
-</div>
-
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -209,7 +199,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -229,8 +219,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.modules.common.remap &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -94,17 +96,13 @@
 <span class="n">_TOLUD_MASK</span> <span class="o">=</span> <span class="mh">0xFFFFF000</span>
 
 
-<div class="viewcode-block" id="remap">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap">[docs]</a>
-<span class="k">class</span> <span class="nc">remap</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<div class="viewcode-block" id="remap"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap">[docs]</a><span class="k">class</span> <span class="nc">remap</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="p">(</span><span class="mh">0x43aa254</span><span class="p">,</span> <span class="s1">&#39;https://chipsec.github.io/modules/chipsec.modules.common.remap.html&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="remap.is_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.is_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="remap.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_core</span><span class="p">():</span>
             <span class="n">rbase_exist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;PCI0.0.0_REMAPBASE&#39;</span><span class="p">)</span>
             <span class="n">rlimit_exist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;PCI0.0.0_REMAPLIMIT&#39;</span><span class="p">)</span>
@@ -121,10 +119,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="remap.is_ibecc_enabled">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.is_ibecc_enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_ibecc_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="remap.is_ibecc_enabled"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.is_ibecc_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_ibecc_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;IBECC_ACTIVATE&#39;</span><span class="p">):</span>
             <span class="n">edsr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register_field</span><span class="p">(</span><span class="s1">&#39;IBECC_ACTIVATE&#39;</span><span class="p">,</span> <span class="s1">&#39;IBECC_EN&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">edsr</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -135,10 +130,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_verbose</span><span class="p">(</span><span class="s1">&#39;IBECC is not defined!&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="remap.check_remap_config">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.check_remap_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_remap_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="remap.check_remap_config"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.check_remap_config">[docs]</a>    <span class="k">def</span> <span class="nf">check_remap_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">is_warning</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="n">remapbase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;PCI0.0.0_REMAPBASE&#39;</span><span class="p">)</span>
@@ -168,7 +160,7 @@
         <span class="n">tsegmb</span> <span class="o">&amp;=</span> <span class="n">_TOLUD_MASK</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;[*] Memory Map:&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*]   Top Of Upper Memory: 0x</span><span class="si">{</span><span class="n">touud</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*]   Remap Limit Address: 0x</span><span class="si">{</span><span class="p">(</span><span class="n">remaplimit</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mh">0xFFFFF</span><span class="p">)</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*]   Remap Limit Address: 0x</span><span class="si">{</span><span class="p">(</span><span class="n">remaplimit</span> <span class="o">|</span> <span class="mh">0xFFFFF</span><span class="p">)</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*]   Remap Base Address : 0x</span><span class="si">{</span><span class="n">remapbase</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*]   4GB                : 0x</span><span class="si">{</span><span class="n">BIT32</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[*]   Top Of Low Memory  : 0x</span><span class="si">{</span><span class="n">tolud</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -248,20 +240,15 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
 
 
-
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># run( module_argv )</span>
     <span class="c1"># Required function: run here all tests from this module</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="remap.run">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="remap.run"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.remap.html#chipsec.modules.common.remap.remap.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;Memory Remapping Configuration&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_remap_config</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div>
-</div>
-
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -321,7 +308,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -341,8 +328,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

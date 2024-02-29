@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.virtmem &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -74,9 +76,7 @@
 <span class="kn">from</span> <span class="nn">chipsec.hal</span> <span class="kn">import</span> <span class="n">hal_base</span>
 
 
-<div class="viewcode-block" id="VirtMemory">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory">[docs]</a>
-<span class="k">class</span> <span class="nc">VirtMemory</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="VirtMemory"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory">[docs]</a><span class="k">class</span> <span class="nc">VirtMemory</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">VirtMemory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">helper</span>
@@ -90,93 +90,64 @@
 
     <span class="c1"># Reading virtual memory</span>
 
-<div class="viewcode-block" id="VirtMemory.read_virtual_mem">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.read_virtual_mem"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem">[docs]</a>    <span class="k">def</span> <span class="nf">read_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.read_virtual_mem_dword">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_dword">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_virtual_mem_dword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.read_virtual_mem_dword"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_dword">[docs]</a>    <span class="k">def</span> <span class="nf">read_virtual_mem_dword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;=I&#39;</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] dword at VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">: 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.read_virtual_mem_word">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_word">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_virtual_mem_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.read_virtual_mem_word"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_word">[docs]</a>    <span class="k">def</span> <span class="nf">read_virtual_mem_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;=H&#39;</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] word at VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">: 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.read_virtual_mem_byte">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_byte">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_virtual_mem_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.read_virtual_mem_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_byte">[docs]</a>    <span class="k">def</span> <span class="nf">read_virtual_mem_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="n">out_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">read_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;=B&#39;</span><span class="p">,</span> <span class="n">out_buf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] byte at VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">: 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
     <span class="c1"># Writing virtual memory</span>
 
-<div class="viewcode-block" id="VirtMemory.write_virtual_mem">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.write_virtual_mem"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem">[docs]</a>    <span class="k">def</span> <span class="nf">write_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] buffer len = 0x</span><span class="si">{</span><span class="n">length</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> to VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
             <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.write_virtual_mem_dword">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_dword">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_virtual_mem_dword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.write_virtual_mem_dword"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_dword">[docs]</a>    <span class="k">def</span> <span class="nf">write_virtual_mem_dword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] dword to VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1"> &lt;- 0x</span><span class="si">{</span><span class="n">dword_value</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">dword_value</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.write_virtual_mem_word">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_word">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_virtual_mem_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">word_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.write_virtual_mem_word"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_word">[docs]</a>    <span class="k">def</span> <span class="nf">write_virtual_mem_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">word_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] word to VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1"> &lt;- 0x</span><span class="si">{</span><span class="n">word_value</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">word_value</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.write_virtual_mem_byte">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_byte">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_virtual_mem_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">byte_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.write_virtual_mem_byte"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_byte">[docs]</a>    <span class="k">def</span> <span class="nf">write_virtual_mem_byte</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">byte_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] byte to VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1"> &lt;- 0x</span><span class="si">{</span><span class="n">byte_value</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">phys_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write_phys_mem</span><span class="p">(</span><span class="n">phys_address</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">byte_value</span><span class="p">))</span></div>
 
-
     <span class="c1"># Allocate virtual memory buffer</span>
 
-<div class="viewcode-block" id="VirtMemory.alloc_virtual_mem">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.alloc_virtual_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">alloc_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFFFFFFF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="VirtMemory.alloc_virtual_mem"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.alloc_virtual_mem">[docs]</a>    <span class="k">def</span> <span class="nf">alloc_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0xFFFFFFFFFFFFFFFF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">alloc_phys_mem</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">max_phys_address</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] Allocated: PA = 0x</span><span class="si">{</span><span class="n">pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">, VA = 0x</span><span class="si">{</span><span class="n">va</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">va</span><span class="p">,</span> <span class="n">pa</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.va2pa">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.va2pa">[docs]</a>
-    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.va2pa"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.va2pa">[docs]</a>    <span class="k">def</span> <span class="nf">va2pa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">va</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">(</span><span class="n">pa</span><span class="p">,</span> <span class="n">error_code</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">va</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">error_code</span><span class="p">:</span>
             <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] Looks like VA (0x</span><span class="si">{</span><span class="n">va</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">) not mapped&#39;</span><span class="p">)</span>
@@ -184,16 +155,11 @@
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] VA (0x</span><span class="si">{</span><span class="n">va</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">) -&gt; PA (0x</span><span class="si">{</span><span class="n">pa</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pa</span></div>
 
-
-<div class="viewcode-block" id="VirtMemory.free_virtual_mem">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.free_virtual_mem">[docs]</a>
-    <span class="k">def</span> <span class="nf">free_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="VirtMemory.free_virtual_mem"><a class="viewcode-back" href="../../../modules/chipsec.hal.virtmem.html#chipsec.hal.virtmem.VirtMemory.free_virtual_mem">[docs]</a>    <span class="k">def</span> <span class="nf">free_virtual_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">virt_address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">pa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">va2pa</span><span class="p">(</span><span class="n">virt_address</span><span class="p">)</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">free_phys_mem</span><span class="p">(</span><span class="n">pa</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[mem] Deallocated : VA = 0x</span><span class="si">{</span><span class="n">virt_address</span><span class="si">:</span><span class="s1">016X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">1</span></div>
-</div>
-
+        <span class="k">return</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">1</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -253,7 +219,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -273,8 +239,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

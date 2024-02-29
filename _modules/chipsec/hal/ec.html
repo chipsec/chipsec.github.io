@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.ec &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -114,9 +116,7 @@
 <span class="n">EC_COMMAND_ACPI_WRITE_EXT</span> <span class="o">=</span> <span class="mh">0x0F1</span>  <span class="c1"># Write EC ACPI extended memory</span>
 
 
-<div class="viewcode-block" id="EC">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC">[docs]</a>
-<span class="k">class</span> <span class="nc">EC</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
+<div class="viewcode-block" id="EC"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC">[docs]</a><span class="k">class</span> <span class="nc">EC</span><span class="p">(</span><span class="n">hal_base</span><span class="o">.</span><span class="n">HALBase</span><span class="p">):</span>
 
     <span class="c1">#</span>
     <span class="c1"># EC ACPI memory access</span>
@@ -136,47 +136,30 @@
             <span class="n">to</span> <span class="o">=</span> <span class="n">to</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="EC.write_command">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_command">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.write_command"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_command">[docs]</a>    <span class="k">def</span> <span class="nf">write_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_ec_inbuf_empty</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_COMMAND</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EC.write_data">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.write_data"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wait_ec_inbuf_empty</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_DATA</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EC.read_data">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EC.read_data"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_data">[docs]</a>    <span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_ec_outbuf_full</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_DATA</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EC.read_memory">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_memory">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EC.read_memory"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_memory">[docs]</a>    <span class="k">def</span> <span class="nf">read_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_command</span><span class="p">(</span><span class="n">EC_COMMAND_ACPI_READ</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_data</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="EC.write_memory">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_memory">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.write_memory"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_memory">[docs]</a>    <span class="k">def</span> <span class="nf">write_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_command</span><span class="p">(</span><span class="n">EC_COMMAND_ACPI_WRITE</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EC.read_memory_extended">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_memory_extended">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_memory_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="EC.read_memory_extended"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_memory_extended">[docs]</a>    <span class="k">def</span> <span class="nf">read_memory_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_command</span><span class="p">(</span><span class="n">EC_COMMAND_ACPI_READ</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="mh">0x2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">word_offset</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
@@ -184,10 +167,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">word_offset</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_data</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="EC.write_memory_extended">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_memory_extended">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_memory_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.write_memory_extended"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_memory_extended">[docs]</a>    <span class="k">def</span> <span class="nf">write_memory_extended</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_command</span><span class="p">(</span><span class="n">EC_COMMAND_ACPI_WRITE</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="mh">0x2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">word_offset</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
@@ -195,10 +175,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">word_offset</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EC.read_range">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_range">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.read_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_range">[docs]</a>    <span class="k">def</span> <span class="nf">read_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0xFF</span><span class="p">]</span> <span class="o">*</span> <span class="n">size</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mh">0x100</span><span class="p">:</span>
@@ -206,23 +183,20 @@
                 <span class="k">if</span> <span class="n">mem_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mem_value</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] Unable to read EC offset 0x</span><span class="si">{</span><span class="n">start_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] Unable to read EC offset 0x</span><span class="si">{</span><span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">mem_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_memory_extended</span><span class="p">(</span><span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">mem_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mem_value</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] Unable to read EC offset 0x</span><span class="si">{</span><span class="n">start_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] Unable to read EC offset 0x</span><span class="si">{</span><span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] read EC memory from offset </span><span class="si">{</span><span class="n">start_offset</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> size </span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
             <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="EC.write_range">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_range">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.write_range"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_range">[docs]</a>    <span class="k">def</span> <span class="nf">write_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write_memory</span><span class="p">(</span><span class="n">start_offset</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] write EC memory to offset </span><span class="si">{</span><span class="n">start_offset</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> size </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
@@ -230,30 +204,22 @@
             <span class="n">print_buffer_bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
     <span class="c1">#</span>
     <span class="c1"># EC Intex I/O access</span>
     <span class="c1">#</span>
-<div class="viewcode-block" id="EC.read_idx">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_idx">[docs]</a>
-    <span class="k">def</span> <span class="nf">read_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.read_idx"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.read_idx">[docs]</a>    <span class="k">def</span> <span class="nf">read_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_INDEX_ADDRL</span><span class="p">,</span> <span class="n">offset</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_INDEX_ADDRH</span><span class="p">,</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_INDEX_DATA</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] index read: offset 0x</span><span class="si">{</span><span class="n">offset</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1"> &gt; 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
-
-<div class="viewcode-block" id="EC.write_idx">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_idx">[docs]</a>
-    <span class="k">def</span> <span class="nf">write_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="EC.write_idx"><a class="viewcode-back" href="../../../modules/chipsec.hal.ec.html#chipsec.hal.ec.EC.write_idx">[docs]</a>    <span class="k">def</span> <span class="nf">write_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[ec] index write: offset 0x</span><span class="si">{</span><span class="n">offset</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1"> &lt; 0x</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">:&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_INDEX_ADDRL</span><span class="p">,</span> <span class="n">offset</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_INDEX_ADDRH</span><span class="p">,</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write_port_byte</span><span class="p">(</span><span class="n">IO_PORT_EC_INDEX_DATA</span><span class="p">,</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-</div>
-
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -313,7 +279,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -333,8 +299,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

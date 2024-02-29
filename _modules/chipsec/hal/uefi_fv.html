@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.uefi_fv &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -202,9 +204,7 @@
 <span class="n">DEF_INDENT</span> <span class="o">=</span> <span class="s2">&quot;    &quot;</span>
 
 
-<div class="viewcode-block" id="EFI_MODULE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_MODULE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_MODULE</span><span class="p">:</span>
+<div class="viewcode-block" id="EFI_MODULE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_MODULE">[docs]</a><span class="k">class</span> <span class="nc">EFI_MODULE</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Guid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UUID</span><span class="p">],</span> <span class="n">HeaderSize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Offset</span> <span class="o">=</span> <span class="n">Offset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Guid</span> <span class="o">=</span> <span class="n">Guid</span>
@@ -224,14 +224,11 @@
         <span class="c1"># a list of children EFI_MODULE nodes to build the EFI_MODULE object model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="EFI_MODULE.name">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_MODULE.name">[docs]</a>
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="EFI_MODULE.name"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_MODULE.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
         <span class="n">_guid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Guid</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="n">_ui_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui_string</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_name</span><span class="si">}</span><span class="s1"> </span><span class="se">{{</span><span class="si">{</span><span class="n">_guid</span><span class="si">}</span><span class="se">}}</span><span class="s1"> </span><span class="si">{</span><span class="n">_ui_str</span><span class="si">}</span><span class="s1">&#39;</span></div>
-
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">+</span> <span class="n">DEF_INDENT</span>
@@ -244,9 +241,7 @@
             <span class="n">_s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">_ind</span><span class="si">}</span><span class="s1">SHA256: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">SHA256</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">_s</span><span class="p">)</span>
 
-<div class="viewcode-block" id="EFI_MODULE.calc_hashes">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_MODULE.calc_hashes">[docs]</a>
-    <span class="k">def</span> <span class="nf">calc_hashes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="EFI_MODULE.calc_hashes"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_MODULE.calc_hashes">[docs]</a>    <span class="k">def</span> <span class="nf">calc_hashes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">hmd5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
@@ -257,14 +252,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">SHA1</span> <span class="o">=</span> <span class="n">hsha1</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
         <span class="n">hsha256</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
         <span class="n">hsha256</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Image</span><span class="p">[</span><span class="n">off</span><span class="p">:])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">SHA256</span> <span class="o">=</span> <span class="n">hsha256</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SHA256</span> <span class="o">=</span> <span class="n">hsha256</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div></div>
 
 
-
-<div class="viewcode-block" id="EFI_FV">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_FV">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_FV</span><span class="p">(</span><span class="n">EFI_MODULE</span><span class="p">):</span>
+<div class="viewcode-block" id="EFI_FV"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_FV">[docs]</a><span class="k">class</span> <span class="nc">EFI_FV</span><span class="p">(</span><span class="n">EFI_MODULE</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">Size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Checksum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ExtHeaderOffset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">CalcSum</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EFI_FV</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Offset</span><span class="p">,</span> <span class="n">Guid</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">,</span> <span class="n">Image</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Size</span> <span class="o">=</span> <span class="n">Size</span>
@@ -280,10 +271,7 @@
         <span class="k">return</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">_s</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="EFI_FILE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_FILE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_FILE</span><span class="p">(</span><span class="n">EFI_MODULE</span><span class="p">):</span>
+<div class="viewcode-block" id="EFI_FILE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_FILE">[docs]</a><span class="k">class</span> <span class="nc">EFI_FILE</span><span class="p">(</span><span class="n">EFI_MODULE</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">Type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">State</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Checksum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">UD</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">CalcSum</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EFI_FILE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Offset</span><span class="p">,</span> <span class="n">Guid</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">,</span> <span class="n">Image</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="n">Guid</span>
@@ -301,10 +289,7 @@
         <span class="k">return</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">_s</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="EFI_SECTION">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_SECTION">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_SECTION</span><span class="p">(</span><span class="n">EFI_MODULE</span><span class="p">):</span>
+<div class="viewcode-block" id="EFI_SECTION"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_SECTION">[docs]</a><span class="k">class</span> <span class="nc">EFI_SECTION</span><span class="p">(</span><span class="n">EFI_MODULE</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EFI_SECTION</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Offset</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">HeaderSize</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Image</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Name</span> <span class="o">=</span> <span class="n">Name</span>
@@ -316,14 +301,11 @@
         <span class="c1"># parent GUID used in search, export to JSON/log</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parentGuid</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="EFI_SECTION.name">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_SECTION.name">[docs]</a>
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="EFI_SECTION.name"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.EFI_SECTION.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
         <span class="n">_guid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentGuid</span>
         <span class="n">_ui_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui_string</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_name</span><span class="si">}</span><span class="s1"> section of binary </span><span class="se">{{</span><span class="si">{</span><span class="n">_guid</span><span class="si">}</span><span class="se">}}</span><span class="s1"> </span><span class="si">{</span><span class="n">_ui_str</span><span class="si">}</span><span class="s1">&#39;</span></div>
-
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">_s</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">indent</span><span class="si">}</span><span class="s1">+</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Offset</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1">h </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1">: Type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1">h&#39;</span>
@@ -339,27 +321,18 @@
         <span class="k">return</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">_s</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="FvSum8">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvSum8">[docs]</a>
-<span class="k">def</span> <span class="nf">FvSum8</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="FvSum8"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvSum8">[docs]</a><span class="k">def</span> <span class="nf">FvSum8</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">sum8</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
         <span class="n">sum8</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum8</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xff</span>
     <span class="k">return</span> <span class="n">sum8</span></div>
 
 
-
-<div class="viewcode-block" id="FvChecksum8">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvChecksum8">[docs]</a>
-<span class="k">def</span> <span class="nf">FvChecksum8</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="FvChecksum8"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvChecksum8">[docs]</a><span class="k">def</span> <span class="nf">FvChecksum8</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">((</span><span class="mh">0x100</span> <span class="o">-</span> <span class="n">FvSum8</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="FvSum16">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvSum16">[docs]</a>
-<span class="k">def</span> <span class="nf">FvSum16</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="FvSum16"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvSum16">[docs]</a><span class="k">def</span> <span class="nf">FvSum16</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">sum16</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">buffer_str</span> <span class="o">=</span> <span class="n">bytestostring</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
     <span class="n">blen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
@@ -371,17 +344,11 @@
     <span class="k">return</span> <span class="n">sum16</span></div>
 
 
-
-<div class="viewcode-block" id="FvChecksum16">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvChecksum16">[docs]</a>
-<span class="k">def</span> <span class="nf">FvChecksum16</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="FvChecksum16"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.FvChecksum16">[docs]</a><span class="k">def</span> <span class="nf">FvChecksum16</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">((</span><span class="mh">0x10000</span> <span class="o">-</span> <span class="n">FvSum16</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xffff</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="ValidateFwVolumeHeader">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.ValidateFwVolumeHeader">[docs]</a>
-<span class="k">def</span> <span class="nf">ValidateFwVolumeHeader</span><span class="p">(</span><span class="n">ZeroVector</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">FsGuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">FvLength</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">HeaderLength</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ExtHeaderOffset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Reserved</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Calcsum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Checksum</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ValidateFwVolumeHeader"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.ValidateFwVolumeHeader">[docs]</a><span class="k">def</span> <span class="nf">ValidateFwVolumeHeader</span><span class="p">(</span><span class="n">ZeroVector</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">FsGuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">FvLength</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">HeaderLength</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ExtHeaderOffset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Reserved</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Calcsum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Checksum</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">fv_rsvd</span> <span class="o">=</span> <span class="p">(</span><span class="n">Reserved</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">fv_len</span> <span class="o">=</span> <span class="p">(</span><span class="n">FvLength</span> <span class="o">&lt;=</span> <span class="n">size</span><span class="p">)</span>
     <span class="n">fv_header_len</span> <span class="o">=</span> <span class="p">(</span><span class="n">ExtHeaderOffset</span> <span class="o">&lt;</span> <span class="n">FvLength</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">HeaderLength</span> <span class="o">&lt;</span> <span class="n">FvLength</span><span class="p">)</span>
@@ -390,10 +357,7 @@
     <span class="k">return</span> <span class="n">fv_rsvd</span> <span class="ow">and</span> <span class="n">fv_len</span> <span class="ow">and</span> <span class="n">fv_header_len</span></div>
 
 
-
-<div class="viewcode-block" id="NextFwVolume">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.NextFwVolume">[docs]</a>
-<span class="k">def</span> <span class="nf">NextFwVolume</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">last_fv_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_FV</span><span class="p">]:</span>
+<div class="viewcode-block" id="NextFwVolume"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.NextFwVolume">[docs]</a><span class="k">def</span> <span class="nf">NextFwVolume</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">last_fv_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_FV</span><span class="p">]:</span>
     <span class="n">fof</span> <span class="o">=</span> <span class="n">off</span> <span class="k">if</span> <span class="n">last_fv_size</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">off</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">last_fv_size</span><span class="p">,</span> <span class="n">EFI_FIRMWARE_VOLUME_HEADER_size</span><span class="p">)</span>
     <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
     <span class="k">while</span> <span class="p">((</span><span class="n">fof</span> <span class="o">+</span> <span class="n">EFI_FIRMWARE_VOLUME_HEADER_size</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">):</span>
@@ -424,10 +388,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-
-<div class="viewcode-block" id="GetFvHeader">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.GetFvHeader">[docs]</a>
-<span class="k">def</span> <span class="nf">GetFvHeader</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="GetFvHeader"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.GetFvHeader">[docs]</a><span class="k">def</span> <span class="nf">GetFvHeader</span><span class="p">(</span><span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
     <span class="n">EFI_FV_BLOCK_MAP_ENTRY_SZ</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_FV_BLOCK_MAP_ENTRY</span><span class="p">)</span>
     <span class="n">header_size</span> <span class="o">=</span> <span class="n">EFI_FIRMWARE_VOLUME_HEADER_size</span> <span class="o">+</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_FV_BLOCK_MAP_ENTRY</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">header_size</span><span class="p">):</span>
@@ -439,15 +400,15 @@
         <span class="n">Reserved</span><span class="p">,</span> <span class="n">Revision</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">EFI_FIRMWARE_VOLUME_HEADER</span><span class="p">,</span> <span class="n">buffer</span><span class="p">[</span><span class="n">off</span><span class="p">:</span><span class="n">off</span> <span class="o">+</span> <span class="n">EFI_FIRMWARE_VOLUME_HEADER_size</span><span class="p">])</span>
     <span class="n">numblocks</span><span class="p">,</span> <span class="n">lenblock</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">EFI_FV_BLOCK_MAP_ENTRY</span><span class="p">,</span> <span class="n">buffer</span><span class="p">[</span><span class="n">fof</span><span class="p">:</span><span class="n">fof</span> <span class="o">+</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_FV_BLOCK_MAP_ENTRY</span><span class="p">)])</span>
     <span class="n">fv_header_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    </span><span class="se">\n</span><span class="s1">FV volume offset: 0x</span><span class="si">{</span><span class="n">fof</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span>
-<span class="s1">    </span><span class="se">\t</span><span class="s1">FvLength:         0x</span><span class="si">{</span><span class="n">FvLength</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span>
-<span class="s1">    </span><span class="se">\t</span><span class="s1">Attributes:       0x</span><span class="si">{</span><span class="n">Attributes</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span>
-<span class="s1">    </span><span class="se">\t</span><span class="s1">HeaderLength:     0x</span><span class="si">{</span><span class="n">HeaderLength</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span>
-<span class="s1">    </span><span class="se">\t</span><span class="s1">Checksum:         0x</span><span class="si">{</span><span class="n">Checksum</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span>
-<span class="s1">    </span><span class="se">\t</span><span class="s1">Revision:         0x</span><span class="si">{</span><span class="n">Revision</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span>
-<span class="s1">    </span><span class="se">\t</span><span class="s1">ExtHeaderOffset:  0x</span><span class="si">{</span><span class="n">ExtHeaderOffset</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span>
-<span class="s1">    </span><span class="se">\t</span><span class="s1">Reserved:         0x</span><span class="si">{</span><span class="n">Reserved</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span>
-<span class="s1">    FFS Guid:    </span><span class="si">{</span><span class="n">UUID</span><span class="p">(</span><span class="n">bytes_le</span><span class="o">=</span><span class="n">FileSystemGuid0</span><span class="p">)</span><span class="si">}</span>
+<span class="s1">    </span><span class="se">\n</span><span class="s1">FV volume offset: 0x</span><span class="si">{</span><span class="n">fof</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    </span><span class="se">\t</span><span class="s1">FvLength:         0x</span><span class="si">{</span><span class="n">FvLength</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    </span><span class="se">\t</span><span class="s1">Attributes:       0x</span><span class="si">{</span><span class="n">Attributes</span><span class="si">:</span><span class="s1">08X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    </span><span class="se">\t</span><span class="s1">HeaderLength:     0x</span><span class="si">{</span><span class="n">HeaderLength</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    </span><span class="se">\t</span><span class="s1">Checksum:         0x</span><span class="si">{</span><span class="n">Checksum</span><span class="si">:</span><span class="s1">04X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    </span><span class="se">\t</span><span class="s1">Revision:         0x</span><span class="si">{</span><span class="n">Revision</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    </span><span class="se">\t</span><span class="s1">ExtHeaderOffset:  0x</span><span class="si">{</span><span class="n">ExtHeaderOffset</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    </span><span class="se">\t</span><span class="s1">Reserved:         0x</span><span class="si">{</span><span class="n">Reserved</span><span class="si">:</span><span class="s1">02X</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">    FFS Guid:    </span><span class="si">{</span><span class="n">UUID</span><span class="p">(</span><span class="n">bytes_le</span><span class="o">=</span><span class="n">FileSystemGuid0</span><span class="p">)</span><span class="si">}</span><span class="s1"></span>
 <span class="s1">    &#39;&#39;&#39;</span>
     <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_hal</span><span class="p">(</span><span class="n">fv_header_str</span><span class="p">)</span>
 
@@ -469,10 +430,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">HeaderLength</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="NextFwFile">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.NextFwFile">[docs]</a>
-<span class="k">def</span> <span class="nf">NextFwFile</span><span class="p">(</span><span class="n">FvImage</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">FvLength</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fof</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_FILE</span><span class="p">]:</span>
+<div class="viewcode-block" id="NextFwFile"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.NextFwFile">[docs]</a><span class="k">def</span> <span class="nf">NextFwFile</span><span class="p">(</span><span class="n">FvImage</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">FvLength</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fof</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_FILE</span><span class="p">]:</span>
     <span class="n">file_header_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_FFS_FILE_HEADER</span><span class="p">)</span>
     <span class="n">fof</span> <span class="o">=</span> <span class="n">align</span><span class="p">(</span><span class="n">fof</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
     <span class="n">cur_offset</span> <span class="o">=</span> <span class="n">fof</span>
@@ -531,10 +489,7 @@
     <span class="k">return</span> <span class="n">res</span></div>
 
 
-
-<div class="viewcode-block" id="NextFwFileSection">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.NextFwFileSection">[docs]</a>
-<span class="k">def</span> <span class="nf">NextFwFileSection</span><span class="p">(</span><span class="n">sections</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ssize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sof</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_SECTION</span><span class="p">]:</span>
+<div class="viewcode-block" id="NextFwFileSection"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.NextFwFileSection">[docs]</a><span class="k">def</span> <span class="nf">NextFwFileSection</span><span class="p">(</span><span class="n">sections</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ssize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sof</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">polarity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EFI_SECTION</span><span class="p">]:</span>
     <span class="n">EFI_COMMON_SECTION_HEADER_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_COMMON_SECTION_HEADER</span><span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">curr_offset</span> <span class="o">=</span> <span class="n">sof</span>
@@ -560,7 +515,6 @@
         <span class="k">break</span>
     <span class="k">return</span> <span class="n">res</span></div>
 
-
 <span class="c1"># #################################################################################################</span>
 <span class="c1">#</span>
 <span class="c1"># UEFI Firmware Volume Parsing/Modification Functionality</span>
@@ -568,16 +522,11 @@
 <span class="c1"># #################################################################################################</span>
 
 
-<div class="viewcode-block" id="align_image">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.align_image">[docs]</a>
-<span class="k">def</span> <span class="nf">align_image</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">fill</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="align_image"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.align_image">[docs]</a><span class="k">def</span> <span class="nf">align_image</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">fill</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">ljust</span><span class="p">(((</span><span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">+</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">size</span><span class="p">)</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">fill</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="get_guid_bin">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.get_guid_bin">[docs]</a>
-<span class="k">def</span> <span class="nf">get_guid_bin</span><span class="p">(</span><span class="n">guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="get_guid_bin"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.get_guid_bin">[docs]</a><span class="k">def</span> <span class="nf">get_guid_bin</span><span class="p">(</span><span class="n">guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">values</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">guid</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">]:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="n">x</span><span class="p">:</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
@@ -586,10 +535,7 @@
     <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="assemble_uefi_file">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.assemble_uefi_file">[docs]</a>
-<span class="k">def</span> <span class="nf">assemble_uefi_file</span><span class="p">(</span><span class="n">guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="assemble_uefi_file"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.assemble_uefi_file">[docs]</a><span class="k">def</span> <span class="nf">assemble_uefi_file</span><span class="p">(</span><span class="n">guid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">EFI_FFS_FILE_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;16sHBBL&quot;</span>
     <span class="n">FileHeaderSize</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_FFS_FILE_HEADER</span><span class="p">)</span>
 
@@ -612,10 +558,7 @@
     <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">EFI_FFS_FILE_HEADER</span><span class="p">,</span> <span class="n">get_guid_bin</span><span class="p">(</span><span class="n">guid</span><span class="p">),</span> <span class="n">CheckSum</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">,</span> <span class="n">SizeState</span><span class="p">)</span> <span class="o">+</span> <span class="n">image</span></div>
 
 
-
-<div class="viewcode-block" id="assemble_uefi_section">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.assemble_uefi_section">[docs]</a>
-<span class="k">def</span> <span class="nf">assemble_uefi_section</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">uncomressed_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">compression_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="assemble_uefi_section"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.assemble_uefi_section">[docs]</a><span class="k">def</span> <span class="nf">assemble_uefi_section</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">uncomressed_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">compression_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">EFI_COMPRESSION_SECTION_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;LLB&quot;</span>
     <span class="n">SectionType</span> <span class="o">=</span> <span class="n">EFI_SECTION_COMPRESSION</span>
     <span class="n">SectionSize</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">EFI_COMPRESSION_SECTION_HEADER</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -623,19 +566,12 @@
     <span class="k">return</span> <span class="n">SectionHeader</span> <span class="o">+</span> <span class="n">image</span></div>
 
 
-
-<div class="viewcode-block" id="assemble_uefi_raw">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.assemble_uefi_raw">[docs]</a>
-<span class="k">def</span> <span class="nf">assemble_uefi_raw</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="assemble_uefi_raw"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.assemble_uefi_raw">[docs]</a><span class="k">def</span> <span class="nf">assemble_uefi_raw</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">align_image</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;L&#39;</span><span class="p">,</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FFFFFF</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">EFI_SECTION_RAW</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span><span class="p">))</span> <span class="o">+</span> <span class="n">image</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="DecodeSection">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.DecodeSection">[docs]</a>
-<span class="k">def</span> <span class="nf">DecodeSection</span><span class="p">(</span><span class="n">SecType</span><span class="p">,</span> <span class="n">SecBody</span><span class="p">,</span> <span class="n">SecHeaderSize</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="DecodeSection"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_fv.html#chipsec.hal.uefi_fv.DecodeSection">[docs]</a><span class="k">def</span> <span class="nf">DecodeSection</span><span class="p">(</span><span class="n">SecType</span><span class="p">,</span> <span class="n">SecBody</span><span class="p">,</span> <span class="n">SecHeaderSize</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">pass</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -695,7 +631,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -715,8 +651,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

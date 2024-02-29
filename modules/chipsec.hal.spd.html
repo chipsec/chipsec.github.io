@@ -1,23 +1,24 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>spd module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.hal.spd module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
-    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     
-    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="spi module" href="chipsec.hal.spi.html" />
-    <link rel="prev" title="smbus module" href="chipsec.hal.smbus.html" /> 
+    <link rel="next" title="chipsec.hal.spi module" href="chipsec.hal.spi.html" />
+    <link rel="prev" title="chipsec.hal.smbus module" href="chipsec.hal.smbus.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,15 +30,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi.html" title="spi module"
+          <a href="chipsec.hal.spi.html" title="chipsec.hal.spi module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.smbus.html" title="smbus module"
+          <a href="chipsec.hal.smbus.html" title="chipsec.hal.smbus module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">spd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spd module</a></li> 
       </ul>
     </div>  
 
@@ -46,8 +47,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.hal.spd">
-<span id="spd-module"></span><h1>spd module<a class="headerlink" href="#module-chipsec.hal.spd" title="Link to this heading">¶</a></h1>
+  <div class="section" id="module-chipsec.hal.spd">
+<span id="chipsec-hal-spd-module"></span><h1>chipsec.hal.spd module<a class="headerlink" href="#module-chipsec.hal.spd" title="Permalink to this headline">¶</a></h1>
 <p>Access to Memory (DRAM) Serial Presence Detect (SPD) EEPROM</p>
 <p>References:</p>
 <p><a class="reference external" href="http://www.jedec.org/sites/default/files/docs/4_01_02R19.pdf">http://www.jedec.org/sites/default/files/docs/4_01_02R19.pdf</a>
@@ -58,7 +59,107 @@
 <a class="reference external" href="https://www.simmtester.com/News/PublicationArticle/153">https://www.simmtester.com/News/PublicationArticle/153</a>
 <a class="reference external" href="https://www.simmtester.com/News/PublicationArticle/101">https://www.simmtester.com/News/PublicationArticle/101</a>
 <a class="reference external" href="http://en.wikipedia.org/wiki/Serial_presence_detect">http://en.wikipedia.org/wiki/Serial_presence_detect</a></p>
-</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SPD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smbus</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.decode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.detect">
+<span class="sig-name descname"><span class="pre">detect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.detect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.dump_spd_rom">
+<span class="sig-name descname"><span class="pre">dump_spd_rom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.dump_spd_rom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.dump_spd_rom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.getDRAMDeviceType">
+<span class="sig-name descname"><span class="pre">getDRAMDeviceType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.getDRAMDeviceType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.getDRAMDeviceType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.getModuleType">
+<span class="sig-name descname"><span class="pre">getModuleType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.getModuleType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.getModuleType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.isECC">
+<span class="sig-name descname"><span class="pre">isECC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.isECC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.isECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.isSPDPresent">
+<span class="sig-name descname"><span class="pre">isSPDPresent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.isSPDPresent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.isSPDPresent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.read_byte">
+<span class="sig-name descname"><span class="pre">read_byte</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.read_byte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.read_byte" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.read_range">
+<span class="sig-name descname"><span class="pre">read_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.read_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.read_range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.write_byte">
+<span class="sig-name descname"><span class="pre">write_byte</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.write_byte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.write_byte" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD.write_range">
+<span class="sig-name descname"><span class="pre">write_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">160</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD.write_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD.write_range" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD_DDR">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SPD_DDR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SPDBytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TotalBytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DeviceType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RowAddressCount</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD_DDR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD_DDR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.spd.SPD_DDR" title="chipsec.hal.spd.SPD_DDR"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.spd.SPD_DDR</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD_DDR2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SPD_DDR2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SPDBytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TotalBytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DeviceType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RowAddressCount</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD_DDR2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD_DDR2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.spd.SPD_DDR2" title="chipsec.hal.spd.SPD_DDR2"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.spd.SPD_DDR2</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD_DDR3">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SPD_DDR3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SPDBytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Revision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DeviceType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ModuleType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ChipSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Addressing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Voltages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ModuleOrg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BusWidthECC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FTB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MTBDivident</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MTBDivisor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tCKMin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RsvdD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CASLo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CASHi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD_DDR3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD_DDR3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.spd.SPD_DDR3" title="chipsec.hal.spd.SPD_DDR3"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.spd.SPD_DDR3</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD_DDR4">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SPD_DDR4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SPDBytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Revision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DeviceType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ModuleType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Density</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Addressing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PackageType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OptFeatures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ThermalRefresh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OptFeatures1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ReservedA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VDD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ModuleOrg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BusWidthECC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ThermSensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ModuleTypeExt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD_DDR4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD_DDR4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.spd.SPD_DDR4" title="chipsec.hal.spd.SPD_DDR4"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.spd.SPD_DDR4</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.spd.SPD_REVISION">
+<span class="sig-name descname"><span class="pre">SPD_REVISION</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#SPD_REVISION"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.SPD_REVISION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.spd.dram_device_type_name">
+<span class="sig-name descname"><span class="pre">dram_device_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dram_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#dram_device_type_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.dram_device_type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chipsec.hal.spd.module_type_name">
+<span class="sig-name descname"><span class="pre">module_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/spd.html#module_type_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.spd.module_type_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 
 
             <div class="clearer"></div>
@@ -112,12 +213,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.hal.smbus.html"
-                          title="previous chapter">smbus module</a></p>
+                          title="previous chapter">chipsec.hal.smbus module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.hal.spi.html"
-                          title="next chapter">spi module</a></p>
+                          title="next chapter">chipsec.hal.spi module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -128,7 +229,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -143,20 +244,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi.html" title="spi module"
+          <a href="chipsec.hal.spi.html" title="chipsec.hal.spi module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.smbus.html" title="smbus module"
+          <a href="chipsec.hal.smbus.html" title="chipsec.hal.smbus module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">spd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spd module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 25, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

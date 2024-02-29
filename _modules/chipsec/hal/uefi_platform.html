@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.hal.uefi_platform &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -82,9 +84,7 @@
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="FWType">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.FWType">[docs]</a>
-<span class="k">class</span> <span class="nc">FWType</span><span class="p">:</span>
+<div class="viewcode-block" id="FWType"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.FWType">[docs]</a><span class="k">class</span> <span class="nc">FWType</span><span class="p">:</span>
     <span class="n">EFI_FW_TYPE_UEFI</span> <span class="o">=</span> <span class="s1">&#39;uefi&#39;</span>
     <span class="n">EFI_FW_TYPE_UEFI_AUTH</span> <span class="o">=</span> <span class="s1">&#39;uefi_auth&#39;</span>
 <span class="c1">#    EFI_FW_TYPE_WIN       = &#39;win&#39;      # Windows 8 GetFirmwareEnvironmentVariable format</span>
@@ -99,9 +99,8 @@
     <span class="n">EFI_FW_TYPE_EVSA</span> <span class="o">=</span> <span class="s1">&#39;evsa&#39;</span>      <span class="c1"># &#39;EVSA&#39; NVRAM format</span></div>
 
 
-
 <span class="n">fw_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">FWType</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">FWType</span><span class="p">,</span> <span class="n">t</span><span class="p">))]:</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">FWType</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">FWType</span><span class="p">,</span> <span class="n">t</span><span class="p">))]:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">):</span>
         <span class="n">fw_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">FWType</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
 
@@ -152,11 +151,8 @@
 <span class="n">VAR_DELETED</span> <span class="o">=</span> <span class="mh">0xfd</span>  <span class="c1"># Variable is obsolete</span>
 <span class="n">VAR_ADDED</span> <span class="o">=</span> <span class="mh">0x7f</span>  <span class="c1"># Variable has been completely added</span>
 
-<div class="viewcode-block" id="IS_VARIABLE_STATE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.IS_VARIABLE_STATE">[docs]</a>
-<span class="k">def</span> <span class="nf">IS_VARIABLE_STATE</span><span class="p">(</span><span class="n">_c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_Mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IS_VARIABLE_STATE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.IS_VARIABLE_STATE">[docs]</a><span class="k">def</span> <span class="nf">IS_VARIABLE_STATE</span><span class="p">(</span><span class="n">_c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_Mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">((((</span><span class="o">~</span><span class="n">_c</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="o">~</span><span class="n">_Mask</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span></div>
-
 
 
 <span class="c1">#</span>
@@ -180,24 +176,21 @@
 <span class="n">UEFI_VARIABLE_HEADER_SIZE</span> <span class="o">=</span> <span class="mi">28</span>
 
 
-<div class="viewcode-block" id="UEFI_VARIABLE_HEADER">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.UEFI_VARIABLE_HEADER">[docs]</a>
-<span class="k">class</span> <span class="nc">UEFI_VARIABLE_HEADER</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;UEFI_VARIABLE_HEADER&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes NameSize DataSize VendorGuid0 VendorGuid1 VendorGuid2 VendorGuid3&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="UEFI_VARIABLE_HEADER"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.UEFI_VARIABLE_HEADER">[docs]</a><span class="k">class</span> <span class="nc">UEFI_VARIABLE_HEADER</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;UEFI_VARIABLE_HEADER&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes NameSize DataSize VendorGuid0 VendorGuid1 VendorGuid2 VendorGuid3&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Header (UEFI)</span>
 <span class="s2">-------------</span>
-<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">NameSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">DataSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">VendorGuid : </span><span class="se">{{</span><span class="s2">0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid0</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">-0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid1</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">-0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid2</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">-0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid3</span><span class="si">:</span><span class="s2">08X</span><span class="se">}}</span><span class="si">}</span>
+<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">NameSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">DataSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">VendorGuid : </span><span class="se">{{</span><span class="s2">0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid0</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">-0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid1</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">-0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid2</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2">-0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">VendorGuid3</span><span class="si">:</span><span class="s2">08X</span><span class="se">}}</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="n">UEFI_VARIABLE_STORE_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&lt;16sIBBHI&quot;</span>
@@ -233,32 +226,20 @@
     <span class="k">return</span> <span class="n">l</span>
 
 
-<div class="viewcode-block" id="getNVstore_EFI">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_EFI">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_EFI</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
+<div class="viewcode-block" id="getNVstore_EFI"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_EFI">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_EFI</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">_getNVstore_EFI</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getNVstore_EFI_AUTH">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_EFI_AUTH">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_EFI_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
+<div class="viewcode-block" id="getNVstore_EFI_AUTH"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_EFI_AUTH">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_EFI_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">_getNVstore_EFI</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_AUTH</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getEFIvariables_UEFI">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_UEFI">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_UEFI</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_UEFI"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_UEFI">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_UEFI</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="k">return</span> <span class="n">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getEFIvariables_UEFI_AUTH">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_UEFI_AUTH">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_UEFI_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_UEFI_AUTH"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_UEFI_AUTH">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_UEFI_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="k">return</span> <span class="n">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_AUTH</span><span class="p">)</span></div>
-
 
 
 <span class="sd">&#39;&#39;&#39;</span>
@@ -332,32 +313,27 @@
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="EFI_HDR_NVAR1">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_NVAR1">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_HDR_NVAR1</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_NVAR1&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId TotalSize Reserved1 Reserved2 Reserved3 Attributes State&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_HDR_NVAR1"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_NVAR1">[docs]</a><span class="k">class</span> <span class="nc">EFI_HDR_NVAR1</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_NVAR1&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId TotalSize Reserved1 Reserved2 Reserved3 Attributes State&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Header (NVAR)</span>
 <span class="s2">------------</span>
-<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">TotalSize  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TotalSize</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">Reserved1  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved1</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved2  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved2</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved3  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved3</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
+<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">TotalSize  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TotalSize</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved1  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved1</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved2  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved2</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved3  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved3</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="n">NVAR_EFIvar_signature</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;NVAR&#39;</span>
 
 
-<div class="viewcode-block" id="getNVstore_NVAR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_NVAR">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_NVAR</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
+<div class="viewcode-block" id="getNVstore_NVAR"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_NVAR">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_NVAR</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
     <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">fv</span> <span class="o">=</span> <span class="n">NextFwVolume</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">fv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
@@ -379,14 +355,11 @@
     <span class="k">return</span> <span class="n">l</span></div>
 
 
-
 <span class="k">def</span> <span class="nf">_ord</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">c</span>
 
 
-<div class="viewcode-block" id="getEFIvariables_NVAR">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_NVAR">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_NVAR</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_NVAR"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_NVAR">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_NVAR</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">nvram_buf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NVAR_EFIvar_signature</span><span class="p">)</span>
     <span class="n">nvram_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">)</span>
@@ -467,7 +440,6 @@
     <span class="k">return</span> <span class="n">variables</span></div>
 
 
-
 <span class="n">NVAR_HDR_FMT</span> <span class="o">=</span> <span class="s1">&#39;=IHBBBBB&#39;</span>
 <span class="n">NVAR_HDR_SIZE</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">NVAR_HDR_FMT</span><span class="p">)</span>
 
@@ -475,16 +447,11 @@
 <span class="c1">#</span>
 <span class="c1"># Linear/simple NVAR format parsing</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="getNVstore_NVAR_simple">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_NVAR_simple">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_NVAR_simple</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="getNVstore_NVAR_simple"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_NVAR_simple">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_NVAR_simple</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">nvram_buf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NVAR_EFIvar_signature</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getEFIvariables_NVAR_simple">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_NVAR_simple">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_NVAR_simple</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_NVAR_simple"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_NVAR_simple">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_NVAR_simple</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
     <span class="n">nvsize</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">)</span>
     <span class="n">hdr_fmt</span> <span class="o">=</span> <span class="n">NVAR_HDR_FMT</span>
     <span class="n">hdr_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">hdr_fmt</span><span class="p">)</span>
@@ -518,7 +485,6 @@
     <span class="k">return</span> <span class="n">variables</span></div>
 
 
-
 <span class="c1">#######################################################################</span>
 <span class="c1">#</span>
 <span class="c1"># VSS NVRAM (signature = &#39;$VSS&#39;)</span>
@@ -530,9 +496,7 @@
 <span class="n">VARIABLE_STORE_HEADER_FMT_VSS</span> <span class="o">=</span> <span class="s1">&#39;=IIBBHI&#39;</span>  <span class="c1"># Signature is &#39;$VSS&#39;</span>
 
 
-<div class="viewcode-block" id="VARIABLE_STORE_HEADER_VSS">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS">[docs]</a>
-<span class="k">class</span> <span class="nc">VARIABLE_STORE_HEADER_VSS</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;VARIABLE_STORE_HEADER_VSS&#39;</span><span class="p">,</span> <span class="s1">&#39;Signature Size Format State Reserved Reserved1&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="VARIABLE_STORE_HEADER_VSS"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS">[docs]</a><span class="k">class</span> <span class="nc">VARIABLE_STORE_HEADER_VSS</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;VARIABLE_STORE_HEADER_VSS&#39;</span><span class="p">,</span> <span class="s1">&#39;Signature Size Format State Reserved Reserved1&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -542,12 +506,11 @@
 <span class="s2">-----------------------------</span>
 <span class="s2">Signature : </span><span class="si">{</span><span class="n">sig_str</span><span class="si">}</span><span class="s2"> (0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Signature</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2">)</span>
 <span class="s2">Size      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Size</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"> bytes</span>
-<span class="s2">Format    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Format</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">State     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">Reserved1 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved1</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">Format    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Format</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">State     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved1 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved1</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="n">VARIABLE_STORE_SIGNATURE_VSS2</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="s1">&#39;DDCF3617-3275-4164-98B6-FE85707FFE7D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bytes_le</span>
@@ -556,23 +519,20 @@
 <span class="n">VARIABLE_STORE_HEADER_FMT_VSS2</span> <span class="o">=</span> <span class="s1">&#39;=16sIBBHI&#39;</span>
 
 
-<div class="viewcode-block" id="VARIABLE_STORE_HEADER_VSS2">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS2">[docs]</a>
-<span class="k">class</span> <span class="nc">VARIABLE_STORE_HEADER_VSS2</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;VARIABLE_STORE_HEADER_VSS2&#39;</span><span class="p">,</span> <span class="s1">&#39;Signature Size Format State Reserved Reserved1&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="VARIABLE_STORE_HEADER_VSS2"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.VARIABLE_STORE_HEADER_VSS2">[docs]</a><span class="k">class</span> <span class="nc">VARIABLE_STORE_HEADER_VSS2</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;VARIABLE_STORE_HEADER_VSS2&#39;</span><span class="p">,</span> <span class="s1">&#39;Signature Size Format State Reserved Reserved1&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">EFI Variable Store</span>
 <span class="s2">-----------------------------</span>
-<span class="s2">Signature : </span><span class="si">{</span><span class="n">UUID</span><span class="p">(</span><span class="n">bytes_le</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Signature</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">Signature : </span><span class="si">{</span><span class="n">UUID</span><span class="p">(</span><span class="n">bytes_le</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Signature</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">Size      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Size</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"> bytes</span>
-<span class="s2">Format    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Format</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">State     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">Reserved1 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved1</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">Format    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Format</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">State     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved  : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved1 : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved1</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="n">VARIABLE_STORE_SIGNATURE_VSS2</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="s1">&#39;DDCF3617-3275-4164-98B6-FE85707FFE7D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bytes_le</span>
@@ -583,32 +543,27 @@
 <span class="c1">#NAME_OFFSET_IN_VAR_VSS        = HDR_SIZE_VSS</span>
 
 
-<div class="viewcode-block" id="EFI_HDR_VSS">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_VSS">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_HDR_VSS</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_VSS&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes NameSize DataSize guid&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_HDR_VSS"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_VSS">[docs]</a><span class="k">class</span> <span class="nc">EFI_HDR_VSS</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_VSS&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes NameSize DataSize guid&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Header (VSS)</span>
 <span class="s2">------------</span>
-<span class="s2">VendorGuid : </span><span class="se">{{</span><span class="si">{</span><span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span>
-<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">NameSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">DataSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">VendorGuid : </span><span class="se">{{</span><span class="si">{</span><span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"></span>
+<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">NameSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">DataSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="n">HDR_FMT_VSS_AUTH</span> <span class="o">=</span> <span class="s1">&#39;&lt;HBBIQQQIII16s&#39;</span>
 
 
-<div class="viewcode-block" id="EFI_HDR_VSS_AUTH">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_HDR_VSS_AUTH</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_VSS_AUTH&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes MonotonicCount TimeStamp1 TimeStamp2 PubKeyIndex NameSize DataSize guid&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_HDR_VSS_AUTH"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_VSS_AUTH">[docs]</a><span class="k">class</span> <span class="nc">EFI_HDR_VSS_AUTH</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_VSS_AUTH&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes MonotonicCount TimeStamp1 TimeStamp2 PubKeyIndex NameSize DataSize guid&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
     <span class="c1"># if you don&#39;t re-define __str__ method, initialize is to None</span>
     <span class="c1">#__str__ = None</span>
@@ -617,43 +572,39 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Header (VSS_AUTH)</span>
 <span class="s2">----------------</span>
-<span class="s2">VendorGuid     : </span><span class="se">{{</span><span class="si">{</span><span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span>
-<span class="s2">StartId        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">State          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Attributes     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">MonotonicCount : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">MonotonicCount</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">TimeStamp1     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeStamp1</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">TimeStamp2     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeStamp2</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span>
-<span class="s2">PubKeyIndex    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">PubKeyIndex</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">NameSize       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">DataSize       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">VendorGuid     : </span><span class="se">{{</span><span class="si">{</span><span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"></span>
+<span class="s2">StartId        : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">State          : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Attributes     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">MonotonicCount : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">MonotonicCount</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">TimeStamp1     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeStamp1</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">TimeStamp2     : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TimeStamp2</span><span class="si">:</span><span class="s2">016X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">PubKeyIndex    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">PubKeyIndex</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">NameSize       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">DataSize       : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 
 <span class="n">HDR_FMT_VSS_APPLE</span> <span class="o">=</span> <span class="s1">&#39;&lt;HBBIII16sI&#39;</span>
 
 
-<div class="viewcode-block" id="EFI_HDR_VSS_APPLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE">[docs]</a>
-<span class="k">class</span> <span class="nc">EFI_HDR_VSS_APPLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_VSS_APPLE&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes NameSize DataSize guid unknown&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EFI_HDR_VSS_APPLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFI_HDR_VSS_APPLE">[docs]</a><span class="k">class</span> <span class="nc">EFI_HDR_VSS_APPLE</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EFI_HDR_VSS_APPLE&#39;</span><span class="p">,</span> <span class="s1">&#39;StartId State Reserved Attributes NameSize DataSize guid unknown&#39;</span><span class="p">)):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Header (VSS_APPLE)</span>
 <span class="s2">------------</span>
-<span class="s2">VendorGuid : </span><span class="se">{{</span><span class="si">{</span><span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span>
-<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span>
-<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Reserved   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span>
-<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">NameSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">DataSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
-<span class="s2">Unknown    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">unknown</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span>
+<span class="s2">VendorGuid : </span><span class="se">{{</span><span class="si">{</span><span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2"></span>
+<span class="s2">StartId    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">StartId</span><span class="si">:</span><span class="s2">04X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">State      : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Reserved   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Reserved</span><span class="si">:</span><span class="s2">02X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Attributes : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Attributes</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">NameSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">NameSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">DataSize   : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DataSize</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">Unknown    : 0x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">unknown</span><span class="si">:</span><span class="s2">08X</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span></div>
-
 
 <span class="k">def</span> <span class="nf">_getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">vss_type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">VARIABLE_STORE_HEADER_VSS</span><span class="p">,</span> <span class="n">VARIABLE_STORE_HEADER_VSS2</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
     <span class="k">if</span> <span class="n">vss_type</span> <span class="o">==</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS2</span><span class="p">:</span>
@@ -676,48 +627,31 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">nvram_start</span><span class="p">,</span> <span class="n">nvram_hdr</span><span class="o">.</span><span class="n">Size</span><span class="p">,</span> <span class="n">nvram_hdr</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="getNVstore_VSS">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="getNVstore_VSS"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">_getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getNVstore_VSS_AUTH">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS_AUTH">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_VSS_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="getNVstore_VSS_AUTH"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS_AUTH">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_VSS_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">_getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_AUTH</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getNVstore_VSS2">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS2">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_VSS2</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="getNVstore_VSS2"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS2">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_VSS2</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">_getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS2</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getNVstore_VSS2_AUTH">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS2_AUTH">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_VSS2_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="getNVstore_VSS2_AUTH"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS2_AUTH">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_VSS2_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">_getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS2_AUTH</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getNVstore_VSS_APPLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS_APPLE">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_VSS_APPLE</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="getNVstore_VSS_APPLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_VSS_APPLE">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_VSS_APPLE</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">_getNVstore_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_APPLE</span><span class="p">)</span></div>
-
 
 
 <span class="n">VSS_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_AUTH</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS2</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS2_AUTH</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_APPLE</span><span class="p">)</span>
 <span class="n">MAX_VSS_VAR_ALIGNMENT</span> <span class="o">=</span> <span class="mi">8</span>
 
 
-<div class="viewcode-block" id="isCorrectVSStype">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.isCorrectVSStype">[docs]</a>
-<span class="k">def</span> <span class="nf">isCorrectVSStype</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">vss_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="isCorrectVSStype"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.isCorrectVSStype">[docs]</a><span class="k">def</span> <span class="nf">isCorrectVSStype</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">vss_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">vss_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VSS_TYPES</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
@@ -769,7 +703,6 @@
                         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">return</span> <span class="kc">False</span></div>
-
 
 
 <span class="k">def</span> <span class="nf">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">_fwtype</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
@@ -842,39 +775,24 @@
     <span class="k">return</span> <span class="n">variables</span>
 
 
-<div class="viewcode-block" id="getEFIvariables_VSS">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_VSS"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="k">return</span> <span class="n">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getEFIvariables_VSS_AUTH">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS_AUTH">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_VSS_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_VSS_AUTH"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS_AUTH">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_VSS_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="k">return</span> <span class="n">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_AUTH</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getEFIvariables_VSS2">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS2">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_VSS2</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_VSS2"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS2">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_VSS2</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="k">return</span> <span class="n">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS2</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getEFIvariables_VSS2_AUTH">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS2_AUTH">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_VSS2_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_VSS2_AUTH"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS2_AUTH">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_VSS2_AUTH</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="k">return</span> <span class="n">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS2_AUTH</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="getEFIvariables_VSS_APPLE">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS_APPLE">[docs]</a>
-<span class="k">def</span> <span class="nf">getEFIvariables_VSS_APPLE</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="getEFIvariables_VSS_APPLE"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getEFIvariables_VSS_APPLE">[docs]</a><span class="k">def</span> <span class="nf">getEFIvariables_VSS_APPLE</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="k">return</span> <span class="n">_getEFIvariables_VSS</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">FWType</span><span class="o">.</span><span class="n">EFI_FW_TYPE_VSS_APPLE</span><span class="p">)</span></div>
-
 
 
 <span class="c1">#######################################################################</span>
@@ -888,9 +806,7 @@
 <span class="n">tlv_h_size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">TLV_HEADER</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="getNVstore_EVSA">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_EVSA">[docs]</a>
-<span class="k">def</span> <span class="nf">getNVstore_EVSA</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
+<div class="viewcode-block" id="getNVstore_EVSA"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.getNVstore_EVSA">[docs]</a><span class="k">def</span> <span class="nf">getNVstore_EVSA</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NvStore</span><span class="p">:</span>
     <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">fv</span> <span class="o">=</span> <span class="n">NextFwVolume</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">)</span>
     <span class="k">while</span> <span class="n">fv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -908,10 +824,7 @@
         <span class="n">fv</span> <span class="o">=</span> <span class="n">NextFwVolume</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">,</span> <span class="n">fv</span><span class="o">.</span><span class="n">Offset</span><span class="p">,</span> <span class="n">fv</span><span class="o">.</span><span class="n">Size</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">l</span></div>
 
-
-<div class="viewcode-block" id="EFIvar_EVSA">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFIvar_EVSA">[docs]</a>
-<span class="k">def</span> <span class="nf">EFIvar_EVSA</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
+<div class="viewcode-block" id="EFIvar_EVSA"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.EFIvar_EVSA">[docs]</a><span class="k">def</span> <span class="nf">EFIvar_EVSA</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EfiVariableType</span><span class="p">]]:</span>
     <span class="n">image_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nvram_buf</span><span class="p">)</span>
     <span class="n">sn</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">EVSA_RECORD</span> <span class="o">=</span> <span class="s2">&quot;&lt;IIII&quot;</span>
@@ -953,12 +866,12 @@
                 <span class="n">g</span> <span class="o">=</span> <span class="n">EFI_GUID_STR</span><span class="p">(</span><span class="n">guid0</span><span class="p">)</span>
                 <span class="n">guid_map</span><span class="p">[</span><span class="n">GuidId</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span>
             <span class="k">elif</span> <span class="p">(</span><span class="n">Tag0</span> <span class="o">==</span> <span class="mh">0xEE</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Tag0</span> <span class="o">==</span> <span class="mh">0xE2</span><span class="p">):</span>  <span class="c1"># var name</span>
-                <span class="n">VAR_NAME_RECORD</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;H</span><span class="si">{</span><span class="n">Size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tlv_h_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">s&#39;</span>
+                <span class="n">VAR_NAME_RECORD</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;H</span><span class="si">{</span><span class="n">Size</span> <span class="o">-</span> <span class="n">tlv_h_size</span> <span class="o">-</span> <span class="mi">2</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">s&#39;</span>
                 <span class="n">VarId</span><span class="p">,</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">VAR_NAME_RECORD</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
                 <span class="n">Name</span> <span class="o">=</span> <span class="n">Name</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-16-le&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">var_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">Name</span><span class="p">,</span> <span class="n">VarId</span><span class="p">,</span> <span class="n">Tag0</span><span class="p">,</span> <span class="n">Tag1</span><span class="p">))</span>
             <span class="k">elif</span> <span class="p">(</span><span class="n">Tag0</span> <span class="o">==</span> <span class="mh">0xEF</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Tag0</span> <span class="o">==</span> <span class="mh">0xE3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Tag0</span> <span class="o">==</span> <span class="mh">0x83</span><span class="p">):</span>  <span class="c1"># values</span>
-                <span class="n">VAR_VALUE_RECORD</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;HHI</span><span class="si">{</span><span class="n">Size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tlv_h_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">s&#39;</span>
+                <span class="n">VAR_VALUE_RECORD</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;HHI</span><span class="si">{</span><span class="n">Size</span> <span class="o">-</span> <span class="n">tlv_h_size</span> <span class="o">-</span> <span class="mi">8</span><span class="si">:</span><span class="s1">d</span><span class="si">}</span><span class="s1">s&#39;</span>
                 <span class="n">GuidId</span><span class="p">,</span> <span class="n">VarId</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">,</span> <span class="n">Data</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">VAR_VALUE_RECORD</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
                 <span class="n">value_list</span><span class="p">[</span><span class="n">VarId</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">GuidId</span><span class="p">,</span> <span class="n">Attributes</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">Tag0</span><span class="p">,</span> <span class="n">Tag1</span><span class="p">)</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="p">((</span><span class="n">Tag0</span> <span class="o">==</span> <span class="mh">0xff</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">Tag1</span> <span class="o">==</span> <span class="mh">0xff</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">Size</span> <span class="o">==</span> <span class="mh">0xffff</span><span class="p">)):</span>
@@ -989,7 +902,6 @@
             <span class="n">variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">var_value</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">guid</span><span class="p">,</span> <span class="n">var_value</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="n">fof</span> <span class="o">=</span> <span class="n">fof</span> <span class="o">+</span> <span class="n">Length</span>
     <span class="k">return</span> <span class="n">variables</span></div>
-
 
 
 <span class="c1">#</span>
@@ -1052,37 +964,26 @@
 <span class="c1"># Decoding S3 Resume Boot Script</span>
 <span class="c1">#</span>
 
-<div class="viewcode-block" id="S3BootScriptType">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.S3BootScriptType">[docs]</a>
-<span class="k">class</span> <span class="nc">S3BootScriptType</span><span class="p">:</span>
+<div class="viewcode-block" id="S3BootScriptType"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.S3BootScriptType">[docs]</a><span class="k">class</span> <span class="nc">S3BootScriptType</span><span class="p">:</span>
     <span class="n">EFI_BOOT_SCRIPT_TYPE_DEFAULT</span> <span class="o">=</span> <span class="mh">0x00</span>
     <span class="n">EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT</span> <span class="o">=</span> <span class="mh">0xAA</span></div>
 
 
-
-<div class="viewcode-block" id="decode_s3bs_opcode">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.decode_s3bs_opcode">[docs]</a>
-<span class="k">def</span> <span class="nf">decode_s3bs_opcode</span><span class="p">(</span><span class="n">s3bootscript_type</span><span class="p">,</span> <span class="n">script_data</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_s3bs_opcode"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.decode_s3bs_opcode">[docs]</a><span class="k">def</span> <span class="nf">decode_s3bs_opcode</span><span class="p">(</span><span class="n">s3bootscript_type</span><span class="p">,</span> <span class="n">script_data</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">S3BootScriptType</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT</span> <span class="o">==</span> <span class="n">s3bootscript_type</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">decode_s3bs_opcode_edkcompat</span><span class="p">(</span><span class="n">script_data</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">decode_s3bs_opcode_def</span><span class="p">(</span><span class="n">script_data</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="encode_s3bs_opcode">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bs_opcode">[docs]</a>
-<span class="k">def</span> <span class="nf">encode_s3bs_opcode</span><span class="p">(</span><span class="n">s3bootscript_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="n">S3BOOTSCRIPT_ENTRY</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="encode_s3bs_opcode"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bs_opcode">[docs]</a><span class="k">def</span> <span class="nf">encode_s3bs_opcode</span><span class="p">(</span><span class="n">s3bootscript_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="n">S3BOOTSCRIPT_ENTRY</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">S3BootScriptType</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT</span> <span class="o">==</span> <span class="n">s3bootscript_type</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">encode_s3bs_opcode_edkcompat</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">encode_s3bs_opcode_def</span><span class="p">(</span><span class="n">op</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="decode_s3bs_opcode_def">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.decode_s3bs_opcode_def">[docs]</a>
-<span class="k">def</span> <span class="nf">decode_s3bs_opcode_def</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_s3bs_opcode_def"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.decode_s3bs_opcode_def">[docs]</a><span class="k">def</span> <span class="nf">decode_s3bs_opcode_def</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="n">opcode</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">size</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">width</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1159,15 +1060,12 @@
 
     <span class="k">return</span> <span class="n">op</span></div>
 
-
 <span class="c1">#</span>
 <span class="c1"># @TODO: encode functions are not fully implemented</span>
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="encode_s3bs_opcode_def">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bs_opcode_def">[docs]</a>
-<span class="k">def</span> <span class="nf">encode_s3bs_opcode_def</span><span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="encode_s3bs_opcode_def"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bs_opcode_def">[docs]</a><span class="k">def</span> <span class="nf">encode_s3bs_opcode_def</span><span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">encoded_opcode</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
 
     <span class="k">if</span> <span class="n">S3BootScriptOpcode_MDE</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_IO_WRITE_OPCODE</span> <span class="o">==</span> <span class="n">op</span><span class="o">.</span><span class="n">opcode</span><span class="p">:</span>
@@ -1216,10 +1114,7 @@
     <span class="k">return</span> <span class="n">encoded_opcode</span></div>
 
 
-
-<div class="viewcode-block" id="decode_s3bs_opcode_edkcompat">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.decode_s3bs_opcode_edkcompat">[docs]</a>
-<span class="k">def</span> <span class="nf">decode_s3bs_opcode_edkcompat</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_s3bs_opcode_edkcompat"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.decode_s3bs_opcode_edkcompat">[docs]</a><span class="k">def</span> <span class="nf">decode_s3bs_opcode_edkcompat</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="n">opcode</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">width</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">count</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1289,15 +1184,12 @@
 
     <span class="k">return</span> <span class="n">op</span></div>
 
-
 <span class="c1">#</span>
 <span class="c1"># @TODO: encode functions are not fully implemented</span>
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="encode_s3bs_opcode_edkcompat">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bs_opcode_edkcompat">[docs]</a>
-<span class="k">def</span> <span class="nf">encode_s3bs_opcode_edkcompat</span><span class="p">(</span><span class="n">op</span><span class="p">:</span> <span class="n">S3BOOTSCRIPT_ENTRY</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="encode_s3bs_opcode_edkcompat"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bs_opcode_edkcompat">[docs]</a><span class="k">def</span> <span class="nf">encode_s3bs_opcode_edkcompat</span><span class="p">(</span><span class="n">op</span><span class="p">:</span> <span class="n">S3BOOTSCRIPT_ENTRY</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">encoded_opcode</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
 
     <span class="k">if</span> <span class="n">S3BootScriptOpcode_EdkCompat</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_IO_WRITE_OPCODE</span> <span class="o">==</span> <span class="n">op</span><span class="o">.</span><span class="n">opcode</span> <span class="ow">or</span> \
@@ -1335,10 +1227,7 @@
     <span class="k">return</span> <span class="n">encoded_opcode</span></div>
 
 
-
-<div class="viewcode-block" id="parse_s3bootscript_entry">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.parse_s3bootscript_entry">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_s3bootscript_entry</span><span class="p">(</span><span class="n">s3bootscript_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">script</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_s3bootscript_entry"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.parse_s3bootscript_entry">[docs]</a><span class="k">def</span> <span class="nf">parse_s3bootscript_entry</span><span class="p">(</span><span class="n">s3bootscript_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">script</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">off</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="n">entry_index</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">entry_length</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">opcode</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1372,7 +1261,7 @@
         <span class="n">f</span> <span class="o">=</span> <span class="n">fhdr</span> <span class="o">+</span> <span class="s1">&#39;B&#39;</span>
         <span class="k">if</span> <span class="n">remaining_len</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">hdr_length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">HAL</span><span class="p">:</span>
-                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The script should have at least 0x</span><span class="si">{</span><span class="n">hdr_length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> bytes to parse next entry&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="p">()</span><span class="o">.</span><span class="n">log_warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The script should have at least 0x</span><span class="si">{</span><span class="n">hdr_length</span> <span class="o">+</span> <span class="mi">1</span><span class="si">:</span><span class="s1">X</span><span class="si">}</span><span class="s1"> bytes to parse next entry&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="n">entry_index</span><span class="p">,</span> <span class="n">entry_length</span><span class="p">,</span> <span class="n">opcode</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">script</span><span class="p">[</span><span class="n">off</span><span class="p">:</span> <span class="n">off</span> <span class="o">+</span> <span class="n">hdr_length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
@@ -1395,10 +1284,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">opcode</span><span class="p">,</span> <span class="n">s3script_entry</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="encode_s3bootscript_entry">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bootscript_entry">[docs]</a>
-<span class="k">def</span> <span class="nf">encode_s3bootscript_entry</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+<div class="viewcode-block" id="encode_s3bootscript_entry"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.encode_s3bootscript_entry">[docs]</a><span class="k">def</span> <span class="nf">encode_s3bootscript_entry</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
     <span class="k">if</span> <span class="n">S3BootScriptType</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT</span> <span class="o">==</span> <span class="n">entry</span><span class="o">.</span><span class="n">script_type</span><span class="p">:</span>
         <span class="n">entry_hdr_buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;HB&#39;</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">decoded_opcode</span><span class="o">.</span><span class="n">opcode</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># S3BootScriptType.EFI_BOOT_SCRIPT_TYPE_DEFAULT</span>
@@ -1414,10 +1300,7 @@
     <span class="k">return</span> <span class="n">entry_buf</span></div>
 
 
-
-<div class="viewcode-block" id="create_s3bootscript_entry_buffer">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.create_s3bootscript_entry_buffer">[docs]</a>
-<span class="k">def</span> <span class="nf">create_s3bootscript_entry_buffer</span><span class="p">(</span><span class="n">script_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="create_s3bootscript_entry_buffer"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.create_s3bootscript_entry_buffer">[docs]</a><span class="k">def</span> <span class="nf">create_s3bootscript_entry_buffer</span><span class="p">(</span><span class="n">script_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">entry_val_buf</span> <span class="o">=</span> <span class="n">encode_s3bs_opcode</span><span class="p">(</span><span class="n">script_type</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
     <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry_val_buf</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">S3BootScriptType</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_TYPE_EDKCOMPAT</span> <span class="o">==</span> <span class="n">script_type</span><span class="p">:</span>
@@ -1430,10 +1313,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">entry_hdr_buf</span> <span class="o">+</span> <span class="n">entry_val_buf</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="id_s3bootscript_type">
-<a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.id_s3bootscript_type">[docs]</a>
-<span class="k">def</span> <span class="nf">id_s3bootscript_type</span><span class="p">(</span><span class="n">script</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="id_s3bootscript_type"><a class="viewcode-back" href="../../../modules/chipsec.hal.uefi_platform.html#chipsec.hal.uefi_platform.id_s3bootscript_type">[docs]</a><span class="k">def</span> <span class="nf">id_s3bootscript_type</span><span class="p">(</span><span class="n">script</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">log_script</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
     <span class="n">script_header_length</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">start_op</span><span class="p">,</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;B&#39;</span><span class="p">,</span> <span class="n">script</span><span class="p">[:</span> <span class="mi">1</span><span class="p">])</span>
@@ -1449,7 +1329,6 @@
         <span class="n">script_type</span> <span class="o">=</span> <span class="n">S3BootScriptType</span><span class="o">.</span><span class="n">EFI_BOOT_SCRIPT_TYPE_DEFAULT</span>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">script_type</span><span class="p">,</span> <span class="n">script_header_length</span><span class="p">)</span></div>
-
 
 
 <span class="c1">#</span>
@@ -1541,7 +1420,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1561,8 +1440,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

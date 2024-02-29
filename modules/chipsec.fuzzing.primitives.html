@@ -1,23 +1,24 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>primitives module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chipsec.fuzzing.primitives module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
-    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     
-    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Configuration Files" href="../development/Configuration-Files.html" />
-    <link rel="prev" title="fuzzing package" href="chipsec.fuzzing.html" /> 
+    <link rel="prev" title="chipsec.fuzzing package" href="chipsec.fuzzing.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -32,12 +33,12 @@
           <a href="../development/Configuration-Files.html" title="Configuration Files"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.fuzzing.html" title="fuzzing package"
+          <a href="chipsec.fuzzing.html" title="chipsec.fuzzing package"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.fuzzing.html" accesskey="U">fuzzing package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">primitives module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.fuzzing.html" accesskey="U">chipsec.fuzzing package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.fuzzing.primitives module</a></li> 
       </ul>
     </div>  
 
@@ -46,9 +47,233 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.fuzzing.primitives">
-<span id="primitives-module"></span><h1>primitives module<a class="headerlink" href="#module-chipsec.fuzzing.primitives" title="Link to this heading">¶</a></h1>
-</section>
+  <div class="section" id="module-chipsec.fuzzing.primitives">
+<span id="chipsec-fuzzing-primitives-module"></span><h1>chipsec.fuzzing.primitives module<a class="headerlink" href="#module-chipsec.fuzzing.primitives" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.base_primitive">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">base_primitive</span></span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#base_primitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.base_primitive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The primitive base class implements common functionality shared across most primitives.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.base_primitive.exhaust">
+<span class="sig-name descname"><span class="pre">exhaust</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#base_primitive.exhaust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.base_primitive.exhaust" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exhaust the possible mutations for this primitive.</p>
+<p>&#64;rtype:  Integer
+&#64;return: The number of mutations to reach exhaustion</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.base_primitive.mutate">
+<span class="sig-name descname"><span class="pre">mutate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#base_primitive.mutate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.base_primitive.mutate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mutate the primitive by stepping through the fuzz library, return False on completion.</p>
+<p>&#64;rtype:  Boolean
+&#64;return: True on success, False otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.base_primitive.num_mutations">
+<span class="sig-name descname"><span class="pre">num_mutations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#base_primitive.num_mutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.base_primitive.num_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the total number of mutations for this individual primitive.</p>
+<p>&#64;rtype:  Integer
+&#64;return: Number of mutated forms this primitive can take</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.base_primitive.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#base_primitive.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.base_primitive.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nothing fancy on render, simply return the value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.base_primitive.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#base_primitive.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.base_primitive.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset this primitive to the starting mutation state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.bit_field">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bit_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#bit_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.bit_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.base_primitive" title="chipsec.fuzzing.primitives.base_primitive"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.base_primitive</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.bit_field.add_integer_boundaries">
+<span class="sig-name descname"><span class="pre">add_integer_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#bit_field.add_integer_boundaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.bit_field.add_integer_boundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the supplied integer and border cases to the integer fuzz heuristics library.</p>
+<p>&#64;type  integer: Int
+&#64;param integer: Integer to append to fuzz heuristics</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.bit_field.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#bit_field.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.bit_field.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the primitive.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.bit_field.to_binary">
+<span class="sig-name descname"><span class="pre">to_binary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bit_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#bit_field.to_binary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.bit_field.to_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a number to a binary string.</p>
+<p>&#64;type  number:    Integer
+&#64;param number:    (Optional, def=self.value) Number to convert
+&#64;type  bit_count: Integer
+&#64;param bit_count: (Optional, def=self.width) Width of bit string</p>
+<p>&#64;rtype:  String
+&#64;return: Bit string</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.bit_field.to_decimal">
+<span class="sig-name descname"><span class="pre">to_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#bit_field.to_decimal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.bit_field.to_decimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a binary string to a decimal number.</p>
+<p>&#64;type  binary: String
+&#64;param binary: Binary string</p>
+<p>&#64;rtype:  Integer
+&#64;return: Converted bit string</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.byte">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">byte</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#byte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.byte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.bit_field" title="chipsec.fuzzing.primitives.bit_field"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.bit_field</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.delim">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#delim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.delim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.base_primitive" title="chipsec.fuzzing.primitives.base_primitive"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.base_primitive</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.dword">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#dword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.dword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.bit_field" title="chipsec.fuzzing.primitives.bit_field"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.bit_field</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.group">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.base_primitive" title="chipsec.fuzzing.primitives.base_primitive"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.base_primitive</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.group.mutate">
+<span class="sig-name descname"><span class="pre">mutate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#group.mutate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.group.mutate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move to the next item in the values list.</p>
+<p>&#64;rtype:  False
+&#64;return: False</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.group.num_mutations">
+<span class="sig-name descname"><span class="pre">num_mutations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#group.num_mutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.group.num_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of values in this primitive.</p>
+<p>&#64;rtype:  Integer
+&#64;return: Number of values in this primitive.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.qword">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#qword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.qword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.bit_field" title="chipsec.fuzzing.primitives.bit_field"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.bit_field</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.random_data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">random_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_mutations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#random_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.random_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.base_primitive" title="chipsec.fuzzing.primitives.base_primitive"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.base_primitive</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.random_data.mutate">
+<span class="sig-name descname"><span class="pre">mutate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#random_data.mutate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.random_data.mutate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mutate the primitive value returning False on completion.</p>
+<p>&#64;rtype:  Boolean
+&#64;return: True on success, False otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.random_data.num_mutations">
+<span class="sig-name descname"><span class="pre">num_mutations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#random_data.num_mutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.random_data.num_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the total number of mutations for this individual primitive.</p>
+<p>&#64;rtype:  Integer
+&#64;return: Number of mutated forms this primitive can take</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.static">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">static</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#static"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.static" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.base_primitive" title="chipsec.fuzzing.primitives.base_primitive"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.base_primitive</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.static.mutate">
+<span class="sig-name descname"><span class="pre">mutate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#static.mutate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.static.mutate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do nothing.</p>
+<p>&#64;rtype:  False
+&#64;return: False</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.static.num_mutations">
+<span class="sig-name descname"><span class="pre">num_mutations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#static.num_mutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.static.num_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return 0.</p>
+<p>&#64;rtype:  0
+&#64;return: 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.string">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\x00'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ascii'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.base_primitive" title="chipsec.fuzzing.primitives.base_primitive"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.base_primitive</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.string.add_long_strings">
+<span class="sig-name descname"><span class="pre">add_long_strings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#string.add_long_strings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.string.add_long_strings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a sequence, generate a number of selectively chosen strings lengths of the given sequence and add to the
+string heuristic library.</p>
+<p>&#64;type  sequence: String
+&#64;param sequence: Sequence to repeat for creation of fuzz strings.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.string.fuzz_library">
+<span class="sig-name descname"><span class="pre">fuzz_library</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#chipsec.fuzzing.primitives.string.fuzz_library" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.string.mutate">
+<span class="sig-name descname"><span class="pre">mutate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#string.mutate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.string.mutate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mutate the primitive by stepping through the fuzz library extended with the “this” library, return False on
+completion.</p>
+<p>&#64;rtype:  Boolean
+&#64;return: True on success, False otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.string.num_mutations">
+<span class="sig-name descname"><span class="pre">num_mutations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#string.num_mutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.string.num_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the total number of mutations for this individual primitive.</p>
+<p>&#64;rtype:  Integer
+&#64;return: Number of mutated forms this primitive can take</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.string.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#string.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.string.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the primitive, encode the string according to the specified encoding.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chipsec.fuzzing.primitives.word">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuzzable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/fuzzing/primitives.html#word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.fuzzing.primitives.word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chipsec.fuzzing.primitives.bit_field" title="chipsec.fuzzing.primitives.bit_field"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.fuzzing.primitives.bit_field</span></code></a></p>
+</dd></dl>
+
+</div>
 
 
             <div class="clearer"></div>
@@ -102,7 +327,7 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.fuzzing.html"
-                          title="previous chapter">fuzzing package</a></p>
+                          title="previous chapter">chipsec.fuzzing package</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -118,7 +343,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -136,17 +361,17 @@
           <a href="../development/Configuration-Files.html" title="Configuration Files"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.fuzzing.html" title="fuzzing package"
+          <a href="chipsec.fuzzing.html" title="chipsec.fuzzing package"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.fuzzing.html" >fuzzing package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">primitives module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.fuzzing.html" >chipsec.fuzzing package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.fuzzing.primitives module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jan 25, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

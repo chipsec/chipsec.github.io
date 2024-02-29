@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.modules.common.smm_code_chk &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
     
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
@@ -88,17 +90,13 @@
 <span class="n">TAGS</span> <span class="o">=</span> <span class="p">[</span><span class="n">MTAG_BIOS</span><span class="p">,</span> <span class="n">MTAG_SMM</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="smm_code_chk">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk">[docs]</a>
-<span class="k">class</span> <span class="nc">smm_code_chk</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<div class="viewcode-block" id="smm_code_chk"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk">[docs]</a><span class="k">class</span> <span class="nc">smm_code_chk</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="p">(</span><span class="mh">0x08f743d</span><span class="p">,</span> <span class="s1">&#39;https://chipsec.github.io/modules/chipsec.modules.common.smm_code_chk.html&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="smm_code_chk.is_supported">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk.is_supported">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="smm_code_chk.is_supported"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk.is_supported">[docs]</a>    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">is_register_defined</span><span class="p">(</span><span class="s1">&#39;MSR_SMM_FEATURE_CONTROL&#39;</span><span class="p">):</span>
             <span class="c1"># The MSR_SMM_FEATURE_CONTROL register is available starting from:</span>
             <span class="c1"># * 4th Generation Intel® Core™ Processors (Haswell microarchitecture)</span>
@@ -120,7 +118,6 @@
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span></div>
-
 
     <span class="k">def</span> <span class="nf">_check_SMM_Code_Chk_En</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">regval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="s1">&#39;MSR_SMM_FEATURE_CONTROL&#39;</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
@@ -146,9 +143,7 @@
 
         <span class="k">return</span> <span class="n">res</span>
 
-<div class="viewcode-block" id="smm_code_chk.check_SMM_Code_Chk_En">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk.check_SMM_Code_Chk_En">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_SMM_Code_Chk_En</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="smm_code_chk.check_SMM_Code_Chk_En"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk.check_SMM_Code_Chk_En">[docs]</a>    <span class="k">def</span> <span class="nf">check_SMM_Code_Chk_En</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">msr</span><span class="o">.</span><span class="n">get_cpu_thread_count</span><span class="p">()):</span>
@@ -174,19 +169,14 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc_res</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
 
-
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># run( module_argv )</span>
     <span class="c1"># Required function: run here all tests from this module</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="smm_code_chk.run">
-<a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="smm_code_chk.run"><a class="viewcode-back" href="../../../../modules/chipsec.modules.common.smm_code_chk.html#chipsec.modules.common.smm_code_chk.smm_code_chk.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s2">&quot;SMM_Code_Chk_En (SMM Call-Out) Protection&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_SMM_Code_Chk_En</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div>
-</div>
-
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -246,7 +236,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -266,8 +256,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

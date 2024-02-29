@@ -1,18 +1,20 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="../../../">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chipsec.library.bits &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
-    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
     
-    <link rel="icon" href="../../../_static/chipsec_favicon.jpg"/>
+    <link rel="shortcut icon" href="../../../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -125,52 +127,34 @@
 <span class="n">BIT63</span> <span class="o">=</span> <span class="mh">0x8000000000000000</span>
 
 
-<div class="viewcode-block" id="bit">
-<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.bit">[docs]</a>
-<span class="k">def</span> <span class="nf">bit</span><span class="p">(</span><span class="n">bit_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="bit"><a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.bit">[docs]</a><span class="k">def</span> <span class="nf">bit</span><span class="p">(</span><span class="n">bit_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">bit_num</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="is_set">
-<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.is_set">[docs]</a>
-<span class="k">def</span> <span class="nf">is_set</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bit_mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="is_set"><a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.is_set">[docs]</a><span class="k">def</span> <span class="nf">is_set</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bit_mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">val</span> <span class="o">&amp;</span> <span class="n">bit_mask</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="scan_single_bit_mask">
-<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.scan_single_bit_mask">[docs]</a>
-<span class="k">def</span> <span class="nf">scan_single_bit_mask</span><span class="p">(</span><span class="n">bit_mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="scan_single_bit_mask"><a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.scan_single_bit_mask">[docs]</a><span class="k">def</span> <span class="nf">scan_single_bit_mask</span><span class="p">(</span><span class="n">bit_mask</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
     <span class="k">for</span> <span class="n">bit_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">bit_mask</span> <span class="o">&gt;&gt;</span> <span class="n">bit_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">bit_num</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-
-<div class="viewcode-block" id="is_all_ones">
-<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.is_all_ones">[docs]</a>
-<span class="k">def</span> <span class="nf">is_all_ones</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="is_all_ones"><a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.is_all_ones">[docs]</a><span class="k">def</span> <span class="nf">is_all_ones</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="n">width</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="p">(</span><span class="n">mask</span> <span class="o">&amp;</span> <span class="n">value</span><span class="p">))</span></div>
 
 
-
-<div class="viewcode-block" id="ones_complement">
-<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.ones_complement">[docs]</a>
-<span class="k">def</span> <span class="nf">ones_complement</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">number_of_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="ones_complement"><a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.ones_complement">[docs]</a><span class="k">def</span> <span class="nf">ones_complement</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">number_of_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">number_of_bits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">^</span> <span class="n">value</span></div>
 
 
-
-<div class="viewcode-block" id="get_bits">
-<a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.get_bits">[docs]</a>
-<span class="k">def</span> <span class="nf">get_bits</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nbits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="get_bits"><a class="viewcode-back" href="../../../modules/chipsec.library.bits.html#chipsec.library.bits.get_bits">[docs]</a><span class="k">def</span> <span class="nf">get_bits</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nbits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">start</span>
     <span class="n">ret</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">nbits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">ret</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -230,7 +214,7 @@
     </form>
     </div>
 </div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -250,8 +234,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 18, 2023.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Feb 29, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>
