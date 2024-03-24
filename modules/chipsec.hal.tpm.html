@@ -1,24 +1,23 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.hal.tpm module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>tpm module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.hal.tpm12_commands module" href="chipsec.hal.tpm12_commands.html" />
-    <link rel="prev" title="chipsec.hal.spi_uefi module" href="chipsec.hal.spi_uefi.html" /> 
+    <link rel="next" title="tpm12_commands module" href="chipsec.hal.tpm12_commands.html" />
+    <link rel="prev" title="spi_uefi module" href="chipsec.hal.spi_uefi.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.tpm12_commands.html" title="chipsec.hal.tpm12_commands module"
+          <a href="chipsec.hal.tpm12_commands.html" title="tpm12_commands module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi_uefi.html" title="chipsec.hal.spi_uefi module"
+          <a href="chipsec.hal.spi_uefi.html" title="spi_uefi module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.tpm module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tpm module</a></li> 
       </ul>
     </div>  
 
@@ -47,75 +46,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-chipsec.hal.tpm">
-<span id="chipsec-hal-tpm-module"></span><h1>chipsec.hal.tpm module<a class="headerlink" href="#module-chipsec.hal.tpm" title="Permalink to this headline">¶</a></h1>
+  <section id="module-chipsec.hal.tpm">
+<span id="tpm-module"></span><h1>tpm module<a class="headerlink" href="#module-chipsec.hal.tpm" title="Permalink to this heading">¶</a></h1>
 <p>Trusted Platform Module (TPM) HAL component</p>
 <p><a class="reference external" href="https://trustedcomputinggroup.org">https://trustedcomputinggroup.org</a></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TPM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commandName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">command_argv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send command to the TPM and receive data</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.dump_access">
-<span class="sig-name descname"><span class="pre">dump_access</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_access"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_access" title="Permalink to this definition">¶</a></dt>
-<dd><p>View the contents of the register used to gain ownership of the TPM</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.dump_didvid">
-<span class="sig-name descname"><span class="pre">dump_didvid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_didvid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_didvid" title="Permalink to this definition">¶</a></dt>
-<dd><p>TPM’s Vendor and Device ID</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.dump_intcap">
-<span class="sig-name descname"><span class="pre">dump_intcap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_intcap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_intcap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provides information of which interrupts that particular TPM supports</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.dump_intenable">
-<span class="sig-name descname"><span class="pre">dump_intenable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_intenable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_intenable" title="Permalink to this definition">¶</a></dt>
-<dd><p>View the contents of the register used to enable specific interrupts</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.dump_register">
-<span class="sig-name descname"><span class="pre">dump_register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">register_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_register" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.dump_rid">
-<span class="sig-name descname"><span class="pre">dump_rid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_rid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_rid" title="Permalink to this definition">¶</a></dt>
-<dd><p>TPM’s Revision ID</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.dump_status">
-<span class="sig-name descname"><span class="pre">dump_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.dump_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.dump_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>View general status details</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM.log_register_header">
-<span class="sig-name descname"><span class="pre">log_register_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">register_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM.log_register_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM.log_register_header" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.tpm.TPM_RESPONSE_HEADER">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TPM_RESPONSE_HEADER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ResponseTag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DataSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ReturnCode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/tpm.html#TPM_RESPONSE_HEADER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.tpm.TPM_RESPONSE_HEADER" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.tpm.TPM_RESPONSE_HEADER" title="chipsec.hal.tpm.TPM_RESPONSE_HEADER"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.tpm.TPM_RESPONSE_HEADER</span></code></a></p>
-</dd></dl>
-
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -169,12 +104,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.hal.spi_uefi.html"
-                          title="previous chapter">chipsec.hal.spi_uefi module</a></p>
+                          title="previous chapter">spi_uefi module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.hal.tpm12_commands.html"
-                          title="next chapter">chipsec.hal.tpm12_commands module</a></p>
+                          title="next chapter">tpm12_commands module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -185,7 +120,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -200,20 +135,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.tpm12_commands.html" title="chipsec.hal.tpm12_commands module"
+          <a href="chipsec.hal.tpm12_commands.html" title="tpm12_commands module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi_uefi.html" title="chipsec.hal.spi_uefi module"
+          <a href="chipsec.hal.spi_uefi.html" title="spi_uefi module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.tpm module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tpm module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 29, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Mar 24, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>

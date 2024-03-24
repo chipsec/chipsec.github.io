@@ -1,24 +1,23 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.hal.virtmem module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>virtmem module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.hal.vmm module" href="chipsec.hal.vmm.html" />
-    <link rel="prev" title="chipsec.hal.uefi_search module" href="chipsec.hal.uefi_search.html" /> 
+    <link rel="next" title="vmm module" href="chipsec.hal.vmm.html" />
+    <link rel="prev" title="uefi_search module" href="chipsec.hal.uefi_search.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.vmm.html" title="chipsec.hal.vmm module"
+          <a href="chipsec.hal.vmm.html" title="vmm module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_search.html" title="chipsec.hal.uefi_search module"
+          <a href="chipsec.hal.uefi_search.html" title="uefi_search module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.virtmem module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">virtmem module</a></li> 
       </ul>
     </div>  
 
@@ -47,8 +46,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-chipsec.hal.virtmem">
-<span id="chipsec-hal-virtmem-module"></span><h1>chipsec.hal.virtmem module<a class="headerlink" href="#module-chipsec.hal.virtmem" title="Permalink to this headline">¶</a></h1>
+  <section id="module-chipsec.hal.virtmem">
+<span id="virtmem-module"></span><h1>virtmem module<a class="headerlink" href="#module-chipsec.hal.virtmem" title="Permalink to this heading">¶</a></h1>
 <p>Access to virtual memory</p>
 <dl>
 <dt>usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_virtual_mem</span><span class="p">(</span> <span class="mh">0xf0000</span><span class="p">,</span> <span class="mh">0x100</span> <span class="p">)</span>
@@ -59,68 +58,7 @@
 </div>
 </dd>
 </dl>
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VirtMemory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="chipsec.hal.hal_base.html#chipsec.hal.hal_base.HALBase" title="chipsec.hal.hal_base.HALBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.hal_base.HALBase</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.alloc_virtual_mem">
-<span class="sig-name descname"><span class="pre">alloc_virtual_mem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_phys_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">18446744073709551615</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.alloc_virtual_mem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.alloc_virtual_mem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.free_virtual_mem">
-<span class="sig-name descname"><span class="pre">free_virtual_mem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.free_virtual_mem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.free_virtual_mem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.read_virtual_mem">
-<span class="sig-name descname"><span class="pre">read_virtual_mem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.read_virtual_mem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.read_virtual_mem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.read_virtual_mem_byte">
-<span class="sig-name descname"><span class="pre">read_virtual_mem_byte</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.read_virtual_mem_byte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_byte" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.read_virtual_mem_dword">
-<span class="sig-name descname"><span class="pre">read_virtual_mem_dword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.read_virtual_mem_dword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_dword" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.read_virtual_mem_word">
-<span class="sig-name descname"><span class="pre">read_virtual_mem_word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.read_virtual_mem_word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.read_virtual_mem_word" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.va2pa">
-<span class="sig-name descname"><span class="pre">va2pa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">va</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.va2pa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.va2pa" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.write_virtual_mem">
-<span class="sig-name descname"><span class="pre">write_virtual_mem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.write_virtual_mem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.write_virtual_mem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.write_virtual_mem_byte">
-<span class="sig-name descname"><span class="pre">write_virtual_mem_byte</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">byte_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.write_virtual_mem_byte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_byte" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.write_virtual_mem_dword">
-<span class="sig-name descname"><span class="pre">write_virtual_mem_dword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dword_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.write_virtual_mem_dword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_dword" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.virtmem.VirtMemory.write_virtual_mem_word">
-<span class="sig-name descname"><span class="pre">write_virtual_mem_word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">virt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/virtmem.html#VirtMemory.write_virtual_mem_word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.virtmem.VirtMemory.write_virtual_mem_word" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -174,12 +112,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.hal.uefi_search.html"
-                          title="previous chapter">chipsec.hal.uefi_search module</a></p>
+                          title="previous chapter">uefi_search module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.hal.vmm.html"
-                          title="next chapter">chipsec.hal.vmm module</a></p>
+                          title="next chapter">vmm module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -190,7 +128,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -205,20 +143,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.vmm.html" title="chipsec.hal.vmm module"
+          <a href="chipsec.hal.vmm.html" title="vmm module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_search.html" title="chipsec.hal.uefi_search module"
+          <a href="chipsec.hal.uefi_search.html" title="uefi_search module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.virtmem module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">virtmem module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 29, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Mar 24, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>

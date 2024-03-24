@@ -1,20 +1,19 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Sample module code template &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="&lt;no title&gt;" href="Sample-Util-Command.html" />
@@ -45,35 +44,36 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="sample-module-code-template">
-<h1>Sample module code template<a class="headerlink" href="#sample-module-code-template" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">ModuleResult</span>
+  <section id="sample-module-code-template">
+<h1>Sample module code template<a class="headerlink" href="#sample-module-code-template" title="Permalink to this heading">¶</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">chipsec.library.returncode</span> <span class="kn">import</span> <span class="n">ModuleResult</span>
 
 <span class="k">class</span> <span class="nc">ModuleClass</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class name aligns with file name, eg ModuleClass.py&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class name aligns with file name, eg ModuleClass.py&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Module prerequisite checks&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Module prerequisite checks&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">some_module_requirement</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Module is applicable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
         <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Module is not applicable</span>
 
     <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Module test logic and methods as needed&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Module test logic and methods as needed&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">&#39;Module was successful!&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Primary module execution and result handling&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Primary module execution and result handling&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s1">&#39;Module Description&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span>
 </pre></div>
 </div>
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -143,7 +143,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -168,8 +168,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 29, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Mar 24, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>

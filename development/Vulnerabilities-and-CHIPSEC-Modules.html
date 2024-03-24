@@ -1,23 +1,22 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>CHIPSEC Modules &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.modules package" href="../modules/chipsec.modules.html" />
+    <link rel="next" title="modules package" href="../modules/chipsec.modules.html" />
     <link rel="prev" title="&lt;no title&gt;" href="Sample-Util-Command.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,7 +29,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../modules/chipsec.modules.html" title="chipsec.modules package"
+          <a href="../modules/chipsec.modules.html" title="modules package"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Sample-Util-Command.html" title="&lt;no title&gt;"
@@ -45,15 +44,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="chipsec-modules">
-<h1>CHIPSEC Modules<a class="headerlink" href="#chipsec-modules" title="Permalink to this headline">¶</a></h1>
+  <section id="chipsec-modules">
+<h1>CHIPSEC Modules<a class="headerlink" href="#chipsec-modules" title="Permalink to this heading">¶</a></h1>
 <p>A CHIPSEC module is just a python class that inherits from BaseModule and implements <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and <code class="docutils literal notranslate"><span class="pre">run</span></code>. Modules are stored under the chipsec installation directory in a subdirectory “modules”. The “modules” directory contains one subdirectory for each chipset that chipsec supports. There is also a directory for common modules that should apply to every platform.</p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 67%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/modules/</span></code></p></td>
 <td><p>modules including tests or tools (that’s where most of the chipsec functionality is)</p></td>
@@ -76,11 +71,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 <p>Known vulnerabilities can be mapped to CHIPSEC modules as follows:</p>
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Firmware protections in ROM</strong></span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -124,11 +114,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id2">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Runtime protection of SMRAM</strong></span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -164,11 +149,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id3">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Secure boot -</strong> Incorrect protection of secure boot configuration</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -204,11 +184,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id4">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Persistent firmware configuration</strong></span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -256,11 +231,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id5">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Platform hardware configuration</strong></span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -292,11 +262,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id6">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Runtime firmware (eg. SMI handlers)</strong></span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -340,11 +305,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id7">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Boot time firmware</strong></span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -376,11 +336,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id8">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Power state transitions (eg. resume from sleep)</strong></span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -420,11 +375,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id9">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Firmware update</strong></span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -452,11 +402,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id10">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Network interfaces</strong></span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -476,11 +421,6 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </table>
 <table class="docutils align-default" id="id11">
 <caption><span class="caption-text"><strong>Attack Surface/Vector: Misc</strong></span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Vulnerability Description</p></th>
 <th class="head"><p>CHIPSEC Module</p></th>
@@ -498,100 +438,121 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
 </tr>
 </tbody>
 </table>
-<div class="section" id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules/chipsec.modules.html">List of modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.bdw.html">chipsec.modules.bdw package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.bdw.html#module-chipsec.modules.bdw">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.bdw.html">bdw package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.byt.html">byt package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.common.html">common package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.html">cpu package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.cpu_info.html">cpu_info module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.ia_untrusted.html">ia_untrusted module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.spectre_v2.html">spectre_v2 module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.byt.html">chipsec.modules.byt package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.byt.html#module-chipsec.modules.byt">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.secureboot.html">secureboot package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.secureboot.variables.html">variables module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.html">chipsec.modules.common package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.html">chipsec.modules.common.cpu package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.html#submodules">Submodules</a><ul>
-<li class="toctree-l7"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.cpu_info.html">chipsec.modules.common.cpu.cpu_info module</a></li>
-<li class="toctree-l7"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.ia_untrusted.html">chipsec.modules.common.cpu.ia_untrusted module</a></li>
-<li class="toctree-l7"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.spectre_v2.html">chipsec.modules.common.cpu.spectre_v2 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.html">uefi package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.access_uefispec.html">access_uefispec module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.s3bootscript.html">s3bootscript module</a></li>
 </ul>
 </li>
-<li class="toctree-l6"><a class="reference internal" href="../modules/chipsec.modules.common.cpu.html#module-chipsec.modules.common.cpu">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.bios_kbrd_buffer.html">bios_kbrd_buffer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.bios_smi.html">bios_smi module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.bios_ts.html">bios_ts module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.bios_wp.html">bios_wp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.cet.html">cet module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.debugenabled.html">debugenabled module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.ia32cfg.html">ia32cfg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.me_mfg_mode.html">me_mfg_mode module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.memconfig.html">memconfig module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.memlock.html">memlock module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.remap.html">remap module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.rtclock.html">rtclock module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.sgx_check.html">sgx_check module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.smm.html">smm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.smm_code_chk.html">smm_code_chk module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.smm_dma.html">smm_dma module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.smrr.html">smrr module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.spd_wd.html">spd_wd module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.spi_access.html">spi_access module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.spi_desc.html">spi_desc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.spi_fdopss.html">spi_fdopss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.common.spi_lock.html">spi_lock module</a></li>
 </ul>
 </li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.secureboot.html">chipsec.modules.common.secureboot package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="../modules/chipsec.modules.common.secureboot.html#submodules">Submodules</a><ul>
-<li class="toctree-l7"><a class="reference internal" href="../modules/chipsec.modules.common.secureboot.variables.html">chipsec.modules.common.secureboot.variables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.hsw.html">hsw package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.ivb.html">ivb package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.snb.html">snb package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.tools.html">tools package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.tools.cpu.html">cpu package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.cpu.sinkhole.html">sinkhole module</a></li>
 </ul>
 </li>
-<li class="toctree-l6"><a class="reference internal" href="../modules/chipsec.modules.common.secureboot.html#module-chipsec.modules.common.secureboot">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.tools.secureboot.html">secureboot package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.secureboot.te.html">te module</a></li>
 </ul>
 </li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.html">chipsec.modules.common.uefi package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.html#submodules">Submodules</a><ul>
-<li class="toctree-l7"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.access_uefispec.html">chipsec.modules.common.uefi.access_uefispec module</a></li>
-<li class="toctree-l7"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.s3bootscript.html">chipsec.modules.common.uefi.s3bootscript module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.tools.smm.html">smm package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.smm.rogue_mmio_bar.html">rogue_mmio_bar module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.smm.smm_ptr.html">smm_ptr module</a></li>
 </ul>
 </li>
-<li class="toctree-l6"><a class="reference internal" href="../modules/chipsec.modules.common.uefi.html#module-chipsec.modules.common.uefi">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.tools.uefi.html">uefi package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.uefi.reputation.html">reputation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.uefi.s3script_modify.html">s3script_modify module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.uefi.scan_blocked.html">scan_blocked module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.uefi.scan_image.html">scan_image module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.uefi.uefivar_fuzz.html">uefivar_fuzz module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.html">vmm package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.html">hv package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.define.html">define module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.hypercall.html">hypercall module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.hypercallfuzz.html">hypercallfuzz module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.synth_dev.html">synth_dev module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.synth_kbd.html">synth_kbd module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.vmbus.html">vmbus module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hv.vmbusfuzz.html">vmbusfuzz module</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.html#submodules">Submodules</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.bios_kbrd_buffer.html">chipsec.modules.common.bios_kbrd_buffer module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.bios_smi.html">chipsec.modules.common.bios_smi module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.bios_ts.html">chipsec.modules.common.bios_ts module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.bios_wp.html">chipsec.modules.common.bios_wp module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.cet.html">chipsec.modules.common.cet module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.debugenabled.html">chipsec.modules.common.debugenabled module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.ia32cfg.html">chipsec.modules.common.ia32cfg module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.me_mfg_mode.html">chipsec.modules.common.me_mfg_mode module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.memconfig.html">chipsec.modules.common.memconfig module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.memlock.html">chipsec.modules.common.memlock module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.remap.html">chipsec.modules.common.remap module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.rtclock.html">chipsec.modules.common.rtclock module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.sgx_check.html">chipsec.modules.common.sgx_check module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.smm.html">chipsec.modules.common.smm module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.smm_code_chk.html">chipsec.modules.common.smm_code_chk module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.smm_dma.html">chipsec.modules.common.smm_dma module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.smrr.html">chipsec.modules.common.smrr module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.spd_wd.html">chipsec.modules.common.spd_wd module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.spi_access.html">chipsec.modules.common.spi_access module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.spi_desc.html">chipsec.modules.common.spi_desc module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.spi_fdopss.html">chipsec.modules.common.spi_fdopss module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.common.spi_lock.html">chipsec.modules.common.spi_lock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.vbox.html">vbox package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.vbox.vbox_crash_apicbase.html">vbox_crash_apicbase module</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.common.html#module-chipsec.modules.common">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.xen.html">xen package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.xen.define.html">define module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.xen.hypercall.html">hypercall module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.xen.hypercallfuzz.html">hypercallfuzz module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.xen.xsa188.html">xsa188 module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.hsw.html">chipsec.modules.hsw package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.hsw.html#module-chipsec.modules.hsw">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.common.html">common module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.cpuid_fuzz.html">cpuid_fuzz module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.ept_finder.html">ept_finder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.hypercallfuzz.html">hypercallfuzz module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.iofuzz.html">iofuzz module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.msr_fuzz.html">msr_fuzz module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.pcie_fuzz.html">pcie_fuzz module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.pcie_overlap_fuzz.html">pcie_overlap_fuzz module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.tools.vmm.venom.html">venom module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.ivb.html">chipsec.modules.ivb package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.ivb.html#module-chipsec.modules.ivb">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.tools.generate_test_id.html">generate_test_id module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.tools.wsmt.html">wsmt module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../modules/chipsec.modules.snb.html">chipsec.modules.snb package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../modules/chipsec.modules.snb.html#module-chipsec.modules.snb">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../modules/chipsec.modules.html#module-chipsec.modules">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -650,7 +611,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="../modules/chipsec.modules.html"
-                          title="next chapter">chipsec.modules package</a></p>
+                          title="next chapter">modules package</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -661,7 +622,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -676,7 +637,7 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../modules/chipsec.modules.html" title="chipsec.modules package"
+          <a href="../modules/chipsec.modules.html" title="modules package"
              >next</a> |</li>
         <li class="right" >
           <a href="Sample-Util-Command.html" title="&lt;no title&gt;"
@@ -686,8 +647,8 @@ This means module <code class="docutils literal notranslate"><span class="pre">c
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 29, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Mar 24, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>

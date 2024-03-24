@@ -1,24 +1,23 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.hal.uefi_common module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>uefi_common module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.hal.uefi_compression module" href="chipsec.hal.uefi_compression.html" />
-    <link rel="prev" title="chipsec.hal.uefi module" href="chipsec.hal.uefi.html" /> 
+    <link rel="next" title="uefi_compression module" href="chipsec.hal.uefi_compression.html" />
+    <link rel="prev" title="uefi module" href="chipsec.hal.uefi.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_compression.html" title="chipsec.hal.uefi_compression module"
+          <a href="chipsec.hal.uefi_compression.html" title="uefi_compression module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi.html" title="chipsec.hal.uefi module"
+          <a href="chipsec.hal.uefi.html" title="uefi module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_common module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefi_common module</a></li> 
       </ul>
     </div>  
 
@@ -47,643 +46,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-chipsec.hal.uefi_common">
-<span id="chipsec-hal-uefi-common-module"></span><h1>chipsec.hal.uefi_common module<a class="headerlink" href="#module-chipsec.hal.uefi_common" title="Permalink to this headline">¶</a></h1>
+  <section id="module-chipsec.hal.uefi_common">
+<span id="uefi-common-module"></span><h1>uefi_common module<a class="headerlink" href="#module-chipsec.hal.uefi_common" title="Permalink to this heading">¶</a></h1>
 <p>Common UEFI/EFI functionality including UEFI variables, Firmware Volumes, Secure Boot variables, S3 boot-script, UEFI tables, etc.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_BOOT_SERVICES_TABLE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_BOOT_SERVICES_TABLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">RaiseTPL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RestoreTPL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AllocatePages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FreePages</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetMemoryMap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AllocatePool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FreePool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CreateEvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetTimer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">WaitForEvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SignalEvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CloseEvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CheckEvent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">InstallProtocolInterface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ReinstallProtocolInterface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UninstallProtocolInterface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HandleProtocol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RegisterProtocolNotify</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LocateHandle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LocateDevicePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">InstallConfigurationTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LoadImage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">StartImage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Exit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UnloadImage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ExitBootServices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetNextMonotonicCount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Stall</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetWatchdogTimer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ConnectController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DisconnectController</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OpenProtocol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CloseProtocol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OpenProtocolInformation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ProtocolsPerHandle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LocateHandleBuffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LocateProtocol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">InstallMultipleProtocolInterfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UninstallMultipleProtocolInterfaces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CalculateCrc32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CopyMem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetMem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CreateEventEx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_BOOT_SERVICES_TABLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_BOOT_SERVICES_TABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.EFI_BOOT_SERVICES_TABLE" title="chipsec.hal.uefi_common.EFI_BOOT_SERVICES_TABLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.EFI_BOOT_SERVICES_TABLE</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_CONFIGURATION_TABLE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_CONFIGURATION_TABLE</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_CONFIGURATION_TABLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_CONFIGURATION_TABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_DXE_SERVICES_TABLE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_DXE_SERVICES_TABLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">AddMemorySpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AllocateMemorySpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FreeMemorySpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RemoveMemorySpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetMemorySpaceDescriptor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetMemorySpaceAttributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetMemorySpaceMap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AddIoSpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AllocateIoSpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FreeIoSpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RemoveIoSpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetIoSpaceDescriptor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetIoSpaceMap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Dispatch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Trust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ProcessFirmwareVolume</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_DXE_SERVICES_TABLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_DXE_SERVICES_TABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.EFI_DXE_SERVICES_TABLE" title="chipsec.hal.uefi_common.EFI_DXE_SERVICES_TABLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.EFI_DXE_SERVICES_TABLE</span></code></a></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_ERROR_STR">
-<span class="sig-name descname"><span class="pre">EFI_ERROR_STR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_ERROR_STR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_ERROR_STR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translates an EFI_STATUS value into its corresponding textual representation.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_GUID_STR">
-<span class="sig-name descname"><span class="pre">EFI_GUID_STR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_GUID_STR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_GUID_STR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_RUNTIME_SERVICES_TABLE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_RUNTIME_SERVICES_TABLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GetTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetWakeupTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetWakeupTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetVirtualAddressMap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ConvertPointer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetNextVariableName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SetVariable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GetNextHighMonotonicCount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ResetSystem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UpdateCapsule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QueryCapsuleCapabilities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QueryVariableInfo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_RUNTIME_SERVICES_TABLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_RUNTIME_SERVICES_TABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.EFI_RUNTIME_SERVICES_TABLE" title="chipsec.hal.uefi_common.EFI_RUNTIME_SERVICES_TABLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.EFI_RUNTIME_SERVICES_TABLE</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_SYSTEM_TABLE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_SYSTEM_TABLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FirmwareVendor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FirmwareRevision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ConsoleInHandle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ConIn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ConsoleOutHandle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ConOut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">StandardErrorHandle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">StdErr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RuntimeServices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BootServices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NumberOfTableEntries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ConfigurationTable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_SYSTEM_TABLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_SYSTEM_TABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.EFI_SYSTEM_TABLE" title="chipsec.hal.uefi_common.EFI_SYSTEM_TABLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.EFI_SYSTEM_TABLE</span></code></a></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_SYSTEM_TABLE_REVISION">
-<span class="sig-name descname"><span class="pre">EFI_SYSTEM_TABLE_REVISION</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_SYSTEM_TABLE_REVISION"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_SYSTEM_TABLE_REVISION" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_TABLE_HEADER">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_TABLE_HEADER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Signature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Revision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">HeaderSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CRC32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Reserved</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_TABLE_HEADER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_TABLE_HEADER" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.EFI_TABLE_HEADER" title="chipsec.hal.uefi_common.EFI_TABLE_HEADER"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.EFI_TABLE_HEADER</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_VENDOR_TABLE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EFI_VENDOR_TABLE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">VendorGuidData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VendorTable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_VENDOR_TABLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_VENDOR_TABLE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.EFI_VENDOR_TABLE" title="chipsec.hal.uefi_common.EFI_VENDOR_TABLE"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.EFI_VENDOR_TABLE</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.EFI_VENDOR_TABLE.VendorGuid">
-<span class="sig-name descname"><span class="pre">VendorGuid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#EFI_VENDOR_TABLE.VendorGuid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.EFI_VENDOR_TABLE.VendorGuid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.IS_EFI_VARIABLE_AUTHENTICATED">
-<span class="sig-name descname"><span class="pre">IS_EFI_VARIABLE_AUTHENTICATED</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#IS_EFI_VARIABLE_AUTHENTICATED"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.IS_EFI_VARIABLE_AUTHENTICATED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.IS_VARIABLE_ATTRIBUTE">
-<span class="sig-name descname"><span class="pre">IS_VARIABLE_ATTRIBUTE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_Mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#IS_VARIABLE_ATTRIBUTE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.IS_VARIABLE_ATTRIBUTE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S3BOOTSCRIPT_ENTRY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_in_script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#S3BOOTSCRIPT_ENTRY"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.S3BOOTSCRIPT_ENTRY" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S3BootScriptOpcode</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#S3BootScriptOpcode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_DISPATCH_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_DISPATCH_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_DISPATCH_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_IO_READ_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_IO_READ_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_IO_READ_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_IO_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_IO_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_IO_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_MEM_READ_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_MEM_READ_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_MEM_READ_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_MEM_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_MEM_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_MEM_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_PCI_CONFIG_READ_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG_READ_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_PCI_CONFIG_READ_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_PCI_CONFIG_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_PCI_CONFIG_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_SMBUS_EXECUTE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_SMBUS_EXECUTE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_SMBUS_EXECUTE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_STALL_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_STALL_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_STALL_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_TERMINATE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_TERMINATE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode.EFI_BOOT_SCRIPT_TERMINATE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S3BootScriptOpcode_EdkCompat</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#S3BootScriptOpcode_EdkCompat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.S3BootScriptOpcode" title="chipsec.hal.uefi_common.S3BootScriptOpcode"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.S3BootScriptOpcode</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_INFORMATION_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_INFORMATION_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_INFORMATION_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_MEM_POLL_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_MEM_POLL_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_MEM_POLL_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_TABLE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_TABLE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">170</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_EdkCompat.EFI_BOOT_SCRIPT_TABLE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S3BootScriptOpcode_MDE</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#S3BootScriptOpcode_MDE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#chipsec.hal.uefi_common.S3BootScriptOpcode" title="chipsec.hal.uefi_common.S3BootScriptOpcode"><code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.hal.uefi_common.S3BootScriptOpcode</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_DISPATCH_2_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_DISPATCH_2_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_DISPATCH_2_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_INFORMATION_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_INFORMATION_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_INFORMATION_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_IO_POLL_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_IO_POLL_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_IO_POLL_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_MEM_POLL_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_MEM_POLL_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_MEM_POLL_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG2_POLL_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG2_POLL_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG2_POLL_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG2_READ_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG2_WRITE_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG_POLL_OPCODE">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_PCI_CONFIG_POLL_OPCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">15</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptOpcode_MDE.EFI_BOOT_SCRIPT_PCI_CONFIG_POLL_OPCODE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S3BootScriptSmbusOperation</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#S3BootScriptSmbusOperation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.BWBR_PROCESS_CALL">
-<span class="sig-name descname"><span class="pre">BWBR_PROCESS_CALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.BWBR_PROCESS_CALL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.PROCESS_CALL">
-<span class="sig-name descname"><span class="pre">PROCESS_CALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.PROCESS_CALL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.QUICK_READ">
-<span class="sig-name descname"><span class="pre">QUICK_READ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.QUICK_READ" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.QUICK_WRITE">
-<span class="sig-name descname"><span class="pre">QUICK_WRITE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.QUICK_WRITE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.READ_BLOCK">
-<span class="sig-name descname"><span class="pre">READ_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.READ_BLOCK" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.READ_BYTE">
-<span class="sig-name descname"><span class="pre">READ_BYTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.READ_BYTE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.READ_WORD">
-<span class="sig-name descname"><span class="pre">READ_WORD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.READ_WORD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.RECEIVE_BYTE">
-<span class="sig-name descname"><span class="pre">RECEIVE_BYTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.RECEIVE_BYTE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.SEND_BYTE">
-<span class="sig-name descname"><span class="pre">SEND_BYTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.SEND_BYTE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.WRITE_BLOCK">
-<span class="sig-name descname"><span class="pre">WRITE_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.WRITE_BLOCK" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.WRITE_BYTE">
-<span class="sig-name descname"><span class="pre">WRITE_BYTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.WRITE_BYTE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptSmbusOperation.WRITE_WORD">
-<span class="sig-name descname"><span class="pre">WRITE_WORD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptSmbusOperation.WRITE_WORD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptWidth">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S3BootScriptWidth</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#S3BootScriptWidth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptWidth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT16">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_WIDTH_UINT16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT16" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT32">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_WIDTH_UINT32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT32" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT64">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_WIDTH_UINT64</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT64" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT8">
-<span class="sig-name descname"><span class="pre">EFI_BOOT_SCRIPT_WIDTH_UINT8</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.S3BootScriptWidth.EFI_BOOT_SCRIPT_WIDTH_UINT8" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StatusCode</span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#StatusCode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_ABORTED">
-<span class="sig-name descname"><span class="pre">EFI_ABORTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_ABORTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_ACCESS_DENIED">
-<span class="sig-name descname"><span class="pre">EFI_ACCESS_DENIED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">15</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_ACCESS_DENIED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_ALREADY_STARTED">
-<span class="sig-name descname"><span class="pre">EFI_ALREADY_STARTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_ALREADY_STARTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_BAD_BUFFER_SIZE">
-<span class="sig-name descname"><span class="pre">EFI_BAD_BUFFER_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_BAD_BUFFER_SIZE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_BUFFER_TOO_SMALL">
-<span class="sig-name descname"><span class="pre">EFI_BUFFER_TOO_SMALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_BUFFER_TOO_SMALL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_COMPROMISED_DATA">
-<span class="sig-name descname"><span class="pre">EFI_COMPROMISED_DATA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_COMPROMISED_DATA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_CRC_ERROR">
-<span class="sig-name descname"><span class="pre">EFI_CRC_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">27</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_CRC_ERROR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_DEVICE_ERROR">
-<span class="sig-name descname"><span class="pre">EFI_DEVICE_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_DEVICE_ERROR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_END_OF_FILE">
-<span class="sig-name descname"><span class="pre">EFI_END_OF_FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">31</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_END_OF_FILE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_END_OF_MEDIA">
-<span class="sig-name descname"><span class="pre">EFI_END_OF_MEDIA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">28</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_END_OF_MEDIA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_HTTP_ERROR">
-<span class="sig-name descname"><span class="pre">EFI_HTTP_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_HTTP_ERROR" title="Permalink to this definition">¶</a></dt>
-<dd><p>EFI_WARN_UNKNOWN_GLYPH    = 1
-EFI_WARN_DELETE_FAILURE   = 2
-EFI_WARN_WRITE_FAILURE    = 3
-EFI_WARN_BUFFER_TOO_SMALL = 4
-EFI_WARN_STALE_DATA       = 5
-EFI_WARN_FILE_SYSTEM      = 6</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_ICMP_ERROR">
-<span class="sig-name descname"><span class="pre">EFI_ICMP_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">22</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_ICMP_ERROR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_INCOMPATIBLE_VERSION">
-<span class="sig-name descname"><span class="pre">EFI_INCOMPATIBLE_VERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_INCOMPATIBLE_VERSION" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_INVALID_LANGUAGE">
-<span class="sig-name descname"><span class="pre">EFI_INVALID_LANGUAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_INVALID_LANGUAGE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_INVALID_PARAMETER">
-<span class="sig-name descname"><span class="pre">EFI_INVALID_PARAMETER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_INVALID_PARAMETER" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_LOAD_ERROR">
-<span class="sig-name descname"><span class="pre">EFI_LOAD_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_LOAD_ERROR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_MEDIA_CHANGED">
-<span class="sig-name descname"><span class="pre">EFI_MEDIA_CHANGED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_MEDIA_CHANGED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_NOT_FOUND">
-<span class="sig-name descname"><span class="pre">EFI_NOT_FOUND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_NOT_FOUND" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_NOT_READY">
-<span class="sig-name descname"><span class="pre">EFI_NOT_READY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_NOT_READY" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_NOT_STARTED">
-<span class="sig-name descname"><span class="pre">EFI_NOT_STARTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">19</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_NOT_STARTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_NO_MAPPING">
-<span class="sig-name descname"><span class="pre">EFI_NO_MAPPING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_NO_MAPPING" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_NO_MEDIA">
-<span class="sig-name descname"><span class="pre">EFI_NO_MEDIA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_NO_MEDIA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_NO_RESPONSE">
-<span class="sig-name descname"><span class="pre">EFI_NO_RESPONSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_NO_RESPONSE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_OUT_OF_RESOURCES">
-<span class="sig-name descname"><span class="pre">EFI_OUT_OF_RESOURCES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_OUT_OF_RESOURCES" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_PROTOCOL_ERROR">
-<span class="sig-name descname"><span class="pre">EFI_PROTOCOL_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">24</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_PROTOCOL_ERROR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_SECURITY_VIOLATION">
-<span class="sig-name descname"><span class="pre">EFI_SECURITY_VIOLATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">26</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_SECURITY_VIOLATION" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_SUCCESS">
-<span class="sig-name descname"><span class="pre">EFI_SUCCESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_SUCCESS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_TFTP_ERROR">
-<span class="sig-name descname"><span class="pre">EFI_TFTP_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">23</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_TFTP_ERROR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_TIMEOUT">
-<span class="sig-name descname"><span class="pre">EFI_TIMEOUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">18</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_TIMEOUT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_UNSUPPORTED">
-<span class="sig-name descname"><span class="pre">EFI_UNSUPPORTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_UNSUPPORTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_VOLUME_CORRUPTED">
-<span class="sig-name descname"><span class="pre">EFI_VOLUME_CORRUPTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_VOLUME_CORRUPTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_VOLUME_FULL">
-<span class="sig-name descname"><span class="pre">EFI_VOLUME_FULL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_VOLUME_FULL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.StatusCode.EFI_WRITE_PROTECTED">
-<span class="sig-name descname"><span class="pre">EFI_WRITE_PROTECTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#chipsec.hal.uefi_common.StatusCode.EFI_WRITE_PROTECTED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.align">
-<span class="sig-name descname"><span class="pre">align</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">of</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#align"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.align" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.bit_set">
-<span class="sig-name descname"><span class="pre">bit_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#bit_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.bit_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.get_3b_size">
-<span class="sig-name descname"><span class="pre">get_3b_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#get_3b_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.get_3b_size" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.get_nvar_name">
-<span class="sig-name descname"><span class="pre">get_nvar_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvram</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isAscii</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#get_nvar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.get_nvar_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.op_dispatch">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">op_dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entrypoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#op_dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.op_dispatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.op_io_pci_mem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">op_io_pci_mem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#op_io_pci_mem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.op_io_pci_mem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.op_mem_poll">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">op_mem_poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">looptimes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#op_mem_poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.op_mem_poll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.op_smbus_execute">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">op_smbus_execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peccheck</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#op_smbus_execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.op_smbus_execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.op_stall">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">op_stall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#op_stall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.op_stall" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.op_terminate">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">op_terminate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#op_terminate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.op_terminate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.op_unknown">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">op_unknown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#op_unknown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.op_unknown" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_auth_var">
-<span class="sig-name descname"><span class="pre">parse_auth_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decode_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_auth_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_auth_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_efivar_file">
-<span class="sig-name descname"><span class="pre">parse_efivar_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_efivar_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_efivar_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_esal_var">
-<span class="sig-name descname"><span class="pre">parse_esal_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decode_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_esal_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_esal_var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_external">
-<span class="sig-name descname"><span class="pre">parse_external</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_external"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_external" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_pkcs7">
-<span class="sig-name descname"><span class="pre">parse_pkcs7</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_pkcs7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_pkcs7" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_rsa2048">
-<span class="sig-name descname"><span class="pre">parse_rsa2048</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_rsa2048"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_rsa2048" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_rsa2048_sha1">
-<span class="sig-name descname"><span class="pre">parse_rsa2048_sha1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_rsa2048_sha1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_rsa2048_sha1" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_rsa2048_sha256">
-<span class="sig-name descname"><span class="pre">parse_rsa2048_sha256</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_rsa2048_sha256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_rsa2048_sha256" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_sb_db">
-<span class="sig-name descname"><span class="pre">parse_sb_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decode_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_sb_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_sb_db" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_sha1">
-<span class="sig-name descname"><span class="pre">parse_sha1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_sha1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_sha1" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_sha224">
-<span class="sig-name descname"><span class="pre">parse_sha224</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_sha224"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_sha224" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_sha256">
-<span class="sig-name descname"><span class="pre">parse_sha256</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_sha256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_sha256" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_sha384">
-<span class="sig-name descname"><span class="pre">parse_sha384</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_sha384"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_sha384" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_sha512">
-<span class="sig-name descname"><span class="pre">parse_sha512</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_sha512"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_sha512" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_x509">
-<span class="sig-name descname"><span class="pre">parse_x509</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_x509"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_x509" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_x509_sha256">
-<span class="sig-name descname"><span class="pre">parse_x509_sha256</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_x509_sha256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_x509_sha256" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_x509_sha384">
-<span class="sig-name descname"><span class="pre">parse_x509_sha384</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_x509_sha384"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_x509_sha384" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chipsec.hal.uefi_common.parse_x509_sha512">
-<span class="sig-name descname"><span class="pre">parse_x509_sha512</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/hal/uefi_common.html#parse_x509_sha512"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.hal.uefi_common.parse_x509_sha512" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -737,12 +103,12 @@ EFI_WARN_FILE_SYSTEM      = 6</p>
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.hal.uefi.html"
-                          title="previous chapter">chipsec.hal.uefi module</a></p>
+                          title="previous chapter">uefi module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.hal.uefi_compression.html"
-                          title="next chapter">chipsec.hal.uefi_compression module</a></p>
+                          title="next chapter">uefi_compression module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -753,7 +119,7 @@ EFI_WARN_FILE_SYSTEM      = 6</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -768,20 +134,20 @@ EFI_WARN_FILE_SYSTEM      = 6</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi_compression.html" title="chipsec.hal.uefi_compression module"
+          <a href="chipsec.hal.uefi_compression.html" title="uefi_compression module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.uefi.html" title="chipsec.hal.uefi module"
+          <a href="chipsec.hal.uefi.html" title="uefi module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.uefi_common module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefi_common module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 29, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Mar 24, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>
