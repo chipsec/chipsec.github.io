@@ -1,24 +1,23 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.utilcmd.uefi_cmd module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>uefi_cmd module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.utilcmd.vmem_cmd module" href="chipsec.utilcmd.vmem_cmd.html" />
-    <link rel="prev" title="chipsec.utilcmd.ucode_cmd module" href="chipsec.utilcmd.ucode_cmd.html" /> 
+    <link rel="next" title="vmem_cmd module" href="chipsec.utilcmd.vmem_cmd.html" />
+    <link rel="prev" title="ucode_cmd module" href="chipsec.utilcmd.ucode_cmd.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.vmem_cmd.html" title="chipsec.utilcmd.vmem_cmd module"
+          <a href="chipsec.utilcmd.vmem_cmd.html" title="vmem_cmd module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.ucode_cmd.html" title="chipsec.utilcmd.ucode_cmd module"
+          <a href="chipsec.utilcmd.ucode_cmd.html" title="ucode_cmd module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">chipsec.utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.uefi_cmd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefi_cmd module</a></li> 
       </ul>
     </div>  
 
@@ -47,8 +46,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-chipsec.utilcmd.uefi_cmd">
-<span id="chipsec-utilcmd-uefi-cmd-module"></span><h1>chipsec.utilcmd.uefi_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.uefi_cmd" title="Permalink to this headline">¶</a></h1>
+  <section id="module-chipsec.utilcmd.uefi_cmd">
+<span id="uefi-cmd-module"></span><h1>uefi_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.uefi_cmd" title="Link to this heading">¶</a></h1>
 <p>The uefi command provides access to UEFI variables, both on the live system and in a SPI flash image file.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">types</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="nb">list</span>
@@ -80,108 +79,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">replace</span>  <span class="n">AAAAAAAA</span><span class="o">-</span><span class="n">BBBB</span><span class="o">-</span><span class="n">CCCC</span><span class="o">-</span><span class="n">DDDD</span><span class="o">-</span><span class="n">EEEEEEEEEEEE</span> <span class="n">bios</span><span class="o">.</span><span class="n">bin</span> <span class="n">new_bios</span><span class="o">.</span><span class="n">bin</span> <span class="n">mydriver</span><span class="o">.</span><span class="n">efi</span>
 </pre></div>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UEFICommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.assemble">
-<span class="sig-name descname"><span class="pre">assemble</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.assemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.assemble" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.decode">
-<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.decode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.insert_after">
-<span class="sig-name descname"><span class="pre">insert_after</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.insert_after"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.insert_after" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.insert_before">
-<span class="sig-name descname"><span class="pre">insert_before</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.insert_before"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.insert_before" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.keys">
-<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.keys" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.nvram">
-<span class="sig-name descname"><span class="pre">nvram</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.nvram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.nvram" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.nvram_auth">
-<span class="sig-name descname"><span class="pre">nvram_auth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.nvram_auth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.nvram_auth" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.parse_arguments">
-<span class="sig-name descname"><span class="pre">parse_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.parse_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.parse_arguments" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.remove" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.replace">
-<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.replace" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.requirements">
-<span class="sig-name descname"><span class="pre">requirements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">chipsec.command.toLoad</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.requirements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.requirements" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.s3bootscript">
-<span class="sig-name descname"><span class="pre">s3bootscript</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.s3bootscript"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.s3bootscript" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.set_up">
-<span class="sig-name descname"><span class="pre">set_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.set_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.set_up" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.tables">
-<span class="sig-name descname"><span class="pre">tables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.tables" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_delete">
-<span class="sig-name descname"><span class="pre">var_delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_find">
-<span class="sig-name descname"><span class="pre">var_find</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_find" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_list">
-<span class="sig-name descname"><span class="pre">var_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_read">
-<span class="sig-name descname"><span class="pre">var_read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_read" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.uefi_cmd.UEFICommand.var_write">
-<span class="sig-name descname"><span class="pre">var_write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/uefi_cmd.html#UEFICommand.var_write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.uefi_cmd.UEFICommand.var_write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -235,12 +133,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.utilcmd.ucode_cmd.html"
-                          title="previous chapter">chipsec.utilcmd.ucode_cmd module</a></p>
+                          title="previous chapter">ucode_cmd module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.utilcmd.vmem_cmd.html"
-                          title="next chapter">chipsec.utilcmd.vmem_cmd module</a></p>
+                          title="next chapter">vmem_cmd module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -251,7 +149,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -266,20 +164,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.vmem_cmd.html" title="chipsec.utilcmd.vmem_cmd module"
+          <a href="chipsec.utilcmd.vmem_cmd.html" title="vmem_cmd module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.ucode_cmd.html" title="chipsec.utilcmd.ucode_cmd module"
+          <a href="chipsec.utilcmd.ucode_cmd.html" title="ucode_cmd module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >chipsec.utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.uefi_cmd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">uefi_cmd module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 29, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Mar 27, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
