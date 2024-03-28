@@ -1,24 +1,23 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chipsec.utilcmd.cmos_cmd module &#8212; CHIPSEC  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>cmos_cmd module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
-    <link rel="shortcut icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.utilcmd.config_cmd module" href="chipsec.utilcmd.config_cmd.html" />
-    <link rel="prev" title="chipsec.utilcmd.chipset_cmd module" href="chipsec.utilcmd.chipset_cmd.html" /> 
+    <link rel="next" title="config_cmd module" href="chipsec.utilcmd.config_cmd.html" />
+    <link rel="prev" title="chipset_cmd module" href="chipsec.utilcmd.chipset_cmd.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.config_cmd.html" title="chipsec.utilcmd.config_cmd module"
+          <a href="chipsec.utilcmd.config_cmd.html" title="config_cmd module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.chipset_cmd.html" title="chipsec.utilcmd.chipset_cmd module"
+          <a href="chipsec.utilcmd.chipset_cmd.html" title="chipset_cmd module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">chipsec.utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.cmos_cmd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cmos_cmd module</a></li> 
       </ul>
     </div>  
 
@@ -47,8 +46,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-chipsec.utilcmd.cmos_cmd">
-<span id="chipsec-utilcmd-cmos-cmd-module"></span><h1>chipsec.utilcmd.cmos_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.cmos_cmd" title="Permalink to this headline">¶</a></h1>
+  <section id="module-chipsec.utilcmd.cmos_cmd">
+<span id="cmos-cmd-module"></span><h1>cmos_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.cmos_cmd" title="Link to this heading">¶</a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cmos</span> <span class="n">dump</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cmos</span> <span class="n">readl</span><span class="o">|</span><span class="n">writel</span><span class="o">|</span><span class="n">readh</span><span class="o">|</span><span class="n">writeh</span> <span class="o">&lt;</span><span class="n">byte_offset</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">byte_val</span><span class="p">]</span>
 </pre></div>
@@ -59,53 +58,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">cmos</span> <span class="n">writeh</span> <span class="mh">0x0</span> <span class="mh">0xCC</span>
 </pre></div>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CMOSCommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">chipsec.command.BaseCommand</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_dump">
-<span class="sig-name descname"><span class="pre">cmos_dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.cmos_dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_dump" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_readh">
-<span class="sig-name descname"><span class="pre">cmos_readh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.cmos_readh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_readh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_readl">
-<span class="sig-name descname"><span class="pre">cmos_readl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.cmos_readl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_readl" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_writeh">
-<span class="sig-name descname"><span class="pre">cmos_writeh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.cmos_writeh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_writeh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_writel">
-<span class="sig-name descname"><span class="pre">cmos_writel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.cmos_writel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.cmos_writel" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.parse_arguments">
-<span class="sig-name descname"><span class="pre">parse_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.parse_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.parse_arguments" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.requirements">
-<span class="sig-name descname"><span class="pre">requirements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">chipsec.command.toLoad</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.requirements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.requirements" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chipsec.utilcmd.cmos_cmd.CMOSCommand.set_up">
-<span class="sig-name descname"><span class="pre">set_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/chipsec/utilcmd/cmos_cmd.html#CMOSCommand.set_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chipsec.utilcmd.cmos_cmd.CMOSCommand.set_up" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -159,12 +112,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="chipsec.utilcmd.chipset_cmd.html"
-                          title="previous chapter">chipsec.utilcmd.chipset_cmd module</a></p>
+                          title="previous chapter">chipset_cmd module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="chipsec.utilcmd.config_cmd.html"
-                          title="next chapter">chipsec.utilcmd.config_cmd module</a></p>
+                          title="next chapter">config_cmd module</a></p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -175,7 +128,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -190,20 +143,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.config_cmd.html" title="chipsec.utilcmd.config_cmd module"
+          <a href="chipsec.utilcmd.config_cmd.html" title="config_cmd module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.chipset_cmd.html" title="chipsec.utilcmd.chipset_cmd module"
+          <a href="chipsec.utilcmd.chipset_cmd.html" title="chipset_cmd module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >chipsec.utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.cmos_cmd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cmos_cmd module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Feb 29, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Last updated on Mar 28, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
