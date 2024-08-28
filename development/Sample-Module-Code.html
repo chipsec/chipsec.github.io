@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Sample module code template &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=7bbeba18" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b3ba4146"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="Sample-Util-Command.html" />
+    <link rel="next" title="Util Command" href="Sample-Util-Command.html" />
     <link rel="prev" title="Methods for Platform Detection" href="Platform-Detection.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -29,7 +29,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Sample-Util-Command.html" title="&lt;no title&gt;"
+          <a href="Sample-Util-Command.html" title="Util Command"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Platform-Detection.html" title="Methods for Platform Detection"
@@ -45,7 +45,7 @@
           <div class="body" role="main">
             
   <section id="sample-module-code-template">
-<h1>Sample module code template<a class="headerlink" href="#sample-module-code-template" title="Permalink to this heading">¶</a></h1>
+<h1>Sample module code template<a class="headerlink" href="#sample-module-code-template" title="Link to this heading">¶</a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chipsec.module_common</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 <span class="kn">from</span> <span class="nn">chipsec.library.returncode</span> <span class="kn">import</span> <span class="n">ModuleResult</span>
 
@@ -54,19 +54,19 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Module prerequisite checks&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">some_module_requirement</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Module is applicable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
         <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Module is not applicable</span>
 
-    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Module test logic and methods as needed&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">&#39;Module was successful!&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Primary module execution and result handling&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s1">&#39;Module Description&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">()</span>
@@ -80,10 +80,10 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo of CHIPSEC"/>
             </a></p>
 <h3><a href="../index.html">Table of Contents</a></h3>
 <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
@@ -111,6 +111,7 @@
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
@@ -135,9 +136,9 @@
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="Sample-Util-Command.html"
-                          title="next chapter">&lt;no title&gt;</a></p>
+                          title="next chapter">Util Command</a></p>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -145,13 +146,13 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -161,7 +162,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Sample-Util-Command.html" title="&lt;no title&gt;"
+          <a href="Sample-Util-Command.html" title="Util Command"
              >next</a> |</li>
         <li class="right" >
           <a href="Platform-Detection.html" title="Methods for Platform Detection"
@@ -171,8 +172,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jul 30, 2024.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Last updated on Aug 28, 2024.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     </div>
   </body>
 </html>
