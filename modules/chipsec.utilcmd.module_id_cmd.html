@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>chipsec.hal.spi_jedec_ids module &#8212; CHIPSEC  documentation</title>
+    <title>chipsec.utilcmd.module_id_cmd module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
     
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.hal.spi_uefi module" href="chipsec.hal.spi_uefi.html" />
-    <link rel="prev" title="chipsec.hal.spi_descriptor module" href="chipsec.hal.spi_descriptor.html" /> 
+    <link rel="next" title="chipsec.utilcmd.msgbus_cmd module" href="chipsec.utilcmd.msgbus_cmd.html" />
+    <link rel="prev" title="chipsec.utilcmd.mmio_cmd module" href="chipsec.utilcmd.mmio_cmd.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
@@ -29,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi_uefi.html" title="chipsec.hal.spi_uefi module"
+          <a href="chipsec.utilcmd.msgbus_cmd.html" title="chipsec.utilcmd.msgbus_cmd module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi_descriptor.html" title="chipsec.hal.spi_descriptor module"
+          <a href="chipsec.utilcmd.mmio_cmd.html" title="chipsec.utilcmd.mmio_cmd module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spi_jedec_ids module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">chipsec.utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.module_id_cmd module</a></li> 
       </ul>
     </div>  
 
@@ -46,9 +46,20 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.hal.spi_jedec_ids">
-<span id="chipsec-hal-spi-jedec-ids-module"></span><h1>chipsec.hal.spi_jedec_ids module<a class="headerlink" href="#module-chipsec.hal.spi_jedec_ids" title="Link to this heading">¶</a></h1>
-<p>JEDED ID : Manufacturers and Device IDs</p>
+  <section id="module-chipsec.utilcmd.module_id_cmd">
+<span id="chipsec-utilcmd-module-id-cmd-module"></span><h1>chipsec.utilcmd.module_id_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.module_id_cmd" title="Link to this heading">¶</a></h1>
+<p>Generate a module ID using hashlib from the module’s file name (no file extension).
+Hash is truncated to 28 bits. For module names use full path as seen in example below.</p>
+<dl>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_util</span> <span class="pre">id</span> <span class="pre">name</span> <span class="pre">&lt;module</span> <span class="pre">name&gt;</span></code>
+<code class="docutils literal notranslate"><span class="pre">chipsec_util</span> <span class="pre">id</span> <span class="pre">hash</span> <span class="pre">&lt;module</span> <span class="pre">hash&gt;</span></code></p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">py</span> <span class="nb">id</span> <span class="n">name</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">remap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span><span class="o">.</span><span class="n">py</span> <span class="nb">id</span> <span class="nb">hash</span> <span class="mh">0x67eb58d</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </section>
 
 
@@ -106,13 +117,13 @@
 
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="chipsec.hal.spi_descriptor.html"
-                          title="previous chapter">chipsec.hal.spi_descriptor module</a></p>
+    <p class="topless"><a href="chipsec.utilcmd.mmio_cmd.html"
+                          title="previous chapter">chipsec.utilcmd.mmio_cmd module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="chipsec.hal.spi_uefi.html"
-                          title="next chapter">chipsec.hal.spi_uefi module</a></p>
+    <p class="topless"><a href="chipsec.utilcmd.msgbus_cmd.html"
+                          title="next chapter">chipsec.utilcmd.msgbus_cmd module</a></p>
   </div>
 <search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -138,15 +149,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi_uefi.html" title="chipsec.hal.spi_uefi module"
+          <a href="chipsec.utilcmd.msgbus_cmd.html" title="chipsec.utilcmd.msgbus_cmd module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.hal.spi_descriptor.html" title="chipsec.hal.spi_descriptor module"
+          <a href="chipsec.utilcmd.mmio_cmd.html" title="chipsec.utilcmd.mmio_cmd module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.hal.spi_jedec_ids module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >chipsec.utilcmd package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.module_id_cmd module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
