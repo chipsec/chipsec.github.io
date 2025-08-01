@@ -7,10 +7,10 @@
 
     <title>Windows Installation &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
     
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
@@ -19,7 +19,7 @@
     <link rel="next" title="Building a Bootable USB drive with UEFI Shell (x64)" href="USBwithUEFIShell.html" />
     <link rel="prev" title="DAL Windows Installation" href="InstallWinDAL.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="Related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -225,8 +225,7 @@ manner (such as by parsing MCFG table and mapping configuration space to virtual
 generates a Stop error. For more detail please refer below link: <a class="reference external" href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/performance/stop-error-lenovo-thinkpad-kb4568831-uefi">https://learn.microsoft.com/en-us/troubleshoot/windows-client/performance/stop-error-lenovo-thinkpad-kb4568831-uefi</a></p>
 <p><strong>Filter Driver and Main Helper Driver Architecture</strong></p>
 <figure class="align-default" id="id1">
-<a class="reference internal image-reference" href="../_images/driver_architecture.png"><img alt="CHIPSEC Main &amp; Filter Driver Architecture" src="../_images/driver_architecture.png" style="width: 1100px; height: 1000px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/driver_architecture.png"><img alt="CHIPSEC Main &amp; Filter Driver Architecture" src="../_images/driver_architecture.png" style="width: 1100px; height: 1000px;" /></a>
 <figcaption>
 <p><span class="caption-text">CHIPSEC Main &amp; Filter Driver Architecture</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
@@ -236,68 +235,58 @@ generates a Stop error. For more detail please refer below link: <a class="refer
 <h2>Install PCI Filter Driver<a class="headerlink" href="#install-pci-filter-driver" title="Link to this heading">¶</a></h2>
 <p><strong>1. Locate the Filter Driver Files: chipsec/helper/windows/windows_amd64/</strong></p>
 <figure class="align-default">
-<a class="reference internal image-reference" href="../_images/driver_files.png"><img alt="Check The Filter Driver Files" src="../_images/driver_files.png" style="width: 920px; height: 340px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/driver_files.png"><img alt="Check The Filter Driver Files" src="../_images/driver_files.png" style="width: 920px; height: 340px;" /></a>
 </figure>
 <p><strong>2. Update The PCI Device Driver From Device Manager</strong></p>
 <figure class="align-default">
-<a class="reference internal image-reference" href="../_images/update_driver.png"><img alt="Update The PCI Device Driver" src="../_images/update_driver.png" style="width: 920px; height: 630px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/update_driver.png"><img alt="Update The PCI Device Driver" src="../_images/update_driver.png" style="width: 920px; height: 630px;" /></a>
 </figure>
 <p><strong>3. Browse The PCI Filter Driver</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/browse_driver.png"><img alt="Browse The PCI Filter Driver" src="../_images/browse_driver.png" style="width: 920px; height: 630px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/browse_driver.png"><img alt="Browse The PCI Filter Driver" src="../_images/browse_driver.png" style="width: 920px; height: 630px;" /></a>
 </figure>
 </div></blockquote>
 <p><strong>4. Manually Select The PCI Bus Filter Driver</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/pickup_driver.png"><img alt="Pickup The PCI Filter Driver" src="../_images/pickup_driver.png" style="width: 920px; height: 630px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/pickup_driver.png"><img alt="Pickup The PCI Filter Driver" src="../_images/pickup_driver.png" style="width: 920px; height: 630px;" /></a>
 </figure>
 </div></blockquote>
 <p><strong>5. Install The Filter Driver From Disk</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/install_driver_from_disk.png"><img alt="Install The Filter Driver From Disk" src="../_images/install_driver_from_disk.png" style="width: 920px; height: 650px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/install_driver_from_disk.png"><img alt="Install The Filter Driver From Disk" src="../_images/install_driver_from_disk.png" style="width: 920px; height: 650px;" /></a>
 </figure>
 </div></blockquote>
 <p><strong>6. Installing The Filter Driver</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/installing_driver.png"><img alt="Installing The Filter Driver" src="../_images/installing_driver.png" style="width: 920px; height: 650px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/installing_driver.png"><img alt="Installing The Filter Driver" src="../_images/installing_driver.png" style="width: 920px; height: 650px;" /></a>
 </figure>
 </div></blockquote>
 <p><strong>7. Finish The Filter Driver Installing</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/installing_finished.png"><img alt="Finish The Filter Driver Installing" src="../_images/installing_finished.png" style="width: 920px; height: 650px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/installing_finished.png"><img alt="Finish The Filter Driver Installing" src="../_images/installing_finished.png" style="width: 920px; height: 650px;" /></a>
 </figure>
 </div></blockquote>
 <p><strong>8. Restart Computer</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/restart.png"><img alt="Restart Computer" src="../_images/restart.png" style="width: 920px; height: 420px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/restart.png"><img alt="Restart Computer" src="../_images/restart.png" style="width: 920px; height: 420px;" /></a>
 </figure>
 </div></blockquote>
 <p><strong>9. Check The Installed Device Driver From Device Manager</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/check_installed_driver.png"><img alt="Check The Installed Device Driver" src="../_images/check_installed_driver.png" style="width: 920px; height: 650px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/check_installed_driver.png"><img alt="Check The Installed Device Driver" src="../_images/check_installed_driver.png" style="width: 920px; height: 650px;" /></a>
 </figure>
 </div></blockquote>
 <p><strong>10. Check The Driver Device Info</strong></p>
 <blockquote>
 <div><figure class="align-default">
-<a class="reference internal image-reference" href="../_images/driver_dev_info.png"><img alt="Check The Driver Device Info" src="../_images/driver_dev_info.png" style="width: 700px; height: 700px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/driver_dev_info.png"><img alt="Check The Driver Device Info" src="../_images/driver_dev_info.png" style="width: 700px; height: 700px;" /></a>
 </figure>
 </div></blockquote>
 </section>
@@ -306,8 +295,7 @@ generates a Stop error. For more detail please refer below link: <a class="refer
 <p><strong>Dump PCI Config Test</strong></p>
 <blockquote>
 <div><figure class="align-default" id="id2">
-<a class="reference internal image-reference" href="../_images/pci_dump_test.png"><img alt="Dump PCI Config" src="../_images/pci_dump_test.png" style="width: 950px; height: 900px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/pci_dump_test.png"><img alt="Dump PCI Config" src="../_images/pci_dump_test.png" style="width: 950px; height: 900px;" /></a>
 <figcaption>
 <p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">chipsec_util.py</span> <span class="pre">pci</span> <span class="pre">dump</span> <span class="pre">0</span> <span class="pre">0</span> <span class="pre">0</span></code></span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
 </figcaption>
@@ -315,8 +303,7 @@ generates a Stop error. For more detail please refer below link: <a class="refer
 </div></blockquote>
 <dl>
 <dt><strong>PCI Enumeration Test</strong></dt><dd><figure class="align-default" id="id3">
-<a class="reference internal image-reference" href="../_images/pci_enum_test.png"><img alt="PCI Enumeration Test" src="../_images/pci_enum_test.png" style="width: 850px; height: 700px;" />
-</a>
+<a class="reference internal image-reference" href="../_images/pci_enum_test.png"><img alt="PCI Enumeration Test" src="../_images/pci_enum_test.png" style="width: 850px; height: 700px;" /></a>
 <figcaption>
 <p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">chipsec_util.py</span> <span class="pre">pci</span> <span class="pre">enumerate</span></code></span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
 </figcaption>
@@ -331,10 +318,10 @@ generates a Stop error. For more detail please refer below link: <a class="refer
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo of CHIPSEC"/>
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
             </a></p>
 <h3><a href="../index.html">Table of Contents</a></h3>
 <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
@@ -389,7 +376,7 @@ generates a Stop error. For more detail please refer below link: <a class="refer
     <p class="topless"><a href="USBwithUEFIShell.html"
                           title="next chapter">Building a Bootable USB drive with UEFI Shell (x64)</a></p>
   </div>
-<search id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -397,13 +384,13 @@ generates a Stop error. For more detail please refer below link: <a class="refer
       <input type="submit" value="Go" />
     </form>
     </div>
-</search>
+</div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="Related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -423,8 +410,8 @@ generates a Stop error. For more detail please refer below link: <a class="refer
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jun 26, 2025.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Last updated on Aug 01, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
