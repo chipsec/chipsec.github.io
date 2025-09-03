@@ -7,10 +7,10 @@
 
     <title>chipsec.modules.common.smm_code_chk module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=f40a2feb" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
     
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
@@ -19,7 +19,7 @@
     <link rel="next" title="chipsec.modules.common.smm_dma module" href="chipsec.modules.common.smm_dma.html" />
     <link rel="prev" title="chipsec.modules.common.smm_close module" href="chipsec.modules.common.smm_close.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -50,7 +50,7 @@
   <section id="module-chipsec.modules.common.smm_code_chk">
 <span id="chipsec-modules-common-smm-code-chk-module"></span><h1>chipsec.modules.common.smm_code_chk module<a class="headerlink" href="#module-chipsec.modules.common.smm_code_chk" title="Link to this heading">¶</a></h1>
 <p>SMM_CODE_CHK_EN (SMM Call-Out) Protection check</p>
-<p>SMM_CODE_CHK_EN is a bit found in the MSR_SMM_FEATURE_CONTROL register.
+<p>SMM_CODE_CHK_EN is a bit found in the SMM_FEATURE_CONTROL register.
 Once set to ‘1’, any CPU that attempts to execute SMM code not within the ranges defined by the SMRR will assert an unrecoverable MCE.
 As such, enabling and locking this bit is an important step in mitigating SMM call-out vulnerabilities.
 This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is set and locked.</p>
@@ -72,15 +72,15 @@ This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is
 </div>
 </dd>
 <dt>Registers used:</dt><dd><ul class="simple">
-<li><p>MSR_SMM_FEATURE_CONTROL.LOCK</p></li>
-<li><p>MSR_SMM_FEATURE_CONTROL.SMM_CODE_CHK_EN</p></li>
+<li><p>SMM_FEATURE_CONTROL.LOCK</p></li>
+<li><p>SMM_FEATURE_CONTROL.SMM_CODE_CHK_EN</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>MSR_SMM_FEATURE_CONTROL may not be defined or readable on all platforms.</p></li>
+<li><p>SMM_FEATURE_CONTROL may not be defined or readable on all platforms.</p></li>
 </ul>
 </div>
 </section>
@@ -90,10 +90,10 @@ This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo"/>
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo of CHIPSEC"/>
             </a></p>
 <h3><a href="../index.html">Table of Contents</a></h3>
 <p class="caption" role="heading"><span class="caption-text">Start here</span></p>
@@ -148,7 +148,7 @@ This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is
     <p class="topless"><a href="chipsec.modules.common.smm_dma.html"
                           title="next chapter">chipsec.modules.common.smm_dma module</a></p>
   </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -156,13 +156,13 @@ This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -185,8 +185,8 @@ This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Aug 01, 2025.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+      Last updated on Sep 02, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>
