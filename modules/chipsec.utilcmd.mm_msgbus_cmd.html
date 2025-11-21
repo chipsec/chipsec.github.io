@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>chipsec.utilcmd.mm_msgbus_cmd module &#8212; CHIPSEC  documentation</title>
+    <title>chipsec.hal.ec module &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
     
@@ -16,8 +16,8 @@
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="chipsec.utilcmd.mmcfg_base_cmd module" href="chipsec.utilcmd.mmcfg_base_cmd.html" />
-    <link rel="prev" title="chipsec.utilcmd.mem_cmd module" href="chipsec.utilcmd.mem_cmd.html" /> 
+    <link rel="next" title="chipsec.hal.hal_base module" href="chipsec.hal.hal_base.html" />
+    <link rel="prev" title="chipsec.hal.cpuid module" href="chipsec.hal.cpuid.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
@@ -29,15 +29,15 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.mmcfg_base_cmd.html" title="chipsec.utilcmd.mmcfg_base_cmd module"
+          <a href="chipsec.hal.hal_base.html" title="chipsec.hal.hal_base module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.mem_cmd.html" title="chipsec.utilcmd.mem_cmd module"
+          <a href="chipsec.hal.cpuid.html" title="chipsec.hal.cpuid module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" accesskey="U">chipsec.utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.mm_msgbus_cmd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" accesskey="U">chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.ec module</a></li> 
       </ul>
     </div>  
 
@@ -46,19 +46,19 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.utilcmd.mm_msgbus_cmd">
-<span id="chipsec-utilcmd-mm-msgbus-cmd-module"></span><h1>chipsec.utilcmd.mm_msgbus_cmd module<a class="headerlink" href="#module-chipsec.utilcmd.mm_msgbus_cmd" title="Link to this heading">¶</a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mm_msgbus</span> <span class="n">read</span>     <span class="o">&lt;</span><span class="n">port</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">register</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mm_msgbus</span> <span class="n">write</span>    <span class="o">&lt;</span><span class="n">port</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">register</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">port</span><span class="o">&gt;</span>    <span class="p">:</span> <span class="n">message</span> <span class="n">bus</span> <span class="n">port</span> <span class="n">of</span> <span class="n">the</span> <span class="n">target</span> <span class="n">unit</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">register</span><span class="o">&gt;</span><span class="p">:</span> <span class="n">message</span> <span class="n">bus</span> <span class="n">register</span><span class="o">/</span><span class="n">offset</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">target</span> <span class="n">unit</span> <span class="n">port</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span>   <span class="p">:</span> <span class="n">value</span> <span class="n">to</span> <span class="n">be</span> <span class="n">written</span> <span class="n">to</span> <span class="n">the</span> <span class="n">message</span> <span class="n">bus</span> <span class="n">register</span><span class="o">/</span><span class="n">offset</span>
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">mm_msgbus</span> <span class="n">read</span>  <span class="mh">0x3</span> <span class="mh">0x2E</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">msgbus</span> <span class="n">mm_write</span> <span class="mh">0x3</span> <span class="mh">0x27</span> <span class="mh">0xE0000001</span>
+  <section id="module-chipsec.hal.ec">
+<span id="chipsec-hal-ec-module"></span><h1>chipsec.hal.ec module<a class="headerlink" href="#module-chipsec.hal.ec" title="Link to this heading">¶</a></h1>
+<p>Access to Embedded Controller (EC)</p>
+<p>Usage:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">write_command</span><span class="p">(</span> <span class="n">command</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_data</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_data</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_memory</span><span class="p">(</span> <span class="n">offset</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_memory</span><span class="p">(</span> <span class="n">offset</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_memory_extended</span><span class="p">(</span> <span class="n">word_offset</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_memory_extended</span><span class="p">(</span> <span class="n">word_offset</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_range</span><span class="p">(</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">size</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_range</span><span class="p">(</span> <span class="n">start_offset</span><span class="p">,</span> <span class="n">buffer</span> <span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -118,13 +118,13 @@
 
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="chipsec.utilcmd.mem_cmd.html"
-                          title="previous chapter">chipsec.utilcmd.mem_cmd module</a></p>
+    <p class="topless"><a href="chipsec.hal.cpuid.html"
+                          title="previous chapter">chipsec.hal.cpuid module</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="chipsec.utilcmd.mmcfg_base_cmd.html"
-                          title="next chapter">chipsec.utilcmd.mmcfg_base_cmd module</a></p>
+    <p class="topless"><a href="chipsec.hal.hal_base.html"
+                          title="next chapter">chipsec.hal.hal_base module</a></p>
   </div>
 <search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -150,20 +150,20 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.mmcfg_base_cmd.html" title="chipsec.utilcmd.mmcfg_base_cmd module"
+          <a href="chipsec.hal.hal_base.html" title="chipsec.hal.hal_base module"
              >next</a> |</li>
         <li class="right" >
-          <a href="chipsec.utilcmd.mem_cmd.html" title="chipsec.utilcmd.mem_cmd module"
+          <a href="chipsec.hal.cpuid.html" title="chipsec.hal.cpuid module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../development/Architecture-Overview.html" >Architecture Overview</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="chipsec.utilcmd.html" >chipsec.utilcmd package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">chipsec.utilcmd.mm_msgbus_cmd module</a></li> 
+          <li class="nav-item nav-item-2"><a href="chipsec.hal.html" >chipsec.hal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.hal.ec module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 01, 2025.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Last updated on Nov 21, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

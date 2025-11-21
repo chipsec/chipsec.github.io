@@ -48,8 +48,58 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="chipsec-modules-tools-vmm-hypercallfuzz-module">
-<h1>chipsec.modules.tools.vmm.hypercallfuzz module<a class="headerlink" href="#chipsec-modules-tools-vmm-hypercallfuzz-module" title="Link to this heading">¶</a></h1>
+  <section id="module-chipsec.modules.tools.vmm.hypercallfuzz">
+<span id="chipsec-modules-tools-vmm-hypercallfuzz-module"></span><h1>chipsec.modules.tools.vmm.hypercallfuzz module<a class="headerlink" href="#module-chipsec.modules.tools.vmm.hypercallfuzz" title="Link to this heading">¶</a></h1>
+<p>Pretty simple VMM hypercall fuzzer</p>
+<dl>
+<dt>Usage:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.vmm.hypercallfuzz</span> <span class="pre">[-a</span> <span class="pre">&lt;mode&gt;,&lt;vector_reg&gt;,&lt;maxval&gt;,&lt;iterations&gt;]</span></code></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">mode</span></code><span class="classifier">Hypercall fuzzing mode</span></dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">exhaustive</span></code> : Fuzz all arguments exhaustively in range <code class="docutils literal notranslate"><span class="pre">[0:&lt;maxval&gt;]</span></code> (default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">random</span></code>     : Send random values in all registers in range <code class="docutils literal notranslate"><span class="pre">[0:&lt;maxval&gt;]</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vector_reg</span></code>     : Hypercall vector register</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxval</span></code>         : Maximum value of each register</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iterations</span></code>     : Number of iterations in random mode</p></li>
+</ul>
+</dd>
+<dt>Where:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[]</span></code>: optional line</p></li>
+</ul>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">hypercallfuzz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">vmm</span><span class="o">.</span><span class="n">hypercallfuzz</span> <span class="o">-</span><span class="n">a</span> <span class="n">random</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mh">0xFFFF</span><span class="p">,</span><span class="mi">1000</span>
+</pre></div>
+</div>
+</dd>
+<dt>Additional options set within the module:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DEFAULT_VECTOR_MAXVAL</span></code>     : Default maximum value</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEFAULT_MAXVAL_EXHAUSTIVE</span></code> : Default maximum value for exhaustive testing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEFAULT_MAXVAL_RANDOM</span></code>     : Default maximum value for random testing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEFAULT_RANDOM_ITERATIONS</span></code> : Default iterations for random testing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_FLUSH_LOG_EACH_ITER</span></code>      : Set to flush log after each iteration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_LOG_ALL_GPRS</span></code>             : Display log of each iteration values</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Returns a Warning by default</p></li>
+<li><p>System may be in an unknown state, further evaluation may be needed</p></li>
+</ul>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<ul class="simple">
+<li><p>This module is designed to run in a VM environment</p></li>
+<li><p>Behavior on physical HW is undefined</p></li>
+</ul>
+</div>
 </section>
 
 
@@ -153,8 +203,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 01, 2025.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Last updated on Nov 21, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

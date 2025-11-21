@@ -48,8 +48,40 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="chipsec-modules-tools-uefi-scan-blocked-module">
-<h1>chipsec.modules.tools.uefi.scan_blocked module<a class="headerlink" href="#chipsec-modules-tools-uefi-scan-blocked-module" title="Link to this heading">¶</a></h1>
+  <section id="module-chipsec.modules.tools.uefi.scan_blocked">
+<span id="chipsec-modules-tools-uefi-scan-blocked-module"></span><h1>chipsec.modules.tools.uefi.scan_blocked module<a class="headerlink" href="#module-chipsec.modules.tools.uefi.scan_blocked" title="Link to this heading">¶</a></h1>
+<p>This module checks current contents of UEFI firmware ROM or specified firmware image for blocked EFI binaries
+which can be EFI firmware volumes, EFI executable binaries (PEI modules, DXE drivers..) or EFI sections.
+The module can find EFI binaries by their UI names, EFI GUIDs, MD5/SHA-1/SHA-256 hashes
+or contents matching specified regular expressions.</p>
+<p>Important! This module can only detect what it knows about from its config file.
+If a bad or vulnerable binary is not detected then its ‘signature’ needs to be added to the config.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">-i</span> <span class="pre">-m</span> <span class="pre">tools.uefi.scan_blocked</span> <span class="pre">[-a</span> <span class="pre">&lt;fw_image&gt;,&lt;blockedlist&gt;]</span></code></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fw_image</span></code>      Full file path to UEFI firmware image. If not specified, the module will dump firmware image directly from ROM</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">blockedlist</span></code>   JSON file with configuration of blocked EFI binaries (default = <code class="docutils literal notranslate"><span class="pre">blockedlist.json</span></code>). Config file should be located in the same directory as this module</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">scan_blocked</span>
+</pre></div>
+</div>
+<p>Dumps UEFI firmware image from flash memory device, decodes it and checks for blocked EFI modules defined in the default config <code class="docutils literal notranslate"><span class="pre">blockedlist.json</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">i</span> <span class="o">--</span><span class="n">no_driver</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">scan_blocked</span> <span class="o">-</span><span class="n">a</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span><span class="p">,</span><span class="n">blockedlist</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>Decodes <code class="docutils literal notranslate"><span class="pre">uefi.rom</span></code> binary with UEFI firmware image and checks for blocked EFI modules defined in <code class="docutils literal notranslate"><span class="pre">blockedlist.json</span></code> config</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-i</span></code> and <code class="docutils literal notranslate"><span class="pre">--no_driver</span></code> arguments can be used in this case because the test does not depend on the platform
+and no kernel driver is required when firmware image is specified</p></li>
+</ul>
+</div>
 </section>
 
 
@@ -153,8 +185,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Oct 01, 2025.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Last updated on Nov 21, 2025.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>
