@@ -1,0 +1,26 @@
+txt
+=======
+
+Path: chipsec\\cfg\\8086\\txt.xml
+
+
+Configuration of Intel TXT register, following the guide:
+
+    Intel® Trusted Execution Technology: Software Development Guide
+    Measured Launched Environment Developer's Guide
+    August 2016
+    Revision 013
+
+from https://web.archive.org/web/20170506220426/https://www.intel.com/content/www/us/en/software-developers/intel-txt-software-development-guide.html
+(and https://usermanual.wiki/Document/inteltxtsoftwaredevelopmentguide.1721028921 )
+
+Appendix B.1. (Intel® TXT Configuration Registers) details:
+
+    These registers are mapped into two regions of memory, representing the public and private configuration spaces.
+    [...]
+    The private space registers are mapped to the address range starting at FED20000H.
+    The public space registers are mapped to the address range starting at FED30000H.
+
+As chipsec usually runs in environments where the private space is not available,
+only the public space registers were described here.
+
