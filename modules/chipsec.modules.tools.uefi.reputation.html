@@ -48,33 +48,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-chipsec.modules.tools.uefi.reputation">
-<span id="chipsec-modules-tools-uefi-reputation-module"></span><h1>chipsec.modules.tools.uefi.reputation module<a class="headerlink" href="#module-chipsec.modules.tools.uefi.reputation" title="Link to this heading">¶</a></h1>
-<p>This module checks current contents of UEFI firmware ROM or specified firmware image for bad EFI binaries as per the
-VirusTotal API. These can be EFI firmware volumes, EFI executable binaries (PEI modules, DXE drivers..) or EFI sections.
-The module can find EFI binaries by their UI names, EFI GUIDs, MD5/SHA-1/SHA-256 hashes
-or contents matching specified regular expressions.</p>
-<p>Important! This module can only detect bad or vulnerable EFI modules based on the file’s reputation on VT.</p>
-<dl>
-<dt>Usage:</dt><dd><dl>
-<dt>chipsec_main.py -i -m tools.uefi.reputation -a &lt;vt_api_key&gt;[,&lt;vt_threshold&gt;,&lt;fw_image&gt;]</dt><dd><dl>
-<dt>vt_api_key<span class="classifier">API key to VirusTotal. Can be obtained by visting <a class="reference external" href="https://www.virustotal.com/gui/join-us">https://www.virustotal.com/gui/join-us</a>.</span></dt><dd><p>This argument must be specified.</p>
-</dd>
-<dt>vt_threshold<span class="classifier">The minimal number of different AV vendors on VT which must claim an EFI module is malicious</span></dt><dd><p>before failing the test. Defaults to 10.</p>
-</dd>
-<dt>fw_image<span class="classifier">Full file path to UEFI firmware image</span></dt><dd><p>If not specified, the module will dump firmware image directly from ROM</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Requires virustotal-api</p></li>
-</ul>
-</div>
+  <section id="chipsec-modules-tools-uefi-reputation-module">
+<h1>chipsec.modules.tools.uefi.reputation module<a class="headerlink" href="#chipsec-modules-tools-uefi-reputation-module" title="Link to this heading">¶</a></h1>
 </section>
 
 
@@ -178,7 +153,7 @@ or contents matching specified regular expressions.</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 09, 2025.
+      Last updated on Dec 15, 2025.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
   </body>

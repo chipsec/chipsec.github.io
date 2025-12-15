@@ -50,7 +50,7 @@
   <section id="module-chipsec.modules.common.smm_code_chk">
 <span id="chipsec-modules-common-smm-code-chk-module"></span><h1>chipsec.modules.common.smm_code_chk module<a class="headerlink" href="#module-chipsec.modules.common.smm_code_chk" title="Link to this heading">¶</a></h1>
 <p>SMM_CODE_CHK_EN (SMM Call-Out) Protection check</p>
-<p>SMM_CODE_CHK_EN is a bit found in the MSR_SMM_FEATURE_CONTROL register.
+<p>SMM_CODE_CHK_EN is a bit found in the SMM_FEATURE_CONTROL register.
 Once set to ‘1’, any CPU that attempts to execute SMM code not within the ranges defined by the SMRR will assert an unrecoverable MCE.
 As such, enabling and locking this bit is an important step in mitigating SMM call-out vulnerabilities.
 This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is set and locked.</p>
@@ -72,15 +72,15 @@ This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is
 </div>
 </dd>
 <dt>Registers used:</dt><dd><ul class="simple">
-<li><p>MSR_SMM_FEATURE_CONTROL.LOCK</p></li>
-<li><p>MSR_SMM_FEATURE_CONTROL.SMM_CODE_CHK_EN</p></li>
+<li><p>SMM_FEATURE_CONTROL.LOCK</p></li>
+<li><p>SMM_FEATURE_CONTROL.SMM_CODE_CHK_EN</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>MSR_SMM_FEATURE_CONTROL may not be defined or readable on all platforms.</p></li>
+<li><p>SMM_FEATURE_CONTROL may not be defined or readable on all platforms.</p></li>
 </ul>
 </div>
 </section>
@@ -185,7 +185,7 @@ This CHIPSEC module simply reads the register and checks that SMM_CODE_CHK_EN is
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Dec 09, 2025.
+      Last updated on Dec 15, 2025.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
   </body>
