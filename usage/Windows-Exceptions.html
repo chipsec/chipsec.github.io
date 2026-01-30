@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Windows Exception Errors &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Architecture Overview" href="../development/Architecture-Overview.html" />
+    <link rel="prev" title="Running CHIPSEC" href="Running-Chipsec.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../development/Architecture-Overview.html" title="Architecture Overview"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Running-Chipsec.html" title="Running CHIPSEC"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Windows Exception Errors</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="windows-exception-errors">
+<span id="windows-exceptions"></span><h1>Windows Exception Errors<a class="headerlink" href="#windows-exception-errors" title="Link to this heading">¶</a></h1>
+<p>Windows exception errors have many different causes and at least as many possible solutions.
+The below ‘fixes’ may need to be used in combination to fix any of these issues.</p>
+<section id="status-privileged-instruction-0xc0000096">
+<h2>STATUS_PRIVILEGED_INSTRUCTION (0xC0000096)<a class="headerlink" href="#status-privileged-instruction-0xc0000096" title="Link to this heading">¶</a></h2>
+<p>This type of error often occurs on newer Windows OSes, often caused by the Windows <cite>Device Guard</cite> feature.
+THIS IS A KNOWN ISSUE WITH WINDOWS AND NOT A CHIPSEC BUG.</p>
+<p>For CHIPSEC to work, the Windows <cite>Device Guard</cite> feature needs to be disabled.</p>
+<p>Example errors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">HW</span> <span class="n">Access</span> <span class="n">Violation</span><span class="p">:</span> <span class="n">DeviceIoControl</span> <span class="n">returned</span> <span class="n">STATUS_PRIVILEGED_INSTRUCTION</span> <span class="p">(</span><span class="mh">0xC0000096</span><span class="p">)</span>
+
+<span class="n">chipsec</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">oshelper</span><span class="o">.</span><span class="n">HWAccessViolationError</span><span class="p">:</span> <span class="n">HW</span> <span class="n">Access</span> <span class="n">Violation</span><span class="p">:</span> <span class="n">DeviceIoControl</span> <span class="n">returned</span> <span class="n">STATUS_PRIVILEGED_INSTRUCTION</span> <span class="p">(</span><span class="mh">0xC0000096</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Device Guard and Credential Guard hardware readiness tool</strong></p>
+<p><a class="reference external" href="https://www.microsoft.com/en-us/download/details.aspx?id=53337">Device Guard and Credential Guard hardware readiness tool</a></p>
+<dl class="simple">
+<dt>Steps to disable Device Guard:</dt><dd><ol class="arabic simple">
+<li><p>Download the Microsoft <cite>Device Guard and Credential Guard hardware readiness tool</cite></p></li>
+<li><p>Extract zip contents</p></li>
+<li><p>Run this command (via PowerShell): <code class="docutils literal notranslate"><span class="pre">DG_Readiness.ps1</span> <span class="pre">-Disable</span></code></p></li>
+<li><p>Reboot system and press <strong>&lt;F3&gt;</strong> when prompted (twice)</p></li>
+<li><p>May take several reboots before finishing</p></li>
+</ol>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Microsoft seems to no longer use “Device Guard”, instead now uses WDAC (Windows Defender Application Control).</p>
+</div>
+<p><strong>If the readiness tool doesn’t work…</strong></p>
+<p>Workaround:</p>
+<ol class="arabic simple">
+<li><p>Launch <cite>Local Group Policy Editor</cite></p></li>
+</ol>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>Run -&gt; <code class="docutils literal notranslate"><span class="pre">gpedit.msc</span></code></p></li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Change <cite>Device Guard</cite> setting to <cite>Disabled</cite></p></li>
+</ol>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>Computer Configuration &gt; Administrative Templates &gt; System &gt; Device Guard</p></li>
+<li><p>Switch <cite>Device Guard</cite> from “Not Configured” to “Disabled”</p></li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>Save changes and exit <cite>Group Policy Editor</cite></p></li>
+</ol>
+<blockquote>
+<div><ol class="arabic simple" start="4">
+<li><p>Reboot</p></li>
+</ol>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Windows Home version may NOT have <cite>Group Policy Editor</cite> loaded by default.</p>
+</div>
+<p><strong>Windows Home workaround:</strong></p>
+<p>There is no guarantee that these steps will work.  If they don’t, it is recommended to use <cite>Windows Pro</cite> or <cite>Windows Enterprise</cite> versions that include the <cite>Group Policy Editor</cite>.</p>
+<ol class="arabic simple">
+<li><p>From a Windows PowerShell, <cite>Run as Administrator</cite>, run these commands sequentially:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FOR</span> <span class="o">%</span><span class="n">F</span> <span class="n">IN</span> <span class="p">(</span><span class="s2">&quot;%SystemRoot%\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~*.mum&quot;</span><span class="p">)</span> <span class="n">DO</span> <span class="p">(</span>
+<span class="n">DISM</span> <span class="o">/</span><span class="n">Online</span> <span class="o">/</span><span class="n">NoRestart</span> <span class="o">/</span><span class="n">Add</span><span class="o">-</span><span class="n">Package</span><span class="p">:</span><span class="s2">&quot;</span><span class="si">%F</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+<span class="n">FOR</span> <span class="o">%</span><span class="n">F</span> <span class="n">IN</span> <span class="p">(</span><span class="s2">&quot;%SystemRoot%\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~*.mum&quot;</span><span class="p">)</span> <span class="n">DO</span> <span class="p">(</span>
+<span class="n">DISM</span> <span class="o">/</span><span class="n">Online</span> <span class="o">/</span><span class="n">NoRestart</span> <span class="o">/</span><span class="n">Add</span><span class="o">-</span><span class="n">Package</span><span class="p">:</span><span class="s2">&quot;</span><span class="si">%F</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>After these commands complete, reboot the system.  The <cite>Group Policy Editor</cite> should now be installed and ready to run the above steps to disable <cite>Device Guard</cite>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Occasionally Windows does not include the needed <cite>Administrative template</cite> for <cite>Device Guard</cite> to be visible and the template will have to be updated.
+In this case, download the below update and run it on the system.  Reboot the system and verify that <cite>Device Guard</cite> is now visible.</p>
+<p>Updated Windows 10 Administrative Template:
+<a class="reference external" href="https://www.microsoft.com/en-us/download/100591">https://www.microsoft.com/en-us/download/100591</a></p>
+<p>It is possible that the template update does NOT have the needed permissions to properly update the template.
+A manual update may be needed.  Don’t forget to reboot after.</p>
+</div>
+<p>3. Manually copy the <strong>.admx</strong> and <strong>.adml</strong> files from the update folder
+<strong>C:\Program Files (x86)\Microsoft Group Policy\Windows 10 November 2019 Update (1909)\PolicyDefinitions\</strong> to <strong>C:\Windows\PolicyDefinitions</strong></p>
+<p>If this last step does not work, you will have to use a different OS.</p>
+<p><strong>ERROR: Exception occurred during …</strong></p>
+<p>This error, like the previous issue, appears to be related to a Windows Server OS and its security protections.  Often happening when trying to read an MSR, MMIO, or device.
+Windows Server OS appears to be blocking read access to them.  MSR and MMIO reads will simply fail with this error message.
+Device (PCI) reads appear to mask the device and return all 0xF’s, causing an error parsing them.</p>
+<p>One or more of the above mentioned solutions <em>may</em> fix this.</p>
+<p>Example MSR/MMIO error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="ne">Exception</span> <span class="n">occurred</span> <span class="n">during</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">smm_dma</span><span class="o">.</span><span class="n">run</span><span class="p">():</span> <span class="s1">&#39;&#39;</span><span class="n">TSEGMB</span><span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Example PCI error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="ne">Exception</span> <span class="n">occurred</span> <span class="n">during</span> <span class="n">chipsec</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">bios_smi</span><span class="o">.</span><span class="n">run</span><span class="p">():</span> <span class="s1">&#39;integer out of range for &#39;</span><span class="n">H</span><span class="s1">&#39; format code&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="windows-driver-startservice-error">
+<h2>Windows driver: StartService error<a class="headerlink" href="#windows-driver-startservice-error" title="Link to this heading">¶</a></h2>
+<p>A Windows security feature called HVCI can cause issues running CHIPSEC.  HVCI should be disabled.
+Follow the steps described above to disable HVCI.</p>
+<p>Follow these steps to disable HVCI:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity#how-to-turn-off-hvci">How to disable HVCI</a></p>
+<p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity">Full details on HVCI</a></p>
+</div></blockquote>
+<p>Example error messages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">service</span> <span class="s1">&#39;chipsec&#39;</span> <span class="n">didn</span><span class="s1">&#39;t start: The parameter is incorrect. (87)</span>
+<span class="p">[</span><span class="o">-</span><span class="p">]</span> <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;\chipsec\helper\win\win32helper.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">434</span><span class="p">,</span> <span class="ow">in</span> <span class="n">start</span>
+    <span class="n">win32serviceutil</span><span class="o">.</span><span class="n">StartService</span><span class="p">(</span> <span class="n">SERVICE_NAME</span> <span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&quot;\lib\site-packages\win32\lib\win32serviceutil.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">417</span><span class="p">,</span> <span class="ow">in</span> <span class="n">StartService</span>
+    <span class="n">win32service</span><span class="o">.</span><span class="n">StartService</span><span class="p">(</span><span class="n">hs</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+<span class="n">pywintypes</span><span class="o">.</span><span class="n">error</span><span class="p">:</span> <span class="p">(</span><span class="mi">87</span><span class="p">,</span> <span class="s1">&#39;StartService&#39;</span><span class="p">,</span> <span class="s1">&#39;The parameter is incorrect.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And…</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chipsec</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">oshelper</span><span class="o">.</span><span class="n">OsHelperError</span><span class="p">:</span> <span class="n">service</span> <span class="s1">&#39;chipsec&#39;</span> <span class="n">didn</span><span class="s1">&#39;t start: The parameter is incorrect. (87)</span>
+</pre></div>
+</div>
+</section>
+<section id="additional-details">
+<h2>Additional details<a class="headerlink" href="#additional-details" title="Link to this heading">¶</a></h2>
+<blockquote>
+<div><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/device-guard/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control">Windows Device Guard</a></p>
+<p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard">Windows Credential Guard</a></p>
+<p><a class="reference external" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/windows-defender-application-control">WDAC – Windows Defender Application Control</a></p>
+<p><a class="reference external" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/bringup/device-guard-and-credential-guard">Hypervisor-Protected Code Integrity (HVCI)</a></p>
+</div></blockquote>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo of CHIPSEC"/>
+            </a></p>
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Running-Chipsec.html">Running CHIPSEC</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Windows Exception Errors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Util Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/sphinx.html">Sphinx Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/sphinx.html#generating-documentation">Generating Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/sphinx.html#references">References</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="Running-Chipsec.html"
+                          title="previous chapter">Running CHIPSEC</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../development/Architecture-Overview.html"
+                          title="next chapter">Architecture Overview</a></p>
+  </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../development/Architecture-Overview.html" title="Architecture Overview"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Running-Chipsec.html" title="Running CHIPSEC"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Windows Exception Errors</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Jan 30, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    </div>
+  </body>
+</html>
