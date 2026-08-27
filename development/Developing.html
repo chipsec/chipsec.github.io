@@ -51,20 +51,20 @@
 <p>Most modules read some platform configuration and then pass or fail based on the result. For example:</p>
 <ol class="arabic">
 <li><p>Define the control in the platform XML file (in <code class="docutils literal notranslate"><span class="pre">chipsec/cfg</span></code>):</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;control</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;BiosLockEnable&quot;</span><span class="w">     </span><span class="na">register=</span><span class="s">&quot;BC&quot;</span><span class="w">    </span><span class="na">field=</span><span class="s">&quot;BLE&quot;</span><span class="w">    </span><span class="na">desc=</span><span class="s">&quot;BIOS Lock Enable&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;control</span><span class="w"> </span><span class="na">name=</span><span class="s">"BiosLockEnable"</span><span class="w">     </span><span class="na">register=</span><span class="s">"BC"</span><span class="w">    </span><span class="na">field=</span><span class="s">"BLE"</span><span class="w">    </span><span class="na">desc=</span><span class="s">"BIOS Lock Enable"</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
 </li>
 <li><p>Get the current status of the control:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">get_list_by_name</span><span class="p">(</span><span class="s1">&#39;BiosLockEnable&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_all_value</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">get_list_by_name</span><span class="p">(</span><span class="s1">'BiosLockEnable'</span><span class="p">)</span><span class="o">.</span><span class="n">is_all_value</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
 <li><p>React based on the status of the control:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ble</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s2">&quot;BIOS Lock is set.&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s2">"BIOS Lock is set."</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">&quot;BIOS Lock is not set.&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">"BIOS Lock is not set."</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -193,7 +193,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jul 30, 2026.
+      Last updated on Aug 27, 2026.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     </div>
   </body>

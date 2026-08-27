@@ -62,8 +62,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fwsts1 = dump_status(1, PCI_ME_HFSTS1);
 # Minimal decoding is done here in order to call out most important
 # pieces. Manufacturing mode needs to be locked down prior to shipping
-# the product so it&#39;s called out explicitly.
-printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, (fwsts1 &amp; (1 &lt;&lt; 0x4)) ? &quot;YES&quot; : &quot;NO&quot;);
+# the product so it's called out explicitly.
+printk(BIOS_DEBUG, "ME: Manufacturing Mode      : %s", (fwsts1 &amp; (1 &lt;&lt; 0x4)) ? "YES" : "NO");
 </pre></div>
 </div>
 <p><a class="reference external" href="https://github.com/coreboot/coreboot/blob/master/src/southbridge/intel/*/pch.h">PCH.H</a></p>
@@ -89,7 +89,7 @@ printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, (fwsts1 &amp; (
 </pre></div>
 </div>
 <p><a class="reference external" href="https://github.com/coreboot/coreboot/blob/master/src/southbridge/intel/*/me_status.c">ME_STATUS.C</a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, hfs-&gt;mfg_mode ? &quot;YES&quot; : &quot;NO&quot;);
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>printk(BIOS_DEBUG, "ME: Manufacturing Mode      : %s", hfs-&gt;mfg_mode ? "YES" : "NO");
 </pre></div>
 </div>
 <p>This module checks the following:</p>
@@ -218,7 +218,7 @@ printk(BIOS_DEBUG, &quot;ME: Manufacturing Mode      : %s&quot;, (fwsts1 &amp; (
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jul 30, 2026.
+      Last updated on Aug 27, 2026.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     </div>
   </body>
