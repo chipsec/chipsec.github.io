@@ -50,25 +50,25 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">chipsec.library.returncode</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleResult</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ModuleClass</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class name aligns with file name, eg ModuleClass.py&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Class name aligns with file name, eg ModuleClass.py"""</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Module prerequisite checks&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Module prerequisite checks"""</span>
         <span class="k">if</span> <span class="n">some_module_requirement</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Module is applicable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
         <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Module is not applicable</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Module test logic and methods as needed&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">&#39;Module was successful!&#39;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Module test logic and methods as needed"""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">'Module was successful!'</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Primary module execution and result handling&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s1">&#39;Module Description&#39;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Primary module execution and result handling"""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s1">'Module Description'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span>
 </pre></div>
@@ -173,7 +173,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Jul 30, 2026.
+      Last updated on Aug 27, 2026.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     </div>
   </body>
