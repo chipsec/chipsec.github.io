@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Methods for Platform Detection &#8212; CHIPSEC  documentation</title>
+    <title>Platform Detection &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
     
@@ -16,7 +16,7 @@
     <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Sample module code template" href="Sample-Module-Code.html" />
+    <link rel="next" title="Sample Module Code" href="Sample-Module-Code.html" />
     <link rel="prev" title="chipsec.helper.oshelper module" href="../modules/chipsec.helper.oshelper.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="Related">
@@ -29,13 +29,13 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Sample-Module-Code.html" title="Sample module code template"
+          <a href="Sample-Module-Code.html" title="Sample Module Code"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../modules/chipsec.helper.oshelper.html" title="chipsec.helper.oshelper module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Methods for Platform Detection</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Platform Detection</a></li> 
       </ul>
     </div>  
 
@@ -44,25 +44,27 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="methods-for-platform-detection">
-<span id="platform-detection"></span><h1>Methods for Platform Detection<a class="headerlink" href="#methods-for-platform-detection" title="Link to this heading">¶</a></h1>
-<section id="uses-pci-vendorid-and-deviceid-to-detect-processor-and-pch">
-<h2>Uses PCI VendorID and DeviceID to detect processor and PCH<a class="headerlink" href="#uses-pci-vendorid-and-deviceid-to-detect-processor-and-pch" title="Link to this heading">¶</a></h2>
-<p>Processor: 0:0.0</p>
-<p>PCH: Scans enumerated PCI Devices for corresponding VID/DID per configurations.</p>
-</section>
-<section id="chip-information-located-in-chipsec-chipset-py">
-<h2>Chip information located in <code class="docutils literal notranslate"><span class="pre">chipsec/chipset.py</span></code><a class="headerlink" href="#chip-information-located-in-chipsec-chipset-py" title="Link to this heading">¶</a></h2>
-<p>Currently requires VID of 0x8086 (Intel) or 0x1022 (AMD).</p>
-<p>DeviceID is used as the lookup key.</p>
-<p>If there are matching DeviceID, will fall back to cpuid check for CPU.</p>
-</section>
+  <section id="platform-detection">
+<span id="id1"></span><h1>Platform Detection<a class="headerlink" href="#platform-detection" title="Link to this heading">¶</a></h1>
+<p>CHIPSEC identifies the processor platform and, where applicable, the PCH
+using the SKU metadata and PCI device IDs in its configuration tree. PCI
+enumeration provides device identities; CPU configuration can also use CPUID
+detection values to distinguish platforms that share device IDs. The
+platform-detection and configuration-loading flow is implemented by
+<code class="docutils literal notranslate"><span class="pre">chipsec/chipset.py</span></code> and <code class="docutils literal notranslate"><span class="pre">chipsec/config.py</span></code>.</p>
 <section id="platform-configuration-options">
 <h2>Platform Configuration Options<a class="headerlink" href="#platform-configuration-options" title="Link to this heading">¶</a></h2>
-<p>Select a specific platform using the <code class="docutils literal notranslate"><span class="pre">–p</span></code> flag.</p>
-<p>Specify PCH using the <code class="docutils literal notranslate"><span class="pre">–-pch</span></code> flag.</p>
-<p>~Ignore the platform specific registers using the <code class="docutils literal notranslate"><span class="pre">-i</span></code> flag.~
-The <code class="docutils literal notranslate"><span class="pre">-i</span></code> flag has been deprecated and should not be used.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">-p</span></code> or <code class="docutils literal notranslate"><span class="pre">--platform</span></code> to request a platform code explicitly. Use
+<code class="docutils literal notranslate"><span class="pre">--pch</span></code> to request a PCH code. These options select configuration data; they
+do not change the hardware being detected. The <code class="docutils literal notranslate"><span class="pre">-i</span></code> / <code class="docutils literal notranslate"><span class="pre">--ignore_platform</span></code>
+option is deprecated and should not be used for normal operation.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">-p</span></code>, <code class="docutils literal notranslate"><span class="pre">--pch</span></code> or <code class="docutils literal notranslate"><span class="pre">-i</span></code> is not recommended. These options can
+cause many devices and registers to be detected incorrectly or not detected
+at all. Use them only if you understand their effects. Their practical
+behavior changed between CHIPSEC 1.x.x and 2.x.x.</p>
+</div>
 </section>
 </section>
 
@@ -99,10 +101,10 @@ The <code class="docutils literal notranslate"><span class="pre">-i</span></code
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Configuration-Files.html">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developing.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Methods for Platform Detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -128,7 +130,7 @@ The <code class="docutils literal notranslate"><span class="pre">-i</span></code
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="Sample-Module-Code.html"
-                          title="next chapter">Sample module code template</a></p>
+                          title="next chapter">Sample Module Code</a></p>
   </div>
 <search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -154,18 +156,18 @@ The <code class="docutils literal notranslate"><span class="pre">-i</span></code
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Sample-Module-Code.html" title="Sample module code template"
+          <a href="Sample-Module-Code.html" title="Sample Module Code"
              >next</a> |</li>
         <li class="right" >
           <a href="../modules/chipsec.helper.oshelper.html" title="chipsec.helper.oshelper module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Methods for Platform Detection</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Platform Detection</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>

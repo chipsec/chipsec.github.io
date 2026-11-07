@@ -46,44 +46,40 @@
             
   <section id="configuration-files">
 <span id="id1"></span><h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Link to this heading">¶</a></h1>
-<p>Provide a human readable abstraction for registers in the system</p>
-<blockquote>
-<div><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086</span></code></p></td>
-<td><p>platform specific configuration xml files</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086/common.xml</span></code></p></td>
-<td><p>common configuration</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086/&lt;platform&gt;.xml</span></code></p></td>
-<td><p>configuration for a specific &lt;platform&gt;</p></td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<p>Broken into common and platform specific configuration files.</p>
-<p>Used to define controls, registers and bit fields.</p>
-<p>Common files always loaded first so the platform files can override values.</p>
-<p>Correct platform configuration files loaded based off of platform detection.</p>
-<section id="configuration-file-example">
-<h2>Configuration File Example<a class="headerlink" href="#configuration-file-example" title="Link to this heading">¶</a></h2>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;mmio&gt;</span>
-<span class="nt">&lt;bar</span><span class="w"> </span><span class="na">name=</span><span class="s">"SPIBAR"</span><span class="w"> </span><span class="na">bus=</span><span class="s">"0"</span><span class="w"> </span><span class="na">dev=</span><span class="s">"0x1F"</span><span class="w"> </span><span class="na">fun=</span><span class="s">"5"</span><span class="w"> </span><span class="na">reg=</span><span class="s">"0x10"</span><span class="w"> </span><span class="na">width=</span><span class="s">"4"</span><span class="w"> </span><span class="na">mask=</span><span class="s">"0xFFFFF000"</span><span class="w"> </span><span class="na">size=</span><span class="s">"0x1000"</span><span class="w"> </span><span class="na">desc=</span><span class="s">"SPI Controller Register Range"</span><span class="w"> </span><span class="na">offset=</span><span class="s">"0x0"</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;/mmio&gt;</span>
-<span class="nt">&lt;registers&gt;</span>
-<span class="nt">&lt;register</span><span class="w"> </span><span class="na">name=</span><span class="s">"BC"</span><span class="w"> </span><span class="na">type=</span><span class="s">"pcicfg"</span><span class="w"> </span><span class="na">bus=</span><span class="s">"0"</span><span class="w"> </span><span class="na">dev=</span><span class="s">"0x1F"</span><span class="w"> </span><span class="na">fun=</span><span class="s">"5"</span><span class="w"> </span><span class="na">offset=</span><span class="s">"0xDC"</span><span class="w"> </span><span class="na">size=</span><span class="s">"4"</span><span class="w"> </span><span class="na">desc=</span><span class="s">"BIOS Control"</span><span class="nt">&gt;</span>
-<span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">"BIOSWE"</span><span class="w"> </span><span class="na">bit=</span><span class="s">"0"</span><span class="w"> </span><span class="na">size=</span><span class="s">"1"</span><span class="w"> </span><span class="na">desc=</span><span class="s">"BIOS Write Enable"</span><span class="w"> </span><span class="nt">/&gt;</span>
-…
-<span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">"BILD"</span><span class="w"> </span><span class="na">bit=</span><span class="s">"7"</span><span class="w"> </span><span class="na">size=</span><span class="s">"1"</span><span class="w"> </span><span class="na">desc=</span><span class="s">"BIOS Interface Lock Down"</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;/register&gt;</span>
-<span class="nt">&lt;/registers&gt;</span>
-<span class="nt">&lt;controls&gt;</span>
-<span class="nt">&lt;control</span><span class="w"> </span><span class="na">name=</span><span class="s">"BiosInterfaceLockDown"</span><span class="w"> </span><span class="na">register=</span><span class="s">"BC"</span><span class="w"> </span><span class="na">field=</span><span class="s">"BILD"</span><span class="w"> </span><span class="na">desc=</span><span class="s">"BIOS Interface Lock-Down"</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;/controls&gt;</span>
+<p>CHIPSEC configuration maps platform and device identities to register,
+field, control and BAR definitions. Platform files are stored under
+<code class="docutils literal notranslate"><span class="pre">chipsec/cfg/&lt;vendor-id&gt;/</span></code>; reusable definitions are grouped into XML
+fragments under IP directories. Platform detection selects the platform
+files, whose device entries refer to those fragments with <code class="docutils literal notranslate"><span class="pre">config</span></code>.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086/kbl.xml</span></code> selects a configuration fragment
+for the SPI device:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;pci&gt;</span>
+<span class="w">   </span><span class="nt">&lt;device</span><span class="w"> </span><span class="na">name=</span><span class="s">"SPI"</span><span class="w"> </span><span class="na">bus=</span><span class="s">"0x00"</span><span class="w"> </span><span class="na">dev=</span><span class="s">"0x1F"</span><span class="w"> </span><span class="na">fun=</span><span class="s">"5"</span>
+<span class="w">               </span><span class="na">config=</span><span class="s">"SPI.spi0.xml"</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/pci&gt;</span>
 </pre></div>
 </div>
-</section>
+<p>The referenced <code class="docutils literal notranslate"><span class="pre">chipsec/cfg/8086/SPI/spi0.xml</span></code> contains the register and
+control definitions:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;configuration&gt;</span>
+<span class="w">   </span><span class="nt">&lt;registers&gt;</span>
+<span class="w">      </span><span class="nt">&lt;register</span><span class="w"> </span><span class="na">name=</span><span class="s">"BC"</span><span class="w"> </span><span class="na">type=</span><span class="s">"pcicfg"</span><span class="w"> </span><span class="na">offset=</span><span class="s">"0xDC"</span><span class="w"> </span><span class="na">size=</span><span class="s">"4"</span>
+<span class="w">                     </span><span class="na">desc=</span><span class="s">"BIOS Control"</span><span class="nt">&gt;</span>
+<span class="w">         </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">"BLE"</span><span class="w"> </span><span class="na">bit=</span><span class="s">"1"</span><span class="w"> </span><span class="na">size=</span><span class="s">"1"</span><span class="w"> </span><span class="na">desc=</span><span class="s">"BIOS Lock Enable"</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;/register&gt;</span>
+<span class="w">   </span><span class="nt">&lt;/registers&gt;</span>
+<span class="w">   </span><span class="nt">&lt;controls&gt;</span>
+<span class="w">      </span><span class="nt">&lt;control</span><span class="w"> </span><span class="na">name=</span><span class="s">"BiosLockEnable"</span><span class="w"> </span><span class="na">register=</span><span class="s">"BC"</span><span class="w"> </span><span class="na">field=</span><span class="s">"BLE"</span>
+<span class="w">                    </span><span class="na">desc=</span><span class="s">"BIOS Lock Enable"</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">   </span><span class="nt">&lt;/controls&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</pre></div>
+</div>
+<p>The platform XML is parsed for device and other platform configuration
+sections; register, control and lock definitions belong in referenced
+configuration fragments. Placing those sections directly in a platform XML
+does not load them in the current configuration pipeline. Follow a nearby
+platform and its referenced fragments when adding definitions.</p>
 <section id="list-of-cfg-components">
 <h2>List of Cfg components<a class="headerlink" href="#list-of-cfg-components" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -143,10 +139,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developing.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -208,8 +204,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>
