@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>chipsec.library.uefi.dbx module &#8212; CHIPSEC  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    
+    <link rel="icon" href="../_static/chipsec_favicon.jpg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.library.uefi.dbx module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-chipsec.library.uefi.dbx">
+<span id="chipsec-library-uefi-dbx-module"></span><h1>chipsec.library.uefi.dbx module<a class="headerlink" href="#module-chipsec.library.uefi.dbx" title="Link to this heading">¶</a></h1>
+<p>Helpers for comparing a live UEFI <code class="docutils literal notranslate"><span class="pre">dbx</span></code> variable with Microsoft’s Secure Boot
+DBX reference JSON. Used by <code class="docutils literal notranslate"><span class="pre">chipsec_util</span> <span class="pre">uefi</span> <span class="pre">dbx-check</span></code>.</p>
+<p>The check compares the live UEFI <code class="docutils literal notranslate"><span class="pre">dbx</span></code> (forbidden signatures) variable against
+Microsoft’s published Secure Boot DBX reference and reports any reference
+entries that are missing from the platform. This helps determine whether the
+platform has received the DBX updates that revoke known-vulnerable bootloaders
+(e.g. BootHole, CVE-2020-10713).</p>
+<p>Before running, download the reference JSON from the Microsoft secureboot_objects
+repository and save it locally:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">microsoft</span><span class="o">/</span><span class="n">secureboot_objects</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">PreSignedObjects</span><span class="o">/</span><span class="n">DBX</span><span class="o">/</span><span class="n">dbx_info_msft_latest</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>CHIPSEC reads only this local file and never connects to the network.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">dbx</span><span class="o">-</span><span class="n">check</span> <span class="o">&lt;</span><span class="n">architecture</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">microsoft_dbx_json</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Arguments:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">&lt;architecture&gt;</span></code>        Firmware architecture to check: x64, ia32, aarch64, or arm
+<code class="docutils literal notranslate"><span class="pre">&lt;microsoft_dbx_json&gt;</span></code>  Path to the downloaded dbx_info_msft_latest.json</p>
+</div></blockquote>
+<p>The check compares:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Authenticode SHA-256 image hashes (EFI_CERT_SHA256_GUID entries)</p></li>
+<li><p>X.509 certificate SHA-1 thumbprints (EFI_CERT_X509_GUID entries)</p></li>
+</ul>
+</div></blockquote>
+<p>Output:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Logs whether Secure Boot is currently enabled</p></li>
+<li><p>Lists the number and type of reference entries absent from <code class="docutils literal notranslate"><span class="pre">dbx</span></code>
+(up to 5 sample values per type), or reports that all entries are present</p></li>
+</ul>
+</div></blockquote>
+<p>Limitations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Only the supplied JSON snapshot is checked; results are only as current as
+the downloaded file</p></li>
+<li><p>SVN (Security Version Number) revocation records are not evaluated</p></li>
+<li><p>The active bootloader is not inspected; the check does not confirm whether
+a vulnerable binary is actually in use</p></li>
+<li><p>Requires the CHIPSEC driver (reads live UEFI variables)</p></li>
+</ul>
+</div></blockquote>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">dbx</span><span class="o">-</span><span class="n">check</span> <span class="n">x64</span> <span class="n">dbx_info_msft_latest</span><span class="o">.</span><span class="n">json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">dbx</span><span class="o">-</span><span class="n">check</span> <span class="n">aarch64</span> <span class="n">C</span><span class="p">:</span>\<span class="n">dbx</span>\<span class="n">dbx_info_msft_latest</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/chipsec_logo_transparent.png" alt="Logo of CHIPSEC"/>
+            </a></p>
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/Contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/Download.html">Download CHIPSEC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/InstallLinux.html">Linux Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/InstallWinDAL.html">DAL Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/InstallWindows.html">Windows Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/USBwithUEFIShell.html">Building a Bootable USB drive with UEFI Shell (x64)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Using CHIPSEC</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Interpreting-Results.html">Interpreting results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Running-Chipsec.html">Running CHIPSEC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/Windows-Exceptions.html">Windows Exception Errors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture and Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample Module Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Util Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contribution Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html">Python Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#python-coding-style-guide">Python Coding Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#f-strings">f-Strings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#type-hints">Type Hints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#underscores-in-numeric-literals">Underscores in Numeric Literals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#walrus-operator">Walrus Operator (:=)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/code-style-python.html#deprecate-distutils-module-support">Deprecate distutils module support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/sphinx.html">Sphinx Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/sphinx.html#generating-documentation">Generating Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution/sphinx.html#references">References</a></li>
+</ul>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">chipsec.library.uefi.dbx module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+    </div>
+  </body>
+</html>

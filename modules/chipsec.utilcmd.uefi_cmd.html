@@ -54,6 +54,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="nb">list</span><span class="o">-</span><span class="n">spi</span> <span class="p">[</span><span class="n">rom_file</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">find</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;|&lt;</span><span class="n">GUID</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">read</span><span class="o">|</span><span class="n">var</span><span class="o">-</span><span class="n">write</span><span class="o">|</span><span class="n">var</span><span class="o">-</span><span class="n">delete</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">GUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">efi_variable_file</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">dbx</span><span class="o">-</span><span class="n">check</span> <span class="o">&lt;</span><span class="n">architecture</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">microsoft_dbx_json</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="o">&lt;</span><span class="n">rom_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">filetypes</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">nvram</span><span class="p">[</span><span class="o">-</span><span class="n">auth</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">rom_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">fwtype</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">keys</span> <span class="o">&lt;</span><span class="n">keyvar_file</span><span class="o">&gt;</span>
@@ -71,6 +72,8 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">read</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">write</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span> <span class="n">db</span><span class="o">.</span><span class="n">bin</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">var</span><span class="o">-</span><span class="n">delete</span> <span class="n">db</span> <span class="n">D719B2CB</span><span class="o">-</span><span class="mi">3</span><span class="n">D3A</span><span class="o">-</span><span class="mi">4596</span><span class="o">-</span><span class="n">A3BC</span><span class="o">-</span><span class="n">DAD00E67656F</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">dbx</span><span class="o">-</span><span class="n">check</span> <span class="n">x64</span> <span class="n">dbx_info_msft_latest</span><span class="o">.</span><span class="n">json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">dbx</span><span class="o">-</span><span class="n">check</span> <span class="n">aarch64</span> <span class="n">C</span><span class="p">:</span>\<span class="n">dbx</span>\<span class="n">dbx_info_msft_latest</span><span class="o">.</span><span class="n">json</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">decode</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span> <span class="n">FV_MM</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_util</span> <span class="n">uefi</span> <span class="n">nvram</span> <span class="n">uefi</span><span class="o">.</span><span class="n">rom</span> <span class="n">vss_auth</span>
@@ -116,10 +119,10 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -183,8 +186,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>

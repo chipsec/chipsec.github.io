@@ -59,43 +59,46 @@
 <div><table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span></code></p></td>
-<td><p>main application logic and automation functions</p></td>
+<td><p>main application logic and module execution</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec_util.py</span></code></p></td>
-<td><p>utility functions (access to various hardware resources)</p></td>
+<td><p>command-line access to CHIPSEC utility commands</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/chipset.py</span></code></p></td>
-<td><p>chipset detection</p></td>
+<td><p>chipset detection and CHIPSEC initialization</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/command.py</span></code></p></td>
-<td><p>base class for util commands</p></td>
+<td><p>base class for utility commands</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/defines.py</span></code></p></td>
-<td><p>common defines</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/library/defines.py</span></code></p></td>
+<td><p>common constants and definitions</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/file.py</span></code></p></td>
-<td><p>reading from/writing to files</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/library/file.py</span></code></p></td>
+<td><p>file and path utilities</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/logger.py</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/library/logger.py</span></code></p></td>
 <td><p>logging functions</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/module.py</span></code></p></td>
-<td><p>generic functions to import and load modules</p></td>
+<td><p>module discovery and loading</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/module_common.py</span></code></p></td>
-<td><p>base class for modules</p></td>
+<td><p>base class for security modules</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/result_deltas.py</span></code></p></td>
-<td><p>supports checking result deltas between test runs</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/library/result_deltas.py</span></code></p></td>
+<td><p>checking result deltas between test runs</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/testcase.py</span></code></p></td>
-<td><p>support for XML and JSON log file output</p></td>
+<td><p>result reporting and XML/JSON output</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/helpers.py</span></code></p></td>
-<td><p>registry of supported OS helpers</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/basehelper.py</span></code></p></td>
+<td><p>interface implemented by OS helpers</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/helper/oshelper.py</span></code></p></td>
-<td><p>OS helper: wrapper around platform specific code that invokes kernel driver</p></td>
+<td><p>discovers and selects an OS helper backend</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chipsec/hal/</span></code></p></td>
+<td><p>hardware abstraction layer implementations</p></td>
 </tr>
 </tbody>
 </table>
@@ -305,10 +308,10 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Configuration-Files.html">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developing.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -370,8 +373,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>

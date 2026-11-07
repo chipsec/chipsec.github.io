@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Sample module code template &#8212; CHIPSEC  documentation</title>
+    <title>Sample Module Code &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
     
@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Util Command" href="Sample-Util-Command.html" />
-    <link rel="prev" title="Methods for Platform Detection" href="Platform-Detection.html" /> 
+    <link rel="prev" title="Platform Detection" href="Platform-Detection.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
@@ -32,10 +32,10 @@
           <a href="Sample-Util-Command.html" title="Util Command"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Platform-Detection.html" title="Methods for Platform Detection"
+          <a href="Platform-Detection.html" title="Platform Detection"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Sample module code template</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Sample Module Code</a></li> 
       </ul>
     </div>  
 
@@ -44,35 +44,44 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="sample-module-code-template">
-<h1>Sample module code template<a class="headerlink" href="#sample-module-code-template" title="Link to this heading">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">chipsec.module_common</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">chipsec.library.returncode</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleResult</span>
+  <section id="sample-module-code">
+<h1>Sample Module Code<a class="headerlink" href="#sample-module-code" title="Link to this heading">¶</a></h1>
+<p>This template shows the minimum structure for a module named
+<code class="docutils literal notranslate"><span class="pre">common.example</span></code>. Save it as <code class="docutils literal notranslate"><span class="pre">chipsec/modules/common/example.py</span></code> and
+replace <code class="docutils literal notranslate"><span class="pre">ExampleControl</span></code> with a control defined for the platforms the
+module supports. The class name must match the file’s base name.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">ModuleClass</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Class name aligns with file name, eg ModuleClass.py"""</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">chipsec.library.returncode</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">chipsec.module_common</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">example</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">BaseModule</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">is_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Module prerequisite checks"""</span>
-        <span class="k">if</span> <span class="n">some_module_requirement</span><span class="p">():</span>
-            <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Module is applicable</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">NOTAPPLICABLE</span>
-        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># Module is not applicable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">get_list_by_name</span><span class="p">(</span><span class="s1">'ExampleControl'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">control</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Module test logic and methods as needed"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">'Module was successful!'</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s1">'Example control check'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">read_and_verbose_print</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_argv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Primary module execution and result handling"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">start_test</span><span class="p">(</span><span class="s1">'Module Description'</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">is_all_value</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">'Example control is set.'</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s1">'Example control is not set.'</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">getReturnCode</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Run the module with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">chipsec_main.py</span> <span class="pre">-m</span> <span class="pre">common.example</span></code>. Modules
+that accept arguments receive them as a list in <code class="docutils literal notranslate"><span class="pre">module_argv</span></code>; invoke them
+with <code class="docutils literal notranslate"><span class="pre">-a</span></code>. For module APIs, result handling, safety practices and
+debugging, see <a class="reference internal" href="Developing.html"><span class="doc">Developer Guide</span></a>.</p>
 </section>
 
 
@@ -108,10 +117,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Configuration-Files.html">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developing.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -132,7 +141,7 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="Platform-Detection.html"
-                          title="previous chapter">Methods for Platform Detection</a></p>
+                          title="previous chapter">Platform Detection</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -166,15 +175,15 @@
           <a href="Sample-Util-Command.html" title="Util Command"
              >next</a> |</li>
         <li class="right" >
-          <a href="Platform-Detection.html" title="Methods for Platform Detection"
+          <a href="Platform-Detection.html" title="Platform Detection"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Sample module code template</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Sample Module Code</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>

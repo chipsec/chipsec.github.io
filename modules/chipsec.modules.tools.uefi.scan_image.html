@@ -55,7 +55,7 @@ extracted from flash ROM, and then later check firmware image in flash ROM or
 file against this list of expected executables</p>
 <dl class="simple">
 <dt>Usage:</dt><dd><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.uefi.scan_image</span> <span class="pre">[-a</span> <span class="pre">generate|check,&lt;json&gt;,&lt;fw_image&gt;]</span></code></dt><dd><ul class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">chipsec_main</span> <span class="pre">-m</span> <span class="pre">tools.uefi.scan_image</span> <span class="pre">[-a</span> <span class="pre">generate|check,&lt;json&gt;,&lt;fw_image&gt;[,norm]]</span></code></dt><dd><ul class="simple">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">generate</span></code>      Generates a list of EFI executable binaries from the UEFI</dt><dd><p>firmware image (default)</p>
 </dd>
@@ -76,6 +76,17 @@ file against this list of expected executables</p>
 </dd>
 </dl>
 </li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">norm</span></code>          Optional, <code class="docutils literal notranslate"><span class="pre">generate</span></code> with <code class="docutils literal notranslate"><span class="pre">fw_image</span></code> only. Adds</dt><dd><p><code class="docutils literal notranslate"><span class="pre">sha256_norm</span></code> to each PE32 and TE entry: the SHA-256 of
+the module with its placement undone (relocations reversed;
+ImageBase, TimeDateStamp, CheckSum and section relocation
+pointers zeroed), prefixed with the normalization used
+(<code class="docutils literal notranslate"><span class="pre">uefi-pe-rebase0.v1:sha256:...</span></code> or
+<code class="docutils literal notranslate"><span class="pre">uefi-te-rebase0.v1:sha256:...</span></code>). Omitted where the module
+cannot be normalized exactly. <code class="docutils literal notranslate"><span class="pre">check</span></code> ignores the field</p>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
@@ -92,6 +103,11 @@ image extracted from ROM</p>
 </div>
 <p>Creates a list of EFI executable binaries in <code class="docutils literal notranslate"><span class="pre">efilist.json</span></code> from <code class="docutils literal notranslate"><span class="pre">uefi.rom</span></code>
 firmware binary</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">n</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">scan_image</span> <span class="o">-</span><span class="n">a</span> <span class="n">generate</span><span class="p">,</span><span class="n">efilist</span><span class="o">.</span><span class="n">json</span><span class="p">,</span><span class="n">uefi</span><span class="o">.</span><span class="n">rom</span><span class="p">,</span><span class="n">norm</span>
+</pre></div>
+</div>
+<p>Same, and also records each module’s <code class="docutils literal notranslate"><span class="pre">sha256_norm</span></code>, which stays the same
+wherever the module is placed in flash</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chipsec_main</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">n</span> <span class="o">-</span><span class="n">m</span> <span class="n">tools</span><span class="o">.</span><span class="n">uefi</span><span class="o">.</span><span class="n">scan_image</span> <span class="o">-</span><span class="n">a</span> <span class="n">check</span><span class="p">,</span><span class="n">efilist</span><span class="o">.</span><span class="n">json</span><span class="p">,</span><span class="n">uefi</span><span class="o">.</span><span class="n">rom</span>
 </pre></div>
 </div>
@@ -139,10 +155,10 @@ because the module doesn’t depend on the platform and doesn’t need kernel dr
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../development/Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Configuration-Files.html">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Developing.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Methods for Platform Detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/Sample-Module-Code.html">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../development/Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -208,8 +224,8 @@ because the module doesn’t depend on the platform and doesn’t need kernel dr
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>

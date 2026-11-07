@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="chipsec.helper package" href="../modules/chipsec.helper.html" />
-    <link rel="prev" title="Writing Your Own Modules" href="Developing.html" /> 
+    <link rel="prev" title="Developer Guide" href="Developing.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
@@ -32,7 +32,7 @@
           <a href="../modules/chipsec.helper.html" title="chipsec.helper package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Developing.html" title="Writing Your Own Modules"
+          <a href="Developing.html" title="Developer Guide"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">OS Helpers and Drivers</a></li> 
@@ -46,31 +46,25 @@
             
   <section id="os-helpers-and-drivers">
 <span id="id1"></span><h1>OS Helpers and Drivers<a class="headerlink" href="#os-helpers-and-drivers" title="Link to this heading">¶</a></h1>
-<p>Provide common interfaces to interact with system drivers/commands</p>
-<section id="mostly-invoked-by-hal-modules">
-<h2>Mostly invoked by HAL modules<a class="headerlink" href="#mostly-invoked-by-hal-modules" title="Link to this heading">¶</a></h2>
-<p>Directly invoking helpers from modules should be minimized</p>
-</section>
-<section id="helpers-import-from-basehelper">
-<h2>Helpers import from BaseHelper<a class="headerlink" href="#helpers-import-from-basehelper" title="Link to this heading">¶</a></h2>
-<p>Override applicable functions – default is to generate exception</p>
-<p>I/O, PCI, MSR, UEFI Variables, etc.</p>
-</section>
-<section id="create-a-new-helper">
-<h2>Create a New Helper<a class="headerlink" href="#create-a-new-helper" title="Link to this heading">¶</a></h2>
-<p>Helper needs to be added into the helper folder with a folder structure like: <code class="docutils literal notranslate"><span class="pre">chipsec/helper/&lt;type&gt;/&lt;type&gt;helper.py</span></code></p>
-<section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h3>
-<p>The new helper should be added to <code class="docutils literal notranslate"><span class="pre">chipsec/helper/new/newhelper.py</span></code> and should import from Helper Base Class</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">chipsec.helper.basehelper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Helper</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">NewHelper</span><span class="p">(</span><span class="n">Helper</span><span class="p">):</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">NewHelper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"NewHelper"</span>
-</pre></div>
-</div>
-</section>
+<p>OS helpers provide low-level, operating-system-specific access to drivers and
+system interfaces such as PCI configuration space, MSRs, physical memory and
+UEFI variables. HAL implementations use the active helper to perform these
+operations. Module authors should normally use the HAL API rather than invoke
+the helper directly.</p>
+<p>OS helper backends live in <code class="docutils literal notranslate"><span class="pre">chipsec/helper/&lt;name&gt;/&lt;name&gt;helper.py</span></code>. During
+initialization, <code class="docutils literal notranslate"><span class="pre">OsHelper</span></code> discovers these packages and selects the backend
+for the current environment. Each backend exports a <code class="docutils literal notranslate"><span class="pre">get_helper()</span></code> factory
+that returns its helper instance.</p>
+<section id="implementing-a-new-backend">
+<h2>Implementing a new backend<a class="headerlink" href="#implementing-a-new-backend" title="Link to this heading">¶</a></h2>
+<p>Subclass <code class="docutils literal notranslate"><span class="pre">Helper</span></code> from <code class="docutils literal notranslate"><span class="pre">chipsec.helper.basehelper</span></code> and implement its
+abstract operations. The interface includes driver lifecycle, PCI/MMIO,
+physical memory, I/O ports, CPU registers, CPUID, and UEFI/ACPI services.
+Implement only the behavior the target environment supports, and follow an
+existing backend such as <code class="docutils literal notranslate"><span class="pre">chipsec/helper/linux/linuxhelper.py</span></code> for its
+module structure and <code class="docutils literal notranslate"><span class="pre">get_helper()</span></code> factory. A helper backend is a
+platform-integration change; ordinary security checks should be implemented
+as modules and use the existing HALs.</p>
 </section>
 <section id="helper-components">
 <h2>Helper components<a class="headerlink" href="#helper-components" title="Link to this heading">¶</a></h2>
@@ -127,10 +121,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Configuration-Files.html">Configuration Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Developing.html">Writing Your Own Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Developing.html">Developer Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OS Helpers and Drivers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -151,7 +145,7 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="Developing.html"
-                          title="previous chapter">Writing Your Own Modules</a></p>
+                          title="previous chapter">Developer Guide</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -185,15 +179,15 @@
           <a href="../modules/chipsec.helper.html" title="chipsec.helper package"
              >next</a> |</li>
         <li class="right" >
-          <a href="Developing.html" title="Writing Your Own Modules"
+          <a href="Developing.html" title="Developer Guide"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">OS Helpers and Drivers</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>

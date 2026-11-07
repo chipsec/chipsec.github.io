@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Writing Your Own Modules &#8212; CHIPSEC  documentation</title>
+    <title>Developer Guide &#8212; CHIPSEC  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=8eb72a20" />
     
@@ -35,7 +35,7 @@
           <a href="../modules/chipsec.cfg.8086.pch_5xxlp.xml.html" title="pch_5xxlp"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Writing Your Own Modules</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Developer Guide</a></li> 
       </ul>
     </div>  
 
@@ -44,55 +44,187 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="writing-your-own-modules">
-<h1>Writing Your Own Modules<a class="headerlink" href="#writing-your-own-modules" title="Link to this heading">¶</a></h1>
-<p>Your module class should subclass BaseModule and implement at least the methods named <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and <code class="docutils literal notranslate"><span class="pre">run</span></code>. When chipsec_main runs, it will first run <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and if that returns true, then it will call <code class="docutils literal notranslate"><span class="pre">run</span></code>.</p>
-<p>As of CHIPSEC version 1.2.0, CHIPSEC implements an abstract name for platform <em>controls</em>. Module authors are encouraged to create controls in the XML configuration files for important platform configuration information and then use <code class="docutils literal notranslate"><span class="pre">get_control</span></code> and <code class="docutils literal notranslate"><span class="pre">set_control</span></code> within modules. This abstraction allows modules to test for the abstract control without knowing which register provides it. (This is especially important for test reuse across platform generations.)</p>
-<p>Most modules read some platform configuration and then pass or fail based on the result. For example:</p>
-<ol class="arabic">
-<li><p>Define the control in the platform XML file (in <code class="docutils literal notranslate"><span class="pre">chipsec/cfg</span></code>):</p>
-<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;control</span><span class="w"> </span><span class="na">name=</span><span class="s">"BiosLockEnable"</span><span class="w">     </span><span class="na">register=</span><span class="s">"BC"</span><span class="w">    </span><span class="na">field=</span><span class="s">"BLE"</span><span class="w">    </span><span class="na">desc=</span><span class="s">"BIOS Lock Enable"</span><span class="nt">/&gt;</span>
-</pre></div>
-</div>
-</li>
-<li><p>Get the current status of the control:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ble</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">get_list_by_name</span><span class="p">(</span><span class="s1">'BiosLockEnable'</span><span class="p">)</span><span class="o">.</span><span class="n">is_all_value</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><p>React based on the status of the control:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ble</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s2">"BIOS Lock is set."</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s2">"BIOS Lock is not set."</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><p>Set and Return <code class="docutils literal notranslate"><span class="pre">self.res</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">ble</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">PASSED</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">ModuleResult</span><span class="o">.</span><span class="n">FAILED</span>
-<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span>
-</pre></div>
-</div>
-</li>
-</ol>
-<p>The CHIPSEC HAL and other APIs are also available within these modules. See the next sections for details about the available functionality.</p>
-<p>Copy your module into the <code class="docutils literal notranslate"><span class="pre">chipsec/modules/</span></code> directory structure.</p>
+  <section id="developer-guide">
+<h1>Developer Guide<a class="headerlink" href="#developer-guide" title="Link to this heading">¶</a></h1>
+<p>CHIPSEC modules are Python classes that assess or exercise a platform through
+the CHIPSEC framework. Module code runs with privileged hardware access on
+supported systems. Develop and test on a dedicated test system, and understand
+the effect of every hardware read or write before running a module.</p>
+<section id="module-layout-and-lifecycle">
+<h2>Module layout and lifecycle<a class="headerlink" href="#module-layout-and-lifecycle" title="Link to this heading">¶</a></h2>
+<p>Place modules under <code class="docutils literal notranslate"><span class="pre">chipsec/modules/</span></code>. Use <code class="docutils literal notranslate"><span class="pre">common/</span></code> for checks intended
+to work across supported platforms, or a platform-code directory for a
+platform-specific check. The module name is its path relative to
+<code class="docutils literal notranslate"><span class="pre">chipsec/modules</span></code> without the <code class="docutils literal notranslate"><span class="pre">.py</span></code> suffix; for example,
+<code class="docutils literal notranslate"><span class="pre">chipsec/modules/common/bios_wp.py</span></code> is run as <code class="docutils literal notranslate"><span class="pre">common.bios_wp</span></code>. The module
+class name must match the Python file’s base name.</p>
+<p>Subclass <code class="docutils literal notranslate"><span class="pre">BaseModule</span></code> from <code class="docutils literal notranslate"><span class="pre">chipsec.module_common</span></code>. CHIPSEC calls
+<code class="docutils literal notranslate"><span class="pre">is_supported()</span></code> before <code class="docutils literal notranslate"><span class="pre">run(module_argv)</span></code>. Return <code class="docutils literal notranslate"><span class="pre">False</span></code> from
+<code class="docutils literal notranslate"><span class="pre">is_supported</span></code> when required hardware or configuration is unavailable; the
+module is then reported as not applicable. <code class="docutils literal notranslate"><span class="pre">run</span></code> receives the arguments
+provided with <code class="docutils literal notranslate"><span class="pre">-a</span></code> and returns the module result/return code. See
+<a class="reference internal" href="Sample-Module-Code.html"><span class="doc">Sample Module Code</span></a> for a starting point.</p>
+</section>
+<section id="core-apis">
+<h2>Core APIs<a class="headerlink" href="#core-apis" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code> provides these commonly used objects:</p>
 <ul class="simple">
-<li><p>Modules specific to a certain platform should implement <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> function which returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for the platforms the module is applicable to.</p></li>
-<li><p>Modules specific to a certain platform can also be located in <code class="docutils literal notranslate"><span class="pre">chipsec/modules/&lt;platform_code&gt;</span></code> directory, for example <code class="docutils literal notranslate"><span class="pre">chipsec/modules/hsw</span></code>. Supported platforms and their code can be found by running <code class="docutils literal notranslate"><span class="pre">chipsec_main.py</span> <span class="pre">--help</span></code>.</p></li>
-<li><p>Modules common to all platform which CHIPSEC supports can be located in <code class="docutils literal notranslate"><span class="pre">chipsec/modules/common</span></code> directory.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.cs</span></code> is the active chipset object. Use its configuration interfaces</dt><dd><p>to resolve platform-specific registers and controls instead of duplicating
+platform detection in a module.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.cs.register</span></code> accesses configured registers. Use</dt><dd><p><code class="docutils literal notranslate"><span class="pre">get_list_by_name(name)</span></code> to get an <code class="docutils literal notranslate"><span class="pre">ObjList</span></code> of defined and enabled
+registers, then call <code class="docutils literal notranslate"><span class="pre">objlist.read()</span></code> to read their values.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.cs.control</span></code> accesses abstract controls. A control maps a logical</dt><dd><p>security setting to the register and field used by a platform.
+<code class="docutils literal notranslate"><span class="pre">get_list_by_name(name)</span></code> returns an <code class="docutils literal notranslate"><span class="pre">ObjList</span></code> of defined and enabled
+controls; call <code class="docutils literal notranslate"><span class="pre">objlist.read()</span></code> to read their values.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.cs.device</span></code> provides configured device information. For common</dt><dd><p>hardware operations, use the corresponding HAL exposed under
+<code class="docutils literal notranslate"><span class="pre">self.cs.hals</span></code> (for example, <code class="docutils literal notranslate"><span class="pre">self.cs.hals.spi</span></code> or
+<code class="docutils literal notranslate"><span class="pre">self.cs.hals.uefi</span></code>). See <a class="reference internal" href="Architecture-Overview.html"><span class="doc">Architecture Overview</span></a> and the generated
+CHIPSEC HAL API documentation for the available HALs.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.logger</span></code> provides <code class="docutils literal notranslate"><span class="pre">start_test</span></code>, <code class="docutils literal notranslate"><span class="pre">log</span></code>, <code class="docutils literal notranslate"><span class="pre">log_verbose</span></code>,</dt><dd><p><code class="docutils literal notranslate"><span class="pre">log_warning</span></code>, <code class="docutils literal notranslate"><span class="pre">log_passed</span></code>, <code class="docutils literal notranslate"><span class="pre">log_failed</span></code> and <code class="docutils literal notranslate"><span class="pre">log_important</span></code> for
+consistent output.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">self.result</span></code> tracks return-code status bits. Use</dt><dd><p><code class="docutils literal notranslate"><span class="pre">self.result.setStatusBit(...)</span></code> to add a meaningful status such as
+<code class="docutils literal notranslate"><span class="pre">LOCKS</span></code>, <code class="docutils literal notranslate"><span class="pre">CONFIGURATION</span></code> or <code class="docutils literal notranslate"><span class="pre">VERIFY</span></code>. Follow nearby modules for the
+result style used in that part of the codebase; CHIPSEC retains the legacy
+<code class="docutils literal notranslate"><span class="pre">ModuleResult</span></code> interface for compatibility.</p>
+</dd>
+</dl>
+</li>
 </ul>
-<p>If a new platform needs to be added:</p>
+<p>Platform controls are declared in configuration XML, not hard-coded into a
+portable module. For example:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;control</span><span class="w"> </span><span class="na">name=</span><span class="s">"BiosLockEnable"</span><span class="w"> </span><span class="na">register=</span><span class="s">"BC"</span><span class="w"> </span><span class="na">field=</span><span class="s">"BLE"</span>
+<span class="w">                   </span><span class="na">desc=</span><span class="s">"BIOS Lock Enable"</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>A module can then query the abstract control without knowing which register
+implements it on each platform:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">get_list_by_name</span><span class="p">(</span><span class="s1">'BiosLockEnable'</span><span class="p">)</span>
+<span class="n">lock</span><span class="o">.</span><span class="n">read_and_verbose_print</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">lock</span><span class="o">.</span><span class="n">is_all_value</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_passed</span><span class="p">(</span><span class="s1">'BIOS Lock is set.'</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log_failed</span><span class="p">(</span><span class="s1">'BIOS Lock is not set.'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="Configuration-Files.html"><span class="doc">Configuration Files</span></a> for configuration structure and examples.</p>
+</section>
+<section id="development-practices">
+<h2>Development practices<a class="headerlink" href="#development-practices" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Review the platform datasheet and include appropriate information in an XML configuration file for the platform. Place this file in chipsec/cfg/8086. Registers that are correctly defined in <code class="docutils literal notranslate"><span class="pre">common.xml</span></code> will be inherited and do not need to be added. Use <code class="docutils literal notranslate"><span class="pre">common.xml</span></code> as an example. It is based on the 4th Generation Intel Core platform (Haswell).</p></li>
+<li><dl class="simple">
+<dt>Prefer read-only checks. If a check must modify hardware state, make the</dt><dd><p>change explicit, preserve the original value, and restore it on every exit
+path. Document the risk and require an appropriate test platform.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Use abstract controls and existing HALs so modules can be reused across</dt><dd><p>platform generations. Put platform-specific register mappings in
+configuration XML.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Treat missing definitions, disabled devices, failed reads and all-ones</dt><dd><p>reads as unknown or unsupported input, not as evidence that a protection
+passed or failed. Report a warning or not-applicable result as appropriate.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Validate assumptions and ranges before using hardware-derived values. Keep</dt><dd><p>parsing and result handling explicit, and avoid swallowing exceptions that
+indicate a programming error.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Keep checks focused, log the observed state and expected state, and add</dt><dd><p>unit tests for parsing, decision logic and error paths. Follow the Python
+version and style rules in <a class="reference internal" href="../contribution/code-style-python.html"><span class="doc">Python Version</span></a>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Add module tags and metadata that accurately describe the module. Use</dt><dd><p>existing modules in the same directory as examples of repository
+conventions.</p>
+</dd>
+</dl>
+</li>
 </ul>
+</section>
+<section id="debugging-and-testing">
+<h2>Debugging and testing<a class="headerlink" href="#debugging-and-testing" title="Link to this heading">¶</a></h2>
+<p>Start with a focused run from the CHIPSEC repository root:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python chipsec_main.py -m common.example</span>
+</pre></div>
+</div>
+<p>Increase diagnostic output with <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">-vv</span></code> (verbose, HAL and debug
+logging), and save it with <code class="docutils literal notranslate"><span class="pre">-l</span> <span class="pre">example.log</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--failfast</span></code> when you
+need exceptions to stop the run rather than be masked by normal module
+handling. <code class="docutils literal notranslate"><span class="pre">--no-driver</span></code> is only suitable for operations that do not need
+kernel-driver access.</p>
+<p>When diagnosing a module:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>If it is not found, check the module path/name, class name, and any</dt><dd><p>additional module path passed with <code class="docutils literal notranslate"><span class="pre">-I</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>If it is not applicable, inspect <code class="docutils literal notranslate"><span class="pre">is_supported</span></code> and verify that the</dt><dd><p>platform configuration defines and enables each required device, register
+and control.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>If a result is unexpected, use verbose output to inspect the values read,</dt><dd><p>then confirm the register mapping and expected semantics against the
+platform documentation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>If the module raises an exception, reproduce it with a single-module run</dt><dd><p>and <code class="docutils literal notranslate"><span class="pre">--failfast</span></code>; add a focused test for the failing input or decision
+path.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Run a focused unit test from the repository root, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pytest tests/modules/test_example.py -q</span>
+</pre></div>
+</div>
+<p>Hardware validation is separate from unit testing and must be performed only
+on an appropriate test system. See <a class="reference internal" href="../usage/Running-Chipsec.html"><span class="doc">Running CHIPSEC</span></a> for command
+line options and the <a class="reference external" href="https://github.com/chipsec/chipsec/blob/master/CONTRIBUTING.md">contribution guide</a> for
+contribution requirements.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference external" href="https://github.com/chipsec/chipsec/wiki/files/training/OSFC_2018_CHIPSEC_Workshop.pdf">Creating CHIPSEC modules and commands</a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="Architecture-Overview.html"><span class="doc">Architecture Overview</span></a></p></li>
+<li><p><a class="reference internal" href="Configuration-Files.html"><span class="doc">Configuration Files</span></a></p></li>
+<li><p><a class="reference internal" href="Sample-Module-Code.html"><span class="doc">Sample Module Code</span></a></p></li>
+<li><p><a class="reference external" href="https://github.com/chipsec/chipsec/wiki/files/training/OSFC_2018_CHIPSEC_Workshop.pdf">Creating CHIPSEC modules and commands</a></p></li>
+</ul>
 </div>
+</section>
 </section>
 
 
@@ -128,10 +260,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Architecture-Overview.html">Architecture Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Configuration-Files.html">Configuration Files</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Writing Your Own Modules</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="OS-Helpers-and-Drivers.html">OS Helpers and Drivers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Methods for Platform Detection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample module code template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Platform-Detection.html">Platform Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sample-Module-Code.html">Sample Module Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sample-Util-Command.html">Util Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Vulnerabilities-and-CHIPSEC-Modules.html">CHIPSEC Modules</a></li>
 </ul>
@@ -189,12 +321,12 @@
           <a href="../modules/chipsec.cfg.8086.pch_5xxlp.xml.html" title="pch_5xxlp"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">CHIPSEC  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Writing Your Own Modules</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Developer Guide</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-      Last updated on Sep 24, 2026.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+      Last updated on Nov 06, 2026.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
     </div>
   </body>
 </html>
